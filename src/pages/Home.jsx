@@ -182,14 +182,7 @@ export default function Home() {
                             Começar Grátis
                             <ArrowRight className="w-5 h-5" />
                         </Link>
-                        <Link
-                            to="/login"
-                            onClick={() => analytics.ctaClicked('hero_demo', 'hero')}
-                            className="px-8 py-4 rounded-xl border border-white/10 text-gray-300 hover:bg-white/5 transition-all text-lg flex items-center gap-2"
-                        >
-                            Ver Demo
-                            <ChevronRight className="w-5 h-5" />
-                        </Link>
+
                     </div>
 
                     {/* Stats */}

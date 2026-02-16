@@ -142,11 +142,7 @@ export default function Navbar() {
                             )}
                         </div>
 
-                        {isDemo && (
-                            <span className="hidden sm:inline-flex px-2 py-1 rounded-lg bg-amber-500/10 text-amber-400 text-xs font-medium">
-                                Demo
-                            </span>
-                        )}
+
                         <span className="text-sm text-gray-400 hidden sm:block truncate max-w-[100px]">
                             {displayName}
                         </span>

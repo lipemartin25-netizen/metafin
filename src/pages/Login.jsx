@@ -147,16 +147,7 @@ export default function Login() {
                         </button>
                     </form>
 
-                    {/* Demo */}
-                    <button
-                        onClick={() => {
-                            setEmail('demo@smartfinance.com');
-                            setPassword('demo');
-                        }}
-                        className="w-full mt-3 py-2.5 rounded-xl border border-white/10 text-gray-400 text-sm hover:bg-white/5 transition-all"
-                    >
-                        🎮 Testar em modo Demo
-                    </button>
+
 
                     {/* Links */}
                     <p className="text-center text-sm text-gray-500 mt-6">

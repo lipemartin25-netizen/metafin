@@ -41,16 +41,6 @@ export function AuthProvider({ children }) {
 
     // ===== LOGIN COM EMAIL =====
     const signIn = useCallback(async (email, password) => {
-        if (email === 'demo@smartfinance.com' || !isSupabaseConfigured) {
-            const demoUser = {
-                id: 'demo-user-id',
-                email: email || 'demo@smartfinance.com',
-                user_metadata: { full_name: 'Usuário Demo', plan: 'free' },
-            };
-            setUser(demoUser);
-            setIsDemo(true);
-            return { data: { user: demoUser }, error: null };
-        }
         return await supabase.auth.signInWithPassword({ email, password });
     }, []);
 
@@ -66,17 +56,6 @@ export function AuthProvider({ children }) {
 
     // ===== LOGIN COM GOOGLE (via ID Token — SEM redirect ao Supabase) =====
     const signInWithGoogle = useCallback(async (googleIdToken) => {
-        if (!isSupabaseConfigured) {
-            const demoUser = {
-                id: 'demo-google-id',
-                email: 'demo.google@smartfinance.com',
-                user_metadata: { full_name: 'Google Demo User', plan: 'free' },
-            };
-            setUser(demoUser);
-            setIsDemo(true);
-            return { data: { user: demoUser }, error: null };
-        }
-
         // Usa signInWithIdToken — o Google nunca vê o domínio do Supabase!
         const { data, error } = await supabase.auth.signInWithIdToken({
             provider: 'google',

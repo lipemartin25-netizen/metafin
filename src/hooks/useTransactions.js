@@ -38,14 +38,8 @@ export function useTransactions() {
                 if (data && data.length > 0) {
                     setTransactions(data);
                 } else {
-                    // Primeiro login: carregar dados iniciais (removendo IDs de string legados para o Supabase gerar UUIDs)
-                    const initialTransactions = initialData.transactions.map(({ id, ...t }) => ({
-                        ...t,
-                        user_id: user.id,
-                    }));
-                    const { data: created, error: bulkError } = await db.transactions.bulkCreate(initialTransactions);
-                    if (bulkError) throw bulkError;
-                    setTransactions(created || initialTransactions);
+                    // Primeiro login: Não carregar mais dados fictícios, deixar a plataforma limpa.
+                    setTransactions([]);
                 }
             } else {
                 // Modo offline: localStorage

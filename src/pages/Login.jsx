@@ -1,116 +1,132 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { GoogleLogin } from '@react-oauth/google';
+import { Eye, EyeOff, Loader2, Mail, Lock, ArrowRight } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
-import { TrendingUp, Eye, EyeOff, Loader2 } from 'lucide-react';
-import { analytics } from '../hooks/useAnalytics';
 
 export default function Login() {
-    const { signIn, signInWithGoogle, isDemo } = useAuth();
+    const { signIn, signInWithGoogle } = useAuth();
     const navigate = useNavigate();
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [showPassword, setShowPassword] = useState(false);
-    const [error, setError] = useState('');
+    const [showPass, setShowPass] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [googleLoading, setGoogleLoading] = useState(false);
+    const [error, setError] = useState('');
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
         setError('');
-
-        const { error: authError } = await signIn(email, password);
-
-        if (authError) {
-            setError(authError.message || 'Erro ao fazer login');
+        try {
+            const { error: err } = await signIn(email, password);
+            if (err) throw err;
+            navigate('/app');
+        } catch (err) {
+            setError(err.message || 'Erro ao fazer login');
+        } finally {
             setLoading(false);
-            return;
         }
-
-        analytics.login(isDemo ? 'demo' : 'email');
-        navigate('/app');
     };
 
-    const handleGoogleLogin = async () => {
+    const handleGoogleSuccess = async (credentialResponse) => {
+        setGoogleLoading(true);
         setError('');
-        const { error: authError } = await signInWithGoogle();
-        if (authError) {
-            console.error('Full Google Auth Error:', authError);
-            setError(`Erro Google: ${authError.message}`);
-        } else {
-            analytics.login('google');
+        try {
+            // credentialResponse.credential é o ID Token JWT do Google
+            await signInWithGoogle(credentialResponse.credential);
+            navigate('/app');
+        } catch (err) {
+            console.error("Erro no Login Google:", err);
+            setError(err.message || 'Erro ao entrar com Google');
+        } finally {
+            setGoogleLoading(false);
         }
-    };
-
-    const handleDemoLogin = async () => {
-        setLoading(true);
-        await signIn('demo@smartfinance.com', 'demo');
-        analytics.login('demo');
-        navigate('/app');
     };
 
     return (
-        <div className="min-h-screen bg-gray-950 flex items-center justify-center px-4">
-            {/* Background glow */}
-            <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-emerald-500/5 rounded-full blur-[120px] pointer-events-none" />
+        <div className="min-h-screen bg-gray-950 flex items-center justify-center p-4">
+            <div className="w-full max-w-md">
 
-            <div className="w-full max-w-md relative z-10 animate-fade-in">
-                {/* Logo */}
+                {/* Header */}
                 <div className="text-center mb-8">
-                    <Link to="/" className="inline-flex items-center gap-2 mb-6">
-                        <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-cyan-500 rounded-xl flex items-center justify-center">
-                            <TrendingUp className="w-5 h-5 text-white" />
-                        </div>
-                        <span className="text-xl font-bold text-white">SmartFinance</span>
+                    <Link to="/" className="text-2xl font-bold text-white inline-flex items-center gap-2">
+                        📊 SmartFinance Hub
                     </Link>
-                    <h1 className="text-2xl font-bold text-white">Bem-vindo de volta</h1>
-                    <p className="text-gray-500 text-sm mt-1">
-                        Entre na sua conta para continuar
-                    </p>
+                    <p className="text-gray-500 mt-2">Entre na sua conta</p>
                 </div>
 
                 <div className="glass-card">
-                    {/* Error */}
-                    {error && (
-                        <div className="mb-4 p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm animate-fade-in">
-                            {error}
+
+                    {/* ===== GOOGLE SIGN-IN ===== */}
+                    {googleLoading ? (
+                        <div className="w-full py-3 rounded-xl bg-white/5 flex items-center justify-center gap-2 text-gray-400 text-sm">
+                            <Loader2 className="w-4 h-4 animate-spin" /> Entrando com Google...
+                        </div>
+                    ) : (
+                        <div className="flex justify-center [&>div]:w-full">
+                            <GoogleLogin
+                                onSuccess={handleGoogleSuccess}
+                                onError={() => setError('Erro no login com Google')}
+                                theme="filled_black"
+                                size="large"
+                                text="signin_with"
+                                shape="pill"
+                                locale="pt-BR"
+                                width="100%"
+                            />
                         </div>
                     )}
 
+                    {/* Divider */}
+                    <div className="flex items-center gap-3 my-6">
+                        <div className="flex-1 h-px bg-white/10" />
+                        <span className="text-xs text-gray-500">ou entre com email</span>
+                        <div className="flex-1 h-px bg-white/10" />
+                    </div>
+
+                    {/* Form */}
                     <form onSubmit={handleSubmit} className="space-y-4">
+                        {error && (
+                            <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm">
+                                {error}
+                            </div>
+                        )}
+
                         <div>
-                            <label className="block text-sm text-gray-400 mb-1">Email</label>
-                            <input
-                                type="email"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                placeholder="seu@email.com"
-                                required
-                                className="input-field"
-                            />
+                            <label className="text-sm text-gray-400 mb-1 block">Email</label>
+                            <div className="relative">
+                                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+                                <input
+                                    type="email"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    placeholder="seu@email.com"
+                                    required
+                                    className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-600 text-sm focus:outline-none focus:border-emerald-500/50"
+                                />
+                            </div>
                         </div>
 
                         <div>
-                            <label className="block text-sm text-gray-400 mb-1">Senha</label>
+                            <label className="text-sm text-gray-400 mb-1 block">Senha</label>
                             <div className="relative">
+                                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
                                 <input
-                                    type={showPassword ? 'text' : 'password'}
+                                    type={showPass ? 'text' : 'password'}
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                     placeholder="••••••••"
                                     required
-                                    className="input-field pr-10"
+                                    className="w-full pl-10 pr-10 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-600 text-sm focus:outline-none focus:border-emerald-500/50"
                                 />
                                 <button
                                     type="button"
-                                    onClick={() => setShowPassword(!showPassword)}
-                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white transition-colors"
+                                    onClick={() => setShowPass(!showPass)}
+                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white"
                                 >
-                                    {showPassword ? (
-                                        <EyeOff className="w-4 h-4" />
-                                    ) : (
-                                        <Eye className="w-4 h-4" />
-                                    )}
+                                    {showPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                                 </button>
                             </div>
                         </div>
@@ -118,71 +134,35 @@ export default function Login() {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="gradient-btn w-full flex items-center justify-center gap-2 disabled:opacity-50"
+                            className="gradient-btn w-full flex items-center justify-center gap-2"
                         >
                             {loading ? (
-                                <>
-                                    <Loader2 className="w-4 h-4 animate-spin" />
-                                    Entrando...
-                                </>
+                                <Loader2 className="w-4 h-4 animate-spin" />
                             ) : (
-                                'Entrar'
+                                <>
+                                    <span>Entrar</span>
+                                    <ArrowRight className="w-4 h-4" />
+                                </>
                             )}
                         </button>
                     </form>
 
-                    {/* Divider */}
-                    <div className="flex items-center gap-3 my-6">
-                        <div className="flex-1 h-px bg-white/10" />
-                        <span className="text-sm text-gray-600">ou</span>
-                        <div className="flex-1 h-px bg-white/10" />
-                    </div>
-
-                    {/* Google */}
+                    {/* Demo */}
                     <button
-                        onClick={handleGoogleLogin}
-                        className="w-full py-3 rounded-xl border border-white/10 text-gray-300 hover:bg-white/5 transition-all flex items-center justify-center gap-2 text-sm font-medium mb-3"
+                        onClick={() => {
+                            setEmail('demo@smartfinance.com');
+                            setPassword('demo');
+                        }}
+                        className="w-full mt-3 py-2.5 rounded-xl border border-white/10 text-gray-400 text-sm hover:bg-white/5 transition-all"
                     >
-                        <svg className="w-4 h-4" viewBox="0 0 24 24">
-                            <path
-                                d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"
-                                fill="#4285F4"
-                            />
-                            <path
-                                d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-                                fill="#34A853"
-                            />
-                            <path
-                                d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
-                                fill="#FBBC05"
-                            />
-                            <path
-                                d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
-                                fill="#EA4335"
-                            />
-                        </svg>
-                        Continuar com Google
+                        🎮 Testar em modo Demo
                     </button>
 
-                    {/* Demo mode */}
-                    <button
-                        onClick={handleDemoLogin}
-                        className="w-full py-3 rounded-xl border border-emerald-500/20 text-emerald-400 hover:bg-emerald-500/5 transition-all text-sm font-medium"
-                    >
-                        🚀 Entrar em Modo Demo
-                    </button>
+                    {/* Links */}
+                    <p className="text-center text-sm text-gray-500 mt-6">
+                        Não tem conta? <Link to="/signup" className="text-emerald-400 hover:underline">Criar conta</Link>
+                    </p>
                 </div>
-
-                {/* Sign up link */}
-                <p className="text-center text-sm text-gray-500 mt-6">
-                    Não tem conta?{' '}
-                    <Link
-                        to="/signup"
-                        className="text-emerald-400 hover:text-emerald-300 font-medium transition-colors"
-                    >
-                        Criar conta grátis
-                    </Link>
-                </p>
             </div>
         </div>
     );

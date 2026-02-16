@@ -64,33 +64,27 @@ export function AuthProvider({ children }) {
         });
     }, [signIn]);
 
-    // ===== LOGIN COM GOOGLE =====
-    const signInWithGoogle = useCallback(async () => {
+    // ===== LOGIN COM GOOGLE (via ID Token — SEM redirect ao Supabase) =====
+    const signInWithGoogle = useCallback(async (googleIdToken) => {
         if (!isSupabaseConfigured) {
-            // Modo demo
             const demoUser = {
                 id: 'demo-google-id',
                 email: 'demo.google@smartfinance.com',
-                user_metadata: { full_name: 'Google Demo User', avatar_url: '', plan: 'free' },
+                user_metadata: { full_name: 'Google Demo User', plan: 'free' },
             };
             setUser(demoUser);
             setIsDemo(true);
             return { data: { user: demoUser }, error: null };
         }
 
-        const { data, error } = await supabase.auth.signInWithOAuth({
+        // Usa signInWithIdToken — o Google nunca vê o domínio do Supabase!
+        const { data, error } = await supabase.auth.signInWithIdToken({
             provider: 'google',
-            options: {
-                redirectTo: `${window.location.origin}/app`,
-                queryParams: {
-                    access_type: 'offline',
-                    prompt: 'consent',
-                },
-            },
+            token: googleIdToken,
         });
 
         if (error) throw error;
-        return data;
+        return { data, error: null };
     }, []);
 
     // ===== LOGOUT =====

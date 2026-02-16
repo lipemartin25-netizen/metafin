@@ -36,7 +36,13 @@ export const auth = {
         if (!supabase) return { data: null, error: { message: 'Supabase não configurado' } };
         const { data, error } = await supabase.auth.signInWithOAuth({
             provider: 'google',
-            options: { redirectTo: `${window.location.origin}/app` },
+            options: {
+                redirectTo: `${window.location.origin}/app`,
+                queryParams: {
+                    access_type: 'offline',
+                    prompt: 'consent',
+                },
+            },
         });
         return { data, error };
     },

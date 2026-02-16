@@ -1,0 +1,164 @@
+[
+    {
+        "id": "nubank",
+        "name": "Nubank",
+        "color": "#820ad1",
+        "textColor": "#ffffff",
+        "logo": "N",
+        "type": "bank",
+        "popular": true
+    },
+    {
+        "id": "itau",
+        "name": "Itaú / Itaú Corretora",
+        "color": "#ec7000",
+        "textColor": "#ffffff",
+        "logo": "I",
+        "type": "bank",
+        "popular": true
+    },
+    {
+        "id": "bradesco",
+        "name": "Bradesco / Ágora",
+        "color": "#cc092f",
+        "textColor": "#ffffff",
+        "logo": "B",
+        "type": "bank",
+        "popular": true
+    },
+    {
+        "id": "santander",
+        "name": "Santander",
+        "color": "#ec0000",
+        "textColor": "#ffffff",
+        "logo": "S",
+        "type": "bank",
+        "popular": true
+    },
+    {
+        "id": "inter",
+        "name": "Banco Inter",
+        "color": "#ff7a00",
+        "textColor": "#ffffff",
+        "logo": "I",
+        "type": "bank",
+        "popular": true
+    },
+    {
+        "id": "xp",
+        "name": "XP Investimentos",
+        "color": "#000000",
+        "textColor": "#ffffff",
+        "logo": "X",
+        "type": "broker",
+        "popular": true
+    },
+    {
+        "id": "btg",
+        "name": "BTG Pactual",
+        "color": "#002c5f",
+        "textColor": "#ffffff",
+        "logo": "B",
+        "type": "broker",
+        "popular": true
+    },
+    {
+        "id": "rico",
+        "name": "Rico",
+        "color": "#ff4f00",
+        "textColor": "#ffffff",
+        "logo": "R",
+        "type": "broker",
+        "popular": true
+    },
+    {
+        "id": "clear",
+        "name": "Clear Corretora",
+        "color": "#000000",
+        "textColor": "#ffffff",
+        "logo": "C",
+        "type": "broker",
+        "popular": false
+    },
+    {
+        "id": "genial",
+        "name": "Genial Investimentos",
+        "color": "#00a1e0",
+        "textColor": "#ffffff",
+        "logo": "G",
+        "type": "broker",
+        "popular": false
+    },
+    {
+        "id": "agora",
+        "name": "Ágora Investimentos",
+        "color": "#00b140",
+        "textColor": "#ffffff",
+        "logo": "A",
+        "type": "broker",
+        "popular": false
+    },
+    {
+        "id": "ativa",
+        "name": "Ativa Investimentos",
+        "color": "#003b71",
+        "textColor": "#ffffff",
+        "logo": "A",
+        "type": "broker",
+        "popular": false
+    },
+    {
+        "id": "guide",
+        "name": "Guide Investimentos",
+        "color": "#002a3a",
+        "textColor": "#ffffff",
+        "logo": "G",
+        "type": "broker",
+        "popular": false
+    },
+    {
+        "id": "modal",
+        "name": "Banco Modal (Modalmais)",
+        "color": "#000000",
+        "textColor": "#ffffff",
+        "logo": "M",
+        "type": "bank",
+        "popular": false
+    },
+    {
+        "id": "sofisa",
+        "name": "Banco Sofisa Direto",
+        "color": "#e94e1b",
+        "textColor": "#ffffff",
+        "logo": "S",
+        "type": "bank",
+        "popular": false
+    },
+    {
+        "id": "daycoval",
+        "name": "Banco Daycoval",
+        "color": "#0047bb",
+        "textColor": "#ffffff",
+        "logo": "D",
+        "type": "bank",
+        "popular": false
+    },
+    {
+        "id": "b3",
+        "name": "B3 (Área do Investidor)",
+        "color": "#fabd00",
+        "textColor": "#000000",
+        "logo": "B3",
+        "type": "integration",
+        "popular": true
+    },
+    {
+        "id": "openfinance",
+        "name": "Open Finance Brasil",
+        "color": "#323e48",
+        "textColor": "#ffffff",
+        "logo": "OF",
+        "type": "integration",
+        "popular": true
+    }
+]

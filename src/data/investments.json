@@ -1,0 +1,82 @@
+{
+    "b3": [
+        {
+            "symbol": "PETR4",
+            "name": "Petrobras PN",
+            "quantity": 100,
+            "price": 38.50,
+            "type": "Ações",
+            "logo": "P"
+        },
+        {
+            "symbol": "VALE3",
+            "name": "Vale ON",
+            "quantity": 50,
+            "price": 68.20,
+            "type": "Ações",
+            "logo": "V"
+        },
+        {
+            "symbol": "MXRF11",
+            "name": "Maxi Renda FII",
+            "quantity": 250,
+            "price": 10.50,
+            "type": "FIIs",
+            "logo": "M"
+        },
+        {
+            "symbol": "HGLG11",
+            "name": "CSHG Logística FII",
+            "quantity": 15,
+            "price": 165.00,
+            "type": "FIIs",
+            "logo": "H"
+        }
+    ],
+    "xp": [
+        {
+            "symbol": "Tesouro Selic 2029",
+            "name": "Tesouro Selic 2029",
+            "quantity": 2.5,
+            "price": 14200.00,
+            "type": "Renda Fixa",
+            "logo": "TD"
+        },
+        {
+            "symbol": "CDB Banco Master",
+            "name": "CDB Banco Master 120% CDI",
+            "quantity": 1,
+            "price": 5000.00,
+            "type": "Renda Fixa",
+            "logo": "RF"
+        }
+    ],
+    "btg": [
+        {
+            "symbol": "Fundo Verde FIC FIM",
+            "name": "Fundo Verde Multimercado",
+            "quantity": 1500,
+            "price": 2.30,
+            "type": "Fundos",
+            "logo": "VD"
+        },
+        {
+            "symbol": "LCI ABC Brasil",
+            "name": "LCI ABC Brasil IPCA+ 5%",
+            "quantity": 1,
+            "price": 10000.00,
+            "type": "Renda Fixa",
+            "logo": "RF"
+        }
+    ],
+    "rico": [
+        {
+            "symbol": "IVVB11",
+            "name": "iShares S&P 500",
+            "quantity": 20,
+            "price": 280.00,
+            "type": "ETF",
+            "logo": "US"
+        }
+    ]
+}

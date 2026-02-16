@@ -1,0 +1,121 @@
+{
+  "name": "smartfinance-hub",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "main": "electron/main.cjs",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --ext js,jsx",
+    "electron:dev": "concurrently \"vite\" \"wait-on http://localhost:5173 && electron .\"",
+    "electron:build": "npm run build && electron-builder",
+    "electron:build:win": "npm run build && electron-builder --win",
+    "electron:build:mac": "npm run build && electron-builder --mac",
+    "electron:build:linux": "npm run build && electron-builder --linux",
+    "sb:deploy": "npm run sb:deploy:checkout && npm run sb:deploy:webhook && npm run sb:deploy:portal",
+    "sb:deploy:checkout": "supabase functions deploy stripe-checkout --no-verify-jwt",
+    "sb:deploy:webhook": "supabase functions deploy stripe-webhook --no-verify-jwt",
+    "sb:deploy:portal": "supabase functions deploy stripe-portal --no-verify-jwt",
+    "sb:logs": "supabase functions logs stripe-webhook --follow",
+    "sb:logs:checkout": "supabase functions logs stripe-checkout --follow",
+    "sb:logs:portal": "supabase functions logs stripe-portal --follow",
+    "sb:list": "supabase functions list",
+    "sb:secrets": "supabase secrets list",
+    "stripe:listen": "echo '⚠️ Substitua SEU_PROJECT_ID abaixo pelo seu ID real' && stripe listen --forward-to https://SEU_PROJECT_ID.supabase.co/functions/v1/stripe-webhook",
+    "stripe:trigger:checkout": "stripe trigger checkout.session.completed",
+    "stripe:trigger:payment": "stripe trigger invoice.payment_succeeded",
+    "stripe:trigger:fail": "stripe trigger invoice.payment_failed",
+    "stripe:trigger:cancel": "stripe trigger customer.subscription.deleted",
+    "test:stripe": "echo '' && echo '🧪 Para testar o Stripe, abra 3 terminais:' && echo '' && echo ' Terminal 1: npm run stripe:listen' && echo ' Terminal 2: npm run dev' && echo ' Terminal 3: npm run sb:logs' && echo '' && echo '📖 Detalhes completos em STRIPE_SETUP.md' && echo ''"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.1.0",
+    "@capacitor/cli": "^8.1.0",
+    "@capacitor/core": "^8.1.0",
+    "@capacitor/filesystem": "^8.1.2",
+    "@capacitor/haptics": "^8.0.0",
+    "@capacitor/ios": "^8.1.0",
+    "@capacitor/keyboard": "^8.0.0",
+    "@capacitor/share": "^8.0.1",
+    "@capacitor/splash-screen": "^8.0.1",
+    "@capacitor/status-bar": "^8.0.1",
+    "@supabase/supabase-js": "^2.49.1",
+    "lucide-react": "^0.468.0",
+    "papaparse": "^5.4.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.28.0",
+    "read-excel-file": "^6.0.3",
+    "recharts": "^2.13.3"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.4",
+    "autoprefixer": "^10.4.20",
+    "concurrently": "^9.2.1",
+    "electron": "^40.4.1",
+    "electron-builder": "^26.7.0",
+    "eslint": "^9.13.0",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.15",
+    "vite": "^6.0.1",
+    "vite-plugin-pwa": "^1.2.0",
+    "wait-on": "^9.0.4"
+  },
+  "build": {
+    "appId": "com.smartfinance.hub",
+    "productName": "SmartFinance Hub",
+    "directories": {
+      "output": "electron-dist"
+    },
+    "files": [
+      "dist/**/*",
+      "electron/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "public/icons/icon-512x512.png"
+    },
+    "mac": {
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        }
+      ],
+      "icon": "public/icons/icon-512x512.png",
+      "category": "public.app-category.finance"
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb",
+        "snap"
+      ],
+      "icon": "public/icons/icon-512x512.png",
+      "category": "Finance"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "installerIcon": "public/icons/icon-512x512.png"
+    }
+  }
+}

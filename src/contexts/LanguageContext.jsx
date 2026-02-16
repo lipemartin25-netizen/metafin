@@ -1,0 +1,208 @@
+import { createContext, useContext, useState, useEffect } from 'react';
+
+const LanguageContext = createContext();
+
+const translations = {
+    pt: {
+        dashboard: 'Dashboard',
+        dashboard_overview: 'Visão geral das suas finanças',
+        transactions: 'Transações',
+        accounts: 'Contas',
+        investments: 'Investimentos',
+        ai_assistant: 'Assistente IA',
+        logout: 'Sair',
+        total_balance: 'Saldo Total',
+        income: 'Receitas',
+        expenses: 'Despesas',
+        expense: 'Despesa',
+        connect_bank: 'Conectar Nova Instituição',
+        my_accounts: 'Minhas Contas',
+        welcome: 'Bem-vindo',
+        recent_transactions: 'Transações Recentes',
+        see_all: 'Ver todas',
+        add_transaction: 'Adicionar',
+        import: 'Importar',
+        export: 'Exportar',
+        search: 'Buscar...',
+        loading: 'Carregando...',
+        demo_mode: 'Modo Demo',
+        cash_flow: 'Fluxo de Caixa',
+        expenses_by_category: 'Gastos por Categoria',
+        import_transactions_to_see_chart: 'Importe transações para ver o gráfico',
+        no_expenses: 'Sem despesas',
+        no_recent_transactions: 'Nenhuma transação recente',
+    },
+    en: {
+        dashboard: 'Dashboard',
+        dashboard_overview: 'Overview of your finances',
+        transactions: 'Transactions',
+        accounts: 'Accounts',
+        investments: 'Investments',
+        ai_assistant: 'AI Assistant',
+        logout: 'Sign Out',
+        total_balance: 'Total Balance',
+        income: 'Income',
+        expenses: 'Expenses',
+        expense: 'Expense',
+        connect_bank: 'Connect New Bank',
+        my_accounts: 'My Accounts',
+        welcome: 'Welcome',
+        recent_transactions: 'Recent Transactions',
+        see_all: 'See all',
+        add_transaction: 'Add',
+        import: 'Import',
+        export: 'Export',
+        search: 'Search...',
+        loading: 'Loading...',
+        demo_mode: 'Demo Mode',
+        cash_flow: 'Cash Flow',
+        expenses_by_category: 'Expenses by Category',
+        import_transactions_to_see_chart: 'Import transactions to see the chart',
+        no_expenses: 'No expenses',
+        no_recent_transactions: 'No recent transactions',
+    },
+    es: {
+        dashboard: 'Tablero',
+        dashboard_overview: 'Resumen de sus finanzas',
+        transactions: 'Transacciones',
+        accounts: 'Cuentas',
+        investments: 'Inversiones',
+        ai_assistant: 'Asistente IA',
+        logout: 'Cerrar Sesión',
+        total_balance: 'Saldo Total',
+        income: 'Ingresos',
+        expenses: 'Gastos',
+        expense: 'Gasto',
+        connect_bank: 'Conectar Nuevo Banco',
+        my_accounts: 'Mis Cuentas',
+        welcome: 'Bienvenido',
+        recent_transactions: 'Transacciones Recientes',
+        see_all: 'Ver todas',
+        add_transaction: 'Agregar',
+        import: 'Importar',
+        export: 'Exportar',
+        search: 'Buscar...',
+        loading: 'Cargando...',
+        demo_mode: 'Modo Demo',
+        cash_flow: 'Flujo de Caja',
+        expenses_by_category: 'Gastos por Categoría',
+        import_transactions_to_see_chart: 'Importe transacciones para ver el gráfico',
+        no_expenses: 'Sin gastos',
+        no_recent_transactions: 'No hay transacciones recientes',
+    },
+    fr: {
+        dashboard: 'Tableau de Bord',
+        dashboard_overview: 'Aperçu de vos finances',
+        transactions: 'Transactions',
+        accounts: 'Comptes',
+        investments: 'Investissements',
+        ai_assistant: 'Assistant IA',
+        logout: 'Déconnexion',
+        total_balance: 'Solde Total',
+        income: 'Revenus',
+        expenses: 'Dépenses',
+        expense: 'Dépense',
+        connect_bank: 'Connecter une Banque',
+        my_accounts: 'Mes Comptes',
+        welcome: 'Bienvenue',
+        recent_transactions: 'Transactions Récentes',
+        see_all: 'Voir tout',
+        add_transaction: 'Ajouter',
+        import: 'Importer',
+        export: 'Exporter',
+        search: 'Rechercher...',
+        loading: 'Chargement...',
+        demo_mode: 'Mode Démo',
+        cash_flow: 'Flux de Trésorerie',
+        expenses_by_category: 'Dépenses par Catégorie',
+        import_transactions_to_see_chart: 'Importez des transactions pour voir le graphique',
+        no_expenses: 'Aucune dépense',
+        no_recent_transactions: 'Aucune transaction récente',
+    },
+    cn: {
+        dashboard: '仪表板',
+        dashboard_overview: '您的财务概览',
+        transactions: '交易',
+        accounts: '账户',
+        investments: '投资',
+        ai_assistant: 'AI 助手',
+        logout: '登出',
+        total_balance: '总余额',
+        income: '收入',
+        expenses: '支出',
+        expense: '费用',
+        connect_bank: '连接新银行',
+        my_accounts: '我的账户',
+        welcome: '欢迎',
+        recent_transactions: '最近交易',
+        see_all: '查看全部',
+        add_transaction: '添加',
+        import: '导入',
+        export: '导出',
+        search: '搜索...',
+        loading: '加载中...',
+        demo_mode: '演示模式',
+        cash_flow: '现金流',
+        expenses_by_category: '按类别支出',
+        import_transactions_to_see_chart: '导入交易以查看图表',
+        no_expenses: '无支出',
+        no_recent_transactions: '无最近交易',
+    },
+    hi: {
+        dashboard: 'डैशबोर्ड',
+        dashboard_overview: 'आपके वित्त का अवलोकन',
+        transactions: 'लेनदेन',
+        accounts: 'खाते',
+        investments: 'निवेश',
+        ai_assistant: 'AI सहायक',
+        logout: 'लॉग आउट',
+        total_balance: 'कुल शेष',
+        income: 'आय',
+        expenses: 'व्यय',
+        expense: 'व्यय',
+        connect_bank: 'नया बैंक जोड़ें',
+        my_accounts: 'मेरे खाते',
+        welcome: 'स्वागत',
+        recent_transactions: 'हाल के लेनदेन',
+        see_all: 'सभी देखें',
+        add_transaction: 'जोड़ें',
+        import: 'आयात',
+        export: 'निर्यात',
+        search: 'खोजें...',
+        loading: 'लोड हो रहा है...',
+        demo_mode: 'डेमो मोड',
+        cash_flow: 'नकदी प्रवाह',
+        expenses_by_category: 'श्रेणी के अनुसार व्यय',
+        import_transactions_to_see_chart: 'चार्ट देखने के लिए लेनदेन आयात करें',
+        no_expenses: 'कोई खर्चा नहीं',
+        no_recent_transactions: 'हाल ही में कोई लेनदेन नहीं',
+    },
+};
+
+export function LanguageProvider({ children }) {
+    const [language, setLanguage] = useState('pt');
+
+    useEffect(() => {
+        const stored = localStorage.getItem('sf_lang');
+        if (stored) setLanguage(stored);
+    }, []);
+
+    const changeLanguage = (lang) => {
+        setLanguage(lang);
+        localStorage.setItem('sf_lang', lang);
+    };
+
+    const t = (key) => {
+        return translations[language][key] || key;
+    };
+
+    return (
+        <LanguageContext.Provider value={{ language, changeLanguage, t }}>
+            {children}
+        </LanguageContext.Provider>
+    );
+}
+
+export function useLanguage() {
+    return useContext(LanguageContext);
+}

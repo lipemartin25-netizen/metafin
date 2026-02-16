@@ -1,110 +1,125 @@
-import { createContext, useContext, useState, useEffect } from 'react';
-import { auth, isSupabaseConfigured } from '../lib/supabase';
+import { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
+import { supabase, isSupabaseConfigured } from '../lib/supabase';
 
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [isDemo, setIsDemo] = useState(false);
+    const isMounted = useRef(true);
 
     useEffect(() => {
+        isMounted.current = true;
+
         if (!isSupabaseConfigured) {
-            // Modo offline: check localStorage para demo user
-            const demoUser = localStorage.getItem('sf_demo_user');
-            if (demoUser) {
-                setUser(JSON.parse(demoUser));
-            }
             setLoading(false);
             return;
         }
 
-        // Check session ativa
-        const initAuth = async () => {
-            try {
-                const { data: { session } } = await auth.getSession();
+        supabase.auth.getSession().then(({ data: { session } }) => {
+            if (isMounted.current) {
                 setUser(session?.user ?? null);
-            } catch (error) {
-                console.error('Auth init error:', error);
-                setUser(null);
-            } finally {
                 setLoading(false);
             }
-        };
-
-        initAuth();
-
-        // Listener de auth state changes
-        const { data: { subscription } } = auth.onAuthStateChange((_event, session) => {
-            setUser(session?.user ?? null);
-            setLoading(false);
         });
 
-        return () => subscription.unsubscribe();
+        const { data: { subscription } } = supabase.auth.onAuthStateChange(
+            (_event, session) => {
+                if (isMounted.current) {
+                    setUser(session?.user ?? null);
+                    setIsDemo(false);
+                }
+            }
+        );
+
+        return () => {
+            isMounted.current = false;
+            subscription.unsubscribe();
+        };
     }, []);
 
-    const signUp = async (email, password, name) => {
-        if (!isSupabaseConfigured) {
-            const demoUser = { id: 'demo', email, user_metadata: { full_name: name } };
-            localStorage.setItem('sf_demo_user', JSON.stringify(demoUser));
+    // ===== LOGIN COM EMAIL =====
+    const signIn = useCallback(async (email, password) => {
+        if (email === 'demo@smartfinance.com' || !isSupabaseConfigured) {
+            const demoUser = {
+                id: 'demo-user-id',
+                email: email || 'demo@smartfinance.com',
+                user_metadata: { full_name: 'Usuário Demo', plan: 'free' },
+            };
             setUser(demoUser);
-            return { data: demoUser, error: null };
+            setIsDemo(true);
+            return { data: { user: demoUser }, error: null };
         }
-        const result = await auth.signUp(email, password, name);
-        return result;
-    };
+        return await supabase.auth.signInWithPassword({ email, password });
+    }, []);
 
-    const signIn = async (email, password) => {
+    // ===== CADASTRO =====
+    const signUp = useCallback(async (email, password, fullName) => {
+        if (!isSupabaseConfigured) return signIn(email, password);
+        return await supabase.auth.signUp({
+            email,
+            password,
+            options: { data: { full_name: fullName } },
+        });
+    }, [signIn]);
+
+    // ===== LOGIN COM GOOGLE =====
+    const signInWithGoogle = useCallback(async () => {
         if (!isSupabaseConfigured) {
-            const demoUser = { id: 'demo', email, user_metadata: { full_name: 'Usuário Demo' } };
-            localStorage.setItem('sf_demo_user', JSON.stringify(demoUser));
+            // Modo demo
+            const demoUser = {
+                id: 'demo-google-id',
+                email: 'demo.google@smartfinance.com',
+                user_metadata: { full_name: 'Google Demo User', avatar_url: '', plan: 'free' },
+            };
             setUser(demoUser);
-            return { data: demoUser, error: null };
+            setIsDemo(true);
+            return { data: { user: demoUser }, error: null };
         }
-        const result = await auth.signIn(email, password);
-        return result;
-    };
 
-    const signInWithGoogle = async () => {
-        if (!isSupabaseConfigured) {
-            return { data: null, error: { message: 'Configure o Supabase para login com Google' } };
-        }
-        const result = await auth.signInWithGoogle();
-        return result;
-    };
+        const { data, error } = await supabase.auth.signInWithOAuth({
+            provider: 'google',
+            options: {
+                redirectTo: `${window.location.origin}/app`,
+                queryParams: {
+                    access_type: 'offline',
+                    prompt: 'consent',
+                },
+            },
+        });
 
-    const signOut = async () => {
-        if (!isSupabaseConfigured) {
-            localStorage.removeItem('sf_demo_user');
+        if (error) throw error;
+        return data;
+    }, []);
+
+    // ===== LOGOUT =====
+    const signOut = useCallback(async () => {
+        if (isDemo || !isSupabaseConfigured) {
             setUser(null);
-            return { error: null };
+            setIsDemo(false);
+            return;
         }
-        const result = await auth.signOut();
+        await supabase.auth.signOut();
         setUser(null);
-        return result;
-    };
+    }, [isDemo]);
 
     const value = {
         user,
         loading,
+        isDemo,
         isAuthenticated: !!user,
-        isDemo: !isSupabaseConfigured,
-        signUp,
         signIn,
+        signUp,
         signInWithGoogle,
         signOut,
     };
 
-    return (
-        <AuthContext.Provider value={value}>
-            {children}
-        </AuthContext.Provider>
-    );
+    return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {
     const context = useContext(AuthContext);
-    if (!context) {
-        throw new Error('useAuth must be used within AuthProvider');
-    }
+    if (!context) throw new Error('useAuth deve ser usado dentro de <AuthProvider>');
     return context;
 }

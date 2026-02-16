@@ -32,9 +32,11 @@ export default function Login() {
     };
 
     const handleGoogleLogin = async () => {
+        setError('');
         const { error: authError } = await signInWithGoogle();
         if (authError) {
-            setError(authError.message);
+            console.error('Full Google Auth Error:', authError);
+            setError(`Erro Google: ${authError.message}`);
         } else {
             analytics.login('google');
         }

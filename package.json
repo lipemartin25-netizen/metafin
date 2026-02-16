@@ -31,7 +31,9 @@
     "stripe:trigger:payment": "stripe trigger invoice.payment_succeeded",
     "stripe:trigger:fail": "stripe trigger invoice.payment_failed",
     "stripe:trigger:cancel": "stripe trigger customer.subscription.deleted",
-    "test:stripe": "echo '' && echo '🧪 Para testar o Stripe, abra 3 terminais:' && echo '' && echo ' Terminal 1: npm run stripe:listen' && echo ' Terminal 2: npm run dev' && echo ' Terminal 3: npm run sb:logs' && echo '' && echo '📖 Detalhes completos em STRIPE_SETUP.md' && echo ''"
+    "test:stripe": "echo '' && echo '🧪 Para testar o Stripe, abra 3 terminais:' && echo '' && echo ' Terminal 1: npm run stripe:listen' && echo ' Terminal 2: npm run dev' && echo ' Terminal 3: npm run sb:logs' && echo '' && echo '📖 Detalhes completos em STRIPE_SETUP.md' && echo ''",
+    "cap:sync": "npm run build && npx cap sync",
+    "cap:open": "npx cap open android"
   },
   "dependencies": {
     "@capacitor/android": "^8.1.0",
@@ -64,6 +66,7 @@
     "eslint": "^9.13.0",
     "postcss": "^8.4.49",
     "tailwindcss": "^3.4.15",
+    "typescript": "^5.9.3",
     "vite": "^6.0.1",
     "vite-plugin-pwa": "^1.2.0",
     "wait-on": "^9.0.4"

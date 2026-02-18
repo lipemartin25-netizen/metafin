@@ -8,21 +8,85 @@ import {
     ArrowUpRight,
     ArrowDownRight,
     Loader2,
+    Sparkles,
+    CreditCard,
+    DollarSign,
+    Activity,
+    Calendar,
+    ChevronRight,
+    Target
 } from 'lucide-react';
 import {
-    AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip,
-    ResponsiveContainer, PieChart, Pie, Cell,
+    AreaChart,
+    Area,
+    XAxis,
+    YAxis,
+    CartesianGrid,
+    Tooltip,
+    ResponsiveContainer,
+    BarChart,
+    Bar
 } from 'recharts';
 import categoriesData from '../data/data.json';
 import { analytics } from '../hooks/useAnalytics';
 import { useLanguage } from '../contexts/LanguageContext';
 import ProGate from '../components/ProGate';
-import { Sparkles } from 'lucide-react';
 
 const categoryConfig = categoriesData.categories;
 
 function fmt(value) {
     return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
+}
+
+// Componente de Card de Resumo (Estilo Mobills)
+function SummaryCard({ title, value, type, icon: Icon, trend }) {
+    const isPositive = type === 'income' || type === 'balance';
+
+    let gradient = "from-brand-500 to-brand-600";
+    let iconColor = "text-brand-400";
+    let bgColor = "bg-brand-500/10";
+
+    if (type === 'expense') {
+        gradient = "from-red-500 to-red-600";
+        iconColor = "text-red-400";
+        bgColor = "bg-red-500/10";
+    } else if (type === 'balance') {
+        gradient = "from-blue-500 to-blue-600";
+        iconColor = "text-blue-400";
+        bgColor = "bg-blue-500/10";
+    }
+
+    return (
+        <div className="glass-card relative overflow-hidden group hover:translate-y-[-2px] transition-all duration-300">
+            {/* Background Glow Effect */}
+            <div className={`absolute -right-6 -top-6 w-24 h-24 rounded-full blur-2xl opacity-20 ${bgColor}`} />
+
+            <div className="relative z-10">
+                <div className="flex items-center justify-between mb-4">
+                    <div className={`p-2.5 rounded-xl ${bgColor} border border-white/5`}>
+                        <Icon className={`w-5 h-5 ${iconColor}`} />
+                    </div>
+                    {trend && (
+                        <span className={`text-xs font-medium px-2 py-1 rounded-lg ${trend >= 0 ? 'text-emerald-400 bg-emerald-500/10' : 'text-red-400 bg-red-500/10'
+                            }`}>
+                            {trend > 0 ? '+' : ''}{trend}%
+                        </span>
+                    )}
+                </div>
+
+                <h3 className="text-gray-400 text-sm font-medium mb-1">{title}</h3>
+                <p className="text-2xl font-bold text-white tracking-tight">{fmt(value)}</p>
+
+                {/* Mini Sparkline Visualization (CSS only for simplicity) */}
+                <div className="mt-4 h-1.5 w-full bg-surface-700/50 rounded-full overflow-hidden">
+                    <div
+                        className={`h-full rounded-full bg-gradient-to-r ${gradient} opacity-80`}
+                        style={{ width: '65%' }} // Placeholder width
+                    />
+                </div>
+            </div>
+        </div>
+    );
 }
 
 export default function Dashboard() {
@@ -31,173 +95,257 @@ export default function Dashboard() {
 
     useEffect(() => { analytics.dashboardViewed(); }, []);
 
+    // Preparar dados para o gráfico principal
     const dailyData = useMemo(() => {
         const g = {};
-        transactions.slice().sort((a, b) => a.date.localeCompare(b.date)).forEach((t) => {
-            const day = t.date.slice(8, 10) + '/' + t.date.slice(5, 7);
-            if (!g[day]) g[day] = { day, receita: 0, despesa: 0 };
-            if (t.type === 'income') g[day].receita += Math.abs(t.amount);
-            else g[day].despesa += Math.abs(t.amount);
-        });
-        return Object.values(g);
-    }, [transactions]);
+        // Ordenar transações por data
+        const sorted = transactions.slice().sort((a, b) => a.date.localeCompare(b.date));
 
-    const categoryData = useMemo(() => {
-        const g = {};
-        transactions.filter((t) => t.type === 'expense').forEach((t) => {
-            if (!g[t.category]) g[t.category] = { name: categoryConfig[t.category]?.label || t.category, value: 0, color: categoryConfig[t.category]?.color || '#6b7280' };
-            g[t.category].value += Math.abs(t.amount);
+        // Agrupar por dia
+        sorted.forEach((t) => {
+            const dateObj = new Date(t.date + 'T12:00:00');
+            const dayKey = dateObj.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+
+            if (!g[dayKey]) g[dayKey] = { day: dayKey, receita: 0, despesa: 0, saldo: 0 };
+
+            if (t.type === 'income') g[dayKey].receita += Math.abs(t.amount);
+            else g[dayKey].despesa += Math.abs(t.amount);
         });
-        return Object.values(g).sort((a, b) => b.value - a.value);
+
+        // Converter para array e limitar aos últimos 14 dias para melhor visualização
+        return Object.values(g).slice(-14);
     }, [transactions]);
 
     const recentTransactions = useMemo(() => transactions.slice(0, 5), [transactions]);
 
-    if (loading) return <div className="flex items-center justify-center h-[60vh]"><Loader2 className="w-8 h-8 text-emerald-400 animate-spin" /></div>;
+    if (loading) {
+        return (
+            <div className="flex flex-col items-center justify-center h-[calc(100vh-100px)]">
+                <Loader2 className="w-10 h-10 text-brand-500 animate-spin mb-4" />
+                <p className="text-gray-400 animate-pulse">Carregando seus dados...</p>
+            </div>
+        );
+    }
 
-    const ttStyle = { backgroundColor: '#1f2937', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', color: '#fff' };
+    const CustomTooltip = ({ active, payload, label }) => {
+        if (active && payload && payload.length) {
+            return (
+                <div className="glass-card !p-3 border border-white/10 !bg-surface-900/90 backdrop-blur-xl">
+                    <p className="text-gray-400 text-xs mb-2">{label}</p>
+                    {payload.map((entry, index) => (
+                        <div key={index} className="flex items-center gap-2 text-sm mb-1">
+                            <div className="w-2 h-2 rounded-full" style={{ backgroundColor: entry.color }} />
+                            <span className="text-gray-300 capitalize">{entry.name}:</span>
+                            <span className="font-semibold text-white">{fmt(entry.value)}</span>
+                        </div>
+                    ))}
+                </div>
+            );
+        }
+        return null;
+    };
 
     return (
-        <div className="py-6 space-y-6 animate-fade-in">
-            <div className="flex items-center justify-between">
-                <div><h1 className="text-2xl font-bold text-white">{t('dashboard')}</h1><p className="text-gray-400 text-sm">{t('dashboard_overview')}</p></div>
-            </div>
-
-            <div className="grid sm:grid-cols-3 gap-4">
-                <div className="glass-card relative overflow-hidden group">
-                    <div className="flex items-center justify-between relative z-10">
-                        <div><p className="text-gray-400 text-sm font-medium mb-1">{t('total_balance')}</p><h2 className="text-3xl font-bold bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">{fmt(summary.balance)}</h2></div>
-                        <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-500 to-cyan-500 flex items-center justify-center shadow-lg shadow-emerald-500/20"><Wallet className="w-6 h-6 text-white" /></div>
-                    </div>
+        <div className="py-8 space-y-8 animate-fade-in pb-24">
+            {/* Header Section */}
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+                <div>
+                    <h1 className="text-3xl font-bold text-white mb-2">
+                        Visão Geral
+                    </h1>
+                    <p className="text-gray-400 flex items-center gap-2">
+                        <Calendar className="w-4 h-4" />
+                        <span>Resumo financeiro do mês</span>
+                    </p>
                 </div>
 
-                <div className="glass-card relative overflow-hidden group">
-                    <div className="flex items-center justify-between relative z-10">
-                        <div><p className="text-gray-400 text-sm font-medium mb-1">{t('income')}</p><h2 className="text-2xl font-bold text-emerald-400">{fmt(summary.totalIncome)}</h2></div>
-                        <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center group-hover:bg-emerald-500/20 transition-colors"><TrendingUp className="w-5 h-5 text-emerald-400" /></div>
-                    </div>
-                </div>
-
-                <div className="glass-card relative overflow-hidden group">
-                    <div className="flex items-center justify-between relative z-10">
-                        <div><p className="text-gray-400 text-sm font-medium mb-1">{t('expenses')}</p><h2 className="text-2xl font-bold text-rose-400">{fmt(summary.totalExpenses)}</h2></div>
-                        <div className="w-10 h-10 rounded-xl bg-rose-500/10 flex items-center justify-center group-hover:bg-rose-500/20 transition-colors"><TrendingDown className="w-5 h-5 text-rose-400" /></div>
-                    </div>
+                <div className="flex items-center gap-3">
+                    <ProGate feature="aiInsights">
+                        <Link
+                            to="/app/advisor"
+                            className="bg-brand-500/10 hover:bg-brand-500/20 text-brand-400 border border-brand-500/20 px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-2 transition-all group"
+                        >
+                            <Sparkles className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                            Insights IA
+                        </Link>
+                    </ProGate>
                 </div>
             </div>
 
-            {/* Charts Grid */}
-            <div className="grid lg:grid-cols-3 gap-6">
-                {/* Main Chart */}
-                <div className="glass-card lg:col-span-2 p-6">
-                    <h3 className="text-lg font-semibold text-white mb-6 flex items-center gap-2"><TrendingUp className="w-5 h-5 text-emerald-400" /> {t('cash_flow')}</h3>
-                    {dailyData.length > 0 ? (
-                        <ResponsiveContainer width="100%" height={260}>
-                            <AreaChart data={dailyData}>
-                                <defs>
-                                    <linearGradient id="gR" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor="#10b981" stopOpacity={0.3} /><stop offset="95%" stopColor="#10b981" stopOpacity={0} /></linearGradient>
-                                    <linearGradient id="gD" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor="#ef4444" stopOpacity={0.3} /><stop offset="95%" stopColor="#ef4444" stopOpacity={0} /></linearGradient>
-                                </defs>
-                                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-                                <XAxis dataKey="day" stroke="#6b7280" fontSize={12} />
-                                <YAxis stroke="#6b7280" fontSize={12} />
-                                <Tooltip contentStyle={ttStyle} formatter={(v) => fmt(v)} />
-                                <Area type="monotone" dataKey="receita" stroke="#10b981" fillOpacity={1} fill="url(#gR)" name={t('income')} />
-                                <Area type="monotone" dataKey="despesa" stroke="#ef4444" fillOpacity={1} fill="url(#gD)" name={t('expense')} />
-                            </AreaChart>
-                        </ResponsiveContainer>
-                    ) : <div className="h-[260px] flex items-center justify-center text-gray-600">{t('import_transactions_to_see_chart')}</div>}
-                </div>
+            {/* Summary Cards Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                <SummaryCard
+                    title={t('total_balance')}
+                    value={summary.balance}
+                    type="balance"
+                    icon={Wallet}
+                    trend={12} // Mock trend for premium feel
+                />
+                <SummaryCard
+                    title={t('income')}
+                    value={summary.totalIncome}
+                    type="income"
+                    icon={TrendingUp}
+                    trend={8}
+                />
+                <SummaryCard
+                    title={t('expenses')}
+                    value={summary.totalExpenses}
+                    type="expense"
+                    icon={TrendingDown}
+                    trend={-5}
+                />
+            </div>
 
-                <div className="glass-card p-6">
-                    <h3 className="text-lg font-semibold text-white mb-6">{t('expenses_by_category')}</h3>
-                    {categoryData.length > 0 ? (<>
-                        <ResponsiveContainer width="100%" height={180}>
-                            <PieChart><Pie data={categoryData} cx="50%" cy="50%" innerRadius={50} outerRadius={80} paddingAngle={3} dataKey="value">
-                                {categoryData.map((e, i) => <Cell key={i} fill={e.color} />)}
-                            </Pie><Tooltip contentStyle={ttStyle} formatter={(v) => fmt(v)} /></PieChart>
-                        </ResponsiveContainer>
-                        <div className="mt-2 space-y-2">{categoryData.slice(0, 4).map((c) => (
-                            <div key={c.name} className="flex items-center justify-between text-sm">
-                                <div className="flex items-center gap-2"><div className="w-3 h-3 rounded-full" style={{ backgroundColor: c.color }} /><span className="text-gray-400">{c.name}</span></div>
-                                <span className="text-white font-medium">{fmt(c.value)}</span>
+            {/* Main Content Grid */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+                {/* Main Chart Section */}
+                <div className="lg:col-span-2 glass-card p-6 flex flex-col h-[400px]">
+                    <div className="flex items-center justify-between mb-6">
+                        <div>
+                            <h3 className="text-lg font-semibold text-white flex items-center gap-2">
+                                <Activity className="w-5 h-5 text-brand-400" />
+                                Fluxo de Caixa
+                            </h3>
+                            <p className="text-xs text-gray-400 mt-1">Receitas vs Despesas (Últimos 14 dias)</p>
+                        </div>
+                        <select className="bg-surface-800 text-xs text-gray-300 border border-white/10 rounded-lg px-2 py-1 outline-none focus:border-brand-500/50">
+                            <option>Últimos 14 dias</option>
+                            <option>Este Mês</option>
+                        </select>
+                    </div>
+
+                    <div className="flex-1 w-full min-h-0">
+                        {dailyData.length > 0 ? (
+                            <ResponsiveContainer width="100%" height="100%">
+                                <AreaChart data={dailyData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                                    <defs>
+                                        <linearGradient id="colorIncome" x1="0" y1="0" x2="0" y2="1">
+                                            <stop offset="5%" stopColor="#10b981" stopOpacity={0.3} />
+                                            <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
+                                        </linearGradient>
+                                        <linearGradient id="colorExpense" x1="0" y1="0" x2="0" y2="1">
+                                            <stop offset="5%" stopColor="#ef4444" stopOpacity={0.3} />
+                                            <stop offset="95%" stopColor="#ef4444" stopOpacity={0} />
+                                        </linearGradient>
+                                    </defs>
+                                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
+                                    <XAxis
+                                        dataKey="day"
+                                        stroke="#6b7280"
+                                        fontSize={11}
+                                        tickLine={false}
+                                        axisLine={false}
+                                        dy={10}
+                                    />
+                                    <YAxis
+                                        stroke="#6b7280"
+                                        fontSize={11}
+                                        tickLine={false}
+                                        axisLine={false}
+                                        tickFormatter={(v) => `R$${v / 1000}k`}
+                                    />
+                                    <Tooltip content={<CustomTooltip />} />
+                                    <Area
+                                        type="monotone"
+                                        dataKey="receita"
+                                        stroke="#10b981"
+                                        strokeWidth={2}
+                                        fillOpacity={1}
+                                        fill="url(#colorIncome)"
+                                        name={t('income')}
+                                    />
+                                    <Area
+                                        type="monotone"
+                                        dataKey="despesa"
+                                        stroke="#ef4444"
+                                        strokeWidth={2}
+                                        fillOpacity={1}
+                                        fill="url(#colorExpense)"
+                                        name={t('expenses')}
+                                    />
+                                </AreaChart>
+                            </ResponsiveContainer>
+                        ) : (
+                            <div className="h-full flex flex-col items-center justify-center text-gray-500 border border-dashed border-white/10 rounded-xl bg-white/[0.02]">
+                                <Activity className="w-8 h-8 mb-2 opacity-50" />
+                                <p>{t('no_transactions_yet')}</p>
                             </div>
-                        ))}</div>
-                    </>) : <div className="h-[180px] flex items-center justify-center text-gray-600">{t('no_expenses')}</div>}
+                        )}
+                    </div>
                 </div>
-            </div>
 
-            {/* AI Insights Section */}
-            <ProGate feature="aiInsights">
-                <div className="glass-card border border-emerald-500/10 p-6 flex flex-col md:flex-row gap-6 items-start">
-                    <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-2">
-                            <Sparkles className="w-5 h-5 text-emerald-400" />
-                            <h3 className="text-lg font-semibold text-white">Insights com IA</h3>
-                            <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 text-[10px] font-bold uppercase tracking-wider border border-emerald-500/20">
-                                PRO
-                            </span>
+                {/* Right Column: Planning & Quick Actions */}
+                <div className="space-y-6">
+                    {/* Objetivos / Planejamento Rápido */}
+                    <div className="glass-card p-6">
+                        <div className="flex items-center justify-between mb-4">
+                            <h3 className="text-lg font-semibold text-white flex items-center gap-2">
+                                <Target className="w-5 h-5 text-blue-400" />
+                                Planejamento
+                            </h3>
                         </div>
-                        <p className="text-gray-400 text-sm mb-4 leading-relaxed">
-                            Use o chat de IA (botão ✨ no canto inferior) para obter análises
-                            personalizadas, previsões e dicas de economia baseadas nos seus dados reais.
-                        </p>
+
+                        <div className="space-y-4">
+                            <div className="space-y-2">
+                                <div className="flex justify-between text-xs">
+                                    <span className="text-gray-300">Viagem de Férias</span>
+                                    <span className="text-white font-medium">R$ 2.500 / 5.000</span>
+                                </div>
+                                <div className="h-2 w-full bg-surface-700 rounded-full overflow-hidden">
+                                    <div className="h-full bg-blue-500 w-1/2 rounded-full" />
+                                </div>
+                            </div>
+                            <div className="space-y-2">
+                                <div className="flex justify-between text-xs">
+                                    <span className="text-gray-300">Reserva de Emergência</span>
+                                    <span className="text-white font-medium">R$ 1.200 / 10.000</span>
+                                </div>
+                                <div className="h-2 w-full bg-surface-700 rounded-full overflow-hidden">
+                                    <div className="h-full bg-brand-500 w-[12%] rounded-full" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <button className="w-full mt-5 py-2.5 rounded-xl border border-dashed border-white/20 text-gray-400 text-sm hover:text-white hover:border-white/40 hover:bg-white/5 transition-all flex items-center justify-center gap-2">
+                            + Novo Objetivo
+                        </button>
                     </div>
 
-                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 w-full md:w-auto">
-                        {[
-                            { icon: '📊', label: 'Análise Completa', desc: 'Resumo inteligente', prompt: 'Me dê um resumo financeiro completo' },
-                            { icon: '💰', label: 'Dicas de Economia', desc: 'Onde cortar gastos', prompt: 'Me dê dicas de como economizar' },
-                            { icon: '📈', label: 'Previsão Mensal', desc: 'Tendências futuras', prompt: 'Qual a minha previsão financeira para os próximos meses?' },
-                            { icon: '📋', label: 'Plano 50/30/20', desc: 'Orçamento ideal', prompt: 'Como ficaria meu plano 50/30/20 com base nos meus gastos?' },
-                            { icon: '🏷️', label: 'Auto-Categorizar', desc: 'IA classifica', prompt: 'Você pode me ajudar a categorizar minhas despesas?' },
-                            { icon: '🧾', label: 'Dicas de IR', desc: 'Imposto de Renda', prompt: 'O que eu preciso saber para declarar meu imposto de renda com base nos meus dados?' },
-                        ].map((item) => (
-                            <Link
-                                key={item.label}
-                                to={`/app/advisor?q=${encodeURIComponent(item.prompt)}`}
-                                className="p-3 rounded-xl bg-white/[0.03] border border-white/5 text-center hover:bg-white/[0.08] hover:border-emerald-500/20 transition-all cursor-pointer group/card"
-                            >
-                                <span className="text-2xl block mb-2 transition-transform group-hover/card:scale-110">{item.icon}</span>
-                                <p className="text-xs font-medium text-gray-300 mb-0.5 group-hover/card:text-emerald-400">{item.label}</p>
-                                <p className="text-[10px] text-gray-600 group-hover/card:text-gray-500">{item.desc}</p>
+                    {/* Quick Access List (Recent Transaction Mini) */}
+                    <div className="glass-card p-0 overflow-hidden flex flex-col h-[200px]">
+                        <div className="px-5 py-4 border-b border-white/5 flex items-center justify-between bg-white/[0.02]">
+                            <h3 className="text-sm font-semibold text-white">Últimas Transações</h3>
+                            <Link to="/app/transactions" className="p-1 rounded-lg hover:bg-white/10 transition-colors">
+                                <ChevronRight className="w-4 h-4 text-gray-400" />
                             </Link>
-                        ))}
-                    </div>
-                </div>
-            </ProGate>
-
-            <div className="glass-card p-0 overflow-hidden flex flex-col">
-                <div className="p-6 border-b border-white/5 flex items-center justify-between">
-                    <h3 className="text-lg font-semibold text-white">{t('recent_transactions')}</h3>
-                    <a href="/app/transactions" className="text-xs text-emerald-400 hover:text-emerald-300 font-medium">{t('see_all')}</a>
-                </div>
-                <div className="flex-1 overflow-y-auto custom-scrollbar max-h-[400px]">
-                    {recentTransactions.length > 0 ? (
-                        <div className="divide-y divide-white/5">
-                            {recentTransactions.map((t) => {
-                                const cat = categoryConfig[t.category];
-                                return (
-                                    <div key={t.id} className="p-4 flex items-center justify-between hover:bg-white/5 transition-colors">
-                                        <div className="flex items-center gap-3">
-                                            <div className={`w-10 h-10 rounded-full flex items-center justify-center ${t.type === 'income' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-rose-500/10 text-rose-400'}`}>
-                                                {t.type === 'income' ? <ArrowUpRight className="w-5 h-5" /> : <ArrowDownRight className="w-5 h-5" />}
-                                            </div>
-                                            <div>
-                                                <p className="text-white font-medium">{t.description}</p>
-                                                <p className="text-xs text-gray-400">{new Date(t.date + 'T12:00:00').toLocaleDateString('pt-BR')} • {cat?.label || t.category}</p>
-                                            </div>
-                                        </div>
-                                        <span className={`font-semibold ${t.type === 'income' ? 'text-emerald-400' : 'text-rose-400'}`}>
-                                            {t.type === 'income' ? '+' : '-'}{fmt(Math.abs(t.amount))}
-                                        </span>
-                                    </div>
-                                );
-                            })}
                         </div>
-                    ) : (
-                        <div className="p-8 text-center text-gray-500 text-sm">{t('no_recent_transactions')}</div>
-                    )}
+                        <div className="overflow-y-auto custom-scrollbar p-2">
+                            {recentTransactions.length > 0 ? (
+                                <div className="space-y-1">
+                                    {recentTransactions.map((t) => (
+                                        <div key={t.id} className="flex items-center justify-between p-2.5 hover:bg-white/5 rounded-lg transition-colors cursor-pointer group">
+                                            <div className="flex items-center gap-3">
+                                                <div className={`w-8 h-8 rounded-full flex items-center justify-center ${t.type === 'income' ? 'bg-brand-500/10 text-brand-400' : 'bg-red-500/10 text-red-400'}`}>
+                                                    {t.type === 'income' ? <ArrowUpRight className="w-4 h-4" /> : <ArrowDownRight className="w-4 h-4" />}
+                                                </div>
+                                                <div className="max-w-[100px] truncate">
+                                                    <p className="text-sm text-gray-200 truncate group-hover:text-white transition-colors">{t.description}</p>
+                                                    <p className="text-[10px] text-gray-500">{categoryConfig[t.category]?.label || 'Geral'}</p>
+                                                </div>
+                                            </div>
+                                            <span className={`text-sm font-medium ${t.type === 'income' ? 'text-brand-400' : 'text-gray-300'}`}>
+                                                {t.type === 'income' ? '+' : '-'}{fmt(Math.abs(t.amount))}
+                                            </span>
+                                        </div>
+                                    ))}
+                                </div>
+                            ) : (
+                                <p className="text-center text-xs text-gray-500 mt-10">Nenhuma transação recente</p>
+                            )}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

@@ -15,6 +15,7 @@ import BankAccounts from './pages/BankAccounts';
 import Investments from './pages/Investments';
 import Upgrade from './pages/Upgrade';
 import AiChat from './components/AiChat';
+import Settings from './pages/Settings';
 
 export default function App() {
   const location = useLocation();
@@ -55,6 +56,7 @@ export default function App() {
           <Route path="investments" element={<Investments />} />
           <Route path="advisor" element={<AIAssistant />} />
           <Route path="upgrade" element={<Upgrade />} />
+          <Route path="settings" element={<Settings />} />
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

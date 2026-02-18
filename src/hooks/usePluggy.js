@@ -12,16 +12,16 @@ export function usePluggy() {
         setConnecting(true);
         setError(null);
 
-        // Em produção na Vercel, o backend está no mesmo domínio /api
+        // Chamada relativa funciona melhor em produção (mesmo domínio)
         const API_URL = import.meta.env.VITE_API_URL || '';
 
         try {
-            console.log('Iniciando conexão Pluggy via:', `${API_URL}/api/pluggy-connect`);
+            console.log('Iniciando conexão Pluggy via:', `${API_URL}/api/pluggy/connect`);
             const { data: { session } } = await supabase.auth.getSession();
             if (!session) throw new Error('Não autenticado no Supabase');
 
             // 1. Pegar Connect Token do seu Backend
-            const response = await fetch(`${API_URL}/api/pluggy-connect`, {
+            const response = await fetch(`${API_URL}/api/pluggy/connect`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -30,7 +30,10 @@ export function usePluggy() {
                 body: JSON.stringify({ itemId })
             });
 
-            if (!response.ok) throw new Error('Falha ao gerar token de conexão');
+            if (!response.ok) {
+                const errData = await response.json().catch(() => ({}));
+                throw new Error(errData.error || 'Falha ao gerar token de conexão');
+            }
             const { accessToken } = await response.json();
 
             // 2. Carregar Script do Pluggy se não existir
@@ -54,8 +57,8 @@ export function usePluggy() {
                     try {
                         const { data: { session } } = await supabase.auth.getSession();
 
-                        // Registrar item no backend para garantir vínculo com user_id antes do webhook
-                        await fetch(`${API_URL}/api/pluggy-save-item`, {
+                        // Registrar item no backend de forma robusta
+                        const resp = await fetch(`${API_URL}/api/pluggy/save-item`, {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
@@ -64,10 +67,15 @@ export function usePluggy() {
                             body: JSON.stringify({ itemId: itemData.item.id })
                         });
 
+                        if (!resp.ok) {
+                            const err = await resp.json().catch(() => ({}));
+                            throw new Error(err.error || 'Erro ao registrar item');
+                        }
+
                         window.location.reload();
                     } catch (err) {
                         console.error('Erro ao salvar item no banco:', err);
-                        setError('Conexão estabelecida, mas erro ao registrar. Atualize a página.');
+                        setError(`Conexão estabelecida, mas erro ao registrar: ${err.message}`);
                     }
                 },
                 onError: (errorData) => {

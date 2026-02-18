@@ -1,5 +1,5 @@
-const { createClient } = require('@supabase/supabase-js');
-const { PluggyClient } = require('pluggy-sdk');
+import { createClient } from '@supabase/supabase-js';
+import { PluggyClient } from 'pluggy-sdk';
 
 const supabase = createClient(
     process.env.SUPABASE_URL,
@@ -16,15 +16,20 @@ export default async function handler(req, res) {
         return res.status(405).json({ error: 'Method not allowed' });
     }
 
-    const { event, item, itemId } = req.body;
-    console.log(`Webhook received: ${event} for item ${itemId || item?.id}`);
+    try {
+        const { event, item, itemId } = req.body;
+        console.log(`Webhook received: ${event} for item ${itemId || item?.id}`);
 
-    if (event === 'item/created' || event === 'item/updated') {
-        const connItemId = itemId || item?.id;
-        await syncItemData(connItemId);
+        if (event === 'item/created' || event === 'item/updated') {
+            const connItemId = itemId || item?.id;
+            await syncItemData(connItemId);
+        }
+
+        res.status(200).send('OK');
+    } catch (error) {
+        console.error('Webhook Handler Error:', error);
+        res.status(500).json({ error: error.message });
     }
-
-    res.status(200).send('OK');
 }
 
 async function syncItemData(itemId) {

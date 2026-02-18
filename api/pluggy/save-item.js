@@ -1,4 +1,4 @@
-const { createClient } = require('@supabase/supabase-js');
+import { createClient } from '@supabase/supabase-js';
 
 const supabase = createClient(
     process.env.SUPABASE_URL,
@@ -12,7 +12,6 @@ function getBearerToken(req) {
 }
 
 export default async function handler(req, res) {
-    // CORS para permitir chamadas do mesmo domínio e locais
     res.setHeader("Access-Control-Allow-Origin", "*");
     res.setHeader("Access-Control-Allow-Headers", "authorization, content-type");
     res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");

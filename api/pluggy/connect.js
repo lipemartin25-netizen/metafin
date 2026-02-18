@@ -1,5 +1,5 @@
-const { createClient } = require('@supabase/supabase-js');
-const { PluggyClient } = require('pluggy-sdk');
+import { createClient } from '@supabase/supabase-js';
+import { PluggyClient } from 'pluggy-sdk';
 
 const supabase = createClient(
     process.env.SUPABASE_URL,
@@ -31,7 +31,9 @@ export default async function handler(req, res) {
     }
 
     try {
-        const token = req.headers.authorization?.split(' ')[1];
+        const authHeader = req.headers.authorization || "";
+        const token = authHeader.startsWith("Bearer ") ? authHeader.slice(7) : null;
+
         if (!token) return res.status(401).json({ error: 'Token missing' });
 
         const { data: { user }, error } = await supabase.auth.getUser(token);
@@ -42,6 +44,6 @@ export default async function handler(req, res) {
         res.status(200).json(connectTokenData);
     } catch (err) {
         console.error('Pluggy Token Error:', err);
-        res.status(500).json({ error: 'Failed to create connect token' });
+        res.status(500).json({ error: err.message || 'Failed to create connect token' });
     }
 }

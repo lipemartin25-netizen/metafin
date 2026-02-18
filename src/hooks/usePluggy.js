@@ -51,15 +51,24 @@ export function usePluggy() {
                 onSuccess: async (itemData) => {
                     console.log('Sucesso Pluggy:', itemData);
 
-                    // Salvar conexão no nosso banco (via Supabase RLS)
-                    await supabase.from('of_connections').upsert({
-                        provider_item_id: itemData.item.id,
-                        status: itemData.item.status,
-                        provider: 'pluggy'
-                    }, { onConflict: 'provider_item_id' });
+                    try {
+                        const { data: { session } } = await supabase.auth.getSession();
 
-                    // Opcional: Forçar refresh dos dados no front
-                    window.location.reload();
+                        // Registrar item no backend para garantir vínculo com user_id antes do webhook
+                        await fetch(`${API_URL}/api/pluggy-save-item`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${session.access_token}`
+                            },
+                            body: JSON.stringify({ itemId: itemData.item.id })
+                        });
+
+                        window.location.reload();
+                    } catch (err) {
+                        console.error('Erro ao salvar item no banco:', err);
+                        setError('Conexão estabelecida, mas erro ao registrar. Atualize a página.');
+                    }
                 },
                 onError: (errorData) => {
                     console.error('Erro Pluggy:', errorData);

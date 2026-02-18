@@ -40,7 +40,7 @@ export function usePluggy() {
             if (!window.PluggyConnect) {
                 await new Promise((resolve, reject) => {
                     const script = document.createElement('script');
-                    script.src = 'https://cdn.pluggy.ai/pluggy-connect/v2/index.js';
+                    script.src = 'https://cdn.pluggy.ai/pluggy-connect/latest/pluggy-connect.js';
                     script.async = true;
                     script.onload = resolve;
                     script.onerror = reject;

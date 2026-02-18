@@ -11,28 +11,6 @@ import categoriesData from '../data/data.json';
 const categoryConfig = categoriesData.categories;
 const allCategories = Object.keys(categoryConfig);
 
-const CATEGORY_KEYWORDS = {
-    alimentacao: ['mercado', 'supermercado', 'ifood', 'restaurante', 'padaria', 'açougue', 'alimenta', 'food', 'refeição'],
-    transporte: ['uber', 'combustível', 'gasolina', '99', 'estacionamento', 'pedágio', 'transporte', 'ônibus', 'metrô'],
-    moradia: ['aluguel', 'condomínio', 'luz', 'água', 'gás', 'energia', 'cpfl', 'iptu', 'moradia'],
-    saude: ['farmácia', 'médico', 'hospital', 'consulta', 'dentista', 'plano de saúde', 'drogaria', 'droga raia', 'saude'],
-    educacao: ['curso', 'escola', 'faculdade', 'livro', 'udemy', 'alura', 'educação', 'mensalidade'],
-    entretenimento: ['netflix', 'spotify', 'cinema', 'show', 'teatro', 'jogo', 'assinatura', 'disney', 'hbo'],
-    renda: ['salário', 'freelance', 'rendimento', 'dividendo', 'venda', 'pix recebido', 'transferência recebida'],
-    investimentos: ['investimento', 'poupança', 'tesouro', 'ação', 'fundo', 'cdb', 'lci', 'lca'],
-};
-
-function detectCategory(description) {
-    const lower = description.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-    for (const [category, keywords] of Object.entries(CATEGORY_KEYWORDS)) {
-        for (const keyword of keywords) {
-            const nk = keyword.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-            if (lower.includes(nk)) return category;
-        }
-    }
-    return 'outros';
-}
-
 function fmt(value) {
     return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
 }

@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import {
-    MessageCircle, Send, X, Loader2, Bot, User,
-    ChevronDown, Sparkles, Lock, Zap, RotateCcw, Copy, Check,
+    Send, X, Loader2, Bot,
+    ChevronDown, Sparkles, Lock, RotateCcw, Copy, Check,
 } from 'lucide-react';
 import { AI_MODELS, AI_ACTIONS, callAI, buildFinancialContext } from '../lib/aiProviders';
 import { usePlan } from '../hooks/usePlan';
@@ -9,14 +9,14 @@ import { useTransactions } from '../hooks/useTransactions';
 import { analytics } from '../hooks/useAnalytics';
 
 export default function AiChat() {
-    const { isPro, can, limits } = usePlan();
+    const { isPro, limits } = usePlan();
     const { transactions, summary } = useTransactions();
 
     const [isOpen, setIsOpen] = useState(false);
     const [messages, setMessages] = useState([]);
     const [input, setInput] = useState('');
     const [loading, setLoading] = useState(false);
-    const [selectedModel, setSelectedModel] = useState('gpt-5-nano');
+    const [selectedModel, setSelectedModel] = useState('gemini-flash');
     const [showModelPicker, setShowModelPicker] = useState(false);
     const [copiedId, setCopiedId] = useState(null);
     const [error, setError] = useState('');
@@ -54,8 +54,8 @@ export default function AiChat() {
             // Note: useTransactions returns summary object { income, expense, balance } but buildFinancialContext expects { totalIncome, totalExpenses... }
             // Let's adapt here
             const adaptedSummary = {
-                totalIncome: summary.income || 0,
-                totalExpenses: summary.expense || 0,
+                income: summary.income || 0,
+                expense: summary.expense || 0,
                 balance: summary.balance || 0,
                 count: transactions.length
             };
@@ -242,8 +242,8 @@ export default function AiChat() {
                                                 setShowModelPicker(false);
                                             }}
                                             className={`flex items-center gap-3 w-full px-3 py-2 rounded-xl text-xs transition-all ${isActive
-                                                    ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
-                                                    : 'text-gray-400 hover:bg-white/5 hover:text-white border border-transparent'
+                                                ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                                                : 'text-gray-400 hover:bg-white/5 hover:text-white border border-transparent'
                                                 }`}
                                         >
                                             <span className="text-base">{m.icon}</span>
@@ -304,10 +304,10 @@ export default function AiChat() {
 
                                     <div
                                         className={`rounded-2xl px-4 py-3 text-sm leading-relaxed shadow-sm ${msg.role === 'user'
-                                                ? 'bg-emerald-600 text-white rounded-tr-sm'
-                                                : msg.isError
-                                                    ? 'bg-red-500/10 text-red-300 border border-red-500/20 rounded-tl-sm'
-                                                    : 'bg-white/5 text-gray-200 border border-white/5 rounded-tl-sm'
+                                            ? 'bg-emerald-600 text-white rounded-tr-sm'
+                                            : msg.isError
+                                                ? 'bg-red-500/10 text-red-300 border border-red-500/20 rounded-tl-sm'
+                                                : 'bg-white/5 text-gray-200 border border-white/5 rounded-tl-sm'
                                             }`}
                                     >
                                         {/* Content with basic markdown */}

@@ -10,7 +10,6 @@ import {
     CheckCircle,
     ArrowRight,
     Star,
-    ChevronRight,
 } from 'lucide-react';
 import { analytics } from '../hooks/useAnalytics';
 import { db, isSupabaseConfigured } from '../lib/supabase';
@@ -324,7 +323,7 @@ export default function Home() {
                                     ))}
                                 </div>
                                 <p className="text-sm text-gray-300 mb-4 leading-relaxed">
-                                    "{t.text}"
+                                    &quot;{t.text}&quot;
                                 </p>
                                 <div>
                                     <p className="text-sm font-semibold text-white">{t.name}</p>

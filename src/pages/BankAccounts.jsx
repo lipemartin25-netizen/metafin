@@ -1,9 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useTransactions } from '../hooks/useTransactions';
 import { useAuth } from '../contexts/AuthContext';
 import { analytics } from '../hooks/useAnalytics';
-import { Plus, Trash2, CheckCircle, AlertCircle, Loader2, ArrowRight, ShieldCheck, Banknote, RefreshCw, X } from 'lucide-react';
+import { Trash2, CheckCircle, ShieldCheck, Banknote, RefreshCw, X, Link } from 'lucide-react';
 import banksData from '../data/banks.json';
+import { parseFile, ACCEPTED_EXTENSIONS } from '../lib/fileParser';
+import { useBankAccounts } from '../hooks/useBankAccounts';
+import { usePluggy } from '../hooks/usePluggy';
 
 const SAMPLE_BANK_TRANSACTIONS = {
     nubank: [
@@ -16,7 +19,6 @@ const SAMPLE_BANK_TRANSACTIONS = {
         { description: 'Condomínio', amount: -450.00, category: 'moradia', type: 'expense' },
         { description: 'Salário', amount: 3500.00, category: 'renda', type: 'income' },
     ],
-    // Generic fallback for others
     generic: [
         { description: 'Transferência Recebida', amount: 150.00, category: 'renda', type: 'income' },
         { description: 'Pagamento Boleto', amount: -89.90, category: 'moradia', type: 'expense' },
@@ -28,109 +30,156 @@ function fmt(value) {
 }
 
 export default function BankAccounts() {
-    const { addBulkTransactions, deleteTransaction, transactions } = useTransactions();
-    const { user } = useAuth();
-    const [connectedBanks, setConnectedBanks] = useState([]);
+    const { addBulkTransactions } = useTransactions();
+    const { user: _user } = useAuth();
+    const { accounts, addAccount, deleteAccount, updateAccount: _updateAccount, loading, error: hookError } = useBankAccounts();
+    const { openWidget, connecting: _pluggyLoading, error: pluggyError } = usePluggy();
     const [showConnectModal, setShowConnectModal] = useState(false);
     const [selectedBank, setSelectedBank] = useState(null);
-    const [connectingState, setConnectingState] = useState('idle'); // idle, redirecting, consenting, success
+    const [connectingState, setConnectingState] = useState('idle');
     const [syncing, setSyncing] = useState(null);
 
-    // Load initial state from localStorage
-    useEffect(() => {
-        const stored = localStorage.getItem('sf_connected_banks');
-        if (stored) setConnectedBanks(JSON.parse(stored));
-    }, []);
+    // States para customização e dados reais
+    const [customNickname, setCustomNickname] = useState('');
+    const [customBalance, setCustomBalance] = useState('');
+    const [agency, setAgency] = useState('');
+    const [accountNum, setAccountNum] = useState('');
+    const [dataSource, setDataSource] = useState('empty'); // empty, demo, file
+    const [importFile, setImportFile] = useState(null);
+    const [importError, setImportError] = useState('');
 
-    const saveBanks = (banks) => {
-        setConnectedBanks(banks);
-        localStorage.setItem('sf_connected_banks', JSON.stringify(banks));
-    };
+    // Gerenciado pelo hook useBankAccounts
 
     const handleConnectClick = (bank) => {
         setSelectedBank(bank);
-        setConnectingState('redirecting');
+        setCustomNickname(bank.name);
+        setCustomBalance('0,00');
+        setAgency('');
+        setAccountNum('');
+        setDataSource('empty');
+        setImportFile(null);
+        setImportError('');
+        setConnectingState('consenting'); // Vá direto para o formulário de dados
         setShowConnectModal(true);
         analytics.featureUsed(`connect_bank_start_${bank.id}`);
-
-        // Simulate redirection delay
-        setTimeout(() => {
-            setConnectingState('consenting');
-        }, 1500);
     };
 
     const handleConfirmConsent = async () => {
         setConnectingState('syncing');
+        setImportError('');
 
-        // Simulate API call and syncing transactions
-        await new Promise(r => setTimeout(r, 2000));
+        try {
+            const balanceNum = parseFloat(customBalance.replace(/\./g, '').replace(',', '.')) || 0;
+            let transactionsToAdd = [];
 
-        const newBank = { ...selectedBank, connectedAt: new Date().toISOString(), balance: Math.random() * 5000 + 500 };
-        const updated = [...connectedBanks, newBank];
-        saveBanks(updated);
+            if (dataSource === 'demo') {
+                const samples = SAMPLE_BANK_TRANSACTIONS[selectedBank.id] || SAMPLE_BANK_TRANSACTIONS.generic;
+                transactionsToAdd = samples.map(t => ({
+                    ...t,
+                    date: new Date().toISOString().split('T')[0],
+                    status: 'categorized',
+                    notes: `Simulado via Demo (${customNickname})`
+                }));
+            } else if (dataSource === 'file' && importFile) {
+                const parsed = await parseFile(importFile);
+                transactionsToAdd = parsed.map(t => ({
+                    ...t,
+                    notes: `Importado via Arquivo (${customNickname})`
+                }));
+            }
 
-        // Import sample transactions for this bank
-        const samples = SAMPLE_BANK_TRANSACTIONS[selectedBank.id] || SAMPLE_BANK_TRANSACTIONS.generic;
-        const transactionsToAdd = samples.map(t => ({
-            ...t,
-            date: new Date().toISOString().split('T')[0],
-            status: 'categorized',
-            notes: `Importado via Open Finance (${selectedBank.name})`
-        }));
+            const newBankData = {
+                ...selectedBank,
+                name: customNickname || selectedBank.name,
+                agency: agency || '0001',
+                account_number: accountNum || Math.floor(Math.random() * 90000) + 1000,
+                connectedAt: new Date().toISOString(),
+                balance: balanceNum
+            };
 
-        await addBulkTransactions(transactionsToAdd);
-        analytics.featureUsed(`connect_bank_success_${selectedBank.id}`);
-        setConnectingState('success');
+            const result = await addAccount(newBankData);
 
-        setTimeout(() => {
-            setShowConnectModal(false);
-            setConnectingState('idle');
-            setSelectedBank(null);
-        }, 1500);
-    };
+            if (!result) {
+                throw new Error('Falha ao salvar no banco de dados. Verifique sua conexão ou se a tabela bank_accounts existe.');
+            }
 
-    const handleDisconnect = async (bankId) => {
-        const updated = connectedBanks.filter(b => b.id !== bankId);
-        saveBanks(updated);
-        analytics.featureUsed('disconnect_bank');
+            if (transactionsToAdd.length > 0) {
+                await addBulkTransactions(transactionsToAdd);
+            }
+
+            analytics.featureUsed(`connect_bank_success_${selectedBank.id}_${dataSource}`);
+            setConnectingState('success');
+
+            setTimeout(() => {
+                setShowConnectModal(false);
+                setConnectingState('idle');
+                setSelectedBank(null);
+            }, 1500);
+        } catch (err) {
+            console.error('Error connecting bank:', err);
+            setImportError(err.message);
+            setConnectingState('consenting');
+        }
     };
 
     const handleSync = async (bankId) => {
         setSyncing(bankId);
         await new Promise(r => setTimeout(r, 1500));
-
-        // Simular nova transação encontrada
-        const newTx = {
-            description: 'Recarga Celular (Sync)',
-            amount: -30.00,
-            category: 'servicos',
-            type: 'expense',
-            date: new Date().toISOString().split('T')[0],
-            notes: 'Sincronizado automaticamente via Open Finance'
-        };
-        await addBulkTransactions([newTx]);
-
-        // Atualizar saldo localmente
-        const updated = connectedBanks.map(b =>
-            b.id === bankId ? { ...b, balance: (b.balance || 0) - 30 } : b
-        );
-        saveBanks(updated);
-
         analytics.featureUsed('bank_sync_refresh');
         setSyncing(null);
     };
 
-    const totalBalance = connectedBanks.reduce((sum, b) => sum + (b.balance || 0), 0);
+    const handleDisconnect = async (bankId) => {
+        if (!confirm('Tem certeza que deseja desconectar esta conta? Todos os dados importados serão mantidos no histórico, mas a sincronização será interrompida.')) return;
+        await deleteAccount(bankId);
+        analytics.featureUsed('disconnect_bank');
+    };
+
+    const totalBalance = (accounts || []).reduce((sum, b) => sum + (b.balance || 0), 0);
 
     return (
         <div className="py-6 space-y-6 animate-fade-in pb-20">
             {/* Header */}
             <div>
-                <h1 className="text-2xl font-bold text-white flex items-center gap-2">
-                    <Banknote className="w-6 h-6 text-emerald-400" />
-                    Contas Conectadas
-                </h1>
-                <p className="text-gray-400 text-sm mt-1">Gerencie suas conexões Open Finance e sincronize saldos automaticamente.</p>
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div>
+                        <h2 className="text-2xl font-bold text-white flex items-center gap-2">
+                            <Banknote className="text-emerald-400" /> Instituições Financeiras
+                        </h2>
+                        <p className="text-gray-400 text-sm">Gerencie suas contas bancárias e conexões Open Finance.</p>
+                    </div>
+                    <div className="flex gap-2">
+                        <button
+                            onClick={() => openWidget()}
+                            className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-2 transition-all shadow-lg shadow-purple-900/20"
+                        >
+                            <Link className="w-4 h-4" /> Conectar via Pluggy
+                        </button>
+                    </div>
+                </div>
+
+                {hookError && (
+                    <div className="bg-red-500/10 border border-red-500/20 text-red-400 p-4 rounded-xl text-sm flex items-center gap-3 animate-shake mb-4">
+                        <X className="w-5 h-5 flex-shrink-0" />
+                        <div className="flex-1">
+                            <p className="font-bold">Erro no Banco de Dados (Supabase):</p>
+                            <p className="text-xs opacity-80">{hookError}</p>
+                        </div>
+                    </div>
+                )}
+
+                {pluggyError && (
+                    <div className="bg-purple-500/10 border border-purple-500/20 text-purple-400 p-4 rounded-xl text-sm flex items-center gap-3 animate-shake mb-4">
+                        <X className="w-5 h-5 flex-shrink-0" />
+                        <div className="flex-1">
+                            <p className="font-bold">Erro na Conexão Pluggy (Servidor Node):</p>
+                            <p className="text-xs opacity-80">{pluggyError}</p>
+                            {pluggyError === 'Failed to fetch' && (
+                                <p className="text-[10px] mt-1 text-purple-300/80 italic">Dica: O servidor em localhost:3001 não está respondendo. Verifique se o terminal do &quot;server&quot; está rodando.</p>
+                            )}
+                        </div>
+                    </div>
+                )}
             </div>
 
             {/* Total Balance Card */}
@@ -153,10 +202,15 @@ export default function BankAccounts() {
             {/* My Connected Accounts */}
             <div>
                 <h3 className="text-lg font-semibold text-white mb-3 flex items-center gap-2">
-                    Minhas Contas <span className="bg-white/10 text-xs px-2 py-0.5 rounded-full text-gray-300">{connectedBanks.length}</span>
+                    Minhas Contas <span className="bg-white/10 text-xs px-2 py-0.5 rounded-full text-gray-300">{accounts?.length || 0}</span>
                 </h3>
 
-                {connectedBanks.length === 0 ? (
+                {loading ? (
+                    <div className="flex flex-col items-center justify-center py-12 gap-3">
+                        <RefreshCw className="w-8 h-8 text-emerald-400 animate-spin" />
+                        <p className="text-gray-500 text-sm animate-pulse">Sincronizando suas contas...</p>
+                    </div>
+                ) : (accounts?.length || 0) === 0 ? (
                     <div className="glass-card text-center py-8 border-dashed border-2 border-white/10 bg-transparent">
                         <div className="w-12 h-12 rounded-full bg-white/5 mx-auto flex items-center justify-center mb-3">
                             <Banknote className="w-6 h-6 text-gray-500" />
@@ -171,15 +225,15 @@ export default function BankAccounts() {
                     </div>
                 ) : (
                     <div className="grid sm:grid-cols-2 gap-4">
-                        {connectedBanks.map(bank => (
+                        {accounts.map(bank => (
                             <div key={bank.id} className="glass-card flex items-center justify-between group">
                                 <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-lg" style={{ backgroundColor: bank.color, color: bank.textColor }}>
-                                        {bank.logo}
+                                    <div className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-lg" style={{ backgroundColor: bank.color || '#10b981', color: bank.textColor || '#fff' }}>
+                                        {bank.logo || bank.bank_name?.charAt(0) || 'B'}
                                     </div>
                                     <div>
-                                        <h4 className="font-semibold text-white">{bank.name}</h4>
-                                        <p className="text-xs text-gray-400">Conta Corrente •••• {Math.floor(Math.random() * 9000) + 1000}</p>
+                                        <h4 className="font-semibold text-white">{bank.display_name || bank.name}</h4>
+                                        <p className="text-xs text-gray-400">{bank.bank_name} • Ag {bank.agency || '0001'} • Cta {bank.account_number}</p>
                                         <p className="text-sm font-medium text-emerald-400 mt-0.5">{fmt(bank.balance || 0)}</p>
                                     </div>
                                 </div>
@@ -193,8 +247,8 @@ export default function BankAccounts() {
                                     </button>
                                     <button
                                         onClick={() => handleDisconnect(bank.id)}
-                                        className="p-2 rounded-lg text-gray-400 hover:text-red-400 hover:bg-red-500/10 transition-all opacity-0 group-hover:opacity-100"
-                                        title="Desconectar"
+                                        className="p-2 rounded-lg text-red-500/50 hover:text-red-400 hover:bg-red-500/10 transition-all"
+                                        title="Remover Conta"
                                     >
                                         <Trash2 className="w-4 h-4" />
                                     </button>
@@ -209,7 +263,7 @@ export default function BankAccounts() {
             <div id="new-connection">
                 <h3 className="text-lg font-semibold text-white mb-3">Conectar Nova Instituição</h3>
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-                    {banksData.filter(b => !connectedBanks.find(cb => cb.id === b.id)).map(bank => (
+                    {banksData.filter(b => !accounts?.find(cb => cb.bank_id === b.id || cb.id === b.id)).map(bank => (
                         <button
                             key={bank.id}
                             onClick={() => handleConnectClick(bank)}
@@ -241,29 +295,102 @@ export default function BankAccounts() {
 
                         {/* Content based on state */}
                         <div className="p-6">
-                            {connectingState === 'redirecting' && (
-                                <div className="text-center py-6">
-                                    <Loader2 className="w-10 h-10 text-emerald-400 animate-spin mx-auto mb-4" />
-                                    <p className="text-white font-medium">Redirecionando para o aplicativo do banco...</p>
-                                    <p className="text-sm text-gray-500 mt-2">Valide sua identidade no app da instituição.</p>
-                                </div>
-                            )}
-
                             {connectingState === 'consenting' && (
                                 <div className="space-y-4">
-                                    <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-4">
-                                        <h4 className="text-sm font-semibold text-emerald-400 mb-2 flex items-center gap-2"><ShieldCheck className="w-4 h-4" /> Autorização de Dados</h4>
-                                        <ul className="text-xs text-gray-300 space-y-2 list-disc pl-4">
-                                            <li>Dados cadastrais</li>
-                                            <li>Saldos e extratos de conta corrente</li>
-                                            <li>Informações de cartão de crédito</li>
-                                        </ul>
+                                    <div className="grid grid-cols-2 gap-3">
+                                        <div className="col-span-2">
+                                            <label className="text-[10px] text-gray-500 uppercase font-bold ml-1">Apelido da Conta</label>
+                                            <input
+                                                type="text"
+                                                value={customNickname}
+                                                onChange={(e) => setCustomNickname(e.target.value)}
+                                                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-white text-sm focus:border-emerald-500/50 outline-none mt-1"
+                                                placeholder="Ex: Minha Conta Nubank"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="text-[10px] text-gray-500 uppercase font-bold ml-1">Agência</label>
+                                            <input
+                                                type="text"
+                                                value={agency}
+                                                onChange={(e) => setAgency(e.target.value)}
+                                                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-white text-sm focus:border-emerald-500/50 outline-none mt-1"
+                                                placeholder="0001"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="text-[10px] text-gray-500 uppercase font-bold ml-1">Conta</label>
+                                            <input
+                                                type="text"
+                                                value={accountNum}
+                                                onChange={(e) => setAccountNum(e.target.value)}
+                                                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-white text-sm focus:border-emerald-500/50 outline-none mt-1"
+                                                placeholder="12345-6"
+                                            />
+                                        </div>
+                                        <div className="col-span-2">
+                                            <label className="text-[10px] text-gray-500 uppercase font-bold ml-1">Saldo Inicial (R$)</label>
+                                            <input
+                                                type="text"
+                                                value={customBalance}
+                                                onChange={(e) => setCustomBalance(e.target.value)}
+                                                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-white text-sm focus:border-emerald-500/50 outline-none mt-1"
+                                                placeholder="0,00"
+                                            />
+                                        </div>
                                     </div>
-                                    <p className="text-xs text-gray-500 text-center px-4">
-                                        Ao continuar, você concorda em compartilhar seus dados financeiros para fins de gestão financeira, com validade de 12 meses.
-                                    </p>
-                                    <button onClick={handleConfirmConsent} className="gradient-btn w-full py-3 text-sm font-semibold">
-                                        Confirmar e Conectar
+
+                                    <div className="space-y-2">
+                                        <label className="text-[10px] text-gray-500 uppercase font-bold ml-1">Fonte de Dados</label>
+                                        <div className="grid grid-cols-3 gap-2">
+                                            <button
+                                                onClick={() => setDataSource('empty')}
+                                                className={`py-2 text-[10px] font-bold rounded-lg border transition-all ${dataSource === 'empty' ? 'bg-emerald-500/20 border-emerald-500/50 text-emerald-400' : 'bg-white/5 border-white/10 text-gray-500'}`}
+                                            >
+                                                LIMPA
+                                            </button>
+                                            <button
+                                                onClick={() => setDataSource('demo')}
+                                                className={`py-2 text-[10px] font-bold rounded-lg border transition-all ${dataSource === 'demo' ? 'bg-blue-500/20 border-blue-500/50 text-blue-400' : 'bg-white/5 border-white/10 text-gray-500'}`}
+                                            >
+                                                DEMO
+                                            </button>
+                                            <button
+                                                onClick={() => setDataSource('file')}
+                                                className={`py-2 text-[10px] font-bold rounded-lg border transition-all ${dataSource === 'file' ? 'bg-purple-500/20 border-purple-500/50 text-purple-400' : 'bg-white/5 border-white/10 text-gray-500'}`}
+                                            >
+                                                EXTRATO
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    {dataSource === 'file' && (
+                                        <div className="space-y-2">
+                                            <input
+                                                type="file"
+                                                accept={ACCEPTED_EXTENSIONS}
+                                                onChange={(e) => setImportFile(e.target.files[0])}
+                                                className="w-full text-xs text-gray-400 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-purple-500/10 file:text-purple-400 hover:file:bg-purple-500/20 cursor-pointer"
+                                            />
+                                            <p className="text-[9px] text-gray-500 text-center italic">Arraste seu arquivo CSV, Excel ou JSON para importar transações reais.</p>
+                                        </div>
+                                    )}
+
+                                    {importError && (
+                                        <p className="text-xs text-red-400 bg-red-500/10 p-2 rounded-lg border border-red-500/20 text-center">{importError}</p>
+                                    )}
+
+                                    <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-4">
+                                        <h4 className="text-sm font-semibold text-emerald-400 mb-2 flex items-center gap-2"><ShieldCheck className="w-4 h-4" /> Conexão Segura</h4>
+                                        <p className="text-[10px] text-gray-300">Seus dados serão processados localmente e criptografados. Não armazenamos senhas bancárias.</p>
+                                    </div>
+
+                                    <button
+                                        onClick={handleConfirmConsent}
+                                        disabled={dataSource === 'file' && !importFile}
+                                        className="gradient-btn w-full py-3 text-sm font-semibold disabled:opacity-50"
+                                    >
+                                        Vincular Conta {selectedBank.name}
                                     </button>
                                 </div>
                             )}
@@ -282,7 +409,7 @@ export default function BankAccounts() {
                                         <CheckCircle className="w-8 h-8 text-emerald-400" />
                                     </div>
                                     <h3 className="text-xl font-bold text-white mb-2">Conectado com Sucesso!</h3>
-                                    <p className="text-sm text-gray-400">Suas transações foram importadas e o saldo atualizado.</p>
+                                    <p className="text-sm text-gray-400">Suas transações de {customNickname} foram importadas.</p>
                                 </div>
                             )}
                         </div>

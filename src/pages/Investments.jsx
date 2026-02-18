@@ -4,18 +4,14 @@ import { useTransactions } from '../hooks/useTransactions';
 import { analytics } from '../hooks/useAnalytics';
 import {
     TrendingUp,
-    TrendingDown,
-    PieChart as PieIcon,
     Briefcase,
-    Plus,
     Link2,
     CheckCircle,
     Loader2,
     X,
-    Building2,
-    Landmark
+    Building2
 } from 'lucide-react';
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip, LineChart, Line, XAxis, YAxis, CartesianGrid, Legend } from 'recharts';
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip, LineChart, Line, XAxis, YAxis, CartesianGrid } from 'recharts';
 import banksData from '../data/banks.json';
 import investmentsData from '../data/investments.json';
 import benchmarksData from '../data/benchmarks.json';
@@ -28,12 +24,15 @@ function fmt(value) {
 }
 
 export default function Investments() {
-    const { user } = useAuth();
+    const { user: _user } = useAuth();
     const { addBulkTransactions } = useTransactions();
     const [connectedBrokers, setConnectedBrokers] = useState([]);
     const [showConnectModal, setShowConnectModal] = useState(false);
     const [selectedBroker, setSelectedBroker] = useState(null);
     const [connectingState, setConnectingState] = useState('idle');
+    const [accountNum, setAccountNum] = useState('');
+    const [dataSource, setDataSource] = useState('empty'); // empty, demo
+    const [customTotal, setCustomTotal] = useState('10000,00');
 
     // Carregar estado inicial
     useEffect(() => {
@@ -48,42 +47,56 @@ export default function Investments() {
 
     const handleConnectClick = (broker) => {
         setSelectedBroker(broker);
-        setConnectingState('redirecting');
+        setAccountNum('');
+        setCustomTotal('0,00');
+        setDataSource('empty');
+        setConnectingState('consenting');
         setShowConnectModal(true);
         analytics.featureUsed(`connect_broker_start_${broker.id}`);
-
-        // Simular fluxo de conexão
-        setTimeout(() => setConnectingState('consenting'), 1500);
     };
 
     const handleConfirmConsent = async () => {
         setConnectingState('syncing');
-        await new Promise(r => setTimeout(r, 2000));
 
-        const assets = investmentsData[selectedBroker.id] || investmentsData.xp || [];
-        const totalValue = assets.reduce((sum, asset) => sum + (asset.quantity * asset.price), 0);
+        // Simular processamento
+        await new Promise(r => setTimeout(r, 1500));
 
-        // Gerar transações mock para o histórico
-        const mockTxs = [
-            {
-                date: new Date().toISOString().split('T')[0],
-                description: `Aporte Inicial - ${selectedBroker.name}`,
-                amount: totalValue * 0.1,
-                category: 'investimentos',
-                type: 'expense'
-            },
-            {
-                date: new Date(Date.now() - 86400000 * 5).toISOString().split('T')[0],
-                description: `Dividendos Recebidos - ${selectedBroker.name}`,
-                amount: totalValue * 0.005,
-                category: 'investimentos',
-                type: 'income'
-            }
-        ];
-        await addBulkTransactions(mockTxs);
+        let assets = [];
+        let totalValue = 0;
+
+        if (dataSource === 'demo') {
+            assets = investmentsData[selectedBroker.id] || investmentsData.xp || [];
+            totalValue = assets.reduce((sum, asset) => sum + (asset.quantity * asset.price), 0);
+        } else {
+            totalValue = parseFloat(customTotal.replace(/\./g, '').replace(',', '.')) || 0;
+            // No modo 'empty', criamos um asset genérico com o valor total
+            assets = [{
+                name: 'Saldo em Corretora',
+                symbol: 'CASH',
+                quantity: 1,
+                price: totalValue,
+                type: 'Fundo'
+            }];
+        }
+
+        // Gerar transação de aporte se for demo ou se tiver valor
+        if (totalValue > 0) {
+            const mockTxs = [
+                {
+                    date: new Date().toISOString().split('T')[0],
+                    description: `Aporte Inicial - ${selectedBroker.name}`,
+                    amount: -totalValue,
+                    category: 'investimentos',
+                    type: 'expense',
+                    notes: `Vinculado à conta ${accountNum}`
+                }
+            ];
+            await addBulkTransactions(mockTxs);
+        }
 
         const newBroker = {
             ...selectedBroker,
+            accountNumber: accountNum || Math.floor(Math.random() * 90000) + 1000,
             connectedAt: new Date().toISOString(),
             totalValue,
             assets
@@ -92,7 +105,7 @@ export default function Investments() {
         const updated = [...connectedBrokers, newBroker];
         saveBrokers(updated);
 
-        analytics.featureUsed(`connect_broker_success_${selectedBroker.id}`);
+        analytics.featureUsed(`connect_broker_success_${selectedBroker.id}_${dataSource}`);
         setConnectingState('success');
 
         setTimeout(() => {
@@ -143,6 +156,7 @@ export default function Investments() {
                 portfolio: portValue,
                 ibov_norm: (b.ibovespa / benchmarksData[0].ibovespa) * startValue,
                 cdi_norm: Math.pow(1.008, i) * startValue, // 0.8% am aprox
+                analysis_target: startValue * Math.pow(1.011, i) // 1.1% growth target per month
             };
         });
     }, [portfolio.total]);
@@ -240,11 +254,18 @@ export default function Investments() {
                             <YAxis hide domain={['auto', 'auto']} />
                             <RechartsTooltip
                                 contentStyle={{ backgroundColor: '#111827', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px' }}
-                                formatter={(v, name) => [fmt(v), name === 'portfolio' ? 'Minha Carteira' : name === 'ibov_norm' ? 'Ibovespa' : 'CDI']}
+                                formatter={(v, name) => [
+                                    fmt(v),
+                                    name === 'portfolio' ? 'Minha Carteira' :
+                                        name === 'ibov_norm' ? 'Ibovespa' :
+                                            name === 'cdi_norm' ? 'CDI' :
+                                                name === 'analysis_target' ? 'Análise Alvo' : name
+                                ]}
                             />
                             <Line type="monotone" dataKey="portfolio" stroke="#10b981" strokeWidth={3} dot={false} tension={0.4} />
-                            <Line type="monotone" dataKey="ibov_norm" stroke="#3b82f6" strokeWidth={2} strokeDasharray="5 5" dot={false} />
                             <Line type="monotone" dataKey="cdi_norm" stroke="#f59e0b" strokeWidth={2} strokeDasharray="3 3" dot={false} />
+                            <Line type="monotone" dataKey="ibov_norm" stroke="#3b82f6" strokeWidth={2} strokeDasharray="5 5" dot={false} />
+                            <Line type="monotone" dataKey="analysis_target" name="Análise Alvo" stroke="#ec4899" strokeWidth={2} strokeDasharray="10 5" dot={false} />
                         </LineChart>
                     </ResponsiveContainer>
                 </div>
@@ -385,19 +406,54 @@ export default function Investments() {
 
                             {connectingState === 'consenting' && (
                                 <div className="space-y-4">
-                                    <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-4">
-                                        <h4 className="text-sm font-semibold text-emerald-400 mb-2 flex items-center gap-2"><CheckCircle className="w-4 h-4" /> Autorização de Leitura</h4>
-                                        <ul className="text-xs text-gray-300 space-y-2 list-disc pl-4">
-                                            <li>Posição consolidada de ativos</li>
-                                            <li>Histórico de movimentações (Renda Variável)</li>
-                                            <li>Produtos de Renda Fixa e Fundos</li>
-                                        </ul>
+                                    <div className="grid grid-cols-2 gap-3">
+                                        <div className="col-span-2">
+                                            <label className="text-[10px] text-gray-500 uppercase font-bold ml-1">Número da Conta</label>
+                                            <input
+                                                type="text"
+                                                value={accountNum}
+                                                onChange={(e) => setAccountNum(e.target.value)}
+                                                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-white text-sm focus:border-emerald-500/50 outline-none mt-1"
+                                                placeholder="Ex: 123456-7"
+                                            />
+                                        </div>
+                                        <div className="col-span-2">
+                                            <label className="text-[10px] text-gray-500 uppercase font-bold ml-1">Patrimônio Atual (R$)</label>
+                                            <input
+                                                type="text"
+                                                value={customTotal}
+                                                onChange={(e) => setCustomTotal(e.target.value)}
+                                                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-white text-sm focus:border-emerald-500/50 outline-none mt-1"
+                                                placeholder="0,00"
+                                            />
+                                        </div>
                                     </div>
-                                    <p className="text-xs text-gray-500 text-center px-4">
-                                        Esta conexão permite apenas a leitura dos dados. Nenhuma transação pode ser realizada por aqui.
-                                    </p>
+
+                                    <div className="space-y-2">
+                                        <label className="text-[10px] text-gray-500 uppercase font-bold ml-1">Fonte de Dados</label>
+                                        <div className="flex gap-2">
+                                            <button
+                                                onClick={() => setDataSource('empty')}
+                                                className={`flex-1 py-2 text-[10px] font-bold rounded-lg border transition-all ${dataSource === 'empty' ? 'bg-emerald-500/20 border-emerald-500/50 text-emerald-400' : 'bg-white/5 border-white/10 text-gray-500'}`}
+                                            >
+                                                LIMPA
+                                            </button>
+                                            <button
+                                                onClick={() => setDataSource('demo')}
+                                                className={`flex-1 py-2 text-[10px] font-bold rounded-lg border transition-all ${dataSource === 'demo' ? 'bg-blue-500/20 border-blue-500/50 text-blue-400' : 'bg-white/5 border-white/10 text-gray-500'}`}
+                                            >
+                                                DEMO (XP)
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-4">
+                                        <h4 className="text-sm font-semibold text-emerald-400 mb-2 flex items-center gap-2"><CheckCircle className="w-4 h-4" /> Integração B3</h4>
+                                        <p className="text-[10px] text-gray-300">Seus investimentos serão sincronizados diretamente com a Área do Investidor B3 via Open Finance.</p>
+                                    </div>
+
                                     <button onClick={handleConfirmConsent} className="gradient-btn w-full py-3 text-sm font-semibold">
-                                        Confirmar Conexão
+                                        Vincular {selectedBroker.name}
                                     </button>
                                 </div>
                             )}

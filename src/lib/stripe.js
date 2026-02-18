@@ -5,7 +5,7 @@
 
 import { supabase } from './supabase';
 
-const STRIPE_PUBLISHABLE_KEY = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
+const _STRIPE_PUBLISHABLE_KEY = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
 
 const PRICES = {

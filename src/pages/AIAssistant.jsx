@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { useTransactions } from '../hooks/useTransactions';
 import { useAuth } from '../contexts/AuthContext';
 import { analytics } from '../hooks/useAnalytics';
-import { Bot, Send, User, Loader2, Sparkles, TrendingUp, PiggyBank, AlertTriangle, RotateCcw, FileText } from 'lucide-react';
+import { Bot, Send, User, Loader2, Sparkles, TrendingUp, PiggyBank, AlertTriangle, RotateCcw } from 'lucide-react';
 import categoriesData from '../data/data.json';
 
 const categoryConfig = categoriesData.categories;

@@ -30,3 +30,5 @@ supabase/.temp
 # Electron
 electron-dist
 postinstall.js
+
+.vercel

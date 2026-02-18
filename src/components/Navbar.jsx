@@ -36,7 +36,7 @@ const LANG_NAMES = {
 };
 
 export default function Navbar() {
-    const { user, signOut, isDemo } = useAuth();
+    const { user, signOut, isDemo: _isDemo } = useAuth();
     const { language, changeLanguage, t } = useLanguage();
     const { isPro } = useSubscription();
     const navigate = useNavigate();

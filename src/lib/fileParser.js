@@ -33,6 +33,7 @@ export function detectCategory(description) {
 function normalizeRow(row) {
     const date = row.data || row.date || row.Data || row.DATE || row.dt || '';
     const description = row.descricao || row.description || row.Descricao || row['Descrição'] || row.DESCRICAO || row.desc || '';
+    const rawAmount = row.valor || row.amount || row.Valor || row.AMOUNT || row.vlr || row.val || '';
     let amountStr = String(rawAmount).replace(/[R$\s]/g, '');
 
     // Detect format: If it has both . and , (e.g. 1.234,56 or 1,234.56)

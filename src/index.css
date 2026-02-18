@@ -15,6 +15,7 @@ body {
     color: #f9fafb;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
 }
 
 /* ========== SCROLLBAR ========== */
@@ -77,4 +78,94 @@ body {
     background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
     background-size: 200% 100%;
     animation: shimmer 2s infinite;
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-in {
+    animation: fade-in 0.2s ease-out;
+}
+
+/* ========== MOBILE RESPONSIVE ========== */
+
+/* Glass cards menores no mobile */
+@media (max-width: 640px) {
+    .glass-card {
+        @apply p-4;
+        border-radius: 1rem;
+    }
+
+    /* Tabelas responsivas */
+    table {
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        white-space: nowrap;
+    }
+
+    /* Inputs maiores para toque */
+    .input-field {
+        @apply py-3.5 text-base;
+    }
+
+    /* Botões maiores para toque */
+    .gradient-btn {
+        @apply px-5 py-3 text-sm;
+        min-height: 44px;
+    }
+
+    /* Gráficos Recharts - reduzir altura */
+    .recharts-responsive-container {
+        min-height: 200px !important;
+        max-height: 280px !important;
+    }
+
+    /* Modais não ultrapassam a tela */
+    .modal-content,
+    [role="dialog"] {
+        max-width: calc(100vw - 2rem) !important;
+        max-height: calc(100vh - 2rem) !important;
+        overflow-y: auto;
+    }
+}
+
+/* Grids que empilham no mobile */
+@media (max-width: 768px) {
+    .grid-cols-2,
+    .grid-cols-3,
+    .grid-cols-4 {
+        grid-template-columns: 1fr !important;
+    }
+
+    .md\:grid-cols-2 {
+        grid-template-columns: 1fr !important;
+    }
+
+    .md\:grid-cols-3 {
+        grid-template-columns: 1fr !important;
+    }
+
+    .md\:grid-cols-4 {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+/* Telas muito pequenas */
+@media (max-width: 380px) {
+    .glass-card {
+        padding: 0.75rem;
+    }
+
+    body {
+        font-size: 14px;
+    }
 }

@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
  * Usage: <ProGate feature="aiChat"> ... conteúdo pro ... </ProGate>
  */
 export default function ProGate({ feature, children, fallback, className = '' }) {
-    const { can, isPro } = usePlan();
+    const { can } = usePlan();
 
     // Se tiver permissão, mostra o conteúdo real
     if (can(feature)) {

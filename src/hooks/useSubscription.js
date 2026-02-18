@@ -1,69 +1,53 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import {
-    createCheckoutSession,
-    openCustomerPortal,
-    getSubscriptionStatus,
-    getPaymentHistory,
-    isSubscriptionActive,
-} from '../lib/stripe';
 
+/**
+ * useSubscription Hook - Versão simplificada (Todos são PRO)
+ * Stripe bypass ativado.
+ */
 export function useSubscription() {
-    const { user, isDemo } = useAuth();
+    const { user: _user } = useAuth();
     const [subscription, setSubscription] = useState(null);
     const [payments, setPayments] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [checkoutLoading, setCheckoutLoading] = useState(false);
-    const [error, setError] = useState('');
+    const [checkoutLoading, _setCheckoutLoading] = useState(false);
+    const [error, _setError] = useState('');
 
-    // Bypass Stripe - Todos são PRO por enquanto
+    // Bypass Stripe - Todos são PRO por padrão
     useEffect(() => {
-        setSubscription({ plan: 'pro', subscription_status: 'active' });
+        setSubscription({
+            plan: 'pro',
+            subscription_status: 'active',
+            subscription_current_period_end: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString()
+        });
         setLoading(false);
     }, []);
 
-    // Checkout
-    const checkout = useCallback(async (billingPeriod = 'monthly') => {
-        setCheckoutLoading(true);
-        setError('');
-        try {
-            await createCheckoutSession(billingPeriod);
-        } catch (err) {
-            setError(err.message);
-            setCheckoutLoading(false);
-        }
+    // Checkout - Desativado
+    const checkout = useCallback(async (_billingPeriod = 'monthly') => {
+        console.log('Checkout desativado: usuário já é Pro.');
     }, []);
 
-    // Portal
+    // Portal - Desativado
     const manageSubscription = useCallback(async () => {
-        setError('');
-        try {
-            await openCustomerPortal();
-        } catch (err) {
-            setError(err.message);
-        }
+        console.log('Portal desativado: usuário já é Pro.');
     }, []);
 
-    // Histórico
+    // Histórico - Vazio
     const loadPayments = useCallback(async () => {
-        const data = await getPaymentHistory();
-        setPayments(data);
-        return data;
+        setPayments([]);
+        return [];
     }, []);
 
-    // Refresh
+    // Refresh - No-op
     const refresh = useCallback(async () => {
-        const status = await getSubscriptionStatus();
-        setSubscription(status);
-        return status;
-    }, []);
+        return subscription;
+    }, [subscription]);
 
     const isActive = true;
-    // Considera PRO se estiver Ativo/Trialing ou se o plan no DB for 'pro'.
     const isPro = true;
     const isTrial = false;
     const isPastDue = false;
-
     const daysRemaining = 999;
 
     return {

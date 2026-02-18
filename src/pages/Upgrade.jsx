@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
-    Check, Sparkles, Zap, Shield, Loader2,
+    Check, Shield,
     CreditCard, AlertCircle, Crown, ArrowLeft,
 } from 'lucide-react';
 import { useSubscription } from '../hooks/useSubscription';
@@ -15,8 +15,8 @@ export default function Upgrade() {
     const [billing, setBilling] = useState('monthly');
     const {
         subscription, isPro, isTrial, daysRemaining,
-        checkout, manageSubscription,
-        checkoutLoading, error,
+        manageSubscription,
+        error,
     } = useSubscription();
 
     // Checar se veio de checkout success/canceled

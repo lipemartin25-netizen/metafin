@@ -6,16 +6,18 @@ import {
     LayoutDashboard,
     ArrowRightLeft,
     LogOut,
-    TrendingUp,
     Menu,
     X,
     Sparkles,
-    Banknote,
-    Globe,
-    Briefcase,
+    Wallet,
+    PieChart,
+    Bot,
     Crown,
+    Settings,
+    ChevronDown,
+    Globe
 } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 const FLAGS = {
     pt: '🇧🇷',
@@ -26,183 +28,237 @@ const FLAGS = {
     hi: '🇮🇳',
 };
 
-const LANG_NAMES = {
-    pt: 'Português',
-    en: 'English',
-    es: 'Español',
-    fr: 'Français',
-    cn: '中文',
-    hi: 'हिंदी',
-};
-
 export default function Navbar() {
-    const { user, signOut, isDemo: _isDemo } = useAuth();
+    const { user, signOut } = useAuth();
     const { language, changeLanguage, t } = useLanguage();
     const { isPro } = useSubscription();
     const navigate = useNavigate();
     const [mobileOpen, setMobileOpen] = useState(false);
-    const [langMenuOpen, setLangMenuOpen] = useState(false);
+    const [profileOpen, setProfileOpen] = useState(false);
+    const [langOpen, setLangOpen] = useState(false);
+    const profileRef = useRef(null);
+    const langRef = useRef(null);
 
-    const navItems = [
-        { to: '/app', label: t('dashboard'), icon: LayoutDashboard, end: true },
-        { to: '/app/transactions', label: t('transactions'), icon: ArrowRightLeft },
-        { to: '/app/accounts', label: t('accounts'), icon: Banknote },
-        { to: '/app/investments', label: t('investments'), icon: Briefcase },
-        { to: '/app/advisor', label: t('ai_assistant'), icon: Sparkles },
-    ];
+    // Fechar dropdowns ao clicar fora
+    useEffect(() => {
+        function handleClickOutside(event) {
+            if (profileRef.current && !profileRef.current.contains(event.target)) {
+                setProfileOpen(false);
+            }
+            if (langRef.current && !langRef.current.contains(event.target)) {
+                setLangOpen(false);
+            }
+        }
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
 
     const handleSignOut = async () => {
         await signOut();
         navigate('/');
     };
 
-    const displayName =
-        user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'Usuário';
+    const navItems = [
+        { to: '/app', label: t('dashboard'), icon: LayoutDashboard, end: true },
+        { to: '/app/transactions', label: t('transactions'), icon: ArrowRightLeft },
+        { to: '/app/accounts', label: t('accounts'), icon: Wallet },
+        { to: '/app/investments', label: t('investments'), icon: PieChart },
+        { to: '/app/advisor', label: t('ai_assistant'), icon: Bot },
+    ];
+
+    const userInitial = user?.email?.[0]?.toUpperCase() || 'U';
+    const userName = user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'Usuário';
 
     return (
-        <nav className="glass border-b border-white/10 sticky top-0 z-50">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <nav className="fixed top-0 left-0 right-0 z-50 glass border-b border-white/5 bg-surface-900/80 backdrop-blur-xl">
+            <div className="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-16">
-                    {/* Logo */}
-                    <NavLink to="/app" className="flex items-center gap-2 shrink-0">
-                        <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-cyan-500 rounded-lg flex items-center justify-center">
-                            <TrendingUp className="w-4 h-4 text-white" />
-                        </div>
-                        <span className="text-lg font-bold text-white hidden sm:block">
-                            SmartFinance
-                        </span>
-                    </NavLink>
 
-                    {/* Desktop Nav */}
-                    <div className="hidden md:flex items-center gap-1">
-                        {navItems.map((item) => (
-                            <NavLink
-                                key={item.to}
-                                to={item.to}
-                                end={item.end}
-                                className={({ isActive }) =>
-                                    `flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${isActive
-                                        ? 'bg-emerald-500/15 text-emerald-400'
-                                        : 'text-gray-400 hover:text-white hover:bg-white/5'
-                                    }`
-                                }
-                            >
-                                <item.icon className="w-4 h-4" />
-                                {item.label}
-                            </NavLink>
-                        ))}
+                    {/* Logo Area */}
+                    <div className="flex items-center gap-8">
+                        <Link to="/app" className="flex items-center gap-2.5 group">
+                            <div className="relative w-9 h-9 flex items-center justify-center bg-gradient-to-br from-brand-500 to-brand-700 rounded-xl shadow-lg shadow-brand-500/20 group-hover:shadow-brand-500/30 transition-all duration-300">
+                                <Wallet className="w-5 h-5 text-white" strokeWidth={2.5} />
+                                <div className="absolute inset-0 bg-white/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity" />
+                            </div>
+                            <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400 tracking-tight">
+                                SmartFinance
+                            </span>
+                        </Link>
+
+                        {/* Desktop Navigation */}
+                        <div className="hidden md:flex items-center gap-1">
+                            {navItems.map((item) => (
+                                <NavLink
+                                    key={item.to}
+                                    to={item.to}
+                                    end={item.end}
+                                    className={({ isActive }) =>
+                                        `flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${isActive
+                                            ? 'bg-brand-500/10 text-brand-400 shadow-[0_0_15px_-3px_rgba(16,185,129,0.1)]'
+                                            : 'text-gray-400 hover:text-white hover:bg-white/5'
+                                        }`
+                                    }
+                                >
+                                    <item.icon className="w-4 h-4" />
+                                    {item.label}
+                                </NavLink>
+                            ))}
+                        </div>
                     </div>
 
-                    {/* Right Side */}
+                    {/* Right Actions */}
                     <div className="flex items-center gap-3">
-                        {/* Upgrade Button / Pro Badge */}
-                        <div className="hidden sm:flex items-center">
+
+                        {/* Language Selector */}
+                        <div className="relative" ref={langRef}>
+                            <button
+                                onClick={() => setLangOpen(!langOpen)}
+                                className="w-9 h-9 flex items-center justify-center rounded-lg text-gray-400 hover:text-white hover:bg-white/5 transition-colors"
+                            >
+                                <span className="text-lg">{FLAGS[language]}</span>
+                            </button>
+
+                            {langOpen && (
+                                <div className="absolute right-0 mt-2 w-48 py-1 rounded-xl bg-surface-800 border border-white/10 shadow-xl shadow-black/50 animate-fade-in origin-top-right">
+                                    {Object.entries(FLAGS).map(([code, flag]) => (
+                                        <button
+                                            key={code}
+                                            onClick={() => { changeLanguage(code); setLangOpen(false); }}
+                                            className={`w-full text-left px-4 py-2.5 text-sm flex items-center gap-3 hover:bg-white/5 transition-colors ${language === code ? 'text-brand-400 bg-brand-500/5' : 'text-gray-300'
+                                                }`}
+                                        >
+                                            <span className="text-lg">{flag}</span>
+                                            <span className="capitalize">{code === 'pt' ? 'Português' : code === 'en' ? 'English' : code}</span>
+                                            {language === code && <div className="ml-auto w-1.5 h-1.5 rounded-full bg-brand-500" />}
+                                        </button>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Pro Badge / Upgrade Button */}
+                        <div className="hidden sm:block">
                             {!isPro ? (
                                 <Link
                                     to="/app/upgrade"
-                                    className="px-3 py-1.5 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-500 text-white text-xs font-semibold hover:shadow-lg hover:shadow-emerald-500/25 transition-all flex items-center gap-1"
+                                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-brand-600 to-brand-500 hover:from-brand-500 hover:to-brand-400 text-white text-xs font-bold shadow-lg shadow-brand-500/20 hover:shadow-brand-500/30 transition-all transform hover:-translate-y-0.5"
                                 >
-                                    <Sparkles className="w-3 h-3" /> Upgrade
+                                    <Sparkles className="w-3.5 h-3.5" />
+                                    <span>DESBLOQUEAR PRO</span>
                                 </Link>
                             ) : (
-                                <span className="px-2 py-1 rounded-lg bg-emerald-500/10 text-emerald-400 text-xs font-medium flex items-center gap-1 border border-emerald-500/20">
-                                    <Crown className="w-3 h-3" /> Pro
+                                <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-800 border border-brand-500/30 text-brand-400 text-xs font-bold shadow-glow-sm">
+                                    <Crown className="w-3.5 h-3.5 fill-current" />
+                                    <span>PRO ATIVO</span>
                                 </span>
                             )}
                         </div>
 
-                        {/* Language Selector */}
-                        <div className="relative">
+                        {/* Profile Dropdown */}
+                        <div className="relative" ref={profileRef}>
                             <button
-                                onClick={() => setLangMenuOpen(!langMenuOpen)}
-                                className="p-2 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 transition-all flex items-center gap-1"
-                                title="Mudar Idioma"
+                                onClick={() => setProfileOpen(!profileOpen)}
+                                className="flex items-center gap-3 pl-2 pr-1 py-1 rounded-full hover:bg-white/5 transition-colors group"
                             >
-                                <Globe className="w-4 h-4" />
-                                <span className="text-xs">{FLAGS[language]}</span>
+                                <div className="text-right hidden sm:block">
+                                    <p className="text-xs font-medium text-white group-hover:text-brand-300 transition-colors truncate max-w-[100px]">
+                                        {userName}
+                                    </p>
+                                    <p className="text-[10px] text-gray-500 group-hover:text-gray-400 transition-colors">
+                                        {isPro ? 'Membro Pro' : 'Plano Grátis'}
+                                    </p>
+                                </div>
+                                <div className="w-9 h-9 rounded-full bg-gradient-to-br from-surface-700 to-surface-800 border border-white/10 flex items-center justify-center text-sm font-bold text-white shadow-inner group-hover:border-brand-500/50 transition-colors">
+                                    {userInitial}
+                                </div>
+                                <ChevronDown className={`w-3.5 h-3.5 text-gray-500 transition-transform duration-200 ${profileOpen ? 'rotate-180' : ''}`} />
                             </button>
 
-                            {langMenuOpen && (
-                                <>
-                                    <div className="fixed inset-0 z-10" onClick={() => setLangMenuOpen(false)}></div>
-                                    <div className="absolute right-0 mt-2 w-40 glass-card p-1 z-20 shadow-xl border border-white/10">
-                                        {Object.keys(FLAGS).map(code => (
-                                            <button
-                                                key={code}
-                                                onClick={() => { changeLanguage(code); setLangMenuOpen(false); }}
-                                                className={`w-full text-left px-3 py-2 rounded-lg text-sm flex items-center gap-2 hover:bg-white/10 transition-all ${language === code ? 'text-emerald-400 bg-emerald-500/10' : 'text-gray-300'
-                                                    }`}
-                                            >
-                                                <span>{FLAGS[code]}</span>
-                                                <span>{LANG_NAMES[code]}</span>
-                                            </button>
-                                        ))}
+                            {profileOpen && (
+                                <div className="absolute right-0 mt-2 w-56 rounded-xl bg-surface-900 border border-white/10 shadow-2xl shadow-black/50 py-1.5 animate-fade-in origin-top-right">
+                                    <div className="px-4 py-3 border-b border-white/5 mb-1">
+                                        <p className="text-sm font-medium text-white truncate">{userName}</p>
+                                        <p className="text-xs text-gray-500 truncate">{user?.email}</p>
                                     </div>
-                                </>
+
+                                    <Link
+                                        to="/app/settings"
+                                        onClick={() => setProfileOpen(false)}
+                                        className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-300 hover:text-white hover:bg-white/5 transition-colors"
+                                    >
+                                        <Settings className="w-4 h-4" />
+                                        {t('settings')}
+                                    </Link>
+
+                                    <div className="h-px bg-white/5 my-1" />
+
+                                    <button
+                                        onClick={handleSignOut}
+                                        className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-colors"
+                                    >
+                                        <LogOut className="w-4 h-4" />
+                                        {t('logout')}
+                                    </button>
+                                </div>
                             )}
                         </div>
 
-
-                        <span className="text-sm text-gray-400 hidden sm:block truncate max-w-[100px]">
-                            {displayName}
-                        </span>
-                        <button
-                            onClick={handleSignOut}
-                            className="p-2 rounded-xl text-gray-400 hover:text-red-400 hover:bg-red-500/10 transition-all"
-                            title={t('logout')}
-                        >
-                            <LogOut className="w-4 h-4" />
-                        </button>
-
-                        {/* Mobile Toggle */}
+                        {/* Mobile Menu Button */}
                         <button
                             onClick={() => setMobileOpen(!mobileOpen)}
-                            className="md:hidden p-2 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 transition-all"
+                            className="md:hidden p-2 rounded-lg text-gray-400 hover:text-white hover:bg-white/5"
                         >
-                            {mobileOpen ? (
-                                <X className="w-5 h-5" />
-                            ) : (
-                                <Menu className="w-5 h-5" />
-                            )}
+                            {mobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
                         </button>
                     </div>
                 </div>
+            </div>
 
-                {/* Mobile Nav */}
-                {mobileOpen && (
-                    <div className="md:hidden pb-4 space-y-1 animate-fade-in border-t border-white/5 mt-2 pt-2">
+            {/* Mobile Menu Overlay */}
+            {mobileOpen && (
+                <div className="md:hidden fixed inset-0 top-16 z-40 bg-surface-950/95 backdrop-blur-xl animate-fade-in">
+                    <div className="p-4 space-y-1">
                         {navItems.map((item) => (
                             <NavLink
                                 key={item.to}
                                 to={item.to}
-                                end={item.end}
                                 onClick={() => setMobileOpen(false)}
                                 className={({ isActive }) =>
-                                    `flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${isActive
-                                        ? 'bg-emerald-500/15 text-emerald-400'
+                                    `flex items-center gap-3 px-4 py-3.5 rounded-xl text-base font-medium transition-all ${isActive
+                                        ? 'bg-brand-500/10 text-brand-400 border border-brand-500/20'
                                         : 'text-gray-400 hover:text-white hover:bg-white/5'
                                     }`
                                 }
                             >
-                                <item.icon className="w-4 h-4" />
+                                <item.icon className="w-5 h-5" />
                                 {item.label}
                             </NavLink>
                         ))}
 
-                        {/* Mobile Upgrade Link */}
+                        <div className="h-px bg-white/10 my-4" />
+
                         {!isPro && (
                             <Link
                                 to="/app/upgrade"
                                 onClick={() => setMobileOpen(false)}
-                                className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-emerald-400 bg-emerald-500/10"
+                                className="flex items-center justify-center gap-2 w-full p-3 rounded-xl bg-gradient-to-r from-brand-600 to-brand-500 text-white font-bold shadow-lg shadow-brand-500/25 mb-4"
                             >
                                 <Sparkles className="w-4 h-4" />
                                 Desbloquear Pro
                             </Link>
                         )}
+
+                        <button
+                            onClick={handleSignOut}
+                            className="flex items-center gap-3 px-4 py-3.5 w-full rounded-xl text-base font-medium text-red-400 hover:bg-red-500/10 transition-colors"
+                        >
+                            <LogOut className="w-5 h-5" />
+                            {t('logout')}
+                        </button>
                     </div>
-                )}
-            </div>
+                </div>
+            )}
         </nav>
     );
 }

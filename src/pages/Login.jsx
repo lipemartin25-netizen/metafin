@@ -45,15 +45,15 @@ export default function Login() {
     };
 
     return (
-        <div className="min-h-screen bg-surface-950 flex items-center justify-center p-4 relative overflow-hidden">
-            {/* Animated Background */}
-            <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div className="min-h-screen bg-gray-50 dark:bg-surface-950 flex items-center justify-center p-4 relative overflow-hidden transition-colors duration-300">
+            {/* Animated Background - Only for dark mode usually or adjusted for light */}
+            <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-30 dark:opacity-100">
                 <div className="absolute top-[-20%] left-[-15%] w-[600px] h-[600px] bg-brand-500/[0.08] rounded-full blur-[150px] animate-float" />
                 <div className="absolute bottom-[-20%] right-[-15%] w-[600px] h-[600px] bg-blue-500/[0.08] rounded-full blur-[150px] animate-float" style={{ animationDelay: '3s' }} />
                 <div className="absolute top-[40%] left-[50%] w-[300px] h-[300px] bg-cyan-500/[0.05] rounded-full blur-[120px] animate-pulse-slow" />
                 {/* Grid pattern */}
                 <div className="absolute inset-0 opacity-[0.015]" style={{
-                    backgroundImage: 'linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)',
+                    backgroundImage: 'linear-gradient(rgba(100,100,100,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(100,100,100,0.1) 1px, transparent 1px)',
                     backgroundSize: '60px 60px'
                 }} />
             </div>
@@ -66,20 +66,20 @@ export default function Login() {
                         <div className="w-12 h-12 bg-gradient-to-br from-brand-500 to-brand-600 rounded-xl shadow-lg shadow-brand-500/25 flex items-center justify-center group-hover:scale-105 group-hover:shadow-brand-500/40 transition-all duration-300">
                             <Wallet className="w-6 h-6 text-white" />
                         </div>
-                        <span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400">
+                        <span className="text-2xl font-bold text-gray-900 dark:text-white bg-clip-text text-transparent dark:bg-gradient-to-r dark:from-white dark:to-gray-400">
                             SmartFinance
                         </span>
                     </Link>
-                    <h1 className="text-3xl font-bold text-white mb-2">Bem-vindo de volta!</h1>
-                    <p className="text-gray-400">Entre para gerenciar suas finanças</p>
+                    <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Bem-vindo de volta!</h1>
+                    <p className="text-gray-500 dark:text-gray-400">Entre para gerenciar suas finanças</p>
                 </div>
 
-                <div className="glass-card border border-white/10 shadow-2xl shadow-black/50 backdrop-blur-xl">
+                <div className="glass-card bg-white/80 dark:bg-white/[0.03] border border-gray-200 dark:border-white/10 shadow-xl dark:shadow-black/50 backdrop-blur-xl p-8 rounded-2xl">
 
                     {/* Google Sign-In */}
                     <div className="mb-6">
                         {googleLoading ? (
-                            <div className="w-full py-3 rounded-xl bg-white/5 flex items-center justify-center gap-2 text-gray-400 text-sm animate-pulse border border-white/10">
+                            <div className="w-full py-3 rounded-xl bg-gray-100 dark:bg-white/5 flex items-center justify-center gap-2 text-gray-500 dark:text-gray-400 text-sm animate-pulse border border-gray-200 dark:border-white/10">
                                 <Loader2 className="w-4 h-4 animate-spin" /> Conectando Google...
                             </div>
                         ) : (
@@ -100,51 +100,51 @@ export default function Login() {
 
                     {/* Divider */}
                     <div className="flex items-center gap-3 mb-6">
-                        <div className="flex-1 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+                        <div className="flex-1 h-px bg-gray-200 dark:bg-gradient-to-r dark:from-transparent dark:via-white/10 dark:to-transparent" />
                         <span className="text-xs text-gray-500 font-medium uppercase tracking-wider">ou continue com email</span>
-                        <div className="flex-1 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+                        <div className="flex-1 h-px bg-gray-200 dark:bg-gradient-to-r dark:from-transparent dark:via-white/10 dark:to-transparent" />
                     </div>
 
                     {/* Form */}
                     <form onSubmit={handleSubmit} className="space-y-5">
                         {error && (
-                            <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm flex items-center gap-2 animate-shake">
-                                <div className="w-1.5 h-1.5 rounded-full bg-red-400" />
+                            <div className="p-4 rounded-xl bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20 text-red-600 dark:text-red-400 text-sm flex items-center gap-2 animate-shake">
+                                <div className="w-1.5 h-1.5 rounded-full bg-red-500 dark:bg-red-400" />
                                 {error}
                             </div>
                         )}
 
                         <div className="space-y-1.5">
-                            <label className="text-xs font-medium text-gray-400 ml-1">Email</label>
+                            <label className="text-xs font-medium text-gray-500 dark:text-gray-400 ml-1">Email</label>
                             <div className="relative group">
-                                <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 group-focus-within:text-brand-400 transition-colors" />
+                                <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 group-focus-within:text-brand-500 transition-colors" />
                                 <input
                                     type="email"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     placeholder="seu@email.com"
                                     required
-                                    className="w-full pl-10 pr-4 py-3 rounded-xl bg-surface-800/50 border border-white/10 text-white placeholder-gray-600 text-sm focus:outline-none focus:border-brand-500/50 focus:ring-1 focus:ring-brand-500/20 transition-all"
+                                    className="w-full pl-10 pr-4 py-3 rounded-xl bg-gray-50 dark:bg-surface-800/50 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-600 text-sm focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500/20 transition-all shadow-sm dark:shadow-none"
                                 />
                             </div>
                         </div>
 
                         <div className="space-y-1.5">
-                            <label className="text-xs font-medium text-gray-400 ml-1">Senha</label>
+                            <label className="text-xs font-medium text-gray-500 dark:text-gray-400 ml-1">Senha</label>
                             <div className="relative group">
-                                <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 group-focus-within:text-brand-400 transition-colors" />
+                                <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 group-focus-within:text-brand-500 transition-colors" />
                                 <input
                                     type={showPass ? 'text' : 'password'}
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                     placeholder="••••••••"
                                     required
-                                    className="w-full pl-10 pr-10 py-3 rounded-xl bg-surface-800/50 border border-white/10 text-white placeholder-gray-600 text-sm focus:outline-none focus:border-brand-500/50 focus:ring-1 focus:ring-brand-500/20 transition-all"
+                                    className="w-full pl-10 pr-10 py-3 rounded-xl bg-gray-50 dark:bg-surface-800/50 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-600 text-sm focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500/20 transition-all shadow-sm dark:shadow-none"
                                 />
                                 <button
                                     type="button"
                                     onClick={() => setShowPass(!showPass)}
-                                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white transition-colors"
+                                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-white transition-colors"
                                 >
                                     {showPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                                 </button>
@@ -170,7 +170,7 @@ export default function Login() {
                     <div className="mt-8 text-center">
                         <p className="text-gray-500 text-sm">
                             Não tem uma conta?{' '}
-                            <Link to="/signup" className="text-brand-400 hover:text-brand-300 font-semibold hover:underline decoration-brand-500/30 underline-offset-4 transition-all">
+                            <Link to="/signup" className="text-brand-600 dark:text-brand-400 hover:text-brand-500 dark:hover:text-brand-300 font-semibold hover:underline decoration-brand-500/30 underline-offset-4 transition-all">
                                 Criar conta grátis
                             </Link>
                         </p>
@@ -178,7 +178,7 @@ export default function Login() {
                 </div>
 
                 {/* Trust badges */}
-                <div className="mt-8 flex items-center justify-center gap-6 text-gray-600 text-xs">
+                <div className="mt-8 flex items-center justify-center gap-6 text-gray-500 dark:text-gray-600 text-xs">
                     <span className="flex items-center gap-1.5">
                         <Lock className="w-3 h-3" /> SSL 256-bit
                     </span>

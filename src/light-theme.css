@@ -1,0 +1,144 @@
+/* ================================================================
+   LIGHT THEME - Global Overrides
+   ================================================================ */
+
+/* ---------- Backgrounds ---------- */
+:root.light .bg-gray-950,
+:root.light .bg-surface-950,
+:root.light .bg-surface-950\/95 { background-color: #f1f5f9 !important; }
+
+:root.light .bg-gray-900,
+:root.light .bg-surface-900,
+:root.light .bg-surface-900\/80 { background-color: #f8fafc !important; }
+
+:root.light .bg-surface-800 { background-color: #ffffff !important; }
+:root.light .bg-surface-700\/50 { background-color: rgba(203,213,225,0.5) !important; }
+
+:root.light .bg-white\/3,
+:root.light .bg-white\/5 { background-color: rgba(0,0,0,0.03) !important; }
+:root.light .bg-white\/10 { background-color: rgba(0,0,0,0.06) !important; }
+
+/* ---------- Glass / Cards ---------- */
+:root.light .glass,
+:root.light .glass-card {
+    background: rgba(255,255,255,0.82) !important;
+    border-color: rgba(0,0,0,0.08) !important;
+    backdrop-filter: blur(16px) !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 0 0 1px rgba(0,0,0,0.04) !important;
+}
+
+/* ---------- Text Colors ---------- */
+:root.light .text-white { color: #111827 !important; }
+:root.light .text-gray-100,
+:root.light .text-gray-200 { color: #1f2937 !important; }
+:root.light .text-gray-300 { color: #374151 !important; }
+:root.light .text-gray-400 { color: #6b7280 !important; }
+:root.light .text-gray-500 { color: #9ca3af !important; }
+
+/* ---------- Gradient text (Logo) ---------- */
+:root.light .bg-clip-text.text-transparent { -webkit-text-fill-color: transparent !important; }
+:root.light span.bg-clip-text.bg-gradient-to-r.from-white.to-gray-400 {
+    background-image: linear-gradient(to right, #111827, #6b7280) !important;
+}
+
+/* ---------- Borders ---------- */
+:root.light .border-white\/5,
+:root.light .border-white\/10,
+:root.light .border-white\/20 { border-color: rgba(0,0,0,0.08) !important; }
+:root.light .border-brand-500\/20,
+:root.light .border-brand-500\/30 { border-color: rgba(5,150,105,0.25) !important; }
+
+/* ---------- Hover States ---------- */
+:root.light .hover\:bg-white\/5:hover { background-color: rgba(0,0,0,0.05) !important; }
+:root.light .hover\:text-white:hover { color: #111827 !important; }
+:root.light .hover\:bg-red-500\/10:hover { background-color: rgba(239,68,68,0.08) !important; }
+
+/* ---------- Dropdowns / Shadows ---------- */
+:root.light .shadow-black\/50,
+:root.light .shadow-2xl { box-shadow: 0 10px 40px -10px rgba(0,0,0,0.12) !important; }
+
+/* ---------- Body & Layout ---------- */
+:root.light body { background-color: #f1f5f9 !important; color: #111827 !important; }
+:root.light .min-h-screen.bg-gray-950 { background-color: #f1f5f9 !important; }
+
+/* ---------- Navbar ---------- */
+:root.light nav.fixed {
+    background-color: rgba(255,255,255,0.82) !important;
+    border-bottom-color: rgba(0,0,0,0.08) !important;
+}
+
+/* ---------- Inputs ---------- */
+:root.light input,
+:root.light textarea,
+:root.light select {
+    background-color: #ffffff !important;
+    border-color: rgba(0,0,0,0.12) !important;
+    color: #111827 !important;
+}
+:root.light input::placeholder,
+:root.light textarea::placeholder { color: #9ca3af !important; }
+:root.light input:focus,
+:root.light textarea:focus,
+:root.light select:focus {
+    border-color: #10b981 !important;
+    box-shadow: 0 0 0 3px rgba(16,185,129,0.1) !important;
+}
+
+/* ---------- Brand colors (keep vibrant) ---------- */
+:root.light .text-brand-400 { color: #059669 !important; }
+:root.light .text-brand-300 { color: #10b981 !important; }
+:root.light .bg-brand-500\/10,
+:root.light .bg-brand-500\/5 { background-color: rgba(5,150,105,0.08) !important; }
+
+/* ---------- Status colors ---------- */
+:root.light .text-red-400 { color: #dc2626 !important; }
+:root.light .text-red-300 { color: #ef4444 !important; }
+:root.light .text-emerald-400 { color: #059669 !important; }
+:root.light .text-blue-400 { color: #2563eb !important; }
+:root.light .bg-red-500\/10 { background-color: rgba(220,38,38,0.08) !important; }
+:root.light .bg-emerald-500\/10 { background-color: rgba(5,150,105,0.08) !important; }
+:root.light .bg-blue-500\/10 { background-color: rgba(37,99,235,0.08) !important; }
+
+/* ---------- Profile Avatar ---------- */
+:root.light .from-surface-700.to-surface-800 {
+    --tw-gradient-from: #e2e8f0 !important;
+    --tw-gradient-to: #cbd5e1 !important;
+}
+
+/* ---------- Mobile Overlay ---------- */
+:root.light .bg-surface-950\/95 { background-color: rgba(241,245,249,0.97) !important; }
+
+/* ---------- Recharts ---------- */
+:root.light .recharts-cartesian-grid line { stroke: rgba(0,0,0,0.06) !important; }
+:root.light .recharts-text { fill: #6b7280 !important; }
+:root.light .recharts-default-tooltip {
+    background-color: #ffffff !important;
+    border: 1px solid rgba(0,0,0,0.1) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08) !important;
+}
+
+/* ---------- Scrollbar ---------- */
+:root.light ::-webkit-scrollbar-track { background: #f1f5f9 !important; }
+:root.light ::-webkit-scrollbar-thumb { background: #cbd5e1 !important; }
+:root.light ::-webkit-scrollbar-thumb:hover { background: #94a3b8 !important; }
+:root.light .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.08) !important; }
+:root.light .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.15) !important; }
+
+/* ---------- Selection ---------- */
+:root.light ::selection { background: rgba(5,150,105,0.15) !important; color: #111827 !important; }
+
+/* ---------- Glow shadows (remove) ---------- */
+:root.light .shadow-glow-sm,
+:root.light .shadow-glow-md { box-shadow: 0 1px 3px rgba(0,0,0,0.08) !important; }
+:root.light .shadow-inner-glow { box-shadow: inset 0 1px 0 0 rgba(0,0,0,0.03) !important; }
+
+/* ---------- Gradient buttons keep white text ---------- */
+:root.light .bg-gradient-to-r.from-brand-600.to-brand-500,
+:root.light .bg-gradient-to-r.from-brand-500.to-brand-400 { color: #ffffff !important; }
+:root.light .bg-gradient-to-br.from-brand-500.to-brand-700 .text-white { color: #ffffff !important; }
+
+/* ---------- Smooth transitions ---------- */
+:root body, :root nav, :root .glass, :root .glass-card, :root main {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}

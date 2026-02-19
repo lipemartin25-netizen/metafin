@@ -26,6 +26,7 @@ import {
 import categoriesData from '../data/data.json';
 import { analytics } from '../hooks/useAnalytics';
 import { useLanguage } from '../contexts/LanguageContext';
+import { useTheme } from '../contexts/ThemeContext';
 import ProGate from '../components/ProGate';
 
 const categoryConfig = categoriesData.categories;
@@ -36,43 +37,44 @@ function fmt(value) {
 
 // Componente de Card de Resumo (Estilo Mobills)
 function SummaryCard({ title, value, type, icon: Icon, trend }) {
-    let iconColor = 'text-brand-400';
+    let iconColor = 'text-brand-600 dark:text-brand-400';
     let bgColor = 'bg-brand-500/10';
     let gradient = 'from-brand-500 to-brand-600';
 
     if (type === 'expense') {
-        iconColor = 'text-red-400';
+        iconColor = 'text-red-600 dark:text-red-400';
         bgColor = 'bg-red-500/10';
         gradient = 'from-red-500 to-red-600';
     } else if (type === 'balance') {
-        iconColor = 'text-blue-400';
+        iconColor = 'text-blue-600 dark:text-blue-400';
         bgColor = 'bg-blue-500/10';
         gradient = 'from-blue-500 to-blue-600';
     }
 
     return (
         <div className="glass-card relative overflow-hidden group hover:translate-y-[-2px] transition-all duration-300">
+            {/* Background Blob */}
             <div className={`absolute -right-6 -top-6 w-24 h-24 rounded-full blur-2xl opacity-20 ${bgColor}`} />
 
             <div className="relative z-10">
                 <div className="flex items-center justify-between mb-4">
-                    <div className={`p-2.5 rounded-xl ${bgColor} border border-white/5`}>
+                    <div className={`p-2.5 rounded-xl ${bgColor} border border-transparent dark:border-white/5`}>
                         <Icon className={`w-5 h-5 ${iconColor}`} />
                     </div>
                     {trend !== null && trend !== undefined && (
                         <span className={`text-xs font-medium px-2 py-1 rounded-lg ${trend >= 0
-                                ? 'text-emerald-400 bg-emerald-500/10'
-                                : 'text-red-400 bg-red-500/10'
+                                ? 'text-emerald-700 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-500/10'
+                                : 'text-red-700 dark:text-red-400 bg-red-100 dark:bg-red-500/10'
                             }`}>
                             {trend > 0 ? '+' : ''}{trend}%
                         </span>
                     )}
                 </div>
 
-                <h3 className="text-gray-400 text-sm font-medium mb-1">{title}</h3>
-                <p className="text-2xl font-bold text-white tracking-tight">{fmt(value)}</p>
+                <h3 className="text-gray-500 dark:text-gray-400 text-sm font-medium mb-1">{title}</h3>
+                <p className="text-2xl font-bold text-gray-900 dark:text-white tracking-tight">{fmt(value)}</p>
 
-                <div className="mt-4 h-1.5 w-full bg-surface-700/50 rounded-full overflow-hidden">
+                <div className="mt-4 h-1.5 w-full bg-gray-200 dark:bg-surface-700/50 rounded-full overflow-hidden">
                     <div
                         className={`h-full rounded-full bg-gradient-to-r ${gradient} opacity-80 transition-all duration-700`}
                         style={{ width: `${Math.min(Math.max(Math.abs(trend || 50), 10), 100)}%` }}
@@ -86,6 +88,7 @@ function SummaryCard({ title, value, type, icon: Icon, trend }) {
 export default function Dashboard() {
     const { t } = useLanguage();
     const { transactions, loading, summary } = useTransactions();
+    const { theme } = useTheme();
 
     useEffect(() => { analytics.dashboardViewed(); }, []);
 
@@ -178,13 +181,13 @@ export default function Dashboard() {
     const CustomTooltip = ({ active, payload, label }) => {
         if (active && payload && payload.length) {
             return (
-                <div className="glass-card !p-3 border border-white/10 !bg-surface-900/90 backdrop-blur-xl">
-                    <p className="text-gray-400 text-xs mb-2">{label}</p>
+                <div className="glass-card !p-3 border border-gray-200 dark:border-white/10 !bg-white dark:!bg-surface-900/90 backdrop-blur-xl shadow-xl">
+                    <p className="text-gray-500 dark:text-gray-400 text-xs mb-2">{label}</p>
                     {payload.map((entry, index) => (
                         <div key={index} className="flex items-center gap-2 text-sm mb-1">
                             <div className="w-2 h-2 rounded-full" style={{ backgroundColor: entry.color }} />
-                            <span className="text-gray-300 capitalize">{entry.name}:</span>
-                            <span className="font-semibold text-white">{fmt(entry.value)}</span>
+                            <span className="text-gray-600 dark:text-gray-300 capitalize">{entry.name}:</span>
+                            <span className="font-semibold text-gray-900 dark:text-white">{fmt(entry.value)}</span>
                         </div>
                     ))}
                 </div>
@@ -198,10 +201,10 @@ export default function Dashboard() {
             {/* Header Section */}
             <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold text-white mb-2">
+                    <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
                         {t('overview')}
                     </h1>
-                    <p className="text-gray-400 flex items-center gap-2">
+                    <p className="text-gray-500 dark:text-gray-400 flex items-center gap-2">
                         <Calendar className="w-4 h-4" />
                         <span>{t('monthly_summary')}</span>
                     </p>
@@ -211,7 +214,7 @@ export default function Dashboard() {
                     <ProGate feature="aiInsights">
                         <Link
                             to="/app/advisor"
-                            className="bg-brand-500/10 hover:bg-brand-500/20 text-brand-400 border border-brand-500/20 px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-2 transition-all group"
+                            className="bg-brand-500/10 hover:bg-brand-500/20 text-brand-600 dark:text-brand-400 border border-brand-500/20 px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-2 transition-all group"
                         >
                             <Sparkles className="w-4 h-4 group-hover:scale-110 transition-transform" />
                             {t('ai_insights')}
@@ -252,11 +255,11 @@ export default function Dashboard() {
                 <div className="lg:col-span-2 glass-card p-6 flex flex-col h-[400px]">
                     <div className="flex items-center justify-between mb-6">
                         <div>
-                            <h3 className="text-lg font-semibold text-white flex items-center gap-2">
-                                <Activity className="w-5 h-5 text-brand-400" />
+                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+                                <Activity className="w-5 h-5 text-brand-500" />
                                 {t('cash_flow')}
                             </h3>
-                            <p className="text-xs text-gray-400 mt-1">{t('income_vs_expenses')}</p>
+                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{t('income_vs_expenses')}</p>
                         </div>
                     </div>
 
@@ -274,16 +277,16 @@ export default function Dashboard() {
                                             <stop offset="95%" stopColor="#ef4444" stopOpacity={0} />
                                         </linearGradient>
                                     </defs>
-                                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
-                                    <XAxis dataKey="day" stroke="#6b7280" fontSize={11} tickLine={false} axisLine={false} dy={10} />
-                                    <YAxis stroke="#6b7280" fontSize={11} tickLine={false} axisLine={false} tickFormatter={(v) => v >= 1000 ? `R$${(v / 1000).toFixed(0)}k` : `R$${v}`} />
+                                    <CartesianGrid strokeDasharray="3 3" stroke={theme === 'dark' ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)"} vertical={false} />
+                                    <XAxis dataKey="day" stroke={theme === 'dark' ? "#6b7280" : "#9ca3af"} fontSize={11} tickLine={false} axisLine={false} dy={10} />
+                                    <YAxis stroke={theme === 'dark' ? "#6b7280" : "#9ca3af"} fontSize={11} tickLine={false} axisLine={false} tickFormatter={(v) => v >= 1000 ? `R$${(v / 1000).toFixed(0)}k` : `R$${v}`} />
                                     <Tooltip content={<CustomTooltip />} />
                                     <Area type="monotone" dataKey="receita" stroke="#10b981" strokeWidth={2} fillOpacity={1} fill="url(#colorIncome)" name={t('income')} />
                                     <Area type="monotone" dataKey="despesa" stroke="#ef4444" strokeWidth={2} fillOpacity={1} fill="url(#colorExpense)" name={t('expenses')} />
                                 </AreaChart>
                             </ResponsiveContainer>
                         ) : (
-                            <div className="h-full flex flex-col items-center justify-center text-gray-500 border border-dashed border-white/10 rounded-xl bg-white/[0.02]">
+                            <div className="h-full flex flex-col items-center justify-center text-gray-400 border border-dashed border-gray-200 dark:border-white/10 rounded-xl bg-gray-50 dark:bg-white/[0.02]">
                                 <Activity className="w-8 h-8 mb-2 opacity-50" />
                                 <p>{t('no_transactions_yet')}</p>
                             </div>
@@ -296,8 +299,8 @@ export default function Dashboard() {
                     {/* Objetivos / Planejamento Rápido */}
                     <div className="glass-card p-6">
                         <div className="flex items-center justify-between mb-4">
-                            <h3 className="text-lg font-semibold text-white flex items-center gap-2">
-                                <Target className="w-5 h-5 text-blue-400" />
+                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+                                <Target className="w-5 h-5 text-blue-500" />
                                 {t('planning')}
                             </h3>
                         </div>
@@ -306,10 +309,10 @@ export default function Dashboard() {
                             {goals.map((goal) => (
                                 <div key={goal.id} className="space-y-2">
                                     <div className="flex justify-between text-xs">
-                                        <span className="text-gray-300">{goal.name}</span>
-                                        <span className="text-white font-medium">{fmt(goal.current)} / {fmt(goal.target)}</span>
+                                        <span className="text-gray-500 dark:text-gray-300">{goal.name}</span>
+                                        <span className="text-gray-900 dark:text-white font-medium">{fmt(goal.current)} / {fmt(goal.target)}</span>
                                     </div>
-                                    <div className="h-2 w-full bg-surface-700 rounded-full overflow-hidden">
+                                    <div className="h-2 w-full bg-gray-200 dark:bg-surface-700 rounded-full overflow-hidden">
                                         <div
                                             className={`h-full ${goal.color} rounded-full transition-all duration-700`}
                                             style={{ width: `${Math.min((goal.current / goal.target) * 100, 100)}%` }}
@@ -319,16 +322,16 @@ export default function Dashboard() {
                             ))}
                         </div>
 
-                        <button className="w-full mt-5 py-2.5 rounded-xl border border-dashed border-white/20 text-gray-400 text-sm hover:text-white hover:border-white/40 hover:bg-white/5 transition-all flex items-center justify-center gap-2">
+                        <button className="w-full mt-5 py-2.5 rounded-xl border border-dashed border-gray-300 dark:border-white/20 text-gray-500 dark:text-gray-400 text-sm hover:text-brand-600 dark:hover:text-white hover:border-brand-500 hover:bg-brand-50 dark:hover:bg-white/5 transition-all flex items-center justify-center gap-2">
                             {t('new_goal')}
                         </button>
                     </div>
 
                     {/* Quick Access List (Recent Transactions Mini) */}
                     <div className="glass-card p-0 overflow-hidden flex flex-col h-[200px]">
-                        <div className="px-5 py-4 border-b border-white/5 flex items-center justify-between bg-white/[0.02]">
-                            <h3 className="text-sm font-semibold text-white">{t('last_transactions')}</h3>
-                            <Link to="/app/transactions" className="p-1 rounded-lg hover:bg-white/10 transition-colors">
+                        <div className="px-5 py-4 border-b border-gray-100 dark:border-white/5 flex items-center justify-between bg-gray-50/50 dark:bg-white/[0.02]">
+                            <h3 className="text-sm font-semibold text-gray-900 dark:text-white">{t('last_transactions')}</h3>
+                            <Link to="/app/transactions" className="p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-white/10 transition-colors">
                                 <ChevronRight className="w-4 h-4 text-gray-400" />
                             </Link>
                         </div>
@@ -336,17 +339,17 @@ export default function Dashboard() {
                             {recentTransactions.length > 0 ? (
                                 <div className="space-y-1">
                                     {recentTransactions.map((tx) => (
-                                        <div key={tx.id} className="flex items-center justify-between p-2.5 hover:bg-white/5 rounded-lg transition-colors cursor-pointer group">
+                                        <div key={tx.id} className="flex items-center justify-between p-2.5 hover:bg-gray-50 dark:hover:bg-white/5 rounded-lg transition-colors cursor-pointer group">
                                             <div className="flex items-center gap-3">
-                                                <div className={`w-8 h-8 rounded-full flex items-center justify-center ${tx.type === 'income' ? 'bg-brand-500/10 text-brand-400' : 'bg-red-500/10 text-red-400'}`}>
+                                                <div className={`w-8 h-8 rounded-full flex items-center justify-center ${tx.type === 'income' ? 'bg-brand-100 dark:bg-brand-500/10 text-brand-600 dark:text-brand-400' : 'bg-red-100 dark:bg-red-500/10 text-red-600 dark:text-red-400'}`}>
                                                     {tx.type === 'income' ? <ArrowUpRight className="w-4 h-4" /> : <ArrowDownRight className="w-4 h-4" />}
                                                 </div>
                                                 <div className="max-w-[100px] truncate">
-                                                    <p className="text-sm text-gray-200 truncate group-hover:text-white transition-colors">{tx.description}</p>
+                                                    <p className="text-sm text-gray-700 dark:text-gray-200 truncate group-hover:text-gray-900 dark:group-hover:text-white transition-colors">{tx.description}</p>
                                                     <p className="text-[10px] text-gray-500">{categoryConfig[tx.category]?.label || t('general')}</p>
                                                 </div>
                                             </div>
-                                            <span className={`text-sm font-medium ${tx.type === 'income' ? 'text-brand-400' : 'text-gray-300'}`}>
+                                            <span className={`text-sm font-medium ${tx.type === 'income' ? 'text-brand-600 dark:text-brand-400' : 'text-gray-800 dark:text-gray-300'}`}>
                                                 {tx.type === 'income' ? '+' : '-'}{fmt(Math.abs(tx.amount))}
                                             </span>
                                         </div>

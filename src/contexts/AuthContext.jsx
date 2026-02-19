@@ -39,12 +39,10 @@ export function AuthProvider({ children }) {
         };
     }, []);
 
-    // ===== LOGIN COM EMAIL =====
     const signIn = useCallback(async (email, password) => {
         return await supabase.auth.signInWithPassword({ email, password });
     }, []);
 
-    // ===== CADASTRO =====
     const signUp = useCallback(async (email, password, fullName) => {
         if (!isSupabaseConfigured) return signIn(email, password);
         return await supabase.auth.signUp({
@@ -54,19 +52,37 @@ export function AuthProvider({ children }) {
         });
     }, [signIn]);
 
-    // ===== LOGIN COM GOOGLE (via ID Token — SEM redirect ao Supabase) =====
     const signInWithGoogle = useCallback(async (googleIdToken) => {
-        // Usa signInWithIdToken — o Google nunca vê o domínio do Supabase!
         const { data, error } = await supabase.auth.signInWithIdToken({
             provider: 'google',
             token: googleIdToken,
         });
-
         if (error) throw error;
         return { data, error: null };
     }, []);
 
-    // ===== LOGOUT =====
+    // Redefinir senha via email
+    const requestPasswordReset = useCallback(async (email) => {
+        if (!isSupabaseConfigured) {
+            return { data: null, error: { message: 'Supabase não configurado' } };
+        }
+        const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
+            redirectTo: `${window.location.origin}/login`,
+        });
+        if (error) throw error;
+        return { data, error: null };
+    }, []);
+
+    // Atualizar email do usuário
+    const updateEmail = useCallback(async (newEmail) => {
+        if (!isSupabaseConfigured) {
+            return { data: null, error: { message: 'Supabase não configurado' } };
+        }
+        const { data, error } = await supabase.auth.updateUser({ email: newEmail });
+        if (error) throw error;
+        return { data, error: null };
+    }, []);
+
     const signOut = useCallback(async () => {
         if (isDemo || !isSupabaseConfigured) {
             setUser(null);
@@ -86,6 +102,8 @@ export function AuthProvider({ children }) {
         signUp,
         signInWithGoogle,
         signOut,
+        requestPasswordReset,
+        updateEmail,
     };
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

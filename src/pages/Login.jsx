@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { GoogleLogin } from '@react-oauth/google';
-import { Eye, EyeOff, Loader2, Mail, Lock, ArrowRight, Wallet } from 'lucide-react';
+import { Eye, EyeOff, Loader2, Mail, Lock, ArrowRight, Wallet, Shield, CheckCircle } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 
 export default function Login() {
@@ -37,7 +37,7 @@ export default function Login() {
             await signInWithGoogle(credentialResponse.credential);
             navigate('/app');
         } catch (err) {
-            console.error("Erro no Login Google:", err);
+            console.error('Erro no Login Google:', err);
             setError(err.message || 'Erro ao entrar com Google');
         } finally {
             setGoogleLoading(false);
@@ -46,10 +46,16 @@ export default function Login() {
 
     return (
         <div className="min-h-screen bg-surface-950 flex items-center justify-center p-4 relative overflow-hidden">
-            {/* Background Effects */}
-            <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-                <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-brand-500/10 rounded-full blur-[120px]" />
-                <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-blue-500/10 rounded-full blur-[120px]" />
+            {/* Animated Background */}
+            <div className="absolute inset-0 pointer-events-none overflow-hidden">
+                <div className="absolute top-[-20%] left-[-15%] w-[600px] h-[600px] bg-brand-500/[0.08] rounded-full blur-[150px] animate-float" />
+                <div className="absolute bottom-[-20%] right-[-15%] w-[600px] h-[600px] bg-blue-500/[0.08] rounded-full blur-[150px] animate-float" style={{ animationDelay: '3s' }} />
+                <div className="absolute top-[40%] left-[50%] w-[300px] h-[300px] bg-cyan-500/[0.05] rounded-full blur-[120px] animate-pulse-slow" />
+                {/* Grid pattern */}
+                <div className="absolute inset-0 opacity-[0.015]" style={{
+                    backgroundImage: 'linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)',
+                    backgroundSize: '60px 60px'
+                }} />
             </div>
 
             <div className="w-full max-w-md relative z-10 animate-fade-in">
@@ -57,9 +63,12 @@ export default function Login() {
                 {/* Header */}
                 <div className="text-center mb-8">
                     <Link to="/" className="inline-flex items-center gap-3 mb-6 group">
-                        <div className="w-12 h-12 bg-gradient-to-br from-brand-500 to-brand-600 rounded-xl shadow-lg shadow-brand-500/20 flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
+                        <div className="w-12 h-12 bg-gradient-to-br from-brand-500 to-brand-600 rounded-xl shadow-lg shadow-brand-500/25 flex items-center justify-center group-hover:scale-105 group-hover:shadow-brand-500/40 transition-all duration-300">
                             <Wallet className="w-6 h-6 text-white" />
                         </div>
+                        <span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400">
+                            SmartFinance
+                        </span>
                     </Link>
                     <h1 className="text-3xl font-bold text-white mb-2">Bem-vindo de volta!</h1>
                     <p className="text-gray-400">Entre para gerenciar suas finanças</p>
@@ -67,7 +76,7 @@ export default function Login() {
 
                 <div className="glass-card border border-white/10 shadow-2xl shadow-black/50 backdrop-blur-xl">
 
-                    {/* ===== GOOGLE SIGN-IN ===== */}
+                    {/* Google Sign-In */}
                     <div className="mb-6">
                         {googleLoading ? (
                             <div className="w-full py-3 rounded-xl bg-white/5 flex items-center justify-center gap-2 text-gray-400 text-sm animate-pulse border border-white/10">
@@ -158,7 +167,6 @@ export default function Login() {
                         </button>
                     </form>
 
-                    {/* Links */}
                     <div className="mt-8 text-center">
                         <p className="text-gray-500 text-sm">
                             Não tem uma conta?{' '}
@@ -167,6 +175,19 @@ export default function Login() {
                             </Link>
                         </p>
                     </div>
+                </div>
+
+                {/* Trust badges */}
+                <div className="mt-8 flex items-center justify-center gap-6 text-gray-600 text-xs">
+                    <span className="flex items-center gap-1.5">
+                        <Lock className="w-3 h-3" /> SSL 256-bit
+                    </span>
+                    <span className="flex items-center gap-1.5">
+                        <Shield className="w-3 h-3" /> LGPD
+                    </span>
+                    <span className="flex items-center gap-1.5">
+                        <CheckCircle className="w-3 h-3" /> 2FA Ready
+                    </span>
                 </div>
             </div>
         </div>

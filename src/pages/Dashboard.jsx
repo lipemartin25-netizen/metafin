@@ -9,8 +9,6 @@ import {
     ArrowDownRight,
     Loader2,
     Sparkles,
-    CreditCard,
-    DollarSign,
     Activity,
     Calendar,
     ChevronRight,
@@ -23,9 +21,7 @@ import {
     YAxis,
     CartesianGrid,
     Tooltip,
-    ResponsiveContainer,
-    BarChart,
-    Bar
+    ResponsiveContainer
 } from 'recharts';
 import categoriesData from '../data/data.json';
 import { analytics } from '../hooks/useAnalytics';
@@ -40,25 +36,22 @@ function fmt(value) {
 
 // Componente de Card de Resumo (Estilo Mobills)
 function SummaryCard({ title, value, type, icon: Icon, trend }) {
-    const isPositive = type === 'income' || type === 'balance';
-
-    let gradient = "from-brand-500 to-brand-600";
-    let iconColor = "text-brand-400";
-    let bgColor = "bg-brand-500/10";
+    let iconColor = 'text-brand-400';
+    let bgColor = 'bg-brand-500/10';
+    let gradient = 'from-brand-500 to-brand-600';
 
     if (type === 'expense') {
-        gradient = "from-red-500 to-red-600";
-        iconColor = "text-red-400";
-        bgColor = "bg-red-500/10";
+        iconColor = 'text-red-400';
+        bgColor = 'bg-red-500/10';
+        gradient = 'from-red-500 to-red-600';
     } else if (type === 'balance') {
-        gradient = "from-blue-500 to-blue-600";
-        iconColor = "text-blue-400";
-        bgColor = "bg-blue-500/10";
+        iconColor = 'text-blue-400';
+        bgColor = 'bg-blue-500/10';
+        gradient = 'from-blue-500 to-blue-600';
     }
 
     return (
         <div className="glass-card relative overflow-hidden group hover:translate-y-[-2px] transition-all duration-300">
-            {/* Background Glow Effect */}
             <div className={`absolute -right-6 -top-6 w-24 h-24 rounded-full blur-2xl opacity-20 ${bgColor}`} />
 
             <div className="relative z-10">
@@ -66,8 +59,10 @@ function SummaryCard({ title, value, type, icon: Icon, trend }) {
                     <div className={`p-2.5 rounded-xl ${bgColor} border border-white/5`}>
                         <Icon className={`w-5 h-5 ${iconColor}`} />
                     </div>
-                    {trend && (
-                        <span className={`text-xs font-medium px-2 py-1 rounded-lg ${trend >= 0 ? 'text-emerald-400 bg-emerald-500/10' : 'text-red-400 bg-red-500/10'
+                    {trend !== null && trend !== undefined && (
+                        <span className={`text-xs font-medium px-2 py-1 rounded-lg ${trend >= 0
+                                ? 'text-emerald-400 bg-emerald-500/10'
+                                : 'text-red-400 bg-red-500/10'
                             }`}>
                             {trend > 0 ? '+' : ''}{trend}%
                         </span>
@@ -77,11 +72,10 @@ function SummaryCard({ title, value, type, icon: Icon, trend }) {
                 <h3 className="text-gray-400 text-sm font-medium mb-1">{title}</h3>
                 <p className="text-2xl font-bold text-white tracking-tight">{fmt(value)}</p>
 
-                {/* Mini Sparkline Visualization (CSS only for simplicity) */}
                 <div className="mt-4 h-1.5 w-full bg-surface-700/50 rounded-full overflow-hidden">
                     <div
-                        className={`h-full rounded-full bg-gradient-to-r ${gradient} opacity-80`}
-                        style={{ width: '65%' }} // Placeholder width
+                        className={`h-full rounded-full bg-gradient-to-r ${gradient} opacity-80 transition-all duration-700`}
+                        style={{ width: `${Math.min(Math.max(Math.abs(trend || 50), 10), 100)}%` }}
                     />
                 </div>
             </div>
@@ -95,24 +89,78 @@ export default function Dashboard() {
 
     useEffect(() => { analytics.dashboardViewed(); }, []);
 
+    // Calcular trends reais comparando com mês anterior
+    const trends = useMemo(() => {
+        const now = new Date();
+        const currentMonth = now.getMonth();
+        const currentYear = now.getFullYear();
+
+        let prevMonth = currentMonth - 1;
+        let prevYear = currentYear;
+        if (prevMonth < 0) { prevMonth = 11; prevYear--; }
+
+        let curIncome = 0, curExpense = 0;
+        let prevIncome = 0, prevExpense = 0;
+
+        transactions.forEach((tx) => {
+            const d = new Date(tx.date + 'T12:00:00');
+            const m = d.getMonth();
+            const y = d.getFullYear();
+            const amt = Math.abs(tx.amount);
+
+            if (m === currentMonth && y === currentYear) {
+                if (tx.type === 'income') curIncome += amt;
+                else curExpense += amt;
+            } else if (m === prevMonth && y === prevYear) {
+                if (tx.type === 'income') prevIncome += amt;
+                else prevExpense += amt;
+            }
+        });
+
+        const pct = (cur, prev) => {
+            if (prev === 0) return cur > 0 ? 100 : 0;
+            return Math.round(((cur - prev) / prev) * 100);
+        };
+
+        const incomeTrend = pct(curIncome, prevIncome);
+        const expenseTrend = pct(curExpense, prevExpense);
+        const curBalance = curIncome - curExpense;
+        const prevBalance = prevIncome - prevExpense;
+        const balanceTrend = prevBalance === 0
+            ? (curBalance > 0 ? 100 : curBalance < 0 ? -100 : 0)
+            : Math.round(((curBalance - prevBalance) / Math.abs(prevBalance)) * 100);
+
+        return { incomeTrend, expenseTrend, balanceTrend };
+    }, [transactions]);
+
+    // Metas dinâmicas (persistidas em localStorage)
+    const goals = useMemo(() => {
+        const stored = localStorage.getItem('sf_goals');
+        if (stored) {
+            try { return JSON.parse(stored); } catch { /* ignore */ }
+        }
+        const defaults = [
+            { id: 1, name: t('vacation'), target: 5000, current: 2500, color: 'bg-blue-500' },
+            { id: 2, name: t('emergency_fund'), target: 10000, current: 1200, color: 'bg-brand-500' },
+        ];
+        return defaults;
+    }, [t]);
+
     // Preparar dados para o gráfico principal
     const dailyData = useMemo(() => {
         const g = {};
-        // Ordenar transações por data
         const sorted = transactions.slice().sort((a, b) => a.date.localeCompare(b.date));
 
-        // Agrupar por dia
-        sorted.forEach((t) => {
-            const dateObj = new Date(t.date + 'T12:00:00');
+        sorted.forEach((tx) => {
+            const dateObj = new Date(tx.date + 'T12:00:00');
             const dayKey = dateObj.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
 
-            if (!g[dayKey]) g[dayKey] = { day: dayKey, receita: 0, despesa: 0, saldo: 0 };
+            if (!g[dayKey]) g[dayKey] = { day: dayKey, receita: 0, despesa: 0 };
 
-            if (t.type === 'income') g[dayKey].receita += Math.abs(t.amount);
-            else g[dayKey].despesa += Math.abs(t.amount);
+            if (tx.type === 'income') g[dayKey].receita += Math.abs(tx.amount);
+            else g[dayKey].despesa += Math.abs(tx.amount);
         });
 
-        // Converter para array e limitar aos últimos 14 dias para melhor visualização
         return Object.values(g).slice(-14);
     }, [transactions]);
 
@@ -122,7 +170,7 @@ export default function Dashboard() {
         return (
             <div className="flex flex-col items-center justify-center h-[calc(100vh-100px)]">
                 <Loader2 className="w-10 h-10 text-brand-500 animate-spin mb-4" />
-                <p className="text-gray-400 animate-pulse">Carregando seus dados...</p>
+                <p className="text-gray-400 animate-pulse">{t('loading_data')}</p>
             </div>
         );
     }
@@ -151,11 +199,11 @@ export default function Dashboard() {
             <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
                 <div>
                     <h1 className="text-3xl font-bold text-white mb-2">
-                        Visão Geral
+                        {t('overview')}
                     </h1>
                     <p className="text-gray-400 flex items-center gap-2">
                         <Calendar className="w-4 h-4" />
-                        <span>Resumo financeiro do mês</span>
+                        <span>{t('monthly_summary')}</span>
                     </p>
                 </div>
 
@@ -166,7 +214,7 @@ export default function Dashboard() {
                             className="bg-brand-500/10 hover:bg-brand-500/20 text-brand-400 border border-brand-500/20 px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-2 transition-all group"
                         >
                             <Sparkles className="w-4 h-4 group-hover:scale-110 transition-transform" />
-                            Insights IA
+                            {t('ai_insights')}
                         </Link>
                     </ProGate>
                 </div>
@@ -179,21 +227,21 @@ export default function Dashboard() {
                     value={summary.balance}
                     type="balance"
                     icon={Wallet}
-                    trend={12} // Mock trend for premium feel
+                    trend={trends.balanceTrend}
                 />
                 <SummaryCard
                     title={t('income')}
                     value={summary.totalIncome}
                     type="income"
                     icon={TrendingUp}
-                    trend={8}
+                    trend={trends.incomeTrend}
                 />
                 <SummaryCard
                     title={t('expenses')}
                     value={summary.totalExpenses}
                     type="expense"
                     icon={TrendingDown}
-                    trend={-5}
+                    trend={trends.expenseTrend}
                 />
             </div>
 
@@ -206,14 +254,10 @@ export default function Dashboard() {
                         <div>
                             <h3 className="text-lg font-semibold text-white flex items-center gap-2">
                                 <Activity className="w-5 h-5 text-brand-400" />
-                                Fluxo de Caixa
+                                {t('cash_flow')}
                             </h3>
-                            <p className="text-xs text-gray-400 mt-1">Receitas vs Despesas (Últimos 14 dias)</p>
+                            <p className="text-xs text-gray-400 mt-1">{t('income_vs_expenses')}</p>
                         </div>
-                        <select className="bg-surface-800 text-xs text-gray-300 border border-white/10 rounded-lg px-2 py-1 outline-none focus:border-brand-500/50">
-                            <option>Últimos 14 dias</option>
-                            <option>Este Mês</option>
-                        </select>
                     </div>
 
                     <div className="flex-1 w-full min-h-0">
@@ -231,40 +275,11 @@ export default function Dashboard() {
                                         </linearGradient>
                                     </defs>
                                     <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
-                                    <XAxis
-                                        dataKey="day"
-                                        stroke="#6b7280"
-                                        fontSize={11}
-                                        tickLine={false}
-                                        axisLine={false}
-                                        dy={10}
-                                    />
-                                    <YAxis
-                                        stroke="#6b7280"
-                                        fontSize={11}
-                                        tickLine={false}
-                                        axisLine={false}
-                                        tickFormatter={(v) => `R$${v / 1000}k`}
-                                    />
+                                    <XAxis dataKey="day" stroke="#6b7280" fontSize={11} tickLine={false} axisLine={false} dy={10} />
+                                    <YAxis stroke="#6b7280" fontSize={11} tickLine={false} axisLine={false} tickFormatter={(v) => v >= 1000 ? `R$${(v / 1000).toFixed(0)}k` : `R$${v}`} />
                                     <Tooltip content={<CustomTooltip />} />
-                                    <Area
-                                        type="monotone"
-                                        dataKey="receita"
-                                        stroke="#10b981"
-                                        strokeWidth={2}
-                                        fillOpacity={1}
-                                        fill="url(#colorIncome)"
-                                        name={t('income')}
-                                    />
-                                    <Area
-                                        type="monotone"
-                                        dataKey="despesa"
-                                        stroke="#ef4444"
-                                        strokeWidth={2}
-                                        fillOpacity={1}
-                                        fill="url(#colorExpense)"
-                                        name={t('expenses')}
-                                    />
+                                    <Area type="monotone" dataKey="receita" stroke="#10b981" strokeWidth={2} fillOpacity={1} fill="url(#colorIncome)" name={t('income')} />
+                                    <Area type="monotone" dataKey="despesa" stroke="#ef4444" strokeWidth={2} fillOpacity={1} fill="url(#colorExpense)" name={t('expenses')} />
                                 </AreaChart>
                             </ResponsiveContainer>
                         ) : (
@@ -283,40 +298,36 @@ export default function Dashboard() {
                         <div className="flex items-center justify-between mb-4">
                             <h3 className="text-lg font-semibold text-white flex items-center gap-2">
                                 <Target className="w-5 h-5 text-blue-400" />
-                                Planejamento
+                                {t('planning')}
                             </h3>
                         </div>
 
                         <div className="space-y-4">
-                            <div className="space-y-2">
-                                <div className="flex justify-between text-xs">
-                                    <span className="text-gray-300">Viagem de Férias</span>
-                                    <span className="text-white font-medium">R$ 2.500 / 5.000</span>
+                            {goals.map((goal) => (
+                                <div key={goal.id} className="space-y-2">
+                                    <div className="flex justify-between text-xs">
+                                        <span className="text-gray-300">{goal.name}</span>
+                                        <span className="text-white font-medium">{fmt(goal.current)} / {fmt(goal.target)}</span>
+                                    </div>
+                                    <div className="h-2 w-full bg-surface-700 rounded-full overflow-hidden">
+                                        <div
+                                            className={`h-full ${goal.color} rounded-full transition-all duration-700`}
+                                            style={{ width: `${Math.min((goal.current / goal.target) * 100, 100)}%` }}
+                                        />
+                                    </div>
                                 </div>
-                                <div className="h-2 w-full bg-surface-700 rounded-full overflow-hidden">
-                                    <div className="h-full bg-blue-500 w-1/2 rounded-full" />
-                                </div>
-                            </div>
-                            <div className="space-y-2">
-                                <div className="flex justify-between text-xs">
-                                    <span className="text-gray-300">Reserva de Emergência</span>
-                                    <span className="text-white font-medium">R$ 1.200 / 10.000</span>
-                                </div>
-                                <div className="h-2 w-full bg-surface-700 rounded-full overflow-hidden">
-                                    <div className="h-full bg-brand-500 w-[12%] rounded-full" />
-                                </div>
-                            </div>
+                            ))}
                         </div>
 
                         <button className="w-full mt-5 py-2.5 rounded-xl border border-dashed border-white/20 text-gray-400 text-sm hover:text-white hover:border-white/40 hover:bg-white/5 transition-all flex items-center justify-center gap-2">
-                            + Novo Objetivo
+                            {t('new_goal')}
                         </button>
                     </div>
 
-                    {/* Quick Access List (Recent Transaction Mini) */}
+                    {/* Quick Access List (Recent Transactions Mini) */}
                     <div className="glass-card p-0 overflow-hidden flex flex-col h-[200px]">
                         <div className="px-5 py-4 border-b border-white/5 flex items-center justify-between bg-white/[0.02]">
-                            <h3 className="text-sm font-semibold text-white">Últimas Transações</h3>
+                            <h3 className="text-sm font-semibold text-white">{t('last_transactions')}</h3>
                             <Link to="/app/transactions" className="p-1 rounded-lg hover:bg-white/10 transition-colors">
                                 <ChevronRight className="w-4 h-4 text-gray-400" />
                             </Link>
@@ -324,25 +335,25 @@ export default function Dashboard() {
                         <div className="overflow-y-auto custom-scrollbar p-2">
                             {recentTransactions.length > 0 ? (
                                 <div className="space-y-1">
-                                    {recentTransactions.map((t) => (
-                                        <div key={t.id} className="flex items-center justify-between p-2.5 hover:bg-white/5 rounded-lg transition-colors cursor-pointer group">
+                                    {recentTransactions.map((tx) => (
+                                        <div key={tx.id} className="flex items-center justify-between p-2.5 hover:bg-white/5 rounded-lg transition-colors cursor-pointer group">
                                             <div className="flex items-center gap-3">
-                                                <div className={`w-8 h-8 rounded-full flex items-center justify-center ${t.type === 'income' ? 'bg-brand-500/10 text-brand-400' : 'bg-red-500/10 text-red-400'}`}>
-                                                    {t.type === 'income' ? <ArrowUpRight className="w-4 h-4" /> : <ArrowDownRight className="w-4 h-4" />}
+                                                <div className={`w-8 h-8 rounded-full flex items-center justify-center ${tx.type === 'income' ? 'bg-brand-500/10 text-brand-400' : 'bg-red-500/10 text-red-400'}`}>
+                                                    {tx.type === 'income' ? <ArrowUpRight className="w-4 h-4" /> : <ArrowDownRight className="w-4 h-4" />}
                                                 </div>
                                                 <div className="max-w-[100px] truncate">
-                                                    <p className="text-sm text-gray-200 truncate group-hover:text-white transition-colors">{t.description}</p>
-                                                    <p className="text-[10px] text-gray-500">{categoryConfig[t.category]?.label || 'Geral'}</p>
+                                                    <p className="text-sm text-gray-200 truncate group-hover:text-white transition-colors">{tx.description}</p>
+                                                    <p className="text-[10px] text-gray-500">{categoryConfig[tx.category]?.label || t('general')}</p>
                                                 </div>
                                             </div>
-                                            <span className={`text-sm font-medium ${t.type === 'income' ? 'text-brand-400' : 'text-gray-300'}`}>
-                                                {t.type === 'income' ? '+' : '-'}{fmt(Math.abs(t.amount))}
+                                            <span className={`text-sm font-medium ${tx.type === 'income' ? 'text-brand-400' : 'text-gray-300'}`}>
+                                                {tx.type === 'income' ? '+' : '-'}{fmt(Math.abs(tx.amount))}
                                             </span>
                                         </div>
                                     ))}
                                 </div>
                             ) : (
-                                <p className="text-center text-xs text-gray-500 mt-10">Nenhuma transação recente</p>
+                                <p className="text-center text-xs text-gray-500 mt-10">{t('no_recent_transactions')}</p>
                             )}
                         </div>
                     </div>

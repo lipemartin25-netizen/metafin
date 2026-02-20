@@ -69,9 +69,9 @@ export default function Navbar() {
     const navItems = [
         { to: '/app', label: t('dashboard'), icon: LayoutDashboard, end: true },
         { to: '/app/transactions', label: t('transactions'), icon: ArrowRightLeft },
-        { to: '/app/accounts', label: t('accounts'), icon: Wallet },
-        { to: '/app/cards', label: 'Cartoes', icon: CreditCard },
-        { to: '/app/bills', label: 'Contas', icon: CalendarDays },
+        { to: '/app/accounts', label: 'Saldos & Bancos', icon: Wallet },
+        { to: '/app/cards', label: 'Cartões', icon: CreditCard },
+        { to: '/app/bills', label: 'Contas a Pagar', icon: CalendarDays },
         { to: '/app/investments', label: t('investments'), icon: PieChart },
         { to: '/app/budget', label: 'Orcamento', icon: PiggyBank },
         { to: '/app/goals', label: 'Metas', icon: Target },

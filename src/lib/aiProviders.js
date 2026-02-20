@@ -185,7 +185,7 @@ export async function callAI(modelId, messages, options = {}) {
 }
 
 // ========== FINANCIAL PROMPTS ==========
-export function buildFinancialContext(transactions, summary) {
+export function buildFinancialContext(transactions, summary, extraData = {}) {
     if (!transactions || transactions.length === 0) return "O usuário ainda não tem transações registradas.";
 
     const recentTx = transactions.slice(0, 30).map((t) =>
@@ -198,18 +198,35 @@ export function buildFinancialContext(transactions, summary) {
     const balance = summary?.balance || 0;
     const count = transactions.length;
 
-    return `
+    let context = `
 ## Dados Financeiros do Usuário
 
 **Resumo:**
-- Receita Total: R$ ${totalIncome.toFixed(2)}
-- Despesa Total: R$ ${Math.abs(totalExpense).toFixed(2)}
-- Saldo: R$ ${balance.toFixed(2)}
+- Receita Total: R$ ${parseFloat(totalIncome).toFixed(2)}
+- Despesa Total: R$ ${Math.abs(parseFloat(totalExpense)).toFixed(2)}
+- Saldo: R$ ${parseFloat(balance).toFixed(2)}
 - Total de Transações: ${count}
+`.trim() + '\n\n';
 
-**Transações Recentes:**
-${recentTx}
-`.trim();
+    if (extraData.budgets && extraData.budgets.length > 0) {
+        context += `**Orçamentos Definidos:**\n`;
+        extraData.budgets.forEach(b => {
+            context += `- ${b.category}: R$ ${parseFloat(b.limit).toFixed(2)}/mês\n`;
+        });
+        context += '\n';
+    }
+
+    if (extraData.goals && extraData.goals.length > 0) {
+        context += `**Metas Atuais:**\n`;
+        extraData.goals.forEach(g => {
+            context += `- ${g.name}: R$ ${parseFloat(g.current).toFixed(2)} / R$ ${parseFloat(g.target).toFixed(2)}\n`;
+        });
+        context += '\n';
+    }
+
+    context += `**Transações Recentes:**\n${recentTx}\n`;
+
+    return context;
 }
 
 // Prompts predefinidos para ações comuns

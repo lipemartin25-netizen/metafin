@@ -21,6 +21,7 @@ import FinancialHealth from './pages/FinancialHealth';
 import Budget from './pages/Budget';
 import NetWorth from './pages/NetWorth';
 import Reports from './pages/Reports';
+import DeveloperAPI from './pages/DeveloperAPI';
 import Upgrade from './pages/Upgrade';
 import AiChat from './components/AiChat';
 import Settings from './pages/Settings';
@@ -81,6 +82,7 @@ export default function App() {
           <Route path="reports" element={<Reports />} />
           <Route path="health" element={<FinancialHealth />} />
           <Route path="advisor" element={<AIAssistant />} />
+          <Route path="api" element={<DeveloperAPI />} />
           <Route path="upgrade" element={<Upgrade />} />
           <Route path="settings" element={<Settings />} />
         </Route>

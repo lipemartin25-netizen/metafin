@@ -60,7 +60,11 @@ export default function AiChat() {
                 count: transactions.length
             };
 
-            const financialContext = buildFinancialContext(transactions, adaptedSummary);
+            // Send goals and budgets to AI Context
+            const budgets = JSON.parse(localStorage.getItem('sf_budgets') || '[]');
+            const goals = JSON.parse(localStorage.getItem('sf_goals') || '[]');
+
+            const financialContext = buildFinancialContext(transactions, adaptedSummary, { budgets, goals });
 
             const chatMessages = [
                 { role: 'system', content: `Você é o SmartFinance AI.\n\n${financialContext}` },

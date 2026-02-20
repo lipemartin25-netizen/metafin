@@ -19,9 +19,10 @@ import {
     CalendarDays,
     Target,
     Heart,
-    PiggyBank,
     Landmark,
-    FileText
+    FileText,
+    Code2,
+    PiggyBank
 } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import ThemeToggle from './ThemeToggle';
@@ -77,6 +78,7 @@ export default function Navbar() {
         { to: '/app/networth', label: 'Patrimonio', icon: Landmark },
         { to: '/app/reports', label: 'Relatorios', icon: FileText },
         { to: '/app/health', label: 'Saude', icon: Heart },
+        { to: '/app/api', label: 'Webhooks', icon: Code2 },
         { to: '/app/advisor', label: t('ai_assistant'), icon: Bot },
     ];
 

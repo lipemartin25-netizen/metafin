@@ -19,9 +19,10 @@ import {
     CalendarDays,
     Target,
     Heart,
+    FileText,
+    Code2,
     PiggyBank,
-    Landmark,
-    FileText
+    Landmark
 } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 
@@ -48,6 +49,7 @@ export default function Sidebar({ collapsed, setCollapsed, mobileOpen, setMobile
         { to: '/app/networth', label: 'Patrimonio', icon: Landmark },
         { to: '/app/reports', label: 'Relatorios', icon: FileText },
         { to: '/app/health', label: 'Saude', icon: Heart },
+        { to: '/app/api', label: 'Webhooks', icon: Code2 },
         { to: '/app/advisor', label: t('ai_assistant'), icon: Bot },
     ];
 

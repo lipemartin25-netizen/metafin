@@ -16,6 +16,9 @@ function fmt(value) {
 function analyzeTransactions(transactions) {
     if (!transactions.length) return null;
 
+    const budgets = JSON.parse(localStorage.getItem('sf_budgets') || '[]');
+    const goals = JSON.parse(localStorage.getItem('sf_goals') || '[]');
+
     const totalIncome = transactions.filter((t) => t.type === 'income').reduce((s, t) => s + Math.abs(t.amount), 0);
     const totalExpenses = transactions.filter((t) => t.type === 'expense').reduce((s, t) => s + Math.abs(t.amount), 0);
     const balance = totalIncome - totalExpenses;
@@ -49,7 +52,11 @@ function analyzeTransactions(transactions) {
     });
     const recurring = Object.values(descCounts).filter((d) => d.count >= 2).sort((a, b) => b.total - a.total);
 
-    return { totalIncome, totalExpenses, balance, savingsRate, categoryTotals, sortedCategories, topCategory, months, recurring, count: transactions.length };
+    return {
+        totalIncome, totalExpenses, balance, savingsRate,
+        categoryTotals, sortedCategories, topCategory, months, recurring,
+        count: transactions.length, budgets, goals
+    };
 }
 
 // ========== AI RESPONSE GENERATOR ==========
@@ -148,6 +155,35 @@ function generateAIResponse(question, analysis) {
         return { text: tips, type: 'success' };
     }
 
+    // Budget
+    if (q.match(/orcamento|limite|estour|budget/)) {
+        if (!analysis.budgets || analysis.budgets.length === 0) {
+            return { text: '📈 Você não definiu nenhum orçamento ainda. Vá até a seção **Orçamento** e defina limites para suas categorias!', type: 'info' };
+        }
+
+        let text = '🐖 **Status do seu Orçamento Mensal**\n\n';
+        let overBudgetCount = 0;
+
+        analysis.budgets.forEach(b => {
+            const spent = analysis.categoryTotals[b.category] || 0;
+            const pct = b.limit > 0 ? (spent / b.limit) * 100 : 0;
+            const over = spent > b.limit;
+
+            text += `${categoryConfig[b.category]?.icon || '📦'} **${categoryConfig[b.category]?.label || b.category}**\n`;
+            text += `Limite: ${fmt(b.limit)} | Gasto: ${fmt(spent)} (${pct.toFixed(0)}%)\n`;
+
+            if (over) {
+                text += `🚨 Estourou **${fmt(spent - b.limit)}** do orçamento!\n\n`;
+                overBudgetCount++;
+            } else {
+                text += `✅ Sobram ${fmt(b.limit - spent)} neste mês.\n\n`;
+            }
+        });
+
+        const type = overBudgetCount > 0 ? 'alert' : 'success';
+        return { text, type };
+    }
+
     // Trends
     if (q.match(/tendencia|trend|evolucao|mensal|mes|meses|historico/)) {
         const monthEntries = Object.entries(analysis.months).sort((a, b) => a[0].localeCompare(b[0]));
@@ -183,20 +219,32 @@ function generateAIResponse(question, analysis) {
 
     // Goals
     if (q.match(/meta|objetivo|planejamento|planejar|futuro|reserva|emergencia/)) {
+        let text = '🎯 **Metas e Planejamento**\n\n';
+
+        if (analysis.goals && analysis.goals.length > 0) {
+            text += '**Suas Metas Atuais:**\n';
+            analysis.goals.forEach(g => {
+                const pct = g.target > 0 ? (g.current / g.target) * 100 : 0;
+                text += `• **${g.name}**: ${fmt(g.current)} de ${fmt(g.target)} (${pct.toFixed(0)}% concluída)\n`;
+            });
+            text += '\n';
+        }
+
         const monthlyIncome = analysis.totalIncome / Math.max(Object.keys(analysis.months).length, 1);
         const emergencyFund = monthlyIncome * 6;
+
+        text += `📊 Renda mensal média: **${fmt(monthlyIncome)}**\n\n` +
+            `**Regra 50/30/20 sugerida para você:**\n` +
+            `• 🏠 50% Necessidades: **${fmt(monthlyIncome * 0.5)}** (moradia, alimentação, transporte)\n` +
+            `• 🎮 30% Desejos: **${fmt(monthlyIncome * 0.3)}** (entretenimento, compras)\n` +
+            `• 💰 20% Poupança: **${fmt(monthlyIncome * 0.2)}** (investimentos, reserva)\n\n` +
+            `**Dicas extras:**\n` +
+            `1. 🚨 Focar na Reserva de emergência: alvo de **${fmt(emergencyFund)}**\n` +
+            `2. 📈 Investir 20% da sua renda: **${fmt(monthlyIncome * 0.2)}/mês**\n` +
+            `3. 🎯 Reduzir sua categoria mais cara (${categoryConfig[analysis.topCategory?.[0]]?.label || 'N/A'}) em 10%.\n`;
+
         return {
-            text: `🎯 **Planejamento Financeiro Sugerido**\n\n` +
-                `📊 Renda mensal média: **${fmt(monthlyIncome)}**\n\n` +
-                `**Regra 50/30/20 para você:**\n` +
-                `• 🏠 50% Necessidades: **${fmt(monthlyIncome * 0.5)}** (moradia, alimentação, transporte)\n` +
-                `• 🎮 30% Desejos: **${fmt(monthlyIncome * 0.3)}** (entretenimento, compras)\n` +
-                `• 💰 20% Poupança: **${fmt(monthlyIncome * 0.2)}** (investimentos, reserva)\n\n` +
-                `**Metas sugeridas:**\n` +
-                `1. 🚨 Reserva de emergência (6 meses): **${fmt(emergencyFund)}**\n` +
-                `2. 📈 Investir 20% da renda: **${fmt(monthlyIncome * 0.2)}/mês**\n` +
-                `3. 🎯 Reduzir maior gasto (${categoryConfig[analysis.topCategory?.[0]]?.label || 'N/A'}) em 10%\n` +
-                `4. 📱 Cancelar assinaturas não utilizadas`,
+            text,
             type: 'success',
         };
     }
@@ -205,11 +253,12 @@ function generateAIResponse(question, analysis) {
     return {
         text: `🤔 Não entendi completamente, mas aqui está o que posso fazer:\n\n` +
             `• **"resumo"** — visão geral das finanças\n` +
+            `• **"orçamento"** — status dos seus limites e orçamentos\n` +
             `• **"categorias"** — onde você mais gasta\n` +
             `• **"dicas"** — como economizar\n` +
             `• **"tendências"** — evolução mensal\n` +
             `• **"recorrentes"** — assinaturas e fixos\n` +
-            `• **"metas"** — planejamento financeiro\n\n` +
+            `• **"metas"** — análise das suas metas financeiras\n\n` +
             `Tente uma dessas! 😊`,
         type: 'info',
     };
@@ -218,11 +267,12 @@ function generateAIResponse(question, analysis) {
 // ========== QUICK ACTIONS ==========
 const QUICK_ACTIONS = [
     { label: '📊 Resumo', prompt: 'Me dê um resumo financeiro' },
+    { label: '🐖 Orçamento', prompt: 'Como está meu orçamento?' },
     { label: '💡 Dicas', prompt: 'Quero dicas para economizar' },
     { label: '🏷️ Categorias', prompt: 'Onde estou gastando mais?' },
     { label: '📈 Tendências', prompt: 'Como está minha evolução mensal?' },
     { label: '🔄 Recorrentes', prompt: 'Quais são meus gastos recorrentes?' },
-    { label: '🎯 Metas', prompt: 'Me ajude a planejar metas financeiras' },
+    { label: '🎯 Metas', prompt: 'Me detalhe sobre minhas metas financeiras' },
 ];
 
 // ========== COMPONENT ==========

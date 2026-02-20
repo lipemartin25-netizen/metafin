@@ -1,9 +1,9 @@
 /**
- * SmartFinance Hub — AI Chat Edge Function (Supabase)
+ * SmartFinance Hub - AI Chat Edge Function (Supabase)
  * Proxy seguro para chamadas de IA.
  * As API keys ficam APENAS no servidor (Supabase Secrets).
  *
- * Secrets necessários (configurar via supabase secrets set):
+ * Secrets necessarios (configurar via supabase secrets set):
  *   OPENAI_API_KEY
  *   GEMINI_API_KEY
  *   ANTHROPIC_API_KEY   (opcional)
@@ -202,7 +202,7 @@ Deno.serve(async (req) => {
     }
 
     try {
-        // 1. Autenticar usuário
+        // 1. Autenticar usuario
         const authHeader = req.headers.get("Authorization");
         if (!authHeader) return respond({ error: "Authorization required" }, 401);
 
@@ -214,39 +214,39 @@ Deno.serve(async (req) => {
         } = await supabase.auth.getUser(token);
 
         if (authError || !user) {
-            return respond({ error: "Não autorizado" }, 401);
+            return respond({ error: "Unauthorized" }, 401);
         }
 
         // 2. Parse body
         const { modelId, messages, options } = await req.json();
 
         if (!modelId || !messages || !Array.isArray(messages)) {
-            return respond({ error: "modelId e messages são obrigatórios" }, 400);
+            return respond({ error: "modelId and messages are required" }, 400);
         }
 
         // Limite de mensagens para evitar abuso
         if (messages.length > 50) {
-            return respond({ error: "Máximo de 50 mensagens por chamada" }, 400);
+            return respond({ error: "Maximum 50 messages per call" }, 400);
         }
 
         // 3. Resolver modelo
         const modelConfig = MODELS[modelId];
         if (!modelConfig) {
-            return respond({ error: `Modelo "${modelId}" não encontrado` }, 400);
+            return respond({ error: `Model "${modelId}" not found` }, 400);
         }
 
         const apiKey = getApiKey(modelConfig.provider);
         if (!apiKey) {
             return respond(
                 {
-                    error: `API key não configurada para ${modelConfig.provider}. Configure via: supabase secrets set ${modelConfig.provider.toUpperCase()}_API_KEY=...`,
+                    error: `API key not configured for ${modelConfig.provider}. Set via: supabase secrets set ${modelConfig.provider.toUpperCase()}_API_KEY=...`,
                 },
                 500,
             );
         }
 
         const temperature = options?.temperature ?? 0.7;
-        const maxTokens = Math.min(options?.maxTokens ?? 2048, 4096); // Cap at 4096
+        const maxTokens = Math.min(options?.maxTokens ?? 2048, 4096);
 
         // 4. Chamar provider
         const startTime = Date.now();
@@ -280,10 +280,10 @@ Deno.serve(async (req) => {
                 );
                 break;
             default:
-                return respond({ error: `Provider "${modelConfig.provider}" não suportado` }, 400);
+                return respond({ error: `Provider "${modelConfig.provider}" not supported` }, 400);
         }
 
-        console.log(`[AI] ${modelId} → ${user.email} | ${Date.now() - startTime}ms`);
+        console.log(`[AI] ${modelId} -> ${user.email} | ${Date.now() - startTime}ms`);
 
         return respond(
             {
@@ -295,9 +295,9 @@ Deno.serve(async (req) => {
             200,
         );
     } catch (err) {
-        console.error("[AI Chat] ❌", err);
+        console.error("[AI Chat] Error:", err);
         return respond(
-            { error: err instanceof Error ? err.message : "Erro interno" },
+            { error: err instanceof Error ? err.message : "Internal error" },
             500,
         );
     }

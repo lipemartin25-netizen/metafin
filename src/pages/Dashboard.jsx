@@ -9,10 +9,11 @@ import {
     ArrowDownRight,
     Loader2,
     Sparkles,
-    Activity,
     Calendar,
     ChevronRight,
-    Target
+    Target,
+    Landmark,
+    Activity
 } from 'lucide-react';
 import {
     AreaChart,
@@ -63,8 +64,8 @@ function SummaryCard({ title, value, type, icon: Icon, trend }) {
                     </div>
                     {trend !== null && trend !== undefined && (
                         <span className={`text-xs font-medium px-2 py-1 rounded-lg ${trend >= 0
-                                ? 'text-emerald-700 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-500/10'
-                                : 'text-red-700 dark:text-red-400 bg-red-100 dark:bg-red-500/10'
+                            ? 'text-emerald-700 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-500/10'
+                            : 'text-red-700 dark:text-red-400 bg-red-100 dark:bg-red-500/10'
                             }`}>
                             {trend > 0 ? '+' : ''}{trend}%
                         </span>
@@ -149,6 +150,21 @@ export default function Dashboard() {
         return defaults;
     }, [t]);
 
+    // NetWorth Calculado (Puxando de accounts + invest + carts)
+    const netWorth = useMemo(() => {
+        const accounts = JSON.parse(localStorage.getItem('sf_bank_accounts') || '[]');
+        const brokers = JSON.parse(localStorage.getItem('sf_connected_brokers') || '[]');
+        const cards = JSON.parse(localStorage.getItem('sf_credit_cards') || '[]');
+
+        const totalAccounts = accounts.reduce((s, a) => s + (parseFloat(a.balance) || 0), 0);
+        const totalInvestments = brokers.reduce((s, b) => s + (b.totalValue || 0), 0);
+        const totalCardDebt = cards.reduce((s, c) => s + (c.used || 0), 0);
+
+        const assets = totalAccounts + totalInvestments + Math.max(summary.balance, 0);
+        const liabilities = totalCardDebt;
+        return assets - liabilities;
+    }, [summary]);
+
     // Preparar dados para o gráfico principal
     const dailyData = useMemo(() => {
         const g = {};
@@ -211,6 +227,19 @@ export default function Dashboard() {
                 </div>
 
                 <div className="flex items-center gap-3">
+                    <Link
+                        to="/app/networth"
+                        className="glass-card !p-2 !rounded-xl !border-transparent !bg-indigo-500/10 hover:!bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 flex items-center justify-center gap-2 group transition-all"
+                    >
+                        <div className="text-right mr-1">
+                            <p className="text-[10px] uppercase font-bold text-indigo-500/70">{t('net_worth') || 'Patrimônio'}</p>
+                            <p className="text-sm font-bold tracking-tight">{fmt(netWorth)}</p>
+                        </div>
+                        <div className="p-1.5 bg-indigo-500/20 rounded-lg group-hover:bg-indigo-500/30 transition-colors">
+                            <Landmark className="w-4 h-4" />
+                        </div>
+                    </Link>
+
                     <ProGate feature="aiInsights">
                         <Link
                             to="/app/advisor"

@@ -9,9 +9,8 @@ import { initAnalytics } from './hooks/useAnalytics';
 import './index.css';
 import './light-theme.css'; // Mantendo para compatibilidade com páginas antigas
 
-// Forçar carregamento limpo do Client ID
-const VITE_GOOGLE_CLIENT_ID = "637395895732-62af4b16cjnok4v2uuv4n3kiicpin5jk.apps.googleusercontent.com";
-const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || VITE_GOOGLE_CLIENT_ID;
+// Google Client ID — deve vir do .env.local (VITE_GOOGLE_CLIENT_ID)
+const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || '';
 
 // Inicializar Analytics
 initAnalytics();

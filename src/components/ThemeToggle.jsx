@@ -18,13 +18,11 @@ export default function ThemeToggle({ className = '' }) {
 
   const toggle = () => setTheme(prev => (prev === 'dark' ? 'light' : 'dark'));
 
-  const label = 'Alternar tema';
-
   return (
     <button
       onClick={toggle}
       className={'px-2 py-2 rounded-xl transition-all duration-300 hover:bg-white/10 active:scale-90 ' + className}
-      aria-label={label}
+      aria-label='Alternar tema'
       title={theme === 'dark' ? 'Tema claro' : 'Tema escuro'}
     >
       {theme === 'dark' ? (

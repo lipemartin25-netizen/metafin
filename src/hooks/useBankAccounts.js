@@ -21,6 +21,7 @@ export function useBankAccounts() {
                 const { data: manual, error: manualErr } = await supabase
                     .from('bank_accounts')
                     .select('*')
+                    .eq('user_id', user.id)
                     .order('created_at', { ascending: false });
 
                 if (manualErr) throw manualErr;
@@ -29,6 +30,7 @@ export function useBankAccounts() {
                 const { data: pluggy, error: pluggyErr } = await supabase
                     .from('pluggy_bank_accounts')
                     .select('*')
+                    .eq('user_id', user.id)
                     .order('created_at', { ascending: false });
 
                 if (pluggyErr) throw pluggyErr;

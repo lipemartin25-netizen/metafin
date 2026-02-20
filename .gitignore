@@ -12,6 +12,19 @@ dist
 dist-ssr
 *.local
 
+# Environment variables (CRITICAL — never commit secrets)
+.env
+.env.*
+!.env.example
+server/.env
+
+# Debug / lint output
+debug_line.txt
+lint_final.txt
+lint_output.txt
+lint_results.json
+match.txt
+
 # Editor folders
 .vscode/*
 !.vscode/extensions.json

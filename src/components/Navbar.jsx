@@ -5,19 +5,19 @@ import { useSubscription } from '../hooks/useSubscription';
 import {
     LayoutDashboard,
     ArrowRightLeft,
-    LogOut,
-    Menu,
-    X,
-    Sparkles,
     Wallet,
     PieChart,
     Bot,
     Crown,
     Settings,
     ChevronDown,
-    Globe
+    LogOut,
+    Menu,
+    X,
+    Sparkles
 } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
+import ThemeToggle from './ThemeToggle';
 
 const FLAGS = {
     pt: '🇧🇷',
@@ -70,7 +70,7 @@ export default function Navbar() {
     const userName = user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'Usuário';
 
     return (
-        <nav className="fixed top-0 left-0 right-0 z-50 glass border-b border-white/5 bg-surface-900/80 backdrop-blur-xl">
+        <nav className="fixed top-0 left-0 right-0 z-50 border-b border-gray-200 dark:border-white/5 bg-white/90 dark:bg-surface-900/80 backdrop-blur-xl transition-all duration-300">
             <div className="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-16">
 
@@ -81,7 +81,7 @@ export default function Navbar() {
                                 <Wallet className="w-5 h-5 text-white" strokeWidth={2.5} />
                                 <div className="absolute inset-0 bg-white/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity" />
                             </div>
-                            <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400 tracking-tight">
+                            <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-gray-900 via-gray-600 to-gray-500 dark:from-white dark:to-gray-400 tracking-tight">
                                 SmartFinance
                             </span>
                         </Link>
@@ -95,8 +95,8 @@ export default function Navbar() {
                                     end={item.end}
                                     className={({ isActive }) =>
                                         `flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${isActive
-                                            ? 'bg-brand-500/10 text-brand-400 shadow-[0_0_15px_-3px_rgba(16,185,129,0.1)]'
-                                            : 'text-gray-400 hover:text-white hover:bg-white/5'
+                                            ? 'bg-brand-500/10 text-brand-600 dark:text-brand-400 shadow-[0_0_15px_-3px_rgba(16,185,129,0.1)]'
+                                            : 'text-gray-600 dark:text-gray-400 hover:text-brand-600 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/5'
                                         }`
                                     }
                                 >
@@ -114,18 +114,18 @@ export default function Navbar() {
                         <div className="relative" ref={langRef}>
                             <button
                                 onClick={() => setLangOpen(!langOpen)}
-                                className="w-9 h-9 flex items-center justify-center rounded-lg text-gray-400 hover:text-white hover:bg-white/5 transition-colors"
+                                className="w-9 h-9 flex items-center justify-center rounded-lg text-gray-500 dark:text-gray-400 hover:text-brand-600 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/5 transition-colors"
                             >
                                 <span className="text-lg">{FLAGS[language]}</span>
                             </button>
 
                             {langOpen && (
-                                <div className="absolute right-0 mt-2 w-48 py-1 rounded-xl bg-surface-800 border border-white/10 shadow-xl shadow-black/50 animate-fade-in origin-top-right">
+                                <div className="absolute right-0 mt-2 w-48 py-1 rounded-xl bg-white dark:bg-surface-800 border border-gray-100 dark:border-white/10 shadow-xl dark:shadow-black/50 animate-fade-in origin-top-right ring-1 ring-black/5">
                                     {Object.entries(FLAGS).map(([code, flag]) => (
                                         <button
                                             key={code}
                                             onClick={() => { changeLanguage(code); setLangOpen(false); }}
-                                            className={`w-full text-left px-4 py-2.5 text-sm flex items-center gap-3 hover:bg-white/5 transition-colors ${language === code ? 'text-brand-400 bg-brand-500/5' : 'text-gray-300'
+                                            className={`w-full text-left px-4 py-2.5 text-sm flex items-center gap-3 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors ${language === code ? 'text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-500/5' : 'text-gray-700 dark:text-gray-300'
                                                 }`}
                                         >
                                             <span className="text-lg">{flag}</span>
@@ -136,6 +136,9 @@ export default function Navbar() {
                                 </div>
                             )}
                         </div>
+
+                        {/* Theme Toggle */}
+                        <ThemeToggle />
 
                         {/* Pro Badge / Upgrade Button */}
                         <div className="hidden sm:block">
@@ -148,7 +151,7 @@ export default function Navbar() {
                                     <span>DESBLOQUEAR PRO</span>
                                 </Link>
                             ) : (
-                                <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-800 border border-brand-500/30 text-brand-400 text-xs font-bold shadow-glow-sm">
+                                <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gray-100 dark:bg-surface-800 border border-brand-500/30 text-brand-600 dark:text-brand-400 text-xs font-bold shadow-glow-sm">
                                     <Crown className="w-3.5 h-3.5 fill-current" />
                                     <span>PRO ATIVO</span>
                                 </span>
@@ -159,43 +162,43 @@ export default function Navbar() {
                         <div className="relative" ref={profileRef}>
                             <button
                                 onClick={() => setProfileOpen(!profileOpen)}
-                                className="flex items-center gap-3 pl-2 pr-1 py-1 rounded-full hover:bg-white/5 transition-colors group"
+                                className="flex items-center gap-3 pl-2 pr-1 py-1 rounded-full hover:bg-gray-100 dark:hover:bg-white/5 transition-colors group"
                             >
                                 <div className="text-right hidden sm:block">
-                                    <p className="text-xs font-medium text-white group-hover:text-brand-300 transition-colors truncate max-w-[100px]">
+                                    <p className="text-xs font-medium text-gray-900 dark:text-white group-hover:text-brand-600 dark:group-hover:text-brand-300 transition-colors truncate max-w-[100px]">
                                         {userName}
                                     </p>
-                                    <p className="text-[10px] text-gray-500 group-hover:text-gray-400 transition-colors">
+                                    <p className="text-[10px] text-gray-500 dark:text-gray-500 group-hover:text-gray-700 dark:group-hover:text-gray-400 transition-colors">
                                         {isPro ? 'Membro Pro' : 'Plano Grátis'}
                                     </p>
                                 </div>
-                                <div className="w-9 h-9 rounded-full bg-gradient-to-br from-surface-700 to-surface-800 border border-white/10 flex items-center justify-center text-sm font-bold text-white shadow-inner group-hover:border-brand-500/50 transition-colors">
+                                <div className="w-9 h-9 rounded-full bg-gradient-to-br from-gray-200 to-gray-300 dark:from-surface-700 dark:to-surface-800 border border-white/20 dark:border-white/10 flex items-center justify-center text-sm font-bold text-gray-700 dark:text-white shadow-inner group-hover:border-brand-500/50 transition-colors">
                                     {userInitial}
                                 </div>
                                 <ChevronDown className={`w-3.5 h-3.5 text-gray-500 transition-transform duration-200 ${profileOpen ? 'rotate-180' : ''}`} />
                             </button>
 
                             {profileOpen && (
-                                <div className="absolute right-0 mt-2 w-56 rounded-xl bg-surface-900 border border-white/10 shadow-2xl shadow-black/50 py-1.5 animate-fade-in origin-top-right">
-                                    <div className="px-4 py-3 border-b border-white/5 mb-1">
-                                        <p className="text-sm font-medium text-white truncate">{userName}</p>
+                                <div className="absolute right-0 mt-2 w-56 rounded-xl bg-white dark:bg-surface-900 border border-gray-100 dark:border-white/10 shadow-2xl dark:shadow-black/50 py-1.5 animate-fade-in origin-top-right ring-1 ring-black/5">
+                                    <div className="px-4 py-3 border-b border-gray-100 dark:border-white/5 mb-1">
+                                        <p className="text-sm font-medium text-gray-900 dark:text-white truncate">{userName}</p>
                                         <p className="text-xs text-gray-500 truncate">{user?.email}</p>
                                     </div>
 
                                     <Link
                                         to="/app/settings"
                                         onClick={() => setProfileOpen(false)}
-                                        className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-300 hover:text-white hover:bg-white/5 transition-colors"
+                                        className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:text-brand-600 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-white/5 transition-colors"
                                     >
                                         <Settings className="w-4 h-4" />
                                         {t('settings')}
                                     </Link>
 
-                                    <div className="h-px bg-white/5 my-1" />
+                                    <div className="h-px bg-gray-100 dark:bg-white/5 my-1" />
 
                                     <button
                                         onClick={handleSignOut}
-                                        className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-colors"
+                                        className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors"
                                     >
                                         <LogOut className="w-4 h-4" />
                                         {t('logout')}
@@ -207,7 +210,7 @@ export default function Navbar() {
                         {/* Mobile Menu Button */}
                         <button
                             onClick={() => setMobileOpen(!mobileOpen)}
-                            className="md:hidden p-2 rounded-lg text-gray-400 hover:text-white hover:bg-white/5"
+                            className="md:hidden p-2 rounded-lg text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/5"
                         >
                             {mobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
                         </button>
@@ -217,7 +220,7 @@ export default function Navbar() {
 
             {/* Mobile Menu Overlay */}
             {mobileOpen && (
-                <div className="md:hidden fixed inset-0 top-16 z-40 bg-surface-950/95 backdrop-blur-xl animate-fade-in">
+                <div className="md:hidden fixed inset-0 top-16 z-40 bg-white/95 dark:bg-surface-950/95 backdrop-blur-xl animate-fade-in border-t border-gray-200 dark:border-white/10">
                     <div className="p-4 space-y-1">
                         {navItems.map((item) => (
                             <NavLink
@@ -226,8 +229,8 @@ export default function Navbar() {
                                 onClick={() => setMobileOpen(false)}
                                 className={({ isActive }) =>
                                     `flex items-center gap-3 px-4 py-3.5 rounded-xl text-base font-medium transition-all ${isActive
-                                        ? 'bg-brand-500/10 text-brand-400 border border-brand-500/20'
-                                        : 'text-gray-400 hover:text-white hover:bg-white/5'
+                                        ? 'bg-brand-500/10 text-brand-600 dark:text-brand-400 border border-brand-500/20'
+                                        : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/5'
                                     }`
                                 }
                             >
@@ -236,7 +239,7 @@ export default function Navbar() {
                             </NavLink>
                         ))}
 
-                        <div className="h-px bg-white/10 my-4" />
+                        <div className="h-px bg-gray-100 dark:bg-white/10 my-4" />
 
                         {!isPro && (
                             <Link
@@ -251,7 +254,7 @@ export default function Navbar() {
 
                         <button
                             onClick={handleSignOut}
-                            className="flex items-center gap-3 px-4 py-3.5 w-full rounded-xl text-base font-medium text-red-400 hover:bg-red-500/10 transition-colors"
+                            className="flex items-center gap-3 px-4 py-3.5 w-full rounded-xl text-base font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors"
                         >
                             <LogOut className="w-5 h-5" />
                             {t('logout')}

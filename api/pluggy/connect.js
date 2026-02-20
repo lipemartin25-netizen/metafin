@@ -1,14 +1,26 @@
 import { createClient } from '@supabase/supabase-js';
 
-export default async function handler(req, res) {
-    // CORS
-    res.setHeader('Access-Control-Allow-Credentials', true);
-    res.setHeader('Access-Control-Allow-Origin', '*');
+const ALLOWED_ORIGINS = [
+    'https://smart-finance-hub-tau.vercel.app',
+    'http://localhost:5173',
+    'http://localhost:3000',
+];
+
+function setCorsHeaders(req, res) {
+    const origin = req.headers.origin || '';
+    if (ALLOWED_ORIGINS.includes(origin)) {
+        res.setHeader('Access-Control-Allow-Origin', origin);
+    }
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
     res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,POST');
     res.setHeader(
         'Access-Control-Allow-Headers',
         'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization'
     );
+}
+
+export default async function handler(req, res) {
+    setCorsHeaders(req, res);
 
     if (req.method === 'OPTIONS') {
         return res.status(200).end();

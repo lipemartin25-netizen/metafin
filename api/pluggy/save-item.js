@@ -1,9 +1,10 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabase = createClient(
-    process.env.SUPABASE_URL,
-    process.env.SUPABASE_SERVICE_ROLE_KEY
-);
+const ALLOWED_ORIGINS = [
+    'https://smart-finance-hub-tau.vercel.app',
+    'http://localhost:5173',
+    'http://localhost:3000',
+];
 
 function getBearerToken(req) {
     const auth = req.headers.authorization || "";
@@ -12,7 +13,11 @@ function getBearerToken(req) {
 }
 
 export default async function handler(req, res) {
-    res.setHeader("Access-Control-Allow-Origin", "*");
+    const origin = req.headers.origin || '';
+    if (ALLOWED_ORIGINS.includes(origin)) {
+        res.setHeader("Access-Control-Allow-Origin", origin);
+    }
+    res.setHeader("Access-Control-Allow-Credentials", "true");
     res.setHeader("Access-Control-Allow-Headers", "authorization, content-type");
     res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
     if (req.method === "OPTIONS") return res.status(204).end();
@@ -20,6 +25,11 @@ export default async function handler(req, res) {
     if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
 
     try {
+        const supabase = createClient(
+            process.env.SUPABASE_URL,
+            process.env.SUPABASE_SERVICE_ROLE_KEY
+        );
+
         const token = getBearerToken(req);
         if (!token) return res.status(401).json({ error: "Missing bearer token" });
 

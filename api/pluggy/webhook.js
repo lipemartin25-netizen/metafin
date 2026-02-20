@@ -11,24 +11,48 @@ const pluggy = new PluggyClient({
     clientSecret: process.env.PLUGGY_CLIENT_SECRET,
 });
 
+// UUID v4 pattern for itemId validation
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
 export default async function handler(req, res) {
     if (req.method !== 'POST') {
         return res.status(405).json({ error: 'Method not allowed' });
     }
 
-    try {
-        const { event, item, itemId } = req.body;
-        console.log(`Webhook received: ${event} for item ${itemId || item?.id}`);
+    // Validar webhook secret (configure PLUGGY_WEBHOOK_SECRET nas env vars da Vercel)
+    const webhookSecret = process.env.PLUGGY_WEBHOOK_SECRET;
+    if (webhookSecret) {
+        const receivedSecret = req.headers['x-webhook-secret'] || req.query?.secret;
+        if (receivedSecret !== webhookSecret) {
+            console.warn('Webhook rejected: invalid secret');
+            return res.status(403).json({ error: 'Forbidden' });
+        }
+    }
 
-        if (event === 'item/created' || event === 'item/updated') {
-            const connItemId = itemId || item?.id;
+    try {
+        const { event, item, itemId } = req.body || {};
+
+        // Validar campos obrigatórios
+        if (!event || typeof event !== 'string') {
+            return res.status(400).json({ error: 'Missing or invalid event' });
+        }
+
+        const connItemId = itemId || item?.id;
+        console.log(`Webhook received: ${event} for item ${connItemId}`);
+
+        if ((event === 'item/created' || event === 'item/updated') && connItemId) {
+            // Validar formato do itemId
+            if (!UUID_RE.test(connItemId)) {
+                return res.status(400).json({ error: 'Invalid itemId format' });
+            }
             await syncItemData(connItemId);
         }
 
         res.status(200).send('OK');
     } catch (error) {
         console.error('Webhook Handler Error:', error);
-        res.status(500).json({ error: error.message });
+        // Não expor detalhes internos do erro em produção
+        res.status(500).json({ error: 'Internal server error' });
     }
 }
 

@@ -19,8 +19,21 @@ const pluggy = new PluggyClient({
     clientSecret: process.env.PLUGGY_CLIENT_SECRET,
 });
 
-app.use(cors({ origin: '*' }));
-app.use(express.json());
+// CORS — restringir origens permitidas
+const ALLOWED_ORIGINS = [
+    'https://smart-finance-hub-tau.vercel.app',
+    'http://localhost:5173',
+    'http://localhost:3000',
+];
+app.use(cors({
+    origin: (origin, cb) => {
+        // Permitir requests sem origin (mobile apps, Postman em dev)
+        if (!origin || ALLOWED_ORIGINS.includes(origin)) return cb(null, true);
+        cb(new Error('Bloqueado por CORS'));
+    },
+    credentials: true,
+}));
+app.use(express.json({ limit: '1mb' })); // Prevenir payloads absurdos
 app.use(morgan('dev'));
 
 // Health Check

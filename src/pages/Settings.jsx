@@ -4,11 +4,11 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { useTheme } from '../contexts/ThemeContext';
 import {
     Moon, Sun, Globe, Shield, Bell, Trash2, Key, Mail, Monitor,
-    Smartphone as SmartphoneIcon, AlertCircle, CheckCircle
+    Smartphone as SmartphoneIcon, AlertCircle, CheckCircle, HelpCircle, FileSpreadsheet, Zap
 } from 'lucide-react';
 
 export default function Settings() {
-    const { user, requestPasswordReset, updateEmail } = useAuth();
+    const { user, requestPasswordReset } = useAuth();
     const { t } = useLanguage();
     const { theme, setTheme } = useTheme();
 
@@ -70,6 +70,7 @@ export default function Settings() {
         { id: 'preferences', label: t('preferences'), icon: Globe },
         { id: 'security', label: t('security'), icon: Shield },
         { id: 'notifications', label: t('notifications'), icon: Bell },
+        { id: 'tutorial', label: 'Como Usar', icon: HelpCircle },
     ];
 
     const mockDevices = useMemo(() => [
@@ -86,8 +87,8 @@ export default function Settings() {
             {/* Toast */}
             {message && (
                 <div className={`fixed top-20 right-8 z-50 animate-fade-in p-4 rounded-xl flex items-center gap-2 shadow-xl backdrop-blur-md border ${messageType === 'success'
-                        ? 'bg-brand-500/10 border-brand-500/20 text-brand-600 dark:text-brand-400'
-                        : 'bg-red-500/10 border-red-500/20 text-red-600 dark:text-red-400'
+                    ? 'bg-brand-500/10 border-brand-500/20 text-brand-600 dark:text-brand-400'
+                    : 'bg-red-500/10 border-red-500/20 text-red-600 dark:text-red-400'
                     }`}>
                     <CheckCircle className="w-5 h-5" />
                     {message}
@@ -102,8 +103,8 @@ export default function Settings() {
                             key={section.id}
                             onClick={() => setActiveTab(section.id)}
                             className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 text-left ${activeTab === section.id
-                                    ? 'bg-brand-500/10 text-brand-600 dark:text-brand-400 border border-brand-500/20'
-                                    : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5 border border-transparent'
+                                ? 'bg-brand-500/10 text-brand-600 dark:text-brand-400 border border-brand-500/20'
+                                : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5 border border-transparent'
                                 }`}
                         >
                             <section.icon className={`w-5 h-5 ${activeTab === section.id ? 'text-brand-600 dark:text-brand-400' : 'text-gray-400'}`} />
@@ -287,6 +288,68 @@ export default function Settings() {
                                         <h4 className="text-sm font-medium text-blue-700 dark:text-blue-400 mb-1">{t('important')}</h4>
                                         <p className="text-xs text-blue-600 dark:text-blue-300/80">{t('security_notice')}</p>
                                     </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* ===== TUTORIAL / COMO USAR TAB ===== */}
+                    {activeTab === 'tutorial' && (
+                        <div className="space-y-8 animate-fade-in">
+                            <div>
+                                <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
+                                    <HelpCircle className="w-5 h-5 text-brand-500" /> Como Usar o SmartFinance Hub
+                                </h2>
+
+                                <div className="space-y-6">
+                                    {/* App Overview */}
+                                    <div className="glass-card p-6 border-l-4 border-l-brand-500">
+                                        <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">Visão Geral</h3>
+                                        <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed mb-4">
+                                            O SmartFinance é o seu copiloto inteligente para gerenciar suas finanças. Monitore transações, crie planos de orçamento, acompanhe seu patrimônio líquido e use IA avançada para analisar sua saúde financeira de maneira automática.
+                                        </p>
+                                    </div>
+
+                                    {/* Importing the Documents */}
+                                    <div className="glass-card p-6">
+                                        <h3 className="text-md font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                                            <FileSpreadsheet className="w-5 h-5 text-emerald-500" /> Importando Documentos (Extratos, Planilhas)
+                                        </h3>
+                                        <ul className="text-sm text-gray-500 dark:text-gray-400 space-y-3 pl-4 list-decimal">
+                                            <li>Vá até a aba <strong>Transações</strong> no menu lateral ou inferior.</li>
+                                            <li>Clique no botão <strong>Importar Arquivo</strong> (usando Smart Import Multi-Formato).</li>
+                                            <li>Selecione seus arquivos CSV, Excel ou outros suportados.</li>
+                                            <li>A nossa plataforma lerá e identificará automaticamente as colunas, assim como categorizar as despesas.</li>
+                                            <li>Certifique-se de que os arquivos possuam colunas semelhantes a &quot;data&quot;, &quot;valor&quot; e &quot;descricao&quot;.</li>
+                                        </ul>
+                                    </div>
+
+                                    {/* Webhooks Section */}
+                                    <div className="glass-card p-6 bg-fuchsia-500/5 border border-fuchsia-500/10">
+                                        <h3 className="text-md font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                                            <Zap className="w-5 h-5 text-fuchsia-500" /> Conectando Webhooks e Automações
+                                        </h3>
+                                        <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed mb-4">
+                                            Você pode integrar o SmartFinance com serviços como <strong>Zapier, Make, n8n</strong> para receber transações automaticamente (por ex: do MercadoPago, Stripe, ou notificações do celular).
+                                        </p>
+                                        <ul className="text-sm text-gray-500 dark:text-gray-400 space-y-3 pl-4 list-decimal">
+                                            <li>Vá na página <strong>Webhooks</strong>, clicando sobre o ícone <code>&lt;/&gt;</code> no menu (Webhooks).</li>
+                                            <li>Clique em <strong>Gerar API Key</strong> para criar sua chave de acesso seguro.</li>
+                                            <li>Copie sua chave e integre na sua plataforma de automação preferida usando requisições <code>POST</code>.</li>
+                                            <li>O exemplo de <code>cURL</code> mostra qual estrutura enviar. Nossa IA fará o resto do trabalho!</li>
+                                        </ul>
+                                    </div>
+
+                                    {/* AI Tips Section */}
+                                    <div className="glass-card p-6">
+                                        <h3 className="text-md font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                                            <Globe className="w-5 h-5 text-blue-500" /> Consultor IA
+                                        </h3>
+                                        <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
+                                            A IA tem acesso total de leitura (não escrita) das suas Transações, Metas e Orçamentos para fornecer insights perfeitos. Teste enviar um comando como: <em>&quot;A IA detecta algum padrão onde posso economizar?&quot;</em> na aba <strong>Consultor IA</strong>.
+                                        </p>
+                                    </div>
+
                                 </div>
                             </div>
                         </div>

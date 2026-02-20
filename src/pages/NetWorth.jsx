@@ -63,21 +63,21 @@ export default function NetWorth() {
             </div>
 
             {/* Main Net Worth Card */}
-            <div className="glass-card bg-gradient-to-br from-indigo-500/5 to-purple-500/5 border-indigo-500/20 p-8 text-center relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-40 h-40 bg-indigo-500/5 rounded-full -translate-y-1/2 translate-x-1/2" />
-                <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">Patrimonio Liquido Total</p>
-                <h2 className={`text-5xl font-bold ${data.netWorth >= 0 ? 'text-gray-900 dark:text-white' : 'text-red-500'}`}>
+            <div className="glass-card !bg-transparent !border-transparent !p-4 !shadow-none !mt-0 relative overflow-hidden">
+                <p className="text-sm font-medium text-gray-500 mb-1 flex items-center gap-2">Patrimônio Líquido Real</p>
+                <h2 className={`text-6xl font-extrabold tracking-tighter ${data.netWorth >= 0 ? 'text-gray-900 dark:text-white' : 'text-red-500'}`}>
                     {fmt(data.netWorth)}
                 </h2>
-                <div className="mt-4 flex justify-center gap-6">
-                    <div className="text-center">
-                        <p className="text-xs text-gray-500">Ativos</p>
-                        <p className="text-lg font-bold text-emerald-500 flex items-center gap-1 justify-center"><TrendingUp className="w-4 h-4" /> {fmt(data.assets)}</p>
+
+                <div className="mt-8 flex gap-8">
+                    <div>
+                        <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Total de Ativos</p>
+                        <p className="text-2xl font-bold flex items-center gap-1.5"><TrendingUp className="w-5 h-5 text-emerald-500" /> {fmt(data.assets)}</p>
                     </div>
                     <div className="w-px bg-gray-200 dark:bg-white/10" />
-                    <div className="text-center">
-                        <p className="text-xs text-gray-500">Passivos</p>
-                        <p className="text-lg font-bold text-red-500 flex items-center gap-1 justify-center"><TrendingDown className="w-4 h-4" /> {fmt(data.liabilities)}</p>
+                    <div>
+                        <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Total de Passivos</p>
+                        <p className="text-2xl font-bold flex items-center gap-1.5"><TrendingDown className="w-5 h-5 text-rose-500" /> {fmt(data.liabilities)}</p>
                     </div>
                 </div>
             </div>

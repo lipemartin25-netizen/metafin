@@ -9,10 +9,15 @@ import Transactions from './pages/Transactions';
 import Layout from './components/Layout';
 import ProtectedRoute from './components/ProtectedRoute';
 import NpsSurvey from './components/NpsSurvey';
+import OnboardingTour from './components/OnboardingTour';
 
 import AIAssistant from './pages/AIAssistant';
 import BankAccounts from './pages/BankAccounts';
 import Investments from './pages/Investments';
+import CreditCards from './pages/CreditCards';
+import Bills from './pages/Bills';
+import Goals from './pages/Goals';
+import FinancialHealth from './pages/FinancialHealth';
 import Upgrade from './pages/Upgrade';
 import AiChat from './components/AiChat';
 import Settings from './pages/Settings';
@@ -20,11 +25,13 @@ import Settings from './pages/Settings';
 export default function App() {
   const location = useLocation();
   const [showNps, setShowNps] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(false);
 
   useEffect(() => {
     trackPageView(location.pathname, document.title);
   }, [location]);
 
+  // NPS survey trigger
   useEffect(() => {
     const visitCount = parseInt(localStorage.getItem('sf_visits') || '0') + 1;
     localStorage.setItem('sf_visits', visitCount.toString());
@@ -33,6 +40,15 @@ export default function App() {
     if (visitCount >= 3 && !alreadyAnswered && isAppRoute) {
       const timer = setTimeout(() => setShowNps(true), 10000);
       return () => clearTimeout(timer);
+    }
+  }, [location.pathname]);
+
+  // Onboarding trigger — only on first visit to /app
+  useEffect(() => {
+    const done = localStorage.getItem('sf_onboarding_done');
+    const isAppRoute = location.pathname.startsWith('/app');
+    if (!done && isAppRoute) {
+      setShowOnboarding(true);
     }
   }, [location.pathname]);
 
@@ -53,7 +69,11 @@ export default function App() {
           <Route index element={<Dashboard />} />
           <Route path="transactions" element={<Transactions />} />
           <Route path="accounts" element={<BankAccounts />} />
+          <Route path="cards" element={<CreditCards />} />
+          <Route path="bills" element={<Bills />} />
           <Route path="investments" element={<Investments />} />
+          <Route path="goals" element={<Goals />} />
+          <Route path="health" element={<FinancialHealth />} />
           <Route path="advisor" element={<AIAssistant />} />
           <Route path="upgrade" element={<Upgrade />} />
           <Route path="settings" element={<Settings />} />
@@ -65,6 +85,8 @@ export default function App() {
       {isAppRoute && <AiChat />}
 
       {showNps && <NpsSurvey onClose={handleNpsClose} />}
+
+      {showOnboarding && <OnboardingTour onComplete={() => setShowOnboarding(false)} />}
     </>
   );
 }

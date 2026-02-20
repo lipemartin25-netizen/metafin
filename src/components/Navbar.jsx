@@ -14,7 +14,11 @@ import {
     LogOut,
     Menu,
     X,
-    Sparkles
+    Sparkles,
+    CreditCard,
+    CalendarDays,
+    Target,
+    Heart
 } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import ThemeToggle from './ThemeToggle';
@@ -62,7 +66,11 @@ export default function Navbar() {
         { to: '/app', label: t('dashboard'), icon: LayoutDashboard, end: true },
         { to: '/app/transactions', label: t('transactions'), icon: ArrowRightLeft },
         { to: '/app/accounts', label: t('accounts'), icon: Wallet },
+        { to: '/app/cards', label: 'Cartoes', icon: CreditCard },
+        { to: '/app/bills', label: 'Contas', icon: CalendarDays },
         { to: '/app/investments', label: t('investments'), icon: PieChart },
+        { to: '/app/goals', label: 'Metas', icon: Target },
+        { to: '/app/health', label: 'Saude', icon: Heart },
         { to: '/app/advisor', label: t('ai_assistant'), icon: Bot },
     ];
 

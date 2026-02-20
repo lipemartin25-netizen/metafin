@@ -16,7 +16,7 @@ function fmt(value) {
 }
 
 export default function Transactions() {
-    const { transactions, loading, addTransaction, addBulkTransactions, deleteTransaction } = useTransactions();
+    const { transactions, loading, addTransaction, addBulkTransactions, updateTransaction, deleteTransaction } = useTransactions();
     const [searchQuery, setSearchQuery] = useState('');
     const [filterCategory, setFilterCategory] = useState('all');
     const [filterType, setFilterType] = useState('all');
@@ -24,6 +24,7 @@ export default function Transactions() {
     const [importResult, setImportResult] = useState(null);
     const [importing, setImporting] = useState(false);
     const [deletingId, setDeletingId] = useState(null);
+    const [editId, setEditId] = useState(null);
     const fileInputRef = useRef(null);
     const [viewMode, setViewMode] = useState('list'); // 'list' or 'analysis'
     const [selectedMonth, setSelectedMonth] = useState(new Date().toISOString().slice(0, 7)); // YYYY-MM
@@ -67,10 +68,30 @@ export default function Transactions() {
     const handleAddTransaction = async (e) => {
         e.preventDefault();
         const amount = parseFloat(newTx.amount);
-        await addTransaction({ ...newTx, amount: newTx.type === 'expense' ? -Math.abs(amount) : Math.abs(amount), status: 'categorized' });
-        analytics.transactionCreated(newTx.type, newTx.category);
+        const txData = { ...newTx, amount: newTx.type === 'expense' ? -Math.abs(amount) : Math.abs(amount), status: 'categorized' };
+
+        if (editId) {
+            await updateTransaction(editId, txData);
+            setEditId(null);
+        } else {
+            await addTransaction(txData);
+            analytics.transactionCreated(newTx.type, newTx.category);
+        }
         setShowAddModal(false);
         setNewTx({ date: new Date().toISOString().split('T')[0], description: '', amount: '', category: 'outros', type: 'expense', notes: '' });
+    };
+
+    const handleEditClick = (t) => {
+        setNewTx({
+            date: t.date,
+            description: t.description,
+            amount: Math.abs(t.amount).toString(),
+            category: t.category,
+            type: t.type,
+            notes: t.notes || ''
+        });
+        setEditId(t.id);
+        setShowAddModal(true);
     };
 
     const handleDelete = async (id) => {
@@ -175,7 +196,7 @@ export default function Transactions() {
                         </button>
                     </div>
                     <button onClick={handleExport} className="px-4 py-2 rounded-xl border border-white/10 text-gray-300 hover:bg-white/5 transition-all text-sm flex items-center gap-2"><Download className="w-4 h-4" /><span className="hidden sm:inline">Exportar</span></button>
-                    <button onClick={() => setShowAddModal(true)} className="gradient-btn text-sm flex items-center gap-2"><Plus className="w-4 h-4" /><span className="hidden sm:inline">Adicionar</span></button>
+                    <button onClick={() => { setEditId(null); setNewTx({ date: new Date().toISOString().split('T')[0], description: '', amount: '', category: 'outros', type: 'expense', notes: '' }); setShowAddModal(true); }} className="gradient-btn text-sm flex items-center gap-2"><Plus className="w-4 h-4" /><span className="hidden sm:inline">Adicionar</span></button>
                 </div>
             </div>
 
@@ -318,7 +339,7 @@ export default function Transactions() {
                             <div className="divide-y divide-white/5">{filteredTransactions.map((t) => {
                                 const cat = categoryConfig[t.category];
                                 return (
-                                    <div key={t.id} className="grid grid-cols-1 md:grid-cols-12 gap-2 md:gap-4 px-6 py-4 hover:bg-white/[0.02] transition-colors">
+                                    <div key={t.id} onClick={() => handleEditClick(t)} className="grid grid-cols-1 md:grid-cols-12 gap-2 md:gap-4 px-6 py-4 hover:bg-white/[0.02] transition-colors cursor-pointer group">
                                         <div className="md:col-span-1 text-sm text-gray-500">{new Date(t.date + 'T12:00:00').toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })}</div>
                                         <div className="md:col-span-4 flex items-center gap-3">
                                             <div className="w-8 h-8 rounded-lg flex items-center justify-center text-sm shrink-0" style={{ backgroundColor: `${cat?.color || '#6b7280'}15` }}>{cat?.icon || '📦'}</div>
@@ -329,9 +350,9 @@ export default function Transactions() {
                                         <div className="md:col-span-2 text-right"><span className={`text-sm font-semibold ${t.type === 'income' ? 'text-emerald-400' : 'text-red-400'}`}>{t.type === 'income' ? '+' : '-'} {fmt(Math.abs(t.amount))}</span></div>
                                         <div className="md:col-span-1 text-right">
                                             <button
-                                                onClick={() => handleDelete(t.id)}
+                                                onClick={(e) => { e.stopPropagation(); handleDelete(t.id); }}
                                                 disabled={deletingId === t.id}
-                                                className="p-2 rounded-lg text-gray-400 hover:text-red-400 hover:bg-red-500/10 transition-all disabled:opacity-50"
+                                                className="p-2 rounded-lg text-gray-400 hover:text-red-400 hover:bg-red-500/10 transition-all disabled:opacity-50 opacity-0 group-hover:opacity-100"
                                                 title="Excluir"
                                             >
                                                 {deletingId === t.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
@@ -350,7 +371,7 @@ export default function Transactions() {
             {showAddModal && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
                     <div className="glass-card w-full max-w-md animate-slide-up">
-                        <div className="flex items-center justify-between mb-6"><h2 className="text-lg font-bold text-white">Nova Transação</h2><button onClick={() => setShowAddModal(false)} className="p-1.5 rounded-lg text-gray-500 hover:text-white hover:bg-white/10 transition-all"><X className="w-5 h-5" /></button></div>
+                        <div className="flex items-center justify-between mb-6"><h2 className="text-lg font-bold text-white">{editId ? 'Editar Transação' : 'Nova Transação'}</h2><button onClick={() => { setShowAddModal(false); setEditId(null); }} className="p-1.5 rounded-lg text-gray-500 hover:text-white hover:bg-white/10 transition-all"><X className="w-5 h-5" /></button></div>
                         <form onSubmit={handleAddTransaction} className="space-y-4">
                             <div className="flex rounded-xl bg-white/5 p-1">
                                 <button type="button" onClick={() => setNewTx((p) => ({ ...p, type: 'expense' }))} className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all ${newTx.type === 'expense' ? 'bg-red-500/20 text-red-400' : 'text-gray-500 hover:text-gray-300'}`}>💸 Despesa</button>
@@ -363,7 +384,7 @@ export default function Transactions() {
                             </div>
                             <div><label className="block text-sm text-gray-400 mb-1">Categoria</label><select value={newTx.category} onChange={(e) => setNewTx((p) => ({ ...p, category: e.target.value }))} className="input-field appearance-none cursor-pointer">{allCategories.map((c) => <option key={c} value={c}>{categoryConfig[c]?.icon} {categoryConfig[c]?.label || c}</option>)}</select></div>
                             <div><label className="block text-sm text-gray-400 mb-1">Notas (opcional)</label><input type="text" value={newTx.notes} onChange={(e) => setNewTx((p) => ({ ...p, notes: e.target.value }))} placeholder="Observações..." className="input-field" /></div>
-                            <button type="submit" className="gradient-btn w-full">Adicionar Transação</button>
+                            <button type="submit" className="gradient-btn w-full">{editId ? 'Salvar Transação' : 'Adicionar Transação'}</button>
                         </form>
                     </div>
                 </div>

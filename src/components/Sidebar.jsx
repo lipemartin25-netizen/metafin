@@ -18,7 +18,10 @@ import {
     CreditCard,
     CalendarDays,
     Target,
-    Heart
+    Heart,
+    PiggyBank,
+    Landmark,
+    FileText
 } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 
@@ -40,7 +43,10 @@ export default function Sidebar({ collapsed, setCollapsed, mobileOpen, setMobile
         { to: '/app/cards', label: 'Cartoes', icon: CreditCard },
         { to: '/app/bills', label: 'Contas', icon: CalendarDays },
         { to: '/app/investments', label: t('investments'), icon: PieChart },
+        { to: '/app/budget', label: 'Orcamento', icon: PiggyBank },
         { to: '/app/goals', label: 'Metas', icon: Target },
+        { to: '/app/networth', label: 'Patrimonio', icon: Landmark },
+        { to: '/app/reports', label: 'Relatorios', icon: FileText },
         { to: '/app/health', label: 'Saude', icon: Heart },
         { to: '/app/advisor', label: t('ai_assistant'), icon: Bot },
     ];

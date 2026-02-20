@@ -57,9 +57,9 @@ export default function NetWorth() {
             <div>
                 <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
                     <Landmark className="w-6 h-6 text-indigo-500" />
-                    Patrimonio Liquido
+                    Patrimônio Líquido
                 </h1>
-                <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">Visao consolidada de todos seus ativos e passivos.</p>
+                <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">Visão consolidada de todos seus ativos e passivos.</p>
             </div>
 
             {/* Main Net Worth Card */}
@@ -110,25 +110,22 @@ export default function NetWorth() {
             {/* Breakdown */}
             <div>
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                    <PieChart className="w-5 h-5 text-indigo-500" /> Composicao
+                    <PieChart className="w-5 h-5 text-indigo-500" /> Composição
                 </h3>
                 <div className="grid sm:grid-cols-2 gap-4">
                     {breakdown.map((item, i) => {
                         const Icon = item.icon;
                         return (
-                            <div key={i} className={`glass-card flex items-center gap-4 ${item.type === 'liability' ? 'border-red-500/20' : ''}`}>
-                                <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ backgroundColor: `${item.color}15` }}>
+                            <div key={i} className={`glass-card flex items-center gap-4 ${item.type === 'liability' ? 'hover:border-red-500/30' : 'hover:border-emerald-500/30'} transition-all cursor-pointer`}>
+                                <div className="w-12 h-12 rounded-xl flex items-center justify-center p-3" style={{ backgroundColor: `${item.color}15` }}>
                                     <Icon className="w-6 h-6" style={{ color: item.color }} />
                                 </div>
                                 <div className="flex-1">
-                                    <p className="text-xs text-gray-500 dark:text-gray-400">{item.label}</p>
-                                    <p className={`text-xl font-bold ${item.type === 'liability' ? 'text-red-500' : 'text-gray-900 dark:text-white'}`}>
+                                    <p className="text-xs text-gray-500 dark:text-gray-400 font-bold tracking-widest uppercase">{item.label}</p>
+                                    <p className={`text-xl font-bold mt-1 ${item.type === 'liability' ? 'text-red-500' : 'text-gray-900 dark:text-white'}`}>
                                         {item.type === 'liability' ? '-' : ''}{fmt(item.value)}
                                     </p>
                                 </div>
-                                <span className={`text-[9px] font-bold uppercase px-2 py-0.5 rounded-full ${item.type === 'liability' ? 'bg-red-500/10 text-red-400' : 'bg-emerald-500/10 text-emerald-400'}`}>
-                                    {item.type === 'liability' ? 'PASSIVO' : 'ATIVO'}
-                                </span>
                             </div>
                         );
                     })}

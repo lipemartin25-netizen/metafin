@@ -202,17 +202,17 @@ export default function Transactions() {
 
             {/* Monthly Statement Summary */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div className="glass-card p-4 bg-emerald-500/5 border-emerald-500/10">
-                    <p className="text-[10px] uppercase tracking-widest font-bold text-emerald-500/60 mb-1">Receitas do Mês</p>
-                    <h5 className="text-xl font-bold text-emerald-400">{fmt(monthSummary.income)}</h5>
+                <div className="glass-card p-5 !bg-transparent hover:border-emerald-500/30 transition-all">
+                    <p className="text-xs font-medium text-gray-500 mb-1 flex items-center gap-2">Receitas</p>
+                    <h5 className="text-3xl font-bold text-gray-900 dark:text-white">{fmt(monthSummary.income)}</h5>
                 </div>
-                <div className="glass-card p-4 bg-rose-500/5 border-rose-500/10">
-                    <p className="text-[10px] uppercase tracking-widest font-bold text-rose-500/60 mb-1">Despesas do Mês</p>
-                    <h5 className="text-xl font-bold text-rose-400">-{fmt(monthSummary.expense)}</h5>
+                <div className="glass-card p-5 !bg-transparent hover:border-rose-500/30 transition-all">
+                    <p className="text-xs font-medium text-gray-500 mb-1 flex items-center gap-2">Despesas</p>
+                    <h5 className="text-3xl font-bold text-gray-900 dark:text-white">-{fmt(monthSummary.expense)}</h5>
                 </div>
-                <div className="glass-card p-4 bg-white/5">
-                    <p className="text-[10px] uppercase tracking-widest font-bold text-gray-500 mb-1">Resultado (Fluxo de Caixa)</p>
-                    <h5 className={`text-xl font-bold ${monthSummary.income - monthSummary.expense >= 0 ? 'text-white' : 'text-rose-400'}`}>
+                <div className="glass-card p-5 !bg-transparent hover:border-indigo-500/30 transition-all">
+                    <p className="text-xs font-medium text-gray-500 mb-1 flex items-center gap-2">Fluxo de Caixa</p>
+                    <h5 className={`text-3xl font-bold ${monthSummary.income - monthSummary.expense >= 0 ? 'text-emerald-500' : 'text-rose-500'}`}>
                         {fmt(monthSummary.income - monthSummary.expense)}
                     </h5>
                 </div>
@@ -242,21 +242,21 @@ export default function Transactions() {
             {/* Filters */}
             <div className="flex flex-col sm:flex-row gap-3">
                 <div className="relative flex-1">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
-                    <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Buscar transações..." className="input-field pl-10" />
-                    {searchQuery && <button onClick={() => setSearchQuery('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white"><X className="w-4 h-4" /></button>}
+                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+                    <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Buscar por descrição ou categoria..." className="input-field pl-12 bg-white dark:bg-white/[0.02]" />
+                    {searchQuery && <button onClick={() => setSearchQuery('')} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-900 dark:hover:text-white"><X className="w-4 h-4" /></button>}
                 </div>
                 <div className="relative">
-                    <Filter className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
-                    <select value={filterCategory} onChange={(e) => setFilterCategory(e.target.value)} className="input-field pl-10 pr-8 appearance-none cursor-pointer min-w-[160px]">
-                        <option value="all">Todas categorias</option>
+                    <Filter className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+                    <select value={filterCategory} onChange={(e) => setFilterCategory(e.target.value)} className="input-field pl-12 pr-8 appearance-none cursor-pointer min-w-[200px] bg-white dark:bg-white/[0.02]">
+                        <option value="all">Todas as Categorias</option>
                         {allCategories.map((c) => <option key={c} value={c}>{categoryConfig[c]?.icon} {categoryConfig[c]?.label || c}</option>)}
                     </select>
                 </div>
-                <select value={filterType} onChange={(e) => setFilterType(e.target.value)} className="input-field appearance-none cursor-pointer min-w-[130px]">
-                    <option value="all">Todos tipos</option>
-                    <option value="income">💰 Receita</option>
-                    <option value="expense">💸 Despesa</option>
+                <select value={filterType} onChange={(e) => setFilterType(e.target.value)} className="input-field appearance-none cursor-pointer min-w-[150px] bg-white dark:bg-white/[0.02]">
+                    <option value="all">Tipos</option>
+                    <option value="income">💰 Receitas</option>
+                    <option value="expense">💸 Despesas</option>
                 </select>
             </div>
 
@@ -329,35 +329,43 @@ export default function Transactions() {
             ) : (
                 <>
                     {/* List */}
-                    <div className="glass-card p-0 overflow-hidden">
-                        <div className="hidden md:grid grid-cols-12 gap-4 px-6 py-3 bg-white/[0.02] border-b border-white/5 text-xs font-medium text-gray-500 uppercase tracking-wide">
-                            <div className="col-span-1">Data</div><div className="col-span-4">Descrição</div><div className="col-span-2">Categoria</div><div className="col-span-2">Status</div><div className="col-span-2 text-right">Valor</div><div className="col-span-1 text-right">Ação</div>
-                        </div>
+                    <div className="bg-transparent overflow-hidden mt-2">
                         {filteredTransactions.length === 0 ? (
-                            <div className="p-12 text-center"><Search className="w-12 h-12 text-gray-700 mx-auto mb-4" /><p className="text-gray-500">Nenhuma transação encontrada</p></div>
+                            <div className="p-12 text-center glass-card"><Search className="w-12 h-12 text-gray-400 dark:text-gray-700 mx-auto mb-4" /><p className="text-gray-500">Nenhuma transação encontrada</p></div>
                         ) : (
-                            <div className="divide-y divide-white/5">{filteredTransactions.map((t) => {
+                            <div className="space-y-3">{filteredTransactions.map((t) => {
                                 const cat = categoryConfig[t.category];
                                 return (
-                                    <div key={t.id} onClick={() => handleEditClick(t)} className="grid grid-cols-1 md:grid-cols-12 gap-2 md:gap-4 px-6 py-4 hover:bg-white/[0.02] transition-colors cursor-pointer group">
-                                        <div className="md:col-span-1 text-sm text-gray-500">{new Date(t.date + 'T12:00:00').toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })}</div>
-                                        <div className="md:col-span-4 flex items-center gap-3">
-                                            <div className="w-8 h-8 rounded-lg flex items-center justify-center text-sm shrink-0" style={{ backgroundColor: `${cat?.color || '#6b7280'}15` }}>{cat?.icon || '📦'}</div>
-                                            <div className="min-w-0"><p className="text-sm font-medium text-white truncate">{t.description}</p>{t.notes && <p className="text-xs text-gray-600 truncate">{t.notes}</p>}</div>
+                                    <div key={t.id} onClick={() => handleEditClick(t)} className="glass-card !p-4 flex items-center justify-between hover:border-gray-300 dark:hover:border-white/20 transition-all cursor-pointer group">
+                                        <div className="flex items-center gap-4">
+                                            <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-xl shrink-0" style={{ backgroundColor: `${cat?.color || '#6b7280'}15` }}>{cat?.icon || '📦'}</div>
+                                            <div className="min-w-0">
+                                                <p className="text-base font-bold text-gray-900 dark:text-white truncate group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">{t.description}</p>
+                                                <p className="text-xs text-gray-500 flex items-center gap-2 mt-0.5">
+                                                    <span>{new Date(t.date + 'T12:00:00').toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' })}</span>
+                                                    <span className="w-1 h-1 bg-gray-300 dark:bg-gray-600 rounded-full" />
+                                                    <span style={{ color: cat?.color || '#6b7280' }}>{cat?.label || t.category}</span>
+                                                </p>
+                                            </div>
                                         </div>
-                                        <div className="md:col-span-2"><span className="inline-flex items-center gap-1 px-2 py-1 rounded-lg text-xs" style={{ backgroundColor: `${cat?.color || '#6b7280'}15`, color: cat?.color || '#6b7280' }}>{cat?.label || t.category}</span></div>
-                                        <div className="md:col-span-2"><StatusChip status={t.status} /></div>
-                                        <div className="md:col-span-2 text-right"><span className={`text-sm font-semibold ${t.type === 'income' ? 'text-emerald-400' : 'text-red-400'}`}>{t.type === 'income' ? '+' : '-'} {fmt(Math.abs(t.amount))}</span></div>
-                                        <div className="md:col-span-1 text-right">
-                                            <button
-                                                onClick={(e) => { e.stopPropagation(); handleDelete(t.id); }}
-                                                disabled={deletingId === t.id}
-                                                className="p-2 rounded-lg text-gray-400 hover:text-red-400 hover:bg-red-500/10 transition-all disabled:opacity-50 opacity-0 group-hover:opacity-100"
-                                                title="Excluir"
-                                            >
-                                                {deletingId === t.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
-                                            </button>
+
+                                        <div className="flex flex-col items-end gap-1">
+                                            <span className={`text-lg font-extrabold ${t.type === 'income' ? 'text-emerald-500' : 'text-gray-900 dark:text-white'}`}>
+                                                {t.type === 'income' ? '+' : '-'}{fmt(Math.abs(t.amount))}
+                                            </span>
+                                            <div className="flex items-center gap-3">
+                                                <div className="scale-75 origin-right"><StatusChip status={t.status} /></div>
+                                            </div>
                                         </div>
+
+                                        <button
+                                            onClick={(e) => { e.stopPropagation(); handleDelete(t.id); }}
+                                            disabled={deletingId === t.id}
+                                            className="absolute right-[-40px] top-1/2 -translate-y-1/2 p-2 rounded-xl bg-red-500 text-white shadow-xl hover:bg-red-600 transition-all disabled:opacity-50 opacity-0 group-hover:right-4 group-hover:opacity-100"
+                                            title="Excluir"
+                                        >
+                                            {deletingId === t.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
+                                        </button>
                                     </div>
                                 );
                             })}</div>

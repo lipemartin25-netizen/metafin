@@ -111,144 +111,19 @@ Regras:
 
 Contexto financeiro do usuário será fornecido na mensagem.`;
 
-// ========== API ENDPOINTS ==========
-const ENDPOINTS = {
-    openai: 'https://api.openai.com/v1/chat/completions',
-    google: 'https://generativelanguage.googleapis.com/v1beta/models',
-    anthropic: 'https://api.anthropic.com/v1/messages',
-    deepseek: 'https://api.deepseek.com/chat/completions', // Corrigido endpoint v1 deepseek
-    xai: 'https://api.x.ai/v1/chat/completions',
-    alibaba: 'https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions',
-};
+// ========== EDGE FUNCTION PROXY ==========
+// Todas as chamadas de IA passam pela Edge Function 'ai-chat' do Supabase.
+// As API keys ficam APENAS no servidor (Supabase Secrets).
+// O frontend NUNCA mais tem acesso a chaves de IA.
 
-// ========== API KEYS (dev only — em prod usar Edge Functions) ==========
-function getApiKey(provider) {
-    const keys = {
-        openai: import.meta.env.VITE_OPENAI_API_KEY,
-        google: import.meta.env.VITE_GEMINI_API_KEY,
-        anthropic: import.meta.env.VITE_ANTHROPIC_API_KEY,
-        deepseek: import.meta.env.VITE_DEEPSEEK_API_KEY,
-        xai: import.meta.env.VITE_GROK_API_KEY,
-        alibaba: import.meta.env.VITE_QWEN_API_KEY,
-    };
-    return keys[provider] || '';
-}
+import { supabase } from './supabase';
 
-// ========== PROVIDER-SPECIFIC CALLERS ==========
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
 
-async function callOpenAICompatible(endpoint, apiKey, model, messages, options = {}) {
-    const response = await fetch(endpoint, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${apiKey}`,
-        },
-        body: JSON.stringify({
-            model,
-            messages,
-            temperature: options.temperature ?? 0.7,
-            max_tokens: options.maxTokens ?? 2048,
-            stream: false,
-        }),
-    });
-
-    if (!response.ok) {
-        const error = await response.json().catch(() => ({}));
-        throw new Error(error.error?.message || `API Error: ${response.status}`);
-    }
-
-    const data = await response.json();
-    return {
-        content: data.choices?.[0]?.message?.content || '',
-        usage: data.usage || {},
-        model: data.model || model,
-    };
-}
-
-async function callGemini(apiKey, model, messages, options = {}) {
-    // Ajuste para Gemini Flash 1.5 ou 2.0
-    const modelId = model.startsWith('gemini') ? model : 'gemini-1.5-flash';
-    const url = `${ENDPOINTS.google}/${modelId}:generateContent?key=${apiKey}`;
-
-    // Converter formato OpenAI -> Gemini
-    const contents = messages
-        .filter((m) => m.role !== 'system')
-        .map((m) => ({
-            role: m.role === 'assistant' ? 'model' : 'user',
-            parts: [{ text: m.content }],
-        }));
-
-    const systemInstruction = messages.find((m) => m.role === 'system');
-
-    const response = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            contents,
-            systemInstruction: systemInstruction
-                ? { parts: [{ text: systemInstruction.content }] }
-                : undefined,
-            generationConfig: {
-                temperature: options.temperature ?? 0.7,
-                maxOutputTokens: options.maxTokens ?? 2048,
-            },
-        }),
-    });
-
-    if (!response.ok) {
-        const error = await response.json().catch(() => ({}));
-        throw new Error(error.error?.message || `Gemini Error: ${response.status}`);
-    }
-
-    const data = await response.json();
-    return {
-        content: data.candidates?.[0]?.content?.parts?.[0]?.text || '',
-        usage: data.usageMetadata || {},
-        model,
-    };
-}
-
-async function callAnthropic(apiKey, model, messages, options = {}) {
-    const systemMsg = messages.find((m) => m.role === 'system');
-    const chatMessages = messages.filter((m) => m.role !== 'system');
-
-    const response = await fetch(ENDPOINTS.anthropic, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'x-api-key': apiKey,
-            'anthropic-version': '2023-06-01',
-            'anthropic-dangerous-direct-browser-access': 'true',
-        },
-        body: JSON.stringify({
-            model,
-            max_tokens: options.maxTokens ?? 2048,
-            system: systemMsg?.content || SYSTEM_PROMPT,
-            messages: chatMessages.map((m) => ({
-                role: m.role,
-                content: m.content,
-            })),
-        }),
-    });
-
-    if (!response.ok) {
-        const error = await response.json().catch(() => ({}));
-        throw new Error(error.error?.message || `Claude Error: ${response.status}`);
-    }
-
-    const data = await response.json();
-    return {
-        content: data.content?.[0]?.text || '',
-        usage: data.usage || {},
-        model,
-    };
-}
-
-// ========== UNIVERSAL CALL ==========
 /**
- * Chamar qualquer modelo de IA configurado.
+ * Chamar qualquer modelo de IA via Edge Function segura.
  *
- * @param {string} modelId - ID do modelo (ex: 'gpt-5-nano')
+ * @param {string} modelId - ID do modelo (ex: 'gemini-flash', 'gpt-5-nano')
  * @param {Array} messages - [{ role: 'user'|'assistant'|'system', content: string }]
  * @param {Object} options - { temperature?, maxTokens? }
  */
@@ -256,68 +131,56 @@ export async function callAI(modelId, messages, options = {}) {
     const modelConfig = AI_MODELS[modelId];
     if (!modelConfig) throw new Error(`Modelo "${modelId}" não encontrado`);
 
-    const apiKey = getApiKey(modelConfig.provider);
-    // Em demo mode ou sem key, podemos retornar mock se falhar autenticação
-    // Mas vamos deixar erro explícito para configurar
-    if (!apiKey) {
-        throw new Error(
-            `API key não configurada para ${modelConfig.provider}. ` +
-            `Configure VITE_${modelConfig.provider.toUpperCase()}_API_KEY no .env.local`
-        );
-    }
-
     // Adicionar system prompt se não existir
     const fullMessages = messages[0]?.role === 'system'
         ? messages
         : [{ role: 'system', content: SYSTEM_PROMPT }, ...messages];
 
-    const startTime = Date.now();
-
-    let result;
-
-    switch (modelConfig.provider) {
-        case 'openai':
-            result = await callOpenAICompatible(
-                ENDPOINTS.openai, apiKey, modelConfig.model, fullMessages, options
-            );
-            break;
-
-        case 'google':
-            result = await callGemini(apiKey, modelConfig.model, fullMessages, options);
-            break;
-
-        case 'anthropic':
-            result = await callAnthropic(apiKey, modelConfig.model, fullMessages, options);
-            break;
-
-        case 'deepseek':
-            result = await callOpenAICompatible(
-                ENDPOINTS.deepseek, apiKey, modelConfig.model, fullMessages, options
-            );
-            break;
-
-        case 'xai':
-            result = await callOpenAICompatible(
-                ENDPOINTS.xai, apiKey, modelConfig.model, fullMessages, options
-            );
-            break;
-
-        case 'alibaba':
-            result = await callOpenAICompatible(
-                ENDPOINTS.alibaba, apiKey, modelConfig.model, fullMessages, options
-            );
-            break;
-
-        default:
-            throw new Error(`Provider "${modelConfig.provider}" não suportado`);
+    if (!supabase) {
+        throw new Error('Supabase não configurado. IA requer autenticação.');
     }
 
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session?.access_token) {
+        throw new Error('Faça login para usar o assistente de IA.');
+    }
+
+    const startTime = Date.now();
+
+    const response = await fetch(`${SUPABASE_URL}/functions/v1/ai-chat`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${session.access_token}`,
+        },
+        body: JSON.stringify({
+            modelId,
+            messages: fullMessages,
+            options: {
+                temperature: options.temperature ?? 0.7,
+                maxTokens: options.maxTokens ?? 2048,
+            },
+        }),
+    });
+
+    if (!response.ok) {
+        const error = await response.json().catch(() => ({}));
+        throw new Error(
+            error.error ||
+            `Erro ${response.status}: verifique se a Edge Function 'ai-chat' foi deployada.`
+        );
+    }
+
+    const result = await response.json();
+
     return {
-        ...result,
+        content: result.content || '',
+        usage: result.usage || {},
+        model: result.model || modelConfig.model,
         modelId,
         modelName: modelConfig.name,
-        provider: modelConfig.provider,
-        latency: Date.now() - startTime,
+        provider: result.provider || modelConfig.provider,
+        latency: result.latency || (Date.now() - startTime),
     };
 }
 

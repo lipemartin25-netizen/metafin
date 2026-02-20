@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useTransactions } from '../hooks/useTransactions';
 import { useAuth } from '../contexts/AuthContext';
 import { analytics } from '../hooks/useAnalytics';
-import { Trash2, CheckCircle, ShieldCheck, Banknote, RefreshCw, X, Link } from 'lucide-react';
+import { Trash2, CheckCircle, ShieldCheck, Banknote, RefreshCw, X, Plug, FileText } from 'lucide-react';
 import banksData from '../data/banks.json';
 import { parseFile, ACCEPTED_EXTENSIONS } from '../lib/fileParser';
 import { useBankAccounts } from '../hooks/useBankAccounts';
@@ -59,9 +59,16 @@ export default function BankAccounts() {
         setDataSource('empty');
         setImportFile(null);
         setImportError('');
-        setConnectingState('consenting'); // Vá direto para o formulário de dados
+        setConnectingState('choosing'); // Nova tela: escolher método
         setShowConnectModal(true);
         analytics.featureUsed(`connect_bank_start_${bank.id}`);
+    };
+
+    // Conectar diretamente via Pluggy (Open Finance)
+    const handlePluggyDirect = () => {
+        setShowConnectModal(false);
+        openWidget();
+        analytics.featureUsed(`connect_bank_pluggy_${selectedBank?.id}`);
     };
 
     const handleConfirmConsent = async () => {
@@ -143,18 +150,10 @@ export default function BankAccounts() {
             <div>
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
-                        <h2 className="text-2xl font-bold text-white flex items-center gap-2">
-                            <Banknote className="text-emerald-400" /> Instituições Financeiras
+                        <h2 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                            <Banknote className="text-emerald-500 dark:text-emerald-400" /> Instituições Financeiras
                         </h2>
-                        <p className="text-gray-400 text-sm">Gerencie suas contas bancárias e conexões Open Finance.</p>
-                    </div>
-                    <div className="flex gap-2">
-                        <button
-                            onClick={() => openWidget()}
-                            className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-2 transition-all shadow-lg shadow-purple-900/20"
-                        >
-                            <Link className="w-4 h-4" /> Conectar via Pluggy
-                        </button>
+                        <p className="text-gray-500 dark:text-gray-400 text-sm">Gerencie suas contas bancárias e conexões Open Finance.</p>
                     </div>
                 </div>
 
@@ -295,6 +294,42 @@ export default function BankAccounts() {
 
                         {/* Content based on state */}
                         <div className="p-6">
+                            {/* Choosing: Pluggy or Manual */}
+                            {connectingState === 'choosing' && (
+                                <div className="space-y-3">
+                                    <p className="text-sm text-gray-400 text-center mb-4">Escolha como deseja conectar:</p>
+
+                                    {/* Pluggy - Automatic */}
+                                    <button
+                                        onClick={handlePluggyDirect}
+                                        className="w-full flex items-center gap-4 p-4 rounded-xl bg-purple-500/10 border border-purple-500/30 hover:bg-purple-500/20 hover:border-purple-500/50 transition-all group text-left"
+                                    >
+                                        <div className="w-12 h-12 rounded-xl bg-purple-500/20 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+                                            <Plug className="w-6 h-6 text-purple-400" />
+                                        </div>
+                                        <div>
+                                            <p className="text-sm font-bold text-white">Conectar via Open Finance</p>
+                                            <p className="text-[11px] text-gray-400 mt-0.5">Sincroniza automaticamente via Pluggy. Seus dados em tempo real.</p>
+                                        </div>
+                                        <span className="ml-auto bg-purple-500/30 text-purple-300 text-[9px] font-bold px-2 py-1 rounded-lg flex-shrink-0">RECOMENDADO</span>
+                                    </button>
+
+                                    {/* Manual */}
+                                    <button
+                                        onClick={() => setConnectingState('consenting')}
+                                        className="w-full flex items-center gap-4 p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all group text-left"
+                                    >
+                                        <div className="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+                                            <FileText className="w-6 h-6 text-gray-400" />
+                                        </div>
+                                        <div>
+                                            <p className="text-sm font-bold text-white">Cadastro Manual</p>
+                                            <p className="text-[11px] text-gray-400 mt-0.5">Adicione seus dados manualmente ou importe um extrato.</p>
+                                        </div>
+                                    </button>
+                                </div>
+                            )}
+
                             {connectingState === 'consenting' && (
                                 <div className="space-y-4">
                                     <div className="grid grid-cols-2 gap-3">

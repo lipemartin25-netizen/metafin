@@ -1,39 +1,40 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { useTransactions } from '../hooks/useTransactions';
 import { analytics } from '../hooks/useAnalytics';
+import { usePluggy } from '../hooks/usePluggy';
 import {
     TrendingUp,
     Briefcase,
     Link2,
     CheckCircle,
-    Loader2,
-    X,
     Building2,
     Trash2,
-    ExternalLink
+    ExternalLink,
+    Plug,
+    RefreshCw,
+    ShieldCheck,
+    X
 } from 'lucide-react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip, LineChart, Line, XAxis, YAxis, CartesianGrid } from 'recharts';
 import banksData from '../data/banks.json';
-import investmentsData from '../data/investments.json';
 import benchmarksData from '../data/benchmarks.json';
 
-// Cores para o gráfico de pizza
-const COLORS = ['#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6'];
+// Cores para o grafico de pizza
+const COLORS = ['#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#14b8a6'];
 
 function fmt(value) {
     return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
 }
 
+// Link oficial da B3 para consulta (nao e fonte de dados)
+const B3_PORTAL_URL = 'https://www.investidor.b3.com.br/login?utm_source=B3_MVP&utm_medium=HM_PF&utm_campaign=menu';
+
 export default function Investments() {
     const { user: _user } = useAuth();
-    const { addBulkTransactions } = useTransactions();
+    const { openWidget, connecting: pluggyConnecting, error: pluggyError } = usePluggy();
     const [connectedBrokers, setConnectedBrokers] = useState([]);
-    const [showConnectModal, setShowConnectModal] = useState(false);
-    const [selectedBroker, setSelectedBroker] = useState(null);
-    const [connectingState, setConnectingState] = useState('idle');
 
-    // Carregar estado inicial
+    // Carregar estado inicial do localStorage
     useEffect(() => {
         const stored = localStorage.getItem('sf_connected_brokers');
         if (stored) setConnectedBrokers(JSON.parse(stored));
@@ -46,83 +47,16 @@ export default function Investments() {
 
     // Excluir carteira
     const handleDisconnectBroker = (brokerId) => {
-        if (!confirm('Tem certeza que deseja excluir esta carteira? Os dados de ativos serão removidos.')) return;
+        if (!confirm('Tem certeza que deseja excluir esta carteira? Os dados serao removidos.')) return;
         const updated = connectedBrokers.filter(b => b.id !== brokerId);
         saveBrokers(updated);
         analytics.featureUsed('disconnect_broker');
     };
 
-    // URLs reais dos portais das corretoras/bancos
-    const BROKER_PORTALS = {
-        b3: 'https://www.investidor.b3.com.br/login?utm_source=B3_MVP&utm_medium=HM_PF&utm_campaign=menu',
-        xp: 'https://investimentos.xpi.com.br/',
-        btg: 'https://www.btgpactualdigital.com/login',
-        rico: 'https://www.rico.com.vc/login',
-        clear: 'https://pro.clear.com.br/login',
-        genial: 'https://app.genialinvestimentos.com.br/login',
-        agora: 'https://www.agorainvestimentos.com.br/login',
-        ativa: 'https://www.ativainvestimentos.com.br/',
-        guide: 'https://www.guideinvestimentos.com.br/',
-        modal: 'https://www.modalmais.com.br/login/',
-        nubank: 'https://app.nubank.com.br/',
-        itau: 'https://www.itau.com.br/investimentos/',
-        bradesco: 'https://www.bradesconet.com.br/',
-        santander: 'https://www.santander.com.br/investimentos',
-        inter: 'https://inter.co/inter-invest/',
-        sofisa: 'https://www.sofisadireto.com.br/',
-        daycoval: 'https://www.daycoval.com.br/',
-        openfinance: 'https://openfinancebrasil.org.br/',
-    };
-
-    const getPortalUrl = (brokerId) => BROKER_PORTALS[brokerId] || '#';
-
-    // Conectar com qualquer corretora - redireciona para portal real
-    const handleConnectClick = (broker) => {
-        if (!broker) return;
-        setSelectedBroker(broker);
-        setConnectingState('portal_redirect');
-        setShowConnectModal(true);
-        analytics.featureUsed(`connect_broker_start_${broker.id}`);
-    };
-
-    // Callback quando usuario volta do portal e confirma vinculo
-    const handlePortalConfirmed = async () => {
-        setConnectingState('syncing');
-        await new Promise(r => setTimeout(r, 2000));
-
-        const brokerAssets = investmentsData[selectedBroker.id] || investmentsData.xp || [];
-        const totalValue = brokerAssets.reduce((sum, a) => sum + (a.quantity * a.price), 0);
-
-        const newBroker = {
-            ...selectedBroker,
-            accountNumber: `${selectedBroker.id.toUpperCase()}-Integrado`,
-            connectedAt: new Date().toISOString(),
-            totalValue,
-            assets: brokerAssets,
-            source: 'portal_redirect'
-        };
-
-        const updated = [...connectedBrokers.filter(b => b.id !== selectedBroker.id), newBroker];
-        saveBrokers(updated);
-
-        if (totalValue > 0) {
-            await addBulkTransactions([{
-                date: new Date().toISOString().split('T')[0],
-                description: `Patrimonio importado - ${selectedBroker.name}`,
-                amount: -totalValue,
-                category: 'investimentos',
-                type: 'expense',
-                notes: `Importado via portal ${selectedBroker.name}`
-            }]);
-        }
-
-        analytics.featureUsed(`connect_broker_success_${selectedBroker.id}`);
-        setConnectingState('success');
-        setTimeout(() => {
-            setShowConnectModal(false);
-            setConnectingState('idle');
-            setSelectedBroker(null);
-        }, 1500);
+    // Conectar via Pluggy (Open Finance) — unica via real de integracao
+    const handleConnectPluggy = () => {
+        openWidget();
+        analytics.featureUsed('connect_broker_pluggy');
     };
 
     // Calcular totais
@@ -131,12 +65,16 @@ export default function Investments() {
         let allocation = {};
 
         connectedBrokers.forEach(broker => {
-            broker.assets.forEach(asset => {
-                const val = asset.quantity * asset.price;
-                total += val;
-                if (!allocation[asset.type]) allocation[asset.type] = 0;
-                allocation[asset.type] += val;
-            });
+            if (broker.assets) {
+                broker.assets.forEach(asset => {
+                    const val = asset.quantity * asset.price;
+                    total += val;
+                    if (!allocation[asset.type]) allocation[asset.type] = 0;
+                    allocation[asset.type] += val;
+                });
+            } else {
+                total += broker.totalValue || 0;
+            }
         });
 
         const allocationData = Object.keys(allocation).map(type => ({
@@ -147,26 +85,26 @@ export default function Investments() {
         return { total, allocationData };
     }, [connectedBrokers]);
 
-    // Filtrar apenas corretoras e integrações (excluir bancos de varejo simples se quiser, mas muitos têm investimentos)
-    // Vou listar todos que têm type 'broker' ou 'integration' ou 'bank' (pois bancos tbm têm investimentos)
-    // Mas vou dar destaque para type 'broker' e 'integration'
-    const availableBrokers = banksData.filter(b => !connectedBrokers.find(cb => cb.id === b.id));
+    // Filtrar corretoras disponiveis
+    const availableBrokers = banksData.filter(b =>
+        !connectedBrokers.find(cb => cb.id === b.id) &&
+        (b.type === 'broker' || b.type === 'integration')
+    );
 
     const evolutionData = useMemo(() => {
-        const baseValue = portfolio.total || 150000; // Mock base if empty
-        const startValue = baseValue * 0.85; // Começa 15% abaixo para mostrar evolução
+        const baseValue = portfolio.total || 150000;
+        const startValue = baseValue * 0.85;
 
         return benchmarksData.map((b, i) => {
             const progress = (i + 1) / benchmarksData.length;
             const portValue = startValue + (baseValue - startValue) * Math.pow(progress, 0.8) * (1 + (Math.random() * 0.05 - 0.025));
 
-            // Normalizar índices para base 100 ou similar
             return {
                 ...b,
                 portfolio: portValue,
                 ibov_norm: (b.ibovespa / benchmarksData[0].ibovespa) * startValue,
-                cdi_norm: Math.pow(1.008, i) * startValue, // 0.8% am aprox
-                analysis_target: startValue * Math.pow(1.011, i) // 1.1% growth target per month
+                cdi_norm: Math.pow(1.008, i) * startValue,
+                analysis_target: startValue * Math.pow(1.011, i)
             };
         });
     }, [portfolio.total]);
@@ -174,37 +112,76 @@ export default function Investments() {
     return (
         <div className="py-6 space-y-6 animate-fade-in pb-20">
             {/* Header */}
-            <div className="flex justify-between items-end">
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
                 <div>
-                    <h1 className="text-2xl font-bold text-white flex items-center gap-2">
-                        <Briefcase className="w-6 h-6 text-emerald-400" />
+                    <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                        <Briefcase className="w-6 h-6 text-emerald-500 dark:text-emerald-400" />
                         Investimentos
                     </h1>
-                    <p className="text-gray-400 text-sm mt-1">Acompanhe seu patrimônio consolidado.</p>
+                    <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">Acompanhe seu patrimonio consolidado via Open Finance.</p>
                 </div>
-                {connectedBrokers.length > 0 && (
-                    <button onClick={() => window.open('https://www.b3.com.br', '_blank')} className="text-xs text-emerald-400 hover:underline flex items-center gap-1">
-                        Acessar Área do Investidor B3 <Link2 className="w-3 h-3" />
+                <div className="flex gap-2">
+                    <button
+                        onClick={handleConnectPluggy}
+                        disabled={pluggyConnecting}
+                        className="bg-gradient-to-r from-purple-600 to-purple-500 hover:from-purple-500 hover:to-purple-400 disabled:opacity-50 text-white px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-2 transition-all shadow-lg shadow-purple-900/20"
+                    >
+                        {pluggyConnecting ? (
+                            <RefreshCw className="w-4 h-4 animate-spin" />
+                        ) : (
+                            <Plug className="w-4 h-4" />
+                        )}
+                        Conectar via Pluggy
                     </button>
-                )}
+                    <button
+                        onClick={() => window.open(B3_PORTAL_URL, '_blank')}
+                        className="bg-yellow-500/10 border border-yellow-500/30 hover:bg-yellow-500/20 text-yellow-600 dark:text-yellow-400 px-3 py-2 rounded-xl text-sm font-semibold flex items-center gap-2 transition-all"
+                    >
+                        <ExternalLink className="w-4 h-4" />
+                        B3
+                    </button>
+                </div>
+            </div>
+
+            {/* Pluggy Error */}
+            {pluggyError && (
+                <div className="bg-red-500/10 border border-red-500/20 text-red-400 p-4 rounded-xl text-sm flex items-center gap-3">
+                    <X className="w-5 h-5 flex-shrink-0" />
+                    <div className="flex-1">
+                        <p className="font-bold">Erro na conexao Pluggy:</p>
+                        <p className="text-xs opacity-80">{pluggyError}</p>
+                        {pluggyError === 'Failed to fetch' && (
+                            <p className="text-[10px] mt-1 text-red-300/80 italic">Dica: O servidor em localhost:3001 nao esta respondendo. Verifique se o terminal do server esta rodando.</p>
+                        )}
+                    </div>
+                </div>
+            )}
+
+            {/* Security Badge */}
+            <div className="flex items-center gap-3 bg-emerald-500/5 border border-emerald-500/10 rounded-xl p-3">
+                <ShieldCheck className="w-5 h-5 text-emerald-500 flex-shrink-0" />
+                <div>
+                    <p className="text-xs font-medium text-emerald-600 dark:text-emerald-400">Conexao segura via Open Finance</p>
+                    <p className="text-[10px] text-gray-500">Dados criptografados end-to-end. Suas credenciais nunca passam pelo SmartFinance — elas ficam dentro do Pluggy (regulado pelo Banco Central).</p>
+                </div>
             </div>
 
             {/* Portfolio Summary */}
             <div className="grid md:grid-cols-3 gap-6">
-                <div className="glass-card bg-gradient-to-br from-gray-900 to-gray-800 border-emerald-500/20 col-span-2 relative overflow-hidden">
+                <div className="glass-card bg-gradient-to-br from-gray-100 to-white dark:from-gray-900 dark:to-gray-800 border-emerald-500/20 col-span-2 relative overflow-hidden">
                     <div className="absolute top-0 right-0 p-4 opacity-10"><Building2 className="w-32 h-32 text-emerald-500" /></div>
-                    <p className="text-sm text-gray-400 font-medium">Patrimônio Total</p>
-                    <h2 className="text-4xl font-bold text-white mt-2">{fmt(portfolio.total)}</h2>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 font-medium">Patrimonio Total</p>
+                    <h2 className="text-4xl font-bold text-gray-900 dark:text-white mt-2">{fmt(portfolio.total)}</h2>
                     <div className="mt-4 flex items-center gap-2 text-sm">
-                        <span className="bg-emerald-500/10 text-emerald-400 px-2 py-1 rounded-lg flex items-center gap-1 font-medium">
+                        <span className="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 px-2 py-1 rounded-lg flex items-center gap-1 font-medium">
                             <TrendingUp className="w-3 h-3" /> +1.2% hoje
                         </span>
-                        <span className="text-gray-500">Variação diária simulada</span>
+                        <span className="text-gray-500">Variacao diaria simulada</span>
                     </div>
                 </div>
 
                 <div className="glass-card flex flex-col justify-center items-center relative">
-                    <h3 className="text-sm font-semibold text-gray-300 absolute top-4 left-4">Alocação</h3>
+                    <h3 className="text-sm font-semibold text-gray-600 dark:text-gray-300 absolute top-4 left-4">Alocacao</h3>
                     {portfolio.total > 0 ? (
                         <div className="w-full h-[160px]">
                             <ResponsiveContainer width="100%" height="100%">
@@ -214,13 +191,13 @@ export default function Investments() {
                                             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                                         ))}
                                     </Pie>
-                                    <RechartsTooltip formatter={(val) => fmt(val)} contentStyle={{ backgroundColor: '#1f2937', border: '1px solid rgba(255,255,255,0.1)', color: '#fff' }} />
+                                    <RechartsTooltip formatter={(val) => fmt(val)} contentStyle={{ backgroundColor: '#1f2937', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', borderRadius: '12px' }} />
                                 </PieChart>
                             </ResponsiveContainer>
                         </div>
                     ) : (
                         <div className="text-center text-gray-500 text-xs py-8">
-                            Conecte uma corretora para ver sua alocação
+                            Conecte uma corretora via Pluggy para ver sua alocacao
                         </div>
                     )}
                 </div>
@@ -230,21 +207,21 @@ export default function Investments() {
             <div className="glass-card p-6">
                 <div className="flex items-center justify-between mb-8">
                     <div>
-                        <h3 className="text-lg font-semibold text-white">Evolução do Patrimônio</h3>
-                        <p className="text-xs text-gray-400">Comparado a Ibovespa, CDI e Selic</p>
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Evolucao do Patrimonio</h3>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">Comparado a Ibovespa, CDI e Selic</p>
                     </div>
                     <div className="flex gap-4">
                         <div className="flex items-center gap-1.5">
                             <div className="w-2.5 h-2.5 rounded-full bg-emerald-500"></div>
-                            <span className="text-[10px] text-gray-400 font-bold uppercase">Carteira</span>
+                            <span className="text-[10px] text-gray-500 dark:text-gray-400 font-bold uppercase">Carteira</span>
                         </div>
                         <div className="flex items-center gap-1.5">
                             <div className="w-2.5 h-2.5 rounded-full bg-blue-500"></div>
-                            <span className="text-[10px] text-gray-400 font-bold uppercase">Ibov</span>
+                            <span className="text-[10px] text-gray-500 dark:text-gray-400 font-bold uppercase">Ibov</span>
                         </div>
                         <div className="flex items-center gap-1.5">
                             <div className="w-2.5 h-2.5 rounded-full bg-orange-500"></div>
-                            <span className="text-[10px] text-gray-400 font-bold uppercase">CDI</span>
+                            <span className="text-[10px] text-gray-500 dark:text-gray-400 font-bold uppercase">CDI</span>
                         </div>
                     </div>
                 </div>
@@ -269,57 +246,63 @@ export default function Investments() {
                                     name === 'portfolio' ? 'Minha Carteira' :
                                         name === 'ibov_norm' ? 'Ibovespa' :
                                             name === 'cdi_norm' ? 'CDI' :
-                                                name === 'analysis_target' ? 'Análise Alvo' : name
+                                                name === 'analysis_target' ? 'Analise Alvo' : name
                                 ]}
                             />
                             <Line type="monotone" dataKey="portfolio" stroke="#10b981" strokeWidth={3} dot={false} tension={0.4} />
                             <Line type="monotone" dataKey="cdi_norm" stroke="#f59e0b" strokeWidth={2} strokeDasharray="3 3" dot={false} />
                             <Line type="monotone" dataKey="ibov_norm" stroke="#3b82f6" strokeWidth={2} strokeDasharray="5 5" dot={false} />
-                            <Line type="monotone" dataKey="analysis_target" name="Análise Alvo" stroke="#ec4899" strokeWidth={2} strokeDasharray="10 5" dot={false} />
+                            <Line type="monotone" dataKey="analysis_target" name="Analise Alvo" stroke="#ec4899" strokeWidth={2} strokeDasharray="10 5" dot={false} />
                         </LineChart>
                     </ResponsiveContainer>
                 </div>
             </div>
 
-            {/* Brokers List */}
+            {/* My Portfolios */}
             <div>
-                <h3 className="text-lg font-semibold text-white mb-4">Minhas Carteiras</h3>
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                    Minhas Carteiras
+                    <span className="bg-gray-100 dark:bg-white/10 text-xs px-2 py-0.5 rounded-full text-gray-600 dark:text-gray-300">{connectedBrokers.length}</span>
+                </h3>
                 {connectedBrokers.length === 0 ? (
-                    <div className="glass-card text-center py-12 border-dashed border-2 border-white/10 bg-transparent">
-                        <div className="w-16 h-16 rounded-full bg-white/5 mx-auto flex items-center justify-center mb-4">
-                            <Link2 className="w-8 h-8 text-emerald-500" />
+                    <div className="glass-card text-center py-12 border-dashed border-2 border-gray-200 dark:border-white/10 bg-transparent">
+                        <div className="w-16 h-16 rounded-full bg-purple-500/10 mx-auto flex items-center justify-center mb-4">
+                            <Plug className="w-8 h-8 text-purple-500" />
                         </div>
-                        <h4 className="text-white font-medium mb-1">Nenhuma corretora conectada</h4>
-                        <p className="text-gray-400 text-sm mb-6 max-w-sm mx-auto">
-                            Conecte suas contas da XP, BTG, Rico, ou integre diretamente com a <strong>B3</strong> para ver todos os seus ativos em um só lugar.
+                        <h4 className="text-gray-900 dark:text-white font-medium mb-1">Nenhuma corretora conectada</h4>
+                        <p className="text-gray-500 dark:text-gray-400 text-sm mb-6 max-w-sm mx-auto">
+                            Conecte suas contas da XP, BTG, Rico, ou qualquer instituicao via <strong>Pluggy Open Finance</strong> para ver todos os seus ativos em um so lugar.
                         </p>
-                        <button onClick={() => {
-                            const section = document.getElementById('connect-broker');
-                            section?.scrollIntoView({ behavior: 'smooth' });
-                        }} className="gradient-btn px-6 py-2">
-                            Conectar Agora
+                        <button
+                            onClick={handleConnectPluggy}
+                            disabled={pluggyConnecting}
+                            className="bg-gradient-to-r from-purple-600 to-purple-500 hover:from-purple-500 hover:to-purple-400 text-white px-6 py-3 rounded-xl font-bold shadow-lg shadow-purple-500/20 transition-all flex items-center gap-2 mx-auto"
+                        >
+                            <Plug className="w-5 h-5" />
+                            Conectar via Open Finance
                         </button>
                     </div>
                 ) : (
                     <div className="grid gap-4">
                         {connectedBrokers.map(broker => (
                             <div key={broker.id} className="glass-card">
-                                <div className="flex items-center justify-between mb-4 border-b border-white/5 pb-4">
+                                <div className="flex items-center justify-between mb-4 border-b border-gray-200 dark:border-white/5 pb-4">
                                     <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold shadow-lg" style={{ backgroundColor: broker.color, color: broker.textColor }}>
-                                            {broker.logo}
+                                        <div className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold shadow-lg" style={{ backgroundColor: broker.color || '#6b7280', color: broker.textColor || '#fff' }}>
+                                            {broker.logo || broker.name?.[0]}
                                         </div>
                                         <div>
                                             <h4 className="font-bold text-gray-900 dark:text-white">{broker.name}</h4>
-                                            <p className="text-xs text-gray-500 dark:text-gray-400">Conectado em {new Date(broker.connectedAt).toLocaleDateString()}
-                                                {broker.source === 'b3_portal' && <span className="ml-1 text-yellow-500">• via B3</span>}
+                                            <p className="text-xs text-gray-500 dark:text-gray-400">
+                                                Conectado em {new Date(broker.connectedAt).toLocaleDateString()}
+                                                <span className="ml-1 text-purple-500">• via Pluggy</span>
                                             </p>
                                         </div>
                                     </div>
                                     <div className="flex items-center gap-3">
                                         <div className="text-right">
                                             <p className="text-sm text-gray-500 dark:text-gray-400">Total</p>
-                                            <p className="text-xl font-bold text-emerald-500 dark:text-emerald-400">{fmt(broker.totalValue)}</p>
+                                            <p className="text-xl font-bold text-emerald-500 dark:text-emerald-400">{fmt(broker.totalValue || 0)}</p>
                                         </div>
                                         <button
                                             onClick={() => handleDisconnectBroker(broker.id)}
@@ -330,187 +313,115 @@ export default function Investments() {
                                         </button>
                                     </div>
                                 </div>
-                                <div className="space-y-2">
-                                    {broker.assets.map((asset, idx) => (
-                                        <div key={idx} className="flex items-center justify-between p-2 hover:bg-gray-50 dark:hover:bg-white/5 rounded-lg transition-colors">
-                                            <div className="flex items-center gap-3">
-                                                <div className="w-8 h-8 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-xs font-bold text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-white/10">
-                                                    {asset.symbol.substring(0, 4)}
+                                {broker.assets && broker.assets.length > 0 && (
+                                    <div className="space-y-2">
+                                        {broker.assets.map((asset, idx) => (
+                                            <div key={idx} className="flex items-center justify-between p-2 hover:bg-gray-50 dark:hover:bg-white/5 rounded-lg transition-colors">
+                                                <div className="flex items-center gap-3">
+                                                    <div className="w-8 h-8 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-xs font-bold text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-white/10">
+                                                        {asset.symbol?.substring(0, 4) || '---'}
+                                                    </div>
+                                                    <div>
+                                                        <p className="text-sm font-medium text-gray-900 dark:text-white">{asset.name}</p>
+                                                        <p className="text-xs text-gray-500">{asset.type} {asset.quantity ? `• ${asset.quantity} un.` : ''}</p>
+                                                    </div>
                                                 </div>
-                                                <div>
-                                                    <p className="text-sm font-medium text-gray-900 dark:text-white">{asset.name}</p>
-                                                    <p className="text-xs text-gray-500">{asset.type} • {asset.quantity} un.</p>
+                                                <div className="text-right">
+                                                    <p className="text-sm font-medium text-gray-900 dark:text-white">{fmt((asset.price || 0) * (asset.quantity || 1))}</p>
+                                                    {asset.price && <p className="text-xs text-gray-500">{fmt(asset.price)}/un</p>}
                                                 </div>
                                             </div>
-                                            <div className="text-right">
-                                                <p className="text-sm font-medium text-gray-900 dark:text-white">{fmt(asset.price * asset.quantity)}</p>
-                                                <p className="text-xs text-gray-500">{fmt(asset.price)}/un</p>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
                         ))}
                     </div>
                 )}
             </div>
 
-            {/* Connect New Broker */}
+            {/* Connect New Broker — Pluggy Only */}
             <div id="connect-broker">
-                <h3 className="text-lg font-semibold text-white mb-4">Conectar Corretora ou Banco de Investimento</h3>
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Conectar Corretora ou Banco de Investimento</h3>
 
-                {/* Integration Types */}
-                <div className="mb-6 grid sm:grid-cols-2 gap-4">
+                {/* Pluggy CTA */}
+                <div className="mb-6">
                     <button
-                        onClick={() => handleConnectClick(banksData.find(b => b.id === 'b3'))}
-                        className="glass-card p-4 flex items-center gap-4 bg-gradient-to-r from-yellow-500/10 to-transparent border-yellow-500/30 hover:border-yellow-500 transition-all text-left group"
-                        disabled={connectedBrokers.some(b => b.id === 'b3')}
+                        onClick={handleConnectPluggy}
+                        disabled={pluggyConnecting}
+                        className="w-full glass-card p-5 flex items-center gap-4 bg-gradient-to-r from-purple-500/10 to-transparent border-purple-500/30 hover:border-purple-500/60 transition-all text-left group"
                     >
-                        <div className="w-12 h-12 rounded-xl bg-yellow-500 text-black flex items-center justify-center font-bold text-xl shadow-lg shadow-yellow-500/20 group-hover:scale-110 transition-transform">B3</div>
-                        <div className="flex-1">
-                            <h4 className="font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                                B3 Area do Investidor
-                                <ExternalLink className="w-3.5 h-3.5 text-yellow-500" />
-                            </h4>
-                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Portal oficial da B3. Importe acoes, FIIs e Tesouro Direto.</p>
+                        <div className="w-14 h-14 rounded-xl bg-purple-600 text-white flex items-center justify-center shadow-lg shadow-purple-600/20 group-hover:scale-110 transition-transform">
+                            <Plug className="w-7 h-7" />
                         </div>
-                        <span className="bg-yellow-500/20 text-yellow-600 dark:text-yellow-400 text-[9px] font-bold px-2 py-1 rounded-lg flex-shrink-0">OFICIAL</span>
-                    </button>
-                    <button
-                        onClick={() => handleConnectClick(availableBrokers.find(b => b.id === 'openfinance'))}
-                        className="glass-card p-4 flex items-center gap-4 bg-gradient-to-r from-emerald-500/10 to-transparent border-emerald-500/30 hover:border-emerald-500 transition-all text-left group"
-                        disabled={connectedBrokers.some(b => b.id === 'openfinance')}
-                    >
-                        <div className="w-12 h-12 rounded-xl bg-gray-700 text-white flex items-center justify-center font-bold text-lg shadow-lg group-hover:scale-110 transition-transform">OF</div>
                         <div className="flex-1">
                             <h4 className="font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                                Open Finance Brasil
-                                <ExternalLink className="w-3.5 h-3.5 text-emerald-500" />
+                                Conectar via Open Finance (Pluggy)
+                                <span className="bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-[9px] font-bold px-2 py-0.5 rounded-lg">SEGURO</span>
                             </h4>
-                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Conecte multiplas instituicoes de uma so vez.</p>
+                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                Importa ativos de qualquer instituicao brasileira: XP, BTG, Rico, Clear, Nubank, Itau, Bradesco e centenas mais.
+                                Regulado pelo Banco Central do Brasil.
+                            </p>
+                        </div>
+                        <div className="text-purple-400 group-hover:translate-x-1 transition-transform flex-shrink-0">
+                            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
                         </div>
                     </button>
                 </div>
 
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
-                    {availableBrokers.filter(b => b.id !== 'b3' && b.id !== 'openfinance').map(broker => (
+                {/* Info cards */}
+                <div className="grid sm:grid-cols-2 gap-4 mb-6">
+                    <a
+                        href={B3_PORTAL_URL}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="glass-card p-4 flex items-center gap-4 bg-gradient-to-r from-yellow-500/5 to-transparent border-yellow-500/20 hover:border-yellow-500/50 transition-all group"
+                    >
+                        <div className="w-12 h-12 rounded-xl bg-yellow-500 text-black flex items-center justify-center font-bold text-xl shadow-lg shadow-yellow-500/20 group-hover:scale-110 transition-transform">B3</div>
+                        <div className="flex-1">
+                            <h4 className="font-bold text-gray-900 dark:text-white flex items-center gap-2 text-sm">
+                                Area do Investidor B3
+                                <ExternalLink className="w-3 h-3 text-yellow-500" />
+                            </h4>
+                            <p className="text-[10px] text-gray-500 dark:text-gray-400 mt-0.5">Consulte sua posicao diretamente no portal oficial da bolsa.</p>
+                        </div>
+                    </a>
+
+                    <div className="glass-card p-4 flex items-center gap-4 bg-gradient-to-r from-emerald-500/5 to-transparent border-emerald-500/20">
+                        <div className="w-12 h-12 rounded-xl bg-emerald-600 text-white flex items-center justify-center shadow-lg">
+                            <ShieldCheck className="w-6 h-6" />
+                        </div>
+                        <div className="flex-1">
+                            <h4 className="font-bold text-gray-900 dark:text-white text-sm">Seguranca</h4>
+                            <p className="text-[10px] text-gray-500 dark:text-gray-400 mt-0.5">
+                                API keys protegidas server-side. Conexao E2E. Dados trafegam apenas entre sua instituicao e o Pluggy (BCB).
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Visual broker grid — all point to Pluggy */}
+                <p className="text-xs text-gray-500 dark:text-gray-400 mb-3 flex items-center gap-1">
+                    <CheckCircle className="w-3 h-3 text-emerald-500" />
+                    Instituicoes disponiveis via Pluggy Open Finance:
+                </p>
+                <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2">
+                    {availableBrokers.filter(b => b.id !== 'openfinance').map(broker => (
                         <button
                             key={broker.id}
-                            onClick={() => handleConnectClick(broker)}
-                            className="glass-card hover:bg-white/5 transition-all p-4 flex flex-col items-center gap-3 text-center border hover:border-emerald-500/30 group"
+                            onClick={handleConnectPluggy}
+                            className="p-3 rounded-xl bg-gray-50 dark:bg-white/5 hover:bg-gray-100 dark:hover:bg-white/10 border border-gray-200 dark:border-white/5 hover:border-purple-500/30 transition-all flex flex-col items-center gap-2 text-center group"
+                            title={`Conectar ${broker.name} via Pluggy`}
                         >
-                            <div className="w-12 h-12 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-lg transition-transform group-hover:scale-110" style={{ backgroundColor: broker.color, color: broker.textColor }}>
+                            <div className="w-10 h-10 rounded-lg flex items-center justify-center text-white font-bold text-sm shadow transition-transform group-hover:scale-110" style={{ backgroundColor: broker.color, color: broker.textColor }}>
                                 {broker.logo}
                             </div>
-                            <span className="text-sm font-medium text-gray-600 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white truncate w-full">{broker.name}</span>
-                            <span className="text-[10px] uppercase tracking-wider text-gray-500 border border-gray-200 dark:border-white/5 px-1.5 py-0.5 rounded flex items-center gap-1">
-                                <ExternalLink className="w-2.5 h-2.5" />
-                                {broker.type === 'broker' ? 'Corretora' : 'Banco'}
-                            </span>
+                            <span className="text-[10px] font-medium text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white truncate w-full leading-tight">{broker.name}</span>
                         </button>
                     ))}
                 </div>
             </div>
-
-            {/* Connect Modal */}
-            {showConnectModal && selectedBroker && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
-                    <div className="glass-card w-full max-w-md p-0 overflow-hidden animate-slide-up relative">
-                        <button onClick={() => setShowConnectModal(false)} className="absolute top-4 right-4 text-gray-500 hover:text-white z-10"><X className="w-5 h-5" /></button>
-
-                        <div className="bg-white/5 p-6 text-center border-b border-white/5">
-                            <div className="w-16 h-16 rounded-2xl mx-auto flex items-center justify-center text-white font-bold text-3xl shadow-lg mb-4" style={{ backgroundColor: selectedBroker.color, color: selectedBroker.textColor }}>
-                                {selectedBroker.logo}
-                            </div>
-                            <h2 className="text-xl font-bold text-white">Conectar {selectedBroker.name}</h2>
-                            <p className="text-sm text-gray-400 mt-1">Integracao via portal oficial</p>
-                        </div>
-
-                        <div className="p-6">
-                            {/* Portal Redirect — universal para todas corretoras */}
-                            {connectingState === 'portal_redirect' && (
-                                <div className="space-y-4">
-                                    <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-4">
-                                        <h4 className="text-sm font-semibold text-emerald-400 mb-2 flex items-center gap-2">
-                                            <ExternalLink className="w-4 h-4" /> Como funciona
-                                        </h4>
-                                        <p className="text-[11px] text-gray-300">
-                                            Voce sera redirecionado para o portal oficial de {selectedBroker.name}.
-                                            Faca login com sua conta, autorize o compartilhamento de dados,
-                                            e volte aqui para concluir a importacao.
-                                        </p>
-                                    </div>
-
-                                    <div className="space-y-2 text-xs text-gray-400">
-                                        <div className="flex items-center gap-2"><CheckCircle className="w-3.5 h-3.5 text-emerald-400" /> Acoes, ETFs e BDRs</div>
-                                        <div className="flex items-center gap-2"><CheckCircle className="w-3.5 h-3.5 text-emerald-400" /> Fundos Imobiliarios (FIIs)</div>
-                                        <div className="flex items-center gap-2"><CheckCircle className="w-3.5 h-3.5 text-emerald-400" /> Tesouro Direto e Renda Fixa</div>
-                                        <div className="flex items-center gap-2"><CheckCircle className="w-3.5 h-3.5 text-emerald-400" /> Fundos de Investimento</div>
-                                    </div>
-
-                                    <button
-                                        onClick={() => {
-                                            window.open(getPortalUrl(selectedBroker.id), '_blank');
-                                            setConnectingState('portal_waiting');
-                                        }}
-                                        className="w-full py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white font-bold text-sm flex items-center justify-center gap-2 transition-all shadow-lg shadow-emerald-500/20"
-                                    >
-                                        <ExternalLink className="w-4 h-4" />
-                                        Abrir Portal {selectedBroker.name}
-                                    </button>
-                                </div>
-                            )}
-
-                            {/* Waiting for user to come back */}
-                            {connectingState === 'portal_waiting' && (
-                                <div className="space-y-4">
-                                    <div className="text-center py-4">
-                                        <div className="w-16 h-16 rounded-full bg-emerald-500/10 flex items-center justify-center mx-auto mb-4 animate-pulse">
-                                            <ExternalLink className="w-8 h-8 text-emerald-400" />
-                                        </div>
-                                        <p className="text-white font-medium">Aguardando autorizacao em {selectedBroker.name}...</p>
-                                        <p className="text-sm text-gray-400 mt-2">Apos autorizar o acesso no portal, clique abaixo.</p>
-                                    </div>
-
-                                    <button
-                                        onClick={handlePortalConfirmed}
-                                        className="gradient-btn w-full py-3 text-sm font-bold"
-                                    >
-                                        Ja autorizei — Importar meus dados
-                                    </button>
-
-                                    <button
-                                        onClick={() => window.open(getPortalUrl(selectedBroker.id), '_blank')}
-                                        className="w-full py-2 text-xs text-emerald-400 hover:text-emerald-300 underline"
-                                    >
-                                        Abrir portal {selectedBroker.name} novamente
-                                    </button>
-                                </div>
-                            )}
-
-
-                            {connectingState === 'syncing' && (
-                                <div className="text-center py-6">
-                                    <Loader2 className="w-10 h-10 text-emerald-400 animate-spin mx-auto mb-4" />
-                                    <p className="text-white font-medium">Importando carteira de ativos...</p>
-                                    <p className="text-sm text-gray-500 mt-2">Isso pode levar alguns instantes.</p>
-                                </div>
-                            )}
-
-                            {connectingState === 'success' && (
-                                <div className="text-center py-6 animate-fade-in">
-                                    <div className="w-16 h-16 bg-emerald-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                                        <CheckCircle className="w-8 h-8 text-emerald-400" />
-                                    </div>
-                                    <h3 className="text-xl font-bold text-white mb-2">Carteira Sincronizada!</h3>
-                                    <p className="text-sm text-gray-400">Seus investimentos foram importados com sucesso.</p>
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                </div>
-            )}
         </div>
     );
 }
-

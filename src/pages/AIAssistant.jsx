@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { useTransactions } from '../hooks/useTransactions';
 import { useAuth } from '../contexts/AuthContext';
 import { analytics } from '../hooks/useAnalytics';
-import { Bot, Send, User, Loader2, Sparkles, TrendingUp, PiggyBank, AlertTriangle, RotateCcw } from 'lucide-react';
+import { Bot, Send, User, Loader2, RotateCcw } from 'lucide-react';
 import categoriesData from '../data/data.json';
 
 const categoryConfig = categoriesData.categories;
@@ -354,91 +354,99 @@ export default function AIAssistant() {
         }]);
     };
 
-    if (loading) return <div className="flex items-center justify-center h-[60vh]"><Loader2 className="w-8 h-8 text-emerald-400 animate-spin" /></div>;
+    if (loading) return <div className="flex items-center justify-center h-[60vh]"><Loader2 className="w-12 h-12 text-accent animate-spin" /></div>;
 
     return (
-        <div className="py-6 animate-fade-in flex flex-col h-[calc(100vh-120px)]">
+        <div className="py-6 animate-fade-in flex flex-col h-[calc(100vh-120px)] relative z-0">
+            {/* Cyberpunk Grid Background */}
+            <div className="absolute inset-0 pointer-events-none z-[-1] opacity-10 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+PGRlZnM+PG1hdHRlcm4gaWQ9ImciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTTAgNDBoNDBWMEgweiIgZmlsbD0ibm9uZSIvPjxwYXRoIGQ9Ik0wIDEwaDQwTTAgMjBoNDBNMCAzMGg0ME0xMCAwdjQwTTIwIDB2NDBNMzAgMHY0MCIgc3Ryb2tlPSJyZ2JhKDYsMTgyLDIxMiwwLjE1KSIgc3Ryb2tlLXdpZHRoPSIxIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2cpIi8+PC9zdmc+')]"></div>
+
             {/* Header */}
-            <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center">
-                        <Bot className="w-5 h-5 text-white" />
+            <div className="flex items-center justify-between mb-4 bg-black/50 border border-accent/20 p-4 rounded-xl shadow-[0_0_15px_rgba(57,255,20,0.1)] backdrop-blur-md">
+                <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-lg bg-accent/10 border border-accent/30 flex items-center justify-center shadow-[0_0_10px_rgba(57,255,20,0.2)]">
+                        <Bot className="w-6 h-6 text-accent animate-pulse" />
                     </div>
                     <div>
-                        <h1 className="text-xl font-bold text-white flex items-center gap-2">
-                            Assistente IA <Sparkles className="w-4 h-4 text-yellow-400" />
+                        <h1 className="text-xl font-black text-white flex items-center gap-2 uppercase tracking-widest font-mono">
+                            NEXUS AI <span className="text-accent">{'//'} TERMINAL</span>
                         </h1>
-                        <p className="text-xs text-gray-500">
-                            {analysis ? `Analisando ${analysis.count} transações` : 'Aguardando dados'}
+                        <p className="text-xs text-brand-400 font-mono tracking-wider flex items-center gap-1 mt-1">
+                            {analysis ? `[ SYS.ONLINE : ${analysis.count} NODES CONNECTED ]` : '[ SYS.WAITING_DATA ]'}
                         </p>
                     </div>
                 </div>
-                <button onClick={handleClear} className="p-2 rounded-lg text-gray-500 hover:text-white hover:bg-white/10 transition-all" title="Reiniciar">
-                    <RotateCcw className="w-4 h-4" />
+                <button onClick={handleClear} className="px-3 py-1.5 rounded-lg border border-red-500/30 text-red-500 font-mono text-xs uppercase tracking-widest hover:bg-red-500/10 hover:shadow-[0_0_15px_rgba(239,68,68,0.3)] transition-all flex items-center gap-2" title="Wipe Memory">
+                    <RotateCcw className="w-3 h-3" /> Purge Memory
                 </button>
             </div>
 
             {/* Stats Bar */}
             {analysis && (
-                <div className="grid grid-cols-3 gap-3 mb-4">
-                    <div className="glass-card py-3 px-4 text-center">
-                        <TrendingUp className="w-4 h-4 text-emerald-400 mx-auto mb-1" />
-                        <p className="text-xs text-gray-500">Receita</p>
-                        <p className="text-sm font-bold text-emerald-400">{fmt(analysis.totalIncome)}</p>
+                <div className="grid grid-cols-3 gap-3 mb-4 font-mono">
+                    <div className="bg-black/40 border border-brand-500/20 py-3 px-4 text-center rounded-lg shadow-[inset_0_0_20px_rgba(6,182,212,0.05)] relative overflow-hidden group hover:border-brand-500/50 transition-colors">
+                        <div className="absolute top-0 left-0 w-full h-0.5 bg-brand-500" />
+                        <p className="text-[10px] text-brand-400/70 uppercase tracking-widest mb-1">Total_In</p>
+                        <p className="text-sm font-black text-brand-400">{fmt(analysis.totalIncome)}</p>
                     </div>
-                    <div className="glass-card py-3 px-4 text-center">
-                        <PiggyBank className="w-4 h-4 text-violet-400 mx-auto mb-1" />
-                        <p className="text-xs text-gray-500">Poupança</p>
-                        <p className="text-sm font-bold text-violet-400">{analysis.savingsRate.toFixed(0)}%</p>
+                    <div className="bg-black/40 border border-accent/20 py-3 px-4 text-center rounded-lg shadow-[inset_0_0_20px_rgba(57,255,20,0.05)] relative overflow-hidden group hover:border-accent/50 transition-colors">
+                        <div className="absolute top-0 left-0 w-full h-0.5 bg-accent" />
+                        <p className="text-[10px] text-accent/70 uppercase tracking-widest mb-1">Defense_Net</p>
+                        <p className="text-sm font-black text-accent">{analysis.savingsRate.toFixed(0)}%</p>
                     </div>
-                    <div className="glass-card py-3 px-4 text-center">
-                        <AlertTriangle className="w-4 h-4 text-amber-400 mx-auto mb-1" />
-                        <p className="text-xs text-gray-500">Maior gasto</p>
-                        <p className="text-sm font-bold text-amber-400 truncate">{categoryConfig[analysis.topCategory?.[0]]?.label || '—'}</p>
+                    <div className="bg-black/40 border border-red-500/20 py-3 px-4 text-center rounded-lg shadow-[inset_0_0_20px_rgba(239,68,68,0.05)] relative overflow-hidden group hover:border-red-500/50 transition-colors">
+                        <div className="absolute top-0 left-0 w-full h-0.5 bg-red-500" />
+                        <p className="text-[10px] text-red-400/70 uppercase tracking-widest mb-1">Leak_Source</p>
+                        <p className="text-sm font-black text-red-400 truncate">{categoryConfig[analysis.topCategory?.[0]]?.label || '—'}</p>
                     </div>
                 </div>
             )}
 
             {/* Chat Messages */}
-            <div className="glass-card flex-1 overflow-y-auto p-4 space-y-4 mb-4 custom-scrollbar">
+            <div className="flex-1 overflow-y-auto p-4 space-y-4 mb-4 custom-scrollbar bg-black/60 border border-white/10 rounded-xl relative shadow-[inset_0_0_50px_rgba(0,0,0,0.8)] backdrop-blur-md">
+
                 {messages.map((msg) => (
                     <div key={msg.id} className={`flex gap-3 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                         {msg.role === 'assistant' && (
-                            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center shrink-0 mt-1">
-                                <Bot className="w-3.5 h-3.5 text-white" />
+                            <div className="w-8 h-8 rounded bg-black border border-accent/50 flex items-center justify-center shrink-0 mt-1 shadow-[0_0_10px_rgba(57,255,20,0.2)]">
+                                <Bot className="w-4 h-4 text-accent" />
                             </div>
                         )}
-                        <div className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${msg.role === 'user'
-                            ? 'bg-emerald-500/20 border border-emerald-500/20 text-emerald-100'
+                        <div className={`max-w-[85%] rounded px-4 py-3 text-sm leading-relaxed font-mono shadow-sm ${msg.role === 'user'
+                            ? 'bg-brand-500/10 border border-brand-500/40 text-brand-100 shadow-[0_0_15px_rgba(6,182,212,0.15)]'
                             : msg.type === 'alert'
-                                ? 'bg-red-500/10 border border-red-500/20 text-gray-200'
+                                ? 'bg-red-500/10 border-l-2 border-l-red-500 border-y border-r border-y-white/5 border-r-white/5 text-gray-300'
                                 : msg.type === 'warning'
-                                    ? 'bg-amber-500/10 border border-amber-500/20 text-gray-200'
+                                    ? 'bg-amber-500/10 border-l-2 border-l-amber-500 border-y border-r border-y-white/5 border-r-white/5 text-gray-300'
                                     : msg.type === 'success'
-                                        ? 'bg-emerald-500/10 border border-emerald-500/20 text-gray-200'
-                                        : 'bg-white/5 border border-white/10 text-gray-200'
+                                        ? 'bg-accent/5 border-l-2 border-l-accent border-y border-r border-y-white/5 border-r-white/5 text-gray-300 shadow-[0_0_15px_rgba(57,255,20,0.05)]'
+                                        : 'bg-black/50 border-l-2 border-l-brand-500 border-y border-r border-y-white/5 border-r-white/5 text-gray-300'
                             }`}>
+                            {msg.role === 'assistant' && (
+                                <div className="text-[9px] uppercase tracking-widest text-accent mb-2 border-b border-accent/20 pb-1 w-max">Response_Packet_Received</div>
+                            )}
                             <div className="whitespace-pre-wrap">{msg.text.split('**').map((part, i) =>
-                                i % 2 === 1 ? <strong key={i} className="text-white font-semibold">{part}</strong> : part
+                                i % 2 === 1 ? <strong key={i} className="text-white font-bold">{part}</strong> : part
                             )}</div>
                         </div>
                         {msg.role === 'user' && (
-                            <div className="w-7 h-7 rounded-lg bg-emerald-500/20 flex items-center justify-center shrink-0 mt-1">
-                                <User className="w-3.5 h-3.5 text-emerald-400" />
+                            <div className="w-8 h-8 rounded bg-black border border-brand-500/50 flex items-center justify-center shrink-0 mt-1 shadow-[0_0_10px_rgba(6,182,212,0.2)]">
+                                <User className="w-4 h-4 text-brand-400" />
                             </div>
                         )}
                     </div>
                 ))}
                 {isTyping && (
                     <div className="flex gap-3 items-start">
-                        <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center shrink-0">
-                            <Bot className="w-3.5 h-3.5 text-white" />
+                        <div className="w-8 h-8 rounded bg-black border border-accent/50 flex items-center justify-center shrink-0 shadow-[0_0_10px_rgba(57,255,20,0.2)] animate-pulse">
+                            <Bot className="w-4 h-4 text-accent" />
                         </div>
-                        <div className="bg-white/5 border border-white/10 rounded-2xl px-4 py-3">
+                        <div className="bg-black/50 border-l-2 border-l-accent border-y border-r border-y-white/5 border-r-white/5 text-accent font-mono text-xs px-4 py-3 flex items-center gap-2">
+                            <span>Processing_Query</span>
                             <div className="flex gap-1">
-                                <div className="w-2 h-2 rounded-full bg-gray-500 animate-bounce" style={{ animationDelay: '0ms' }} />
-                                <div className="w-2 h-2 rounded-full bg-gray-500 animate-bounce" style={{ animationDelay: '150ms' }} />
-                                <div className="w-2 h-2 rounded-full bg-gray-500 animate-bounce" style={{ animationDelay: '300ms' }} />
+                                <span className="animate-bounce" style={{ animationDelay: '0ms' }}>.</span>
+                                <span className="animate-bounce" style={{ animationDelay: '150ms' }}>.</span>
+                                <span className="animate-bounce" style={{ animationDelay: '300ms' }}>.</span>
                             </div>
                         </div>
                     </div>
@@ -446,37 +454,39 @@ export default function AIAssistant() {
                 <div ref={messagesEndRef} />
             </div>
 
-            {/* Quick Actions */}
-            <div className="flex gap-2 mb-3 overflow-x-auto pb-1 custom-scrollbar">
+            {/* Quick Actions (Console Commands) */}
+            <div className="flex gap-2 mb-3 overflow-x-auto pb-2 custom-scrollbar font-mono">
                 {QUICK_ACTIONS.map((action) => (
                     <button
                         key={action.label}
                         onClick={() => sendMessage(action.prompt)}
                         disabled={isTyping}
-                        className="px-3 py-1.5 rounded-full border border-white/10 text-xs text-gray-400 hover:text-white hover:border-emerald-500/30 hover:bg-emerald-500/5 transition-all whitespace-nowrap disabled:opacity-50"
+                        className="px-3 py-1.5 rounded border border-brand-500/30 bg-black/40 text-[10px] uppercase tracking-widest text-brand-400 hover:text-white hover:border-accent hover:bg-accent/20 hover:shadow-[0_0_15px_rgba(57,255,20,0.3)] transition-all whitespace-nowrap disabled:opacity-50"
                     >
-                        {action.label}
+                        [&gt;_ {action.label.replace(/[^a-zA-ZÀ-ÿ0-9 ]/g, '').trim()} ]
                     </button>
                 ))}
             </div>
 
-            {/* Input */}
-            <form onSubmit={handleSubmit} className="flex gap-2">
+            {/* Input Form */}
+            <form onSubmit={handleSubmit} className="flex gap-2 relative">
+                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-accent font-mono text-sm pointer-events-none font-bold">&gt;</div>
                 <input
                     ref={inputRef}
                     type="text"
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
-                    placeholder="Pergunte sobre suas finanças..."
+                    placeholder="ENTER QUERY STATEMENT..."
                     disabled={isTyping}
-                    className="input-field flex-1"
+                    className="w-full bg-black/60 border border-white/20 rounded-lg pl-8 pr-16 py-3.5 text-accent font-mono text-sm outline-none focus:border-accent focus:shadow-[0_0_20px_rgba(57,255,20,0.15)] disabled:opacity-50 transition-all uppercase placeholder:text-gray-700 placeholder:normal-case"
                 />
                 <button
                     type="submit"
                     disabled={!input.trim() || isTyping}
-                    className="gradient-btn px-4 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded bg-accent text-black font-black hover:bg-white hover:shadow-[0_0_20px_rgba(57,255,20,0.5)] transition-all disabled:opacity-50 disabled:cursor-not-allowed group"
+                    title="Transmit"
                 >
-                    <Send className="w-4 h-4" />
+                    <Send className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
                 </button>
             </form>
         </div>

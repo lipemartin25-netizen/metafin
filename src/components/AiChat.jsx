@@ -182,38 +182,39 @@ export default function AiChat() {
             {!isOpen && (
                 <button
                     onClick={() => setIsOpen(true)}
-                    className="fixed bottom-6 right-6 z-40 w-14 h-14 rounded-full bg-gradient-to-r from-emerald-500 to-cyan-500 shadow-lg shadow-emerald-500/25 flex items-center justify-center hover:scale-110 transition-transform group animate-bounce-subtle"
+                    className="fixed bottom-6 right-6 z-40 w-14 h-14 rounded-xl bg-black border border-accent flex items-center justify-center hover:scale-110 transition-transform group shadow-[0_0_20px_rgba(57,255,20,0.4)] animate-pulse"
                 >
-                    <Sparkles className="w-6 h-6 text-white group-hover:rotate-12 transition-transform" />
+                    <div className="absolute inset-0 bg-accent/20 blur-md pointer-events-none" />
+                    <Bot className="w-6 h-6 text-accent group-hover:animate-ping relative z-10" />
                 </button>
             )}
 
             {/* Chat Panel */}
             {isOpen && (
-                <div className="fixed bottom-0 right-0 sm:bottom-6 sm:right-6 z-50 w-full sm:w-[400px] md:w-[440px] h-[100dvh] sm:h-[650px] flex flex-col bg-[#0a0a0a] sm:rounded-2xl border border-white/10 shadow-2xl animate-slide-up overflow-hidden ring-1 ring-white/5">
+                <div className="fixed bottom-0 right-0 sm:bottom-6 sm:right-6 z-50 w-full sm:w-[400px] md:w-[440px] h-[100dvh] sm:h-[650px] flex flex-col bg-black sm:rounded-none sm:border-2 border-t-2 border-accent shadow-2xl animate-slide-up overflow-hidden ring-1 ring-accent/30 font-mono">
 
                     {/* Header */}
-                    <div className="flex items-center justify-between px-4 py-3 border-b border-white/5 bg-gray-900/95 backdrop-blur-xl">
-                        <div className="flex items-center gap-2">
-                            <div className="bg-emerald-500/10 p-1.5 rounded-lg">
-                                <Bot className="w-4 h-4 text-emerald-400" />
+                    <div className="flex items-center justify-between px-4 py-3 border-b-2 border-accent bg-black">
+                        <div className="flex items-center gap-3">
+                            <div className="bg-accent/10 border border-accent/50 p-1.5 rounded-sm">
+                                <Bot className="w-5 h-5 text-accent animate-pulse" />
                             </div>
                             <div>
-                                <span className="font-semibold text-white text-sm block">SmartFinance AI</span>
-                                <span className="text-[10px] text-emerald-400 font-medium tracking-wide bg-emerald-500/10 px-1.5 py-0.5 rounded uppercase">PRO ATIVO</span>
+                                <span className="font-black text-white text-sm block tracking-widest uppercase">Nexus AI_Link</span>
+                                <span className="text-[9px] text-accent font-black tracking-widest bg-accent/10 px-1.5 py-0.5 border border-accent/20 uppercase">SECURE connection</span>
                             </div>
                         </div>
-                        <div className="flex items-center gap-1">
+                        <div className="flex items-center gap-2">
                             <button
                                 onClick={handleClear}
-                                className="p-1.5 rounded-lg text-gray-500 hover:text-white hover:bg-white/10 transition-all"
+                                className="p-1.5 rounded-sm border border-red-500/50 text-red-500 hover:text-white hover:bg-red-500 transition-all font-black text-[10px] uppercase tracking-widest flex items-center gap-1"
                                 title="Limpar conversa"
                             >
-                                <RotateCcw className="w-4 h-4" />
+                                <RotateCcw className="w-3 h-3" /> WIPE
                             </button>
                             <button
                                 onClick={() => setIsOpen(false)}
-                                className="p-1.5 rounded-lg text-gray-500 hover:text-white hover:bg-white/10 transition-all"
+                                className="p-1.5 border border-accent/50 text-accent hover:bg-accent hover:text-black transition-all"
                             >
                                 <X className="w-4 h-4" />
                             </button>
@@ -221,19 +222,19 @@ export default function AiChat() {
                     </div>
 
                     {/* Model Picker */}
-                    <div className="px-4 py-2 border-b border-white/5 bg-black/20">
+                    <div className="px-4 py-2 border-b border-white/10 bg-black/50">
                         <button
                             onClick={() => setShowModelPicker(!showModelPicker)}
-                            className="flex items-center gap-2 text-xs text-gray-300 hover:text-white transition-colors w-full bg-white/5 hover:bg-white/10 p-2 rounded-lg border border-white/5"
+                            className="flex items-center gap-2 text-[10px] uppercase font-bold tracking-widest text-brand-400 hover:text-brand-300 transition-colors w-full bg-black border border-brand-500/30 hover:border-brand-500 p-2 rounded-none"
                         >
                             <span className="text-base">{currentModel?.icon}</span>
-                            <span className="font-medium">{currentModel?.name}</span>
-                            <span className="text-gray-500 ml-auto text-[10px] uppercase tracking-wider font-bold">{currentModel?.provider}</span>
+                            <span>{currentModel?.name}</span>
+                            <span className="text-gray-500 ml-auto opacity-50">{currentModel?.provider}</span>
                             <ChevronDown className={`w-3 h-3 transition-transform ${showModelPicker ? 'rotate-180' : ''}`} />
                         </button>
 
                         {showModelPicker && (
-                            <div className="mt-2 space-y-1 pb-2 animate-fade-in max-h-48 overflow-y-auto custom-scrollbar">
+                            <div className="mt-2 space-y-1 pb-2 animate-fade-in max-h-48 overflow-y-auto custom-scrollbar border border-white/10 p-1 bg-black">
                                 {availableModels.map((modelId) => {
                                     const m = AI_MODELS[modelId];
                                     if (!m) return null;
@@ -245,20 +246,20 @@ export default function AiChat() {
                                                 setSelectedModel(modelId);
                                                 setShowModelPicker(false);
                                             }}
-                                            className={`flex items-center gap-3 w-full px-3 py-2 rounded-xl text-xs transition-all ${isActive
-                                                ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
-                                                : 'text-gray-400 hover:bg-white/5 hover:text-white border border-transparent'
+                                            className={`flex items-center gap-3 w-full px-3 py-2 text-xs transition-all ${isActive
+                                                ? 'bg-brand-500/20 text-brand-400 border border-brand-500'
+                                                : 'text-gray-500 hover:bg-white/10 hover:text-white border border-transparent'
                                                 }`}
                                         >
                                             <span className="text-base">{m.icon}</span>
                                             <div className="flex-1 text-left">
-                                                <div className="font-medium flex items-center gap-2">
+                                                <div className="font-bold uppercase flex items-center gap-2 tracking-widest">
                                                     {m.name}
-                                                    <span className="text-[10px] bg-white/5 px-1 rounded text-gray-500">{m.costTier}</span>
+                                                    <span className="text-[9px] bg-white/10 px-1 text-gray-400 border border-white/20">{m.costTier}</span>
                                                 </div>
-                                                <div className="text-[10px] text-gray-600 truncate max-w-[200px]">{m.description}</div>
+                                                <div className="text-[9px] text-gray-600 truncate max-w-[200px] normal-case font-sans">{m.description}</div>
                                             </div>
-                                            {isActive && <Check className="w-3 h-3 text-emerald-500" />}
+                                            {isActive && <Check className="w-3 h-3 text-brand-500" />}
                                         </button>
                                     );
                                 })}
@@ -267,26 +268,26 @@ export default function AiChat() {
                     </div>
 
                     {/* Messages */}
-                    <div className="flex-1 overflow-y-auto px-4 py-4 space-y-6 custom-scrollbar bg-gradient-to-b from-[#0a0a0a] to-[#050505]">
+                    <div className="flex-1 overflow-y-auto px-4 py-4 space-y-6 custom-scrollbar bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+PGRlZnM+PG1hdHRlcm4gaWQ9ImciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTTAgNDBoNDBWMEgweiIgZmlsbD0ibm9uZSIvPjxwYXRoIGQ9Ik0wIDEwaDQwTTAgMjBoNDBNMCAzMGg0ME0xMCAwdjQwTTIwIDB2NDBNMzAgMHY0MCIgc3Ryb2tlPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMDMpIiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZykiLz48L3N2Zz4=')]">
                         {/* Empty State */}
                         {messages.length === 0 && (
                             <div className="text-center py-10 px-4">
-                                <div className="w-16 h-16 bg-gradient-to-br from-emerald-500/20 to-cyan-500/20 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-emerald-500/10 border border-emerald-500/10">
-                                    <Sparkles className="w-8 h-8 text-emerald-400" />
+                                <div className="w-16 h-16 bg-black border-2 border-accent flex items-center justify-center mx-auto mb-6 shadow-[0_0_20px_rgba(57,255,20,0.3)] animate-pulse">
+                                    <Bot className="w-8 h-8 text-accent" />
                                 </div>
-                                <h3 className="text-white font-semibold mb-2">Olá! Vamos analisar suas finanças?</h3>
+                                <h3 className="text-white font-black mb-2 uppercase tracking-widest text-lg">AI_CORE STATUS: WAITING</h3>
                                 <p className="text-gray-500 text-xs mb-8 max-w-[260px] mx-auto leading-relaxed">
-                                    Posso categorizar gastos, sugerir onde economizar ou criar um plano de orçamento personalizado.
+                                    Init command sequence or ask for direct financial extraction.
                                 </p>
                                 <div className="grid grid-cols-1 gap-2.5">
                                     {Object.entries(AI_ACTIONS).slice(0, 4).map(([key, action]) => (
                                         <button
                                             key={key}
                                             onClick={() => handleSend(action.prompt)}
-                                            className="p-3 rounded-xl bg-white/[0.03] border border-white/5 text-xs text-gray-300 hover:bg-white/[0.08] hover:text-white hover:border-emerald-500/30 transition-all text-left flex items-center gap-3 group"
+                                            className="p-3 bg-black border border-white/10 text-xs text-brand-400 hover:bg-brand-500/10 hover:border-brand-500 transition-all text-left flex items-center gap-3 group uppercase tracking-widest shadow-inner"
                                         >
-                                            <span className="text-lg opacity-70 group-hover:opacity-100 transition-opacity">{action.label.split(' ')[0]}</span>
-                                            <span className="font-medium">{action.label.split(' ').slice(1).join(' ')}</span>
+                                            <span className="text-lg opacity-50 group-hover:opacity-100 transition-opacity">&gt;_</span>
+                                            <span className="font-bold">{action.label}</span>
                                         </button>
                                     ))}
                                 </div>
@@ -302,20 +303,19 @@ export default function AiChat() {
                                 <div className={`flex flex-col max-w-[85%] ${msg.role === 'user' ? 'items-end' : 'items-start'}`}>
 
                                     {/* Name Label */}
-                                    <span className="text-[10px] text-gray-500 mb-1 px-1">
-                                        {msg.role === 'user' ? 'Você' : msg.model || 'AI'}
+                                    <span className="text-[9px] font-bold text-gray-500 mb-1 px-1 uppercase tracking-widest">
+                                        {msg.role === 'user' ? 'OPERATOR' : msg.model || 'NEXUS_AI'}
                                     </span>
 
                                     <div
-                                        className={`rounded-2xl px-4 py-3 text-sm leading-relaxed shadow-sm ${msg.role === 'user'
-                                            ? 'bg-emerald-600 text-white rounded-tr-sm'
+                                        className={`px-4 py-3 text-sm leading-relaxed shadow-sm ${msg.role === 'user'
+                                            ? 'bg-accent/10 border-r-4 border-r-accent border-y border-l border-white/10 text-accent shadow-[0_0_10px_rgba(57,255,20,0.1)]'
                                             : msg.isError
-                                                ? 'bg-red-500/10 text-red-300 border border-red-500/20 rounded-tl-sm'
-                                                : 'bg-white/5 text-gray-200 border border-white/5 rounded-tl-sm'
+                                                ? 'bg-red-500/10 text-red-400 border border-red-500/30'
+                                                : 'bg-black border-l-4 border-l-brand-500 border-y border-r border-white/10 text-gray-300 shadow-[0_0_10px_rgba(6,182,212,0.1)]'
                                             }`}
                                     >
-                                        {/* Content with basic markdown */}
-                                        <div className="whitespace-pre-wrap break-words font-light">
+                                        <div className="whitespace-pre-wrap break-words font-medium">
                                             {msg.content}
                                         </div>
                                     </div>
@@ -324,18 +324,18 @@ export default function AiChat() {
                                     <div className="flex items-center gap-2 mt-1 px-1 opacity-0 group-hover:opacity-100 transition-opacity">
                                         {msg.role === 'assistant' && !msg.isError && (
                                             <>
-                                                <span className="text-[10px] text-gray-600">
-                                                    {(msg.latency / 1000).toFixed(1)}s
+                                                <span className="text-[9px] text-gray-600 font-bold">
+                                                    {(msg.latency / 1000).toFixed(1)}s LATENCY
                                                 </span>
                                                 <div className="w-1 h-1 rounded-full bg-gray-700"></div>
                                                 <button
                                                     onClick={() => handleCopy(msg.content, msg.id)}
-                                                    className="text-[10px] text-emerald-400 hover:text-emerald-300 flex items-center gap-1 transition-colors font-medium"
+                                                    className="text-[9px] uppercase tracking-widest text-brand-400 font-black hover:text-brand-300 flex items-center gap-1 transition-colors"
                                                 >
                                                     {copiedId === msg.id ? (
-                                                        <><Check className="w-3 h-3" /> Copiado</>
+                                                        <><Check className="w-3 h-3" /> EXPORTED</>
                                                     ) : (
-                                                        <><Copy className="w-3 h-3" /> Copiar</>
+                                                        <><Copy className="w-3 h-3" /> EXPORT</>
                                                     )}
                                                 </button>
                                             </>
@@ -347,13 +347,11 @@ export default function AiChat() {
 
                         {/* Loading */}
                         {loading && (
-                            <div className="flex justify-start animate-pulse">
-                                <div className="bg-white/5 border border-white/5 rounded-2xl rounded-tl-sm px-4 py-3 flex items-center gap-3">
-                                    <div className="w-2 h-2 bg-emerald-400 rounded-full animate-bounce"></div>
-                                    <div className="w-2 h-2 bg-emerald-400 rounded-full animate-bounce delay-75"></div>
-                                    <div className="w-2 h-2 bg-emerald-400 rounded-full animate-bounce delay-150"></div>
-                                    <span className="text-xs text-gray-400 ml-1 font-medium">
-                                        {currentModel?.name} analisando...
+                            <div className="flex justify-start animate-fade-in">
+                                <div className="bg-black border border-accent/50 px-4 py-3 flex items-center gap-3">
+                                    <Bot className="w-4 h-4 text-accent animate-pulse" />
+                                    <span className="text-xs text-accent uppercase tracking-widest font-black">
+                                        Processing<span className="animate-pulse">_</span>
                                     </span>
                                 </div>
                             </div>
@@ -364,23 +362,23 @@ export default function AiChat() {
 
                     {/* Quick Actions (if chat active) */}
                     {messages.length > 0 && !loading && (
-                        <div className="px-4 py-2 bg-gray-900 border-t border-white/5 flex gap-2 overflow-x-auto no-scrollbar mask-linear-fade">
+                        <div className="px-4 py-2 bg-black border-t border-white/10 flex gap-2 overflow-x-auto custom-scrollbar">
                             {Object.entries(AI_ACTIONS).map(([key, action]) => (
                                 <button
                                     key={key}
                                     onClick={() => handleSend(action.prompt)}
-                                    className="shrink-0 px-3 py-1.5 rounded-full bg-white/5 border border-white/5 text-xs text-gray-400 hover:text-white hover:bg-white/10 hover:border-emerald-500/30 transition-all whitespace-nowrap"
+                                    className="shrink-0 px-3 py-1.5 border border-brand-500/30 text-[9px] uppercase tracking-widest font-bold text-gray-400 hover:text-brand-400 hover:bg-brand-500/10 hover:border-brand-500 transition-all whitespace-nowrap"
                                 >
-                                    {action.label}
+                                    [&gt;] {action.label}
                                 </button>
                             ))}
                         </div>
                     )}
 
                     {/* Input */}
-                    <div className="p-4 border-t border-white/5 bg-gray-900">
+                    <div className="p-4 border-t-2 border-accent bg-black">
                         {error && (
-                            <div className="text-xs text-red-400 mb-2 bg-red-500/10 border border-red-500/20 p-2 rounded-lg flex items-center gap-2">
+                            <div className="text-xs text-red-500 font-bold uppercase tracking-widest mb-2 bg-red-500/10 border border-red-500 p-2 flex items-center gap-2">
                                 <X className="w-3 h-3" /> {error}
                             </div>
                         )}
@@ -389,27 +387,27 @@ export default function AiChat() {
                                 e.preventDefault();
                                 handleSend();
                             }}
-                            className="flex items-center gap-2 bg-black/40 p-1.5 rounded-2xl border border-white/10 focus-within:border-emerald-500/50 transition-colors shadow-inner"
+                            className="flex items-center gap-2 bg-black p-1 border border-white/20 focus-within:border-accent transition-colors shadow-inner"
                         >
                             <input
                                 ref={inputRef}
                                 type="text"
                                 value={input}
                                 onChange={(e) => setInput(e.target.value)}
-                                placeholder="Pergunte sobre suas finanças..."
+                                placeholder="&gt; AWAITING COMMAND..."
                                 disabled={loading}
-                                className="flex-1 px-3 py-2 bg-transparent text-white placeholder-gray-600 text-sm focus:outline-none disabled:opacity-50"
+                                className="flex-1 px-3 py-2 bg-transparent text-accent font-bold placeholder-gray-600 text-sm focus:outline-none disabled:opacity-50"
                             />
                             <button
                                 type="submit"
                                 disabled={loading || !input.trim()}
-                                className="p-2.5 rounded-xl bg-emerald-500 text-white hover:bg-emerald-600 transition-all disabled:opacity-30 disabled:cursor-not-allowed shadow-lg shadow-emerald-500/20"
+                                className="p-2.5 bg-accent text-black font-black hover:bg-white hover:shadow-[0_0_15px_rgba(57,255,20,0.6)] transition-all disabled:opacity-30 disabled:cursor-not-allowed group"
                             >
-                                {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+                                {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />}
                             </button>
                         </form>
-                        <div className="text-[10px] text-gray-600 text-center mt-2 flex justify-center items-center gap-1">
-                            <Lock className="w-2.5 h-2.5" /> Ambiente criptografado & seguro
+                        <div className="text-[9px] uppercase tracking-widest font-black text-gray-700 text-center mt-2 flex justify-center items-center gap-1">
+                            <Lock className="w-2 h-2" /> ENCRYPTED NEURAL NETWORK
                         </div>
                     </div>
                 </div>

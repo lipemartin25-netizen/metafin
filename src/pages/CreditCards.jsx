@@ -1,22 +1,22 @@
 import { useState, useEffect, useMemo } from 'react';
-import { CreditCard, Plus, Trash2, X, Calendar, AlertTriangle, CheckCircle } from 'lucide-react';
+import { CreditCard, Plus, Trash2, X, Calendar, AlertTriangle, CheckCircle, Eye, EyeOff, Zap, Lock, Unlock, Smartphone } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 function fmt(v) {
     return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v);
 }
 
 const FLAGS = [
-    { id: 'visa', name: 'Visa', color: '#1A1F71' },
-    { id: 'mastercard', name: 'Mastercard', color: '#EB001B' },
-    { id: 'elo', name: 'Elo', color: '#00A4E0' },
-    { id: 'amex', name: 'American Express', color: '#006FCF' },
-    { id: 'hipercard', name: 'Hipercard', color: '#822124' },
+    { id: 'visa', name: 'Visa', color: '#1A1F71', logo: 'VISA' },
+    { id: 'mastercard', name: 'Mastercard', color: '#EB001B', logo: 'mastercard' },
+    { id: 'elo', name: 'Elo', color: '#00A4E0', logo: 'elo' },
 ];
 
 export default function CreditCards() {
     const [cards, setCards] = useState([]);
     const [showAdd, setShowAdd] = useState(false);
-    const [form, setForm] = useState({ name: '', flag: 'visa', limit: '', due: '10', used: '' });
+    const [form, setForm] = useState({ name: '', flag: 'visa', limit: '', due: '10', used: '', isVirtual: false });
+    const [showNumbers, setShowNumbers] = useState({});
 
     useEffect(() => {
         const s = localStorage.getItem('sf_credit_cards');
@@ -29,28 +29,37 @@ export default function CreditCards() {
         e.preventDefault();
         const card = {
             id: Date.now().toString(),
-            name: form.name || 'Meu Cartao',
+            name: form.name || 'Meu Cartão',
             flag: form.flag,
             limit: parseFloat(form.limit.replace(/\./g, '').replace(',', '.')) || 5000,
             dueDay: parseInt(form.due) || 10,
             used: parseFloat(form.used.replace(/\./g, '').replace(',', '.')) || 0,
+            isVirtual: form.isVirtual,
+            isLocked: false,
+            number: '**** **** **** ' + Math.floor(1000 + Math.random() * 9000),
+            cvv: Math.floor(100 + Math.random() * 900),
+            exp: `12/${new Date().getFullYear() + 4}`,
             createdAt: new Date().toISOString(),
-            invoices: []
         };
         save([...cards, card]);
-        setForm({ name: '', flag: 'visa', limit: '', due: '10', used: '' });
+        setForm({ name: '', flag: 'visa', limit: '', due: '10', used: '', isVirtual: false });
         setShowAdd(false);
     };
 
     const handleDelete = (id) => {
-        if (!confirm('Excluir este cartao?')) return;
+        if (!confirm('Excluir este cartão?')) return;
         save(cards.filter(c => c.id !== id));
+    };
+
+    const toggleLock = (id) => {
+        save(cards.map(c => c.id === id ? { ...c, isLocked: !c.isLocked } : c));
     };
 
     const totals = useMemo(() => {
         const totalLimit = cards.reduce((s, c) => s + c.limit, 0);
         const totalUsed = cards.reduce((s, c) => s + c.used, 0);
-        return { totalLimit, totalUsed, available: totalLimit - totalUsed };
+        const cashbackEstimativa = totalUsed * 0.015; // Ex: 1.5% fixed cashback
+        return { totalLimit, totalUsed, available: totalLimit - totalUsed, cashbackEstimativa };
     }, [cards]);
 
     const getDueStatus = (dueDay) => {
@@ -62,140 +71,251 @@ export default function CreditCards() {
     };
 
     return (
-        <div className="py-6 space-y-6 animate-fade-in pb-20">
-            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-                <div>
-                    <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                        <CreditCard className="w-6 h-6 text-purple-500" />
-                        Cartoes de Credito
-                    </h1>
-                    <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">Controle seus cartoes e faturas.</p>
+        <div className="py-6 space-y-8 animate-fade-in pb-20">
+            {/* Header Redesigned */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 bg-gradient-to-r from-brand-600/10 to-transparent p-6 rounded-3xl border border-brand-500/10">
+                <div className="flex items-center gap-4">
+                    <div className="w-14 h-14 bg-brand-500/20 rounded-2xl flex items-center justify-center p-3 text-brand-500 backdrop-blur-md">
+                        <CreditCard className="w-full h-full" />
+                    </div>
+                    <div>
+                        <h1 className="text-2xl font-black text-gray-900 dark:text-white tracking-tight">Meus Cartões</h1>
+                        <p className="text-gray-500 dark:text-gray-400 text-sm mt-0.5 font-medium">Baas & Emissão Virtual</p>
+                    </div>
                 </div>
-                <button onClick={() => setShowAdd(true)} className="gradient-btn px-4 py-2 text-sm flex items-center gap-2">
-                    <Plus className="w-4 h-4" /> Adicionar Cartao
+                <button onClick={() => setShowAdd(true)} className="gradient-btn px-6 py-3 rounded-2xl text-sm font-bold flex items-center justify-center gap-2 hover:scale-105 transition-transform shadow-lg shadow-brand-500/20">
+                    <Plus className="w-5 h-5" /> Emitir Novo Cartão
                 </button>
             </div>
 
             {/* Summary Cards */}
-            <div className="grid sm:grid-cols-3 gap-4">
-                <div className="glass-card">
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Limite Total</p>
-                    <p className="text-2xl font-bold text-gray-900 dark:text-white">{fmt(totals.totalLimit)}</p>
+            <div className="grid sm:grid-cols-4 gap-4">
+                <div className="glass-card hover:border-gray-300 dark:hover:border-white/20 transition-colors">
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-2 uppercase font-bold tracking-wider">Limite Total</p>
+                    <p className="text-2xl font-black text-gray-900 dark:text-white">{fmt(totals.totalLimit)}</p>
                 </div>
-                <div className="glass-card">
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Fatura Atual</p>
-                    <p className="text-2xl font-bold text-red-500">{fmt(totals.totalUsed)}</p>
+                <div className="glass-card bg-red-500/5 hover:bg-red-500/10 border-red-500/20 transition-colors">
+                    <p className="text-xs text-red-600/70 dark:text-red-400/70 mb-2 uppercase font-bold tracking-wider">Fatura Atual</p>
+                    <p className="text-2xl font-black text-red-600 dark:text-red-400">{fmt(totals.totalUsed)}</p>
                 </div>
-                <div className="glass-card">
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Disponivel</p>
-                    <p className="text-2xl font-bold text-emerald-500">{fmt(totals.available)}</p>
+                <div className="glass-card bg-emerald-500/5 hover:bg-emerald-500/10 border-emerald-500/20 transition-colors">
+                    <p className="text-xs text-emerald-600/70 dark:text-emerald-400/70 mb-2 uppercase font-bold tracking-wider">Disponível</p>
+                    <p className="text-2xl font-black text-emerald-600 dark:text-emerald-400">{fmt(totals.available)}</p>
                     {totals.totalLimit > 0 && (
-                        <div className="mt-2 h-2 bg-gray-200 dark:bg-white/10 rounded-full overflow-hidden">
-                            <div
-                                className={`h-full rounded-full transition-all ${(totals.totalUsed / totals.totalLimit) > 0.8 ? 'bg-red-500' : (totals.totalUsed / totals.totalLimit) > 0.5 ? 'bg-yellow-500' : 'bg-emerald-500'}`}
-                                style={{ width: `${Math.min((totals.totalUsed / totals.totalLimit) * 100, 100)}%` }}
+                        <div className="mt-3 h-1.5 bg-gray-200 dark:bg-black/20 rounded-full overflow-hidden">
+                            <motion.div
+                                initial={{ width: 0 }}
+                                animate={{ width: `${Math.min((totals.totalUsed / totals.totalLimit) * 100, 100)}%` }}
+                                transition={{ duration: 1, ease: 'easeOut' }}
+                                className={`h-full rounded-full ${(totals.totalUsed / totals.totalLimit) > 0.8 ? 'bg-red-500' : (totals.totalUsed / totals.totalLimit) > 0.5 ? 'bg-yellow-500' : 'bg-emerald-500'}`}
                             />
                         </div>
                     )}
+                </div>
+                <div className="glass-card bg-gradient-to-br from-brand-600/10 to-accent/10 border-brand-500/20 relative overflow-hidden group">
+                    <div className="absolute right-[-20%] top-[-20%] w-32 h-32 bg-brand-500/20 rounded-full blur-3xl group-hover:bg-brand-500/40 transition-colors" />
+                    <p className="text-xs text-brand-600 dark:text-brand-400 mb-2 uppercase font-bold tracking-wider flex items-center gap-1.5">
+                        <Zap className="w-3.5 h-3.5" /> Est. Cashback
+                    </p>
+                    <p className="text-2xl font-black text-brand-600 dark:text-brand-400">{fmt(totals.cashbackEstimativa)}</p>
+                    <p className="text-[10px] text-gray-500 mt-2 font-medium">Rende 1.5% ao faturar</p>
                 </div>
             </div>
 
             {/* Cards List */}
             {cards.length === 0 ? (
-                <div className="glass-card text-center py-12 border-dashed border-2 border-gray-200 dark:border-white/10 bg-transparent">
-                    <CreditCard className="w-12 h-12 text-purple-500 mx-auto mb-4 opacity-50" />
-                    <h4 className="text-gray-900 dark:text-white font-medium mb-1">Nenhum cartao cadastrado</h4>
-                    <p className="text-gray-500 text-sm mb-4">Adicione seus cartoes para controlar faturas e limites.</p>
-                    <button onClick={() => setShowAdd(true)} className="gradient-btn px-6 py-2 text-sm">Adicionar Cartao</button>
+                <div className="glass-card text-center py-16 border-dashed border-2 border-gray-200 dark:border-white/10 bg-transparent flex flex-col items-center justify-center">
+                    <div className="w-20 h-20 bg-gray-100 dark:bg-white/5 rounded-full flex items-center justify-center mb-6">
+                        <CreditCard className="w-10 h-10 text-gray-400 dark:text-gray-500" />
+                    </div>
+                    <h4 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Carteira Vazia</h4>
+                    <p className="text-gray-500 text-sm mb-6 max-w-sm">Você ainda não emitiu nenhum cartão. Crie seu primeiro cartão virtual e gerencie limites instantâneos.</p>
+                    <button onClick={() => setShowAdd(true)} className="gradient-btn px-8 py-3 rounded-xl font-bold text-sm shadow-xl shadow-brand-500/20">Criar Cartão</button>
                 </div>
             ) : (
-                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {cards.map(card => {
-                        const flag = FLAGS.find(f => f.id === card.flag) || FLAGS[0];
-                        const pct = card.limit > 0 ? (card.used / card.limit) * 100 : 0;
-                        const due = getDueStatus(card.dueDay);
-                        const DueIcon = due.icon;
+                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <AnimatePresence>
+                        {cards.map((card, i) => {
+                            const flag = FLAGS.find(f => f.id === card.flag) || FLAGS[0];
+                            const pct = card.limit > 0 ? (card.used / card.limit) * 100 : 0;
+                            const due = getDueStatus(card.dueDay);
+                            const DueIcon = due.icon;
 
-                        return (
-                            <div key={card.id} className="glass-card relative overflow-hidden group">
-                                {/* Card visual header */}
-                                <div className="h-28 rounded-xl mb-4 p-4 flex flex-col justify-between relative overflow-hidden" style={{ background: `linear-gradient(135deg, ${flag.color}, ${flag.color}cc)` }}>
-                                    <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2" />
-                                    <div className="flex justify-between items-start relative z-10">
-                                        <span className="text-white/80 text-xs font-bold uppercase tracking-wider">{flag.name}</span>
-                                        <button onClick={() => handleDelete(card.id)} className="p-1 rounded-lg bg-white/10 hover:bg-white/20 text-white/60 hover:text-white transition-all opacity-0 group-hover:opacity-100">
-                                            <Trash2 className="w-3.5 h-3.5" />
-                                        </button>
-                                    </div>
-                                    <div className="relative z-10">
-                                        <p className="text-white font-bold text-lg">{card.name}</p>
-                                        <p className="text-white/60 text-[10px] font-mono tracking-widest">**** **** **** {card.id.slice(-4)}</p>
-                                    </div>
-                                </div>
+                            return (
+                                <motion.div
+                                    key={card.id}
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, scale: 0.9 }}
+                                    transition={{ duration: 0.3, delay: i * 0.1 }}
+                                    className="relative group perspective"
+                                >
+                                    {/* Physical/Virtual Card Representation */}
+                                    <div className={`relative h-56 rounded-2xl p-6 flex flex-col justify-between overflow-hidden shadow-2xl transition-all duration-500 preserve-3d group-hover:rotate-y-12 ${card.isLocked ? 'grayscale opacity-75' : ''}`} style={{ background: `linear-gradient(135deg, ${flag.color}, ${flag.color}dd)` }}>
+                                        {/* Chip & NF */}
+                                        <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+                                        <div className="flex justify-between items-start relative z-10 w-full">
+                                            <div className="w-12 h-8 rounded bg-yellow-400/30 border border-yellow-400/50 flex items-center justify-center backdrop-blur-sm overflow-hidden">
+                                                <div className="w-full h-px bg-yellow-400/50 absolute" />
+                                                <div className="h-full w-px bg-yellow-400/50 absolute" />
+                                                <div className="w-8 h-4 border border-yellow-400/50 rounded-sm absolute" />
+                                            </div>
 
-                                {/* Usage */}
-                                <div className="space-y-3">
-                                    <div className="flex justify-between text-sm">
-                                        <span className="text-gray-500">Fatura atual</span>
-                                        <span className="font-bold text-gray-900 dark:text-white">{fmt(card.used)}</span>
-                                    </div>
-                                    <div className="h-2 bg-gray-200 dark:bg-white/10 rounded-full overflow-hidden">
-                                        <div className={`h-full rounded-full transition-all ${pct > 80 ? 'bg-red-500' : pct > 50 ? 'bg-yellow-500' : 'bg-emerald-500'}`} style={{ width: `${Math.min(pct, 100)}%` }} />
-                                    </div>
-                                    <div className="flex justify-between text-[10px] text-gray-500">
-                                        <span>{Math.round(pct)}% usado</span>
-                                        <span>Limite: {fmt(card.limit)}</span>
+                                            {card.isVirtual && (
+                                                <div className="flex items-center gap-1.5 bg-white/20 backdrop-blur-md px-3 py-1 rounded-full text-white text-[10px] font-bold tracking-wider">
+                                                    <Smartphone className="w-3 h-3" /> VIRTUAL
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        {/* Card Brand */}
+                                        <div className="absolute top-6 right-6 text-white text-xl font-black italic tracking-tighter opacity-80">
+                                            {flag.logo}
+                                        </div>
+
+                                        {/* Card Number & Info */}
+                                        <div className="relative z-10 mt-auto pt-6">
+                                            <div className="flex items-center justify-between mb-2">
+                                                <button onClick={() => setShowNumbers(prev => ({ ...prev, [card.id]: !prev[card.id] }))} className="text-white/60 hover:text-white transition-colors bg-white/10 p-1.5 rounded-lg backdrop-blur-md">
+                                                    {showNumbers[card.id] ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                                                </button>
+                                            </div>
+
+                                            <p className="text-white text-lg sm:text-xl font-mono tracking-[0.2em] mb-4 drop-shadow-md">
+                                                {showNumbers[card.id] ? card.number : `**** **** **** ${card.number.slice(-4)}`}
+                                            </p>
+
+                                            <div className="flex justify-between items-end">
+                                                <div>
+                                                    <p className="text-white/60 text-[8px] uppercase tracking-widest mb-0.5">Cardholder Name</p>
+                                                    <p className="text-white text-sm font-bold tracking-wider uppercase drop-shadow-md">{card.name}</p>
+                                                </div>
+                                                {showNumbers[card.id] && (
+                                                    <div className="text-right flex gap-4">
+                                                        <div>
+                                                            <p className="text-white/60 text-[8px] uppercase tracking-widest mb-0.5">Exp</p>
+                                                            <p className="text-white text-xs font-mono font-bold">{card.exp}</p>
+                                                        </div>
+                                                        <div>
+                                                            <p className="text-white/60 text-[8px] uppercase tracking-widest mb-0.5">CVV</p>
+                                                            <p className="text-white text-xs font-mono font-bold">{card.cvv}</p>
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
                                     </div>
 
-                                    <div className={`flex items-center gap-2 text-xs px-3 py-1.5 rounded-lg ${due.color}`}>
-                                        <DueIcon className="w-3.5 h-3.5" />
-                                        Vencimento: {due.label}
+                                    {/* Action Bar */}
+                                    <div className="glass-card mt-[-10px] pt-6 pb-4 px-4 rounded-xl shadow-lg border-t-0 rounded-t-none relative z-0">
+                                        <div className="flex items-center justify-between mb-4">
+                                            <div className="flex gap-2">
+                                                <button onClick={() => toggleLock(card.id)} className={`p-2 rounded-xl transition-colors border ${card.isLocked ? 'bg-amber-500/10 text-amber-500 border-amber-500/20 hover:bg-amber-500/20' : 'bg-gray-100 dark:bg-white/5 text-gray-500 hover:text-gray-900 dark:hover:text-white border-transparent'}`}>
+                                                    {card.isLocked ? <Lock className="w-4 h-4" /> : <Unlock className="w-4 h-4" />}
+                                                </button>
+                                                <button onClick={() => handleDelete(card.id)} className="p-2 rounded-xl bg-red-500/10 text-red-500 border border-red-500/20 hover:bg-red-500/20 transition-colors">
+                                                    <Trash2 className="w-4 h-4" />
+                                                </button>
+                                            </div>
+                                            <div className={`flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg font-medium ${due.color}`}>
+                                                <DueIcon className="w-3.5 h-3.5" />
+                                                {due.label}
+                                            </div>
+                                        </div>
+
+                                        <div className="space-y-2">
+                                            <div className="flex justify-between text-sm">
+                                                <span className="text-gray-500 font-medium">Fatura</span>
+                                                <span className="font-bold text-gray-900 dark:text-white">{fmt(card.used)} <span className="text-gray-400 text-xs font-normal">/ {fmt(card.limit)}</span></span>
+                                            </div>
+                                            <div className="h-1.5 bg-gray-200 dark:bg-white/10 rounded-full overflow-hidden">
+                                                <motion.div initial={{ width: 0 }} animate={{ width: `${Math.min(pct, 100)}%` }} className={`h-full rounded-full ${pct > 80 ? 'bg-red-500' : pct > 50 ? 'bg-yellow-500' : 'bg-brand-500'}`} />
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
-                        );
-                    })}
+
+                                    {/* Lock Overlay */}
+                                    {card.isLocked && (
+                                        <div className="absolute inset-x-0 top-0 h-56 z-20 flex items-center justify-center bg-black/40 backdrop-blur-[2px] rounded-2xl">
+                                            <div className="bg-white/10 backdrop-blur-xl border border-white/20 px-6 py-3 rounded-2xl flex flex-col items-center gap-2 shadow-2xl">
+                                                <Lock className="w-8 h-8 text-white" />
+                                                <span className="text-white font-bold tracking-wider text-sm">CARTÃO BLOQUEADO</span>
+                                            </div>
+                                        </div>
+                                    )}
+                                </motion.div>
+                            );
+                        })}
+                    </AnimatePresence>
                 </div>
             )}
 
             {/* Add Card Modal */}
-            {showAdd && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
-                    <form onSubmit={handleAdd} className="glass-card w-full max-w-md p-6 space-y-4 animate-slide-up relative">
-                        <button type="button" onClick={() => setShowAdd(false)} className="absolute top-4 right-4 text-gray-500 hover:text-white"><X className="w-5 h-5" /></button>
-                        <h2 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2"><CreditCard className="w-5 h-5 text-purple-500" /> Novo Cartao</h2>
+            <AnimatePresence>
+                {showAdd && (
+                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+                        <motion.form
+                            initial={{ scale: 0.95, opacity: 0, y: 20 }}
+                            animate={{ scale: 1, opacity: 1, y: 0 }}
+                            exit={{ scale: 0.95, opacity: 0, y: 20 }}
+                            transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                            onSubmit={handleAdd}
+                            className="glass-card w-full max-w-md p-8 relative rounded-3xl"
+                        >
+                            <button type="button" onClick={() => setShowAdd(false)} className="absolute top-6 right-6 p-2 rounded-xl bg-gray-100 dark:bg-white/5 text-gray-500 hover:text-gray-900 dark:hover:text-white transition-colors"><X className="w-5 h-5" /></button>
 
-                        <div>
-                            <label className="text-[10px] text-gray-500 uppercase font-bold">Nome do Cartao</label>
-                            <input value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} className="w-full bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-gray-900 dark:text-white text-sm outline-none focus:border-purple-500/50 mt-1" placeholder="Ex: Nubank Roxinho" />
-                        </div>
-                        <div className="grid grid-cols-2 gap-3">
-                            <div>
-                                <label className="text-[10px] text-gray-500 uppercase font-bold">Bandeira</label>
-                                <select value={form.flag} onChange={e => setForm({ ...form, flag: e.target.value })} className="w-full bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-gray-900 dark:text-white text-sm outline-none mt-1">
-                                    {FLAGS.map(f => <option key={f.id} value={f.id}>{f.name}</option>)}
-                                </select>
+                            <div className="mb-6">
+                                <h2 className="text-2xl font-black text-gray-900 dark:text-white tracking-tight leading-none mb-2">Emitir Cartão</h2>
+                                <p className="text-gray-500 text-sm">Provisione um novo cartão físico ou virtual na sua conta.</p>
                             </div>
-                            <div>
-                                <label className="text-[10px] text-gray-500 uppercase font-bold">Dia Vencimento</label>
-                                <input type="number" min="1" max="31" value={form.due} onChange={e => setForm({ ...form, due: e.target.value })} className="w-full bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-gray-900 dark:text-white text-sm outline-none mt-1" />
-                            </div>
-                        </div>
-                        <div className="grid grid-cols-2 gap-3">
-                            <div>
-                                <label className="text-[10px] text-gray-500 uppercase font-bold">Limite (R$)</label>
-                                <input value={form.limit} onChange={e => setForm({ ...form, limit: e.target.value })} className="w-full bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-gray-900 dark:text-white text-sm outline-none mt-1" placeholder="5.000,00" />
-                            </div>
-                            <div>
-                                <label className="text-[10px] text-gray-500 uppercase font-bold">Fatura Atual (R$)</label>
-                                <input value={form.used} onChange={e => setForm({ ...form, used: e.target.value })} className="w-full bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-gray-900 dark:text-white text-sm outline-none mt-1" placeholder="0,00" />
-                            </div>
-                        </div>
 
-                        <button type="submit" className="gradient-btn w-full py-3 text-sm font-bold">Adicionar Cartao</button>
-                    </form>
-                </div>
-            )}
+                            <div className="space-y-5">
+                                {/* Tipo do Cartão Selecionador */}
+                                <div className="flex bg-gray-100 dark:bg-white/5 p-1 rounded-xl">
+                                    <button type="button" onClick={() => setForm({ ...form, isVirtual: false })} className={`flex-1 py-2 text-sm font-semibold rounded-lg transition-all ${!form.isVirtual ? 'bg-white dark:bg-surface-800 shadow-sm text-gray-900 dark:text-white' : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'}`}>Físico</button>
+                                    <button type="button" onClick={() => setForm({ ...form, isVirtual: true })} className={`flex-1 flex items-center justify-center gap-1.5 py-2 text-sm font-semibold rounded-lg transition-all ${form.isVirtual ? 'bg-gradient-to-r from-brand-500 to-accent shadow-sm text-surface-950' : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'}`}>
+                                        <Smartphone className="w-3.5 h-3.5" /> Virtual
+                                    </button>
+                                </div>
+
+                                <div>
+                                    <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider ml-1">Nome no Cartão</label>
+                                    <input value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} className="w-full bg-gray-50 dark:bg-surface-900 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 text-gray-900 dark:text-white text-sm outline-none focus:border-brand-500/50 focus:ring-1 focus:ring-brand-500/20 mt-1.5 transition-all shadow-sm dark:shadow-none" placeholder="Nome Impresso/Mnemonic" required />
+                                </div>
+
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider ml-1">Bandeira</label>
+                                        <select value={form.flag} onChange={e => setForm({ ...form, flag: e.target.value })} className="w-full bg-gray-50 dark:bg-surface-900 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 text-gray-900 dark:text-white text-sm outline-none mt-1.5 focus:border-brand-500/50 focus:ring-1 focus:ring-brand-500/20 transition-all shadow-sm dark:shadow-none appearance-none">
+                                            {FLAGS.map(f => <option key={f.id} value={f.id}>{f.name}</option>)}
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider ml-1">Vencimento</label>
+                                        <input type="number" min="1" max="31" value={form.due} onChange={e => setForm({ ...form, due: e.target.value })} className="w-full bg-gray-50 dark:bg-surface-900 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 text-gray-900 dark:text-white text-sm outline-none mt-1.5 focus:border-brand-500/50 focus:ring-1 focus:ring-brand-500/20 transition-all shadow-sm dark:shadow-none" required />
+                                    </div>
+                                </div>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider ml-1">Limite Aprovado</label>
+                                        <input value={form.limit} onChange={e => setForm({ ...form, limit: e.target.value })} className="w-full bg-gray-50 dark:bg-surface-900 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 text-gray-900 dark:text-white text-sm outline-none mt-1.5 shadow-sm dark:shadow-none font-mono" placeholder="5.000,00" required />
+                                    </div>
+                                    <div>
+                                        <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider ml-1">Fatura Atual (R$)</label>
+                                        <input value={form.used} onChange={e => setForm({ ...form, used: e.target.value })} className="w-full bg-gray-50 dark:bg-surface-900 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 text-gray-900 dark:text-white text-sm outline-none mt-1.5 shadow-sm dark:shadow-none font-mono" placeholder="0,00" />
+                                    </div>
+                                </div>
+
+                                <div className="pt-2">
+                                    <button type="submit" className="w-full py-3.5 rounded-xl bg-gradient-to-r from-brand-600 via-brand-500 to-accent hover:from-brand-500 hover:to-accent text-surface-950 font-black tracking-wide shadow-[0_0_15px_rgba(6,182,212,0.4)] hover:shadow-[0_0_25px_rgba(57,255,20,0.5)] border border-brand-400/50 transition-all">
+                                        Emitir e Provisionar Cartão
+                                    </button>
+                                </div>
+                            </div>
+                        </motion.form>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     );
 }

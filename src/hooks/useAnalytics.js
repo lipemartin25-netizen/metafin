@@ -43,8 +43,23 @@ export function trackPageView(path, title) {
 export const analytics = {
     // Auth
     signUp: (method = 'email') => track('sign_up', { method }),
-    login: (method = 'email') => track('login', { method }),
-    logout: () => track('logout'),
+    login: (method = 'email', mfaUsed = false) => {
+        track('login', { method, mfa_used: mfaUsed });
+        // Security Audit Log (BACEN 4.658 Concept)
+        track('security_audit', {
+            action: 'LOGIN_SUCCESS',
+            method,
+            mfa_enforced: mfaUsed,
+            timestamp: new Date().toISOString()
+        });
+    },
+    logout: () => {
+        track('logout');
+        track('security_audit', {
+            action: 'LOGOUT',
+            timestamp: new Date().toISOString()
+        });
+    },
 
     // Import
     csvImportStarted: (rowCount) =>
@@ -122,4 +137,20 @@ export const analytics = {
             event_label: score <= 6 ? 'detractor' : score <= 8 ? 'passive' : 'promoter',
             custom_comment: comment.substring(0, 200),
         }),
+
+    // Security & Compliance
+    securityAlert: (type, details) =>
+        track('security_audit', {
+            action: 'SECURITY_ALERT',
+            alert_type: type,
+            details: details,
+            timestamp: new Date().toISOString()
+        }),
+    brokerConnection: (brokerName, status) =>
+        track('security_audit', {
+            action: 'OPEN_FINANCE_SYNC',
+            broker_name: brokerName,
+            status: status,
+            timestamp: new Date().toISOString()
+        })
 };

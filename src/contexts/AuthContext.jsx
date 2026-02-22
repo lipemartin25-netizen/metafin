@@ -41,7 +41,40 @@ export function AuthProvider({ children }) {
 
     const signIn = useCallback(async (email, password) => {
         if (!isSupabaseConfigured) throw new Error('Conexão recusada: Supabase offline.');
-        return await supabase.auth.signInWithPassword({ email, password });
+        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+        if (error) throw error;
+
+        try {
+            const { data: mfa } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+            if (mfa && mfa.nextLevel === 'aal2' && mfa.currentLevel !== 'aal2') {
+                return { data, mfaRequired: true, error: null };
+            }
+        } catch (e) {
+            console.warn("MFA check failed, proceeding without MFA", e);
+        }
+
+        return { data, mfaRequired: false, error: null };
+    }, []);
+
+    const getMfaFactors = useCallback(async () => {
+        if (!isSupabaseConfigured) return { factors: [] };
+        const { data, error } = await supabase.auth.mfa.listFactors();
+        if (error) throw error;
+        return data;
+    }, []);
+
+    const verifyMfa = useCallback(async (factorId, code) => {
+        if (!isSupabaseConfigured) throw new Error('Conexão recusada.');
+        const challenge = await supabase.auth.mfa.challenge({ factorId });
+        if (challenge.error) throw challenge.error;
+
+        const { data, error } = await supabase.auth.mfa.verify({
+            factorId,
+            challengeId: challenge.data.id,
+            code
+        });
+        if (error) throw error;
+        return { data, error: null };
     }, []);
 
     const signUp = useCallback(async (email, password, fullName) => {
@@ -106,6 +139,8 @@ export function AuthProvider({ children }) {
         signOut,
         requestPasswordReset,
         updateEmail,
+        getMfaFactors,
+        verifyMfa,
     };
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

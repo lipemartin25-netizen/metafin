@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
-import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
+import { useEffect, useState, useRef, useCallback } from 'react';
+import { Routes, Route, useLocation, Navigate, useNavigate } from 'react-router-dom';
 import { trackPageView } from './hooks/useAnalytics';
+import { useAuth } from './contexts/AuthContext';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import SignUp from './pages/SignUp';
@@ -29,12 +30,46 @@ import Settings from './pages/Settings';
 
 export default function App() {
   const location = useLocation();
+  const navigate = useNavigate();
+  const { isAuthenticated, signOut } = useAuth();
+
   const [showNps, setShowNps] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
+
+  // Fintech Compliance: Inactivity Logout (15 minutes = 900,000 ms)
+  const inactivityTimer = useRef(null);
+
+  const handleInactivityLogout = useCallback(async () => {
+    if (isAuthenticated) {
+      console.warn('Logging out due to inactivity.');
+      await signOut();
+      navigate('/login', { replace: true });
+    }
+  }, [isAuthenticated, signOut, navigate]);
+
+  const resetInactivityTimer = useCallback(() => {
+    if (inactivityTimer.current) clearTimeout(inactivityTimer.current);
+    if (isAuthenticated) {
+      inactivityTimer.current = setTimeout(handleInactivityLogout, 900000); // 15 mins
+    }
+  }, [handleInactivityLogout, isAuthenticated]);
 
   useEffect(() => {
     trackPageView(location.pathname, document.title);
   }, [location]);
+
+  // Attach global inactivity listeners when authenticated
+  useEffect(() => {
+    const events = ['mousemove', 'keydown', 'scroll', 'click'];
+    if (isAuthenticated) {
+      resetInactivityTimer();
+      events.forEach(evt => window.addEventListener(evt, resetInactivityTimer));
+    }
+    return () => {
+      if (inactivityTimer.current) clearTimeout(inactivityTimer.current);
+      events.forEach(evt => window.removeEventListener(evt, resetInactivityTimer));
+    };
+  }, [isAuthenticated, resetInactivityTimer]);
 
   // NPS survey trigger
   useEffect(() => {

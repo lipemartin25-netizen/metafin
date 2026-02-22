@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { GoogleLogin } from '@react-oauth/google';
-import { Eye, EyeOff, Loader2, Mail, Lock, ArrowRight, Wallet, Shield, CheckCircle } from 'lucide-react';
+import { Eye, EyeOff, Loader2, Mail, Lock, ArrowRight, Wallet, Shield, CheckCircle, Smartphone } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 
 export default function Login() {
-    const { signIn, signInWithGoogle } = useAuth();
+    const { signIn, signInWithGoogle, getMfaFactors, verifyMfa } = useAuth();
     const navigate = useNavigate();
 
     const [email, setEmail] = useState('');
@@ -15,17 +15,56 @@ export default function Login() {
     const [googleLoading, setGoogleLoading] = useState(false);
     const [error, setError] = useState('');
 
+    // MFA States
+    const [mfaRequired, setMfaRequired] = useState(false);
+    const [mfaCode, setMfaCode] = useState('');
+    const [factorId, setFactorId] = useState('');
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
         setError('');
         try {
-            const { error: err } = await signIn(email, password);
+            const { mfaRequired: isMfa, error: err } = await signIn(email, password);
             if (err) throw err;
+
+            if (isMfa) {
+                const factorsData = await getMfaFactors();
+                let totpFactor = null;
+                if (factorsData && Array.isArray(factorsData)) {
+                    totpFactor = factorsData.find(f => f.factor_type === 'totp' && f.status === 'verified');
+                } else if (factorsData && factorsData.totp) {
+                    totpFactor = factorsData.totp.find(f => f.status === 'verified');
+                }
+
+                if (totpFactor) {
+                    setFactorId(totpFactor.id);
+                    setMfaRequired(true);
+                    setLoading(false);
+                    return;
+                } else if (factorsData && factorsData.length > 0) {
+                    setFactorId(factorsData[0].id);
+                    setMfaRequired(true);
+                    setLoading(false);
+                    return;
+                }
+            }
             navigate('/app');
         } catch (err) {
             setError(err.message || 'Erro ao fazer login');
-        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleMfaSubmit = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        setError('');
+        try {
+            await verifyMfa(factorId, mfaCode);
+            navigate('/app');
+        } catch (err) {
+            setError('Código de autenticação inválido ou expirado.');
             setLoading(false);
         }
     };
@@ -76,105 +115,142 @@ export default function Login() {
 
                 <div className="glass-card bg-white/80 dark:bg-white/[0.03] border border-gray-200 dark:border-white/10 shadow-xl dark:shadow-black/50 backdrop-blur-xl p-8 rounded-2xl">
 
-                    {/* Google Sign-In */}
-                    <div className="mb-6">
-                        {googleLoading ? (
-                            <div className="w-full py-3 rounded-xl bg-gray-100 dark:bg-white/5 flex items-center justify-center gap-2 text-gray-500 dark:text-gray-400 text-sm animate-pulse border border-gray-200 dark:border-white/10">
-                                <Loader2 className="w-4 h-4 animate-spin" /> Conectando Google...
-                            </div>
-                        ) : (
-                            <div className="w-full flex justify-center google-btn-wrapper">
-                                <GoogleLogin
-                                    onSuccess={handleGoogleSuccess}
-                                    onError={() => setError('Erro no login com Google')}
-                                    theme="filled_black"
-                                    size="large"
-                                    text="signin_with"
-                                    shape="pill"
-                                    locale="pt-BR"
-                                    width="100%"
-                                />
-                            </div>
-                        )}
-                    </div>
-
-                    {/* Divider */}
-                    <div className="flex items-center gap-3 mb-6">
-                        <div className="flex-1 h-px bg-gray-200 dark:bg-gradient-to-r dark:from-transparent dark:via-white/10 dark:to-transparent" />
-                        <span className="text-xs text-gray-500 font-medium uppercase tracking-wider">ou continue com email</span>
-                        <div className="flex-1 h-px bg-gray-200 dark:bg-gradient-to-r dark:from-transparent dark:via-white/10 dark:to-transparent" />
-                    </div>
-
-                    {/* Form */}
-                    <form onSubmit={handleSubmit} className="space-y-5">
-                        {error && (
-                            <div className="p-4 rounded-xl bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20 text-red-600 dark:text-red-400 text-sm flex items-center gap-2 animate-shake">
-                                <div className="w-1.5 h-1.5 rounded-full bg-red-500 dark:bg-red-400" />
-                                {error}
-                            </div>
-                        )}
-
-                        <div className="space-y-1.5">
-                            <label className="text-xs font-medium text-gray-500 dark:text-gray-400 ml-1">Email</label>
-                            <div className="relative group">
-                                <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 group-focus-within:text-brand-500 transition-colors" />
-                                <input
-                                    type="email"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    placeholder="seu@email.com"
-                                    required
-                                    className="w-full pl-10 pr-4 py-3 rounded-xl bg-gray-50 dark:bg-surface-800/50 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-600 text-sm focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500/20 transition-all shadow-sm dark:shadow-none"
-                                />
-                            </div>
+                    {error && (
+                        <div className="mb-6 p-4 rounded-xl bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20 text-red-600 dark:text-red-400 text-sm flex items-center gap-2 animate-shake">
+                            <div className="w-1.5 h-1.5 rounded-full flex-shrink-0 bg-red-500 dark:bg-red-400" />
+                            {error}
                         </div>
+                    )}
 
-                        <div className="space-y-1.5">
-                            <label className="text-xs font-medium text-gray-500 dark:text-gray-400 ml-1">Senha</label>
-                            <div className="relative group">
-                                <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 group-focus-within:text-brand-500 transition-colors" />
-                                <input
-                                    type={showPass ? 'text' : 'password'}
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    placeholder="••••••••"
-                                    required
-                                    className="w-full pl-10 pr-10 py-3 rounded-xl bg-gray-50 dark:bg-surface-800/50 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-600 text-sm focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500/20 transition-all shadow-sm dark:shadow-none"
-                                />
+                    {!mfaRequired ? (
+                        <>
+                            {/* Google Sign-In */}
+                            <div className="mb-6">
+                                {googleLoading ? (
+                                    <div className="w-full py-3 rounded-xl bg-gray-100 dark:bg-white/5 flex items-center justify-center gap-2 text-gray-500 dark:text-gray-400 text-sm animate-pulse border border-gray-200 dark:border-white/10">
+                                        <Loader2 className="w-4 h-4 animate-spin" /> Conectando Google...
+                                    </div>
+                                ) : (
+                                    <div className="w-full flex justify-center google-btn-wrapper">
+                                        <GoogleLogin
+                                            onSuccess={handleGoogleSuccess}
+                                            onError={() => setError('Erro no login com Google')}
+                                            theme="filled_black"
+                                            size="large"
+                                            text="signin_with"
+                                            shape="pill"
+                                            locale="pt-BR"
+                                            width="100%"
+                                        />
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Divider */}
+                            <div className="flex items-center gap-3 mb-6">
+                                <div className="flex-1 h-px bg-gray-200 dark:bg-gradient-to-r dark:from-transparent dark:via-white/10 dark:to-transparent" />
+                                <span className="text-xs text-gray-500 font-medium uppercase tracking-wider">ou continue com email</span>
+                                <div className="flex-1 h-px bg-gray-200 dark:bg-gradient-to-r dark:from-transparent dark:via-white/10 dark:to-transparent" />
+                            </div>
+
+                            {/* Form */}
+                            <form onSubmit={handleSubmit} className="space-y-5">
+                                <div className="space-y-1.5">
+                                    <label className="text-xs font-medium text-gray-500 dark:text-gray-400 ml-1">Email</label>
+                                    <div className="relative group">
+                                        <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 group-focus-within:text-brand-500 transition-colors" />
+                                        <input
+                                            type="email"
+                                            value={email}
+                                            onChange={(e) => setEmail(e.target.value)}
+                                            placeholder="seu@email.com"
+                                            required
+                                            className="w-full pl-10 pr-4 py-3 rounded-xl bg-gray-50 dark:bg-surface-800/50 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-600 text-sm focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500/20 transition-all shadow-sm dark:shadow-none"
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="space-y-1.5">
+                                    <label className="text-xs font-medium text-gray-500 dark:text-gray-400 ml-1">Senha</label>
+                                    <div className="relative group">
+                                        <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 group-focus-within:text-brand-500 transition-colors" />
+                                        <input
+                                            type={showPass ? 'text' : 'password'}
+                                            value={password}
+                                            onChange={(e) => setPassword(e.target.value)}
+                                            placeholder="••••••••"
+                                            required
+                                            className="w-full pl-10 pr-10 py-3 rounded-xl bg-gray-50 dark:bg-surface-800/50 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-600 text-sm focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500/20 transition-all shadow-sm dark:shadow-none"
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={() => setShowPass(!showPass)}
+                                            className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-white transition-colors"
+                                        >
+                                            {showPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                                        </button>
+                                    </div>
+                                </div>
+
                                 <button
-                                    type="button"
-                                    onClick={() => setShowPass(!showPass)}
-                                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-white transition-colors"
+                                    type="submit"
+                                    disabled={loading}
+                                    className="w-full py-3.5 rounded-xl bg-gradient-to-r from-brand-600 via-brand-500 to-accent hover:from-brand-500 hover:to-accent text-surface-950 font-black tracking-wide shadow-[0_0_15px_rgba(6,182,212,0.4)] hover:shadow-[0_0_25px_rgba(57,255,20,0.5)] border border-brand-400/50 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] transition-all flex items-center justify-center gap-2 group"
                                 >
-                                    {showPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                                    {loading ? (
+                                        <Loader2 className="w-5 h-5 animate-spin text-surface-950" />
+                                    ) : (
+                                        <>
+                                            <span className="uppercase">Entrar no Sistema</span>
+                                            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                                        </>
+                                    )}
                                 </button>
+                            </form>
+
+                            <div className="mt-8 text-center">
+                                <p className="text-gray-500 text-sm">
+                                    Não tem uma conta?{' '}
+                                    <Link to="/signup" className="text-brand-600 dark:text-brand-400 hover:text-brand-500 dark:hover:text-brand-300 font-semibold hover:underline decoration-brand-500/30 underline-offset-4 transition-all">
+                                        Criar conta grátis
+                                    </Link>
+                                </p>
                             </div>
-                        </div>
+                        </>
+                    ) : (
+                        <form onSubmit={handleMfaSubmit} className="space-y-5 animate-fade-in">
+                            <div className="space-y-1.5">
+                                <label className="text-xs font-medium text-gray-500 dark:text-gray-400 ml-1">Código de Segurança (6 dígitos)</label>
+                                <div className="relative group">
+                                    <Smartphone className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 group-focus-within:text-brand-500 transition-colors" />
+                                    <input
+                                        type="text"
+                                        value={mfaCode}
+                                        onChange={(e) => setMfaCode(e.target.value.replace(/\D/g, '').substring(0, 6))}
+                                        placeholder="000000"
+                                        required
+                                        className="w-full pl-10 pr-4 py-3 rounded-xl bg-gray-50 dark:bg-surface-800/50 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-600 text-sm focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500/20 transition-all shadow-sm dark:shadow-none font-mono text-center tracking-widest text-lg"
+                                    />
+                                </div>
+                            </div>
 
-                        <button
-                            type="submit"
-                            disabled={loading}
-                            className="w-full py-3.5 rounded-xl bg-gradient-to-r from-brand-600 via-brand-500 to-accent hover:from-brand-500 hover:to-accent text-surface-950 font-black tracking-wide shadow-[0_0_15px_rgba(6,182,212,0.4)] hover:shadow-[0_0_25px_rgba(57,255,20,0.5)] border border-brand-400/50 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] transition-all flex items-center justify-center gap-2 group"
-                        >
-                            {loading ? (
-                                <Loader2 className="w-5 h-5 animate-spin text-surface-950" />
-                            ) : (
-                                <>
-                                    <span className="uppercase">Entrar no Sistema</span>
-                                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                                </>
-                            )}
-                        </button>
-                    </form>
+                            <button
+                                type="submit"
+                                disabled={loading || mfaCode.length < 6}
+                                className="w-full py-3.5 rounded-xl bg-gradient-to-r from-emerald-600 via-emerald-500 to-emerald-400 hover:from-emerald-500 hover:to-emerald-400 text-white font-black tracking-wide shadow-[0_0_15px_rgba(16,185,129,0.4)] hover:shadow-[0_0_25px_rgba(16,185,129,0.5)] border border-emerald-400/50 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] transition-all flex items-center justify-center gap-2 group disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                                {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : "Verificar e Entrar"}
+                            </button>
 
-                    <div className="mt-8 text-center">
-                        <p className="text-gray-500 text-sm">
-                            Não tem uma conta?{' '}
-                            <Link to="/signup" className="text-brand-600 dark:text-brand-400 hover:text-brand-500 dark:hover:text-brand-300 font-semibold hover:underline decoration-brand-500/30 underline-offset-4 transition-all">
-                                Criar conta grátis
-                            </Link>
-                        </p>
-                    </div>
+                            <button
+                                type="button"
+                                onClick={() => { setMfaRequired(false); setLoading(false); }}
+                                className="w-full py-3 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors block text-center mt-2"
+                            >
+                                Cancelar
+                            </button>
+                        </form>
+                    )}
                 </div>
 
                 {/* Trust badges */}

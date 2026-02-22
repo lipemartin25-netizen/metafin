@@ -128,10 +128,10 @@ export default function Home() {
             <nav className="fixed top-0 w-full z-50 glass border-b border-white/10">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16">
                     <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-cyan-500 rounded-lg flex items-center justify-center">
-                            <TrendingUp className="w-4 h-4 text-white" />
+                        <div className="w-8 h-8 rounded-lg flex items-center justify-center overflow-hidden bg-black/50 border border-emerald-500/20">
+                            <img src="/metafin-logo.png" alt="MetaFin Logo" className="w-full h-full object-cover" />
                         </div>
-                        <span className="text-lg font-bold">SmartFinance</span>
+                        <span className="text-lg font-bold tracking-widest uppercase">MetaFin</span>
                     </div>
                     <div className="flex items-center gap-3">
                         <Link
@@ -387,15 +387,15 @@ export default function Home() {
             <footer className="border-t border-white/5 py-12 px-4 sm:px-6">
                 <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
                     <div className="flex items-center gap-2">
-                        <div className="w-6 h-6 bg-gradient-to-br from-emerald-500 to-cyan-500 rounded-md flex items-center justify-center">
-                            <TrendingUp className="w-3 h-3 text-white" />
+                        <div className="w-6 h-6 rounded-md flex items-center justify-center overflow-hidden bg-black/50 border border-emerald-500/20">
+                            <img src="/metafin-logo.png" alt="MetaFin Logo" className="w-full h-full object-cover" />
                         </div>
-                        <span className="text-sm font-bold text-gray-400">
-                            SmartFinance Hub
+                        <span className="text-sm font-bold text-gray-400 uppercase tracking-widest">
+                            MetaFin
                         </span>
                     </div>
                     <p className="text-xs text-gray-600">
-                        © {new Date().getFullYear()} SmartFinance Hub. Feito com 💚 no
+                        © {new Date().getFullYear()} MetaFin. Feito com 💚 no
                         Brasil.
                     </p>
                 </div>

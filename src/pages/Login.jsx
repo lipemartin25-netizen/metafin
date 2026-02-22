@@ -63,8 +63,8 @@ export default function Login() {
                 {/* Header */}
                 <div className="text-center mb-8">
                     <Link to="/" className="inline-flex items-center gap-3 mb-6 group">
-                        <div className="w-12 h-12 bg-gradient-to-br from-brand-500 via-brand-400 to-accent rounded-xl shadow-[0_0_20px_rgba(6,182,212,0.3)] flex items-center justify-center group-hover:scale-105 group-hover:shadow-[0_0_25px_rgba(57,255,20,0.4)] transition-all duration-300">
-                            <Wallet className="w-6 h-6 text-surface-950 drop-shadow-sm" />
+                        <div className="w-12 h-12 rounded-xl flex items-center justify-center overflow-hidden shadow-[0_0_20px_rgba(57,255,20,0.3)] group-hover:scale-105 group-hover:shadow-[0_0_25px_rgba(57,255,20,0.5)] transition-all duration-300 border border-emerald-500/20 bg-black/50">
+                            <img src="/metafin-logo.png" alt="MetaFin Logo" className="w-full h-full object-cover" />
                         </div>
                         <span className="text-2xl font-bold text-gray-900 dark:text-white bg-clip-text text-transparent dark:bg-gradient-to-r dark:from-white dark:to-gray-400">
                             MetaFin

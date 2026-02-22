@@ -46,6 +46,7 @@ export default function Sidebar({ collapsed, setCollapsed, mobileOpen, setMobile
         { to: '/app/investments', label: t('investments'), icon: PieChart },
         { to: '/app/budget', label: 'Orcamento', icon: PiggyBank },
         { to: '/app/goals', label: 'Metas', icon: Target },
+        { to: '/app/wealth', label: 'Laboratório Wealth', icon: Sparkles },
         { to: '/app/networth', label: 'Patrimonio', icon: Landmark },
         { to: '/app/reports', label: 'Relatorios', icon: FileText },
         { to: '/app/health', label: 'Saude', icon: Heart },

@@ -8,9 +8,10 @@ import { ThemeProvider } from './contexts/ThemeContext';
 import { initAnalytics } from './hooks/useAnalytics';
 import './index.css';
 import './light-theme.css'; // Mantendo para compatibilidade com páginas antigas
+import './lib/sentry';
 
-// Google Client ID — deve vir do .env.local (VITE_GOOGLE_CLIENT_ID)
-const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || '';
+// Google Client ID — suporte para múltiplas nomenclaturas para garantir funcionamento na Vercel
+const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || import.meta.env.VITE_GOOGLE_CLIENTID || '';
 
 // Inicializar Analytics
 initAnalytics();

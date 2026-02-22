@@ -1,6 +1,7 @@
-import { useMemo, useEffect } from 'react';
+import { useMemo, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTransactions } from '../hooks/useTransactions';
+import { calculateCashflow } from '../lib/cashflowForecast';
 import {
     TrendingUp,
     TrendingDown,
@@ -13,7 +14,8 @@ import {
     ChevronRight,
     Target,
     Landmark,
-    Activity
+    Activity,
+    LineChart as LineChartIcon
 } from 'lucide-react';
 import {
     AreaChart,
@@ -29,6 +31,7 @@ import { analytics } from '../hooks/useAnalytics';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useTheme } from '../contexts/ThemeContext';
 import ProGate from '../components/ProGate';
+import XRayDiagnosis from '../components/XRayDiagnosis';
 
 const categoryConfig = categoriesData.categories;
 
@@ -38,24 +41,27 @@ function fmt(value) {
 
 // Componente de Card de Resumo (Estilo Mobills)
 function SummaryCard({ title, value, type, icon: Icon, trend }) {
-    let iconColor = 'text-brand-600 dark:text-brand-400';
-    let bgColor = 'bg-brand-500/10';
-    let gradient = 'from-brand-500 to-brand-600';
+    let iconColor = 'text-accent dark:text-accent border-accent/20';
+    let bgColor = 'bg-accent/10';
+    let gradient = 'from-green-400 to-accent';
+    let shadow = 'group-hover:shadow-[0_0_20px_rgba(57,255,20,0.2)]';
 
     if (type === 'expense') {
-        iconColor = 'text-red-600 dark:text-red-400';
-        bgColor = 'bg-red-500/10';
-        gradient = 'from-red-500 to-red-600';
+        iconColor = 'text-pink-600 dark:text-pink-400 border-pink-500/20';
+        bgColor = 'bg-pink-500/10';
+        gradient = 'from-pink-500 to-fuchsia-600';
+        shadow = 'group-hover:shadow-[0_0_20px_rgba(236,72,153,0.2)]';
     } else if (type === 'balance') {
-        iconColor = 'text-blue-600 dark:text-blue-400';
-        bgColor = 'bg-blue-500/10';
-        gradient = 'from-blue-500 to-blue-600';
+        iconColor = 'text-brand-600 dark:text-brand-400 border-brand-500/20';
+        bgColor = 'bg-brand-500/10';
+        gradient = 'from-brand-400 to-brand-600';
+        shadow = 'group-hover:shadow-[0_0_20px_rgba(6,182,212,0.3)]';
     }
 
     return (
-        <div className="glass-card relative overflow-hidden group hover:translate-y-[-2px] transition-all duration-300">
+        <div className={`glass-card relative overflow-hidden group hover:translate-y-[-2px] transition-all duration-300 border border-transparent hover:border-white/10 ${shadow}`}>
             {/* Background Blob */}
-            <div className={`absolute -right-6 -top-6 w-24 h-24 rounded-full blur-2xl opacity-20 ${bgColor}`} />
+            <div className={`absolute -right-6 -top-6 w-24 h-24 rounded-full blur-2xl opacity-30 ${bgColor}`} />
 
             <div className="relative z-10">
                 <div className="flex items-center justify-between mb-4">
@@ -91,7 +97,21 @@ export default function Dashboard() {
     const { transactions, loading, summary } = useTransactions();
     const { theme } = useTheme();
 
-    useEffect(() => { analytics.dashboardViewed(); }, []);
+    const [chartMode, setChartMode] = useState('history'); // history, forecast
+    const [bills, setBills] = useState([]);
+    const [showXRay, setShowXRay] = useState(false);
+
+    useEffect(() => {
+        analytics.dashboardViewed();
+        const s = localStorage.getItem('sf_bills');
+        if (s) setBills(JSON.parse(s));
+
+        // Check if X-Ray is needed (no score in localStorage)
+        const hasScore = localStorage.getItem('sf_xray_latest');
+        if (!hasScore) {
+            setShowXRay(true);
+        }
+    }, []);
 
     // Calcular trends reais comparando com mês anterior
     const trends = useMemo(() => {
@@ -144,8 +164,8 @@ export default function Dashboard() {
             try { return JSON.parse(stored); } catch { /* ignore */ }
         }
         const defaults = [
-            { id: 1, name: t('vacation'), target: 5000, current: 2500, color: 'bg-blue-500' },
-            { id: 2, name: t('emergency_fund'), target: 10000, current: 1200, color: 'bg-brand-500' },
+            { id: 1, name: t('vacation') || 'Viagem', target: 5000, current: 2500, color: 'bg-blue-500' },
+            { id: 2, name: t('emergency_fund') || 'Segurança', target: 10000, current: 1200, color: 'bg-brand-500' },
         ];
         return defaults;
     }, [t]);
@@ -165,7 +185,7 @@ export default function Dashboard() {
         return assets - liabilities;
     }, [summary]);
 
-    // Preparar dados para o gráfico principal
+    // Preparar dados para o gráfico principal histórico
     const dailyData = useMemo(() => {
         const g = {};
         const sorted = transactions.slice().sort((a, b) => a.date.localeCompare(b.date));
@@ -174,14 +194,28 @@ export default function Dashboard() {
             const dateObj = new Date(tx.date + 'T12:00:00');
             const dayKey = dateObj.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
 
-            if (!g[dayKey]) g[dayKey] = { day: dayKey, receita: 0, despesa: 0 };
+            if (!g[dayKey]) g[dayKey] = { day: dayKey, receita: 0, despesa: 0, balance: 0 };
 
             if (tx.type === 'income') g[dayKey].receita += Math.abs(tx.amount);
             else g[dayKey].despesa += Math.abs(tx.amount);
         });
 
-        return Object.values(g).slice(-14);
+        // Running balance for historical view
+        let runBal = 0;
+        const vals = Object.values(g);
+        vals.forEach(v => {
+            runBal = runBal + v.receita - v.despesa;
+            v.balance = runBal;
+        });
+
+        return vals.slice(-14);
     }, [transactions]);
+
+    // Previsão Calculada
+    const forecastData = useMemo(() => {
+        if (!transactions.length) return [];
+        return calculateCashflow(transactions, bills, summary.balance, 90);
+    }, [transactions, bills, summary.balance]);
 
     const recentTransactions = useMemo(() => transactions.slice(0, 5), [transactions]);
 
@@ -198,12 +232,12 @@ export default function Dashboard() {
         if (active && payload && payload.length) {
             return (
                 <div className="glass-card !p-3 border border-gray-200 dark:border-white/10 !bg-white dark:!bg-surface-900/90 backdrop-blur-xl shadow-xl">
-                    <p className="text-gray-500 dark:text-gray-400 text-xs mb-2">{label}</p>
+                    <p className="text-gray-500 dark:text-gray-400 text-xs mb-2 font-bold">{label}</p>
                     {payload.map((entry, index) => (
                         <div key={index} className="flex items-center gap-2 text-sm mb-1">
                             <div className="w-2 h-2 rounded-full" style={{ backgroundColor: entry.color }} />
                             <span className="text-gray-600 dark:text-gray-300 capitalize">{entry.name}:</span>
-                            <span className="font-semibold text-gray-900 dark:text-white">{fmt(entry.value)}</span>
+                            <span className="font-bold text-gray-900 dark:text-white">{fmt(entry.value)}</span>
                         </div>
                     ))}
                 </div>
@@ -222,11 +256,28 @@ export default function Dashboard() {
                     </h1>
                     <p className="text-gray-500 dark:text-gray-400 flex items-center gap-2">
                         <Calendar className="w-4 h-4" />
-                        <span>{t('monthly_summary')}</span>
+                        <span>Resumo Financeiro e Projeções</span>
                     </p>
                 </div>
 
                 <div className="flex items-center gap-3">
+                    {localStorage.getItem('sf_xray_latest') && (
+                        <button
+                            onClick={() => setShowXRay(true)}
+                            className="glass-card !p-2 !rounded-xl !border-transparent !bg-emerald-500/10 hover:!bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center gap-2 group transition-all"
+                        >
+                            <div className="text-right mr-1">
+                                <p className="text-[10px] uppercase font-bold text-emerald-500/70">Health Score</p>
+                                <p className="text-sm font-bold tracking-tight">
+                                    {JSON.parse(localStorage.getItem('sf_xray_latest')).score}/100
+                                </p>
+                            </div>
+                            <div className="p-1.5 bg-emerald-500/20 rounded-lg group-hover:bg-emerald-500/30 transition-colors">
+                                <Activity className="w-4 h-4" />
+                            </div>
+                        </button>
+                    )}
+
                     <Link
                         to="/app/networth"
                         className="glass-card !p-2 !rounded-xl !border-transparent !bg-indigo-500/10 hover:!bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 flex items-center justify-center gap-2 group transition-all"
@@ -243,10 +294,10 @@ export default function Dashboard() {
                     <ProGate feature="aiInsights">
                         <Link
                             to="/app/advisor"
-                            className="bg-brand-500/10 hover:bg-brand-500/20 text-brand-600 dark:text-brand-400 border border-brand-500/20 px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-2 transition-all group"
+                            className="bg-brand-500/10 hover:bg-brand-500/20 text-brand-600 dark:text-brand-400 border border-brand-500/30 hover:border-brand-400 px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-2 transition-all group shadow-[0_0_15px_rgba(6,182,212,0.15)] hover:shadow-[0_0_20px_rgba(6,182,212,0.4)]"
                         >
-                            <Sparkles className="w-4 h-4 group-hover:scale-110 transition-transform" />
-                            {t('ai_insights')}
+                            <Sparkles className="w-4 h-4 group-hover:scale-110 transition-transform text-white drop-shadow-[0_0_5px_rgba(255,255,255,0.8)]" />
+                            <span className="uppercase tracking-widest text-xs font-black">{t('ai_insights') || 'Insights de IA'}</span>
                         </Link>
                     </ProGate>
                 </div>
@@ -262,14 +313,14 @@ export default function Dashboard() {
                     trend={trends.balanceTrend}
                 />
                 <SummaryCard
-                    title={t('income')}
+                    title="Receitas Mensais"
                     value={summary.totalIncome}
                     type="income"
                     icon={TrendingUp}
                     trend={trends.incomeTrend}
                 />
                 <SummaryCard
-                    title={t('expenses')}
+                    title="Despesas Mensais"
                     value={summary.totalExpenses}
                     type="expense"
                     icon={TrendingDown}
@@ -280,44 +331,77 @@ export default function Dashboard() {
             {/* Main Content Grid */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-                {/* Main Chart Section */}
+                {/* Main Dynamic Chart Section */}
                 <div className="lg:col-span-2 glass-card p-6 flex flex-col h-[400px]">
-                    <div className="flex items-center justify-between mb-6">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-4">
                         <div>
                             <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
-                                <Activity className="w-5 h-5 text-brand-500" />
-                                {t('cash_flow')}
+                                {chartMode === 'history' ? <Activity className="w-5 h-5 text-brand-500" /> : <LineChartIcon className="w-5 h-5 text-indigo-500" />}
+                                {chartMode === 'history' ? 'Fluxo Histórico (14d)' : 'Previsão de Saldo Mínimo (90d)'}
                             </h3>
-                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{t('income_vs_expenses')}</p>
+                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                {chartMode === 'history' ? t('income_vs_expenses') : 'Inteligência conectada a Contas, Assinaturas e Velocidade de Gastos'}
+                            </p>
+                        </div>
+                        <div className="flex gap-1.5 bg-gray-100 dark:bg-black/20 p-1 rounded-xl w-min">
+                            <button onClick={() => setChartMode('history')} className={`px-4 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all whitespace-nowrap ${chartMode === 'history' ? 'bg-white dark:bg-surface-800 shadow shadow-black/5 text-gray-900 dark:text-white' : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'}`}>Passado</button>
+                            <button onClick={() => setChartMode('forecast')} className={`px-4 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all whitespace-nowrap ${chartMode === 'forecast' ? 'bg-indigo-500/20 text-indigo-500 shadow-[0_0_10px_-3px_rgba(99,102,241,0.2)]' : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'}`}>Previsão</button>
                         </div>
                     </div>
 
-                    <div className="flex-1 w-full min-h-0">
-                        {dailyData.length > 0 ? (
+                    <div className="flex-1 w-full min-h-0 animate-fade-in">
+                        {chartMode === 'history' && dailyData.length > 0 && (
                             <ResponsiveContainer width="100%" height="100%">
                                 <AreaChart data={dailyData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                                     <defs>
                                         <linearGradient id="colorIncome" x1="0" y1="0" x2="0" y2="1">
-                                            <stop offset="5%" stopColor="#10b981" stopOpacity={0.3} />
-                                            <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
+                                            <stop offset="5%" stopColor="#39ff14" stopOpacity={0.4} />
+                                            <stop offset="95%" stopColor="#39ff14" stopOpacity={0} />
                                         </linearGradient>
                                         <linearGradient id="colorExpense" x1="0" y1="0" x2="0" y2="1">
-                                            <stop offset="5%" stopColor="#ef4444" stopOpacity={0.3} />
-                                            <stop offset="95%" stopColor="#ef4444" stopOpacity={0} />
+                                            <stop offset="5%" stopColor="#ec4899" stopOpacity={0.4} />
+                                            <stop offset="95%" stopColor="#ec4899" stopOpacity={0} />
                                         </linearGradient>
                                     </defs>
                                     <CartesianGrid strokeDasharray="3 3" stroke={theme === 'dark' ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)"} vertical={false} />
-                                    <XAxis dataKey="day" stroke={theme === 'dark' ? "#6b7280" : "#9ca3af"} fontSize={11} tickLine={false} axisLine={false} dy={10} />
+                                    <XAxis dataKey="day" stroke={theme === 'dark' ? "#6b7280" : "#9ca3af"} fontSize={11} tickLine={false} axisLine={false} dy={10} minTickGap={10} />
                                     <YAxis stroke={theme === 'dark' ? "#6b7280" : "#9ca3af"} fontSize={11} tickLine={false} axisLine={false} tickFormatter={(v) => v >= 1000 ? `R$${(v / 1000).toFixed(0)}k` : `R$${v}`} />
                                     <Tooltip content={<CustomTooltip />} />
-                                    <Area type="monotone" dataKey="receita" stroke="#10b981" strokeWidth={2} fillOpacity={1} fill="url(#colorIncome)" name={t('income')} />
-                                    <Area type="monotone" dataKey="despesa" stroke="#ef4444" strokeWidth={2} fillOpacity={1} fill="url(#colorExpense)" name={t('expenses')} />
+                                    <Area type="monotone" dataKey="receita" stroke="#39ff14" strokeWidth={2} fillOpacity={1} fill="url(#colorIncome)" name={t('income')} />
+                                    <Area type="monotone" dataKey="despesa" stroke="#ec4899" strokeWidth={2} fillOpacity={1} fill="url(#colorExpense)" name={t('expenses')} />
                                 </AreaChart>
                             </ResponsiveContainer>
-                        ) : (
+                        )}
+
+                        {chartMode === 'forecast' && forecastData.length > 0 && (
+                            <ResponsiveContainer width="100%" height="100%">
+                                <AreaChart data={forecastData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                                    <defs>
+                                        <linearGradient id="colorForecast" x1="0" y1="0" x2="0" y2="1">
+                                            <stop offset="5%" stopColor="#6366f1" stopOpacity={0.4} />
+                                            <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
+                                        </linearGradient>
+                                    </defs>
+                                    <CartesianGrid strokeDasharray="3 3" stroke={theme === 'dark' ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)"} vertical={false} />
+                                    <XAxis dataKey="label" stroke={theme === 'dark' ? "#6b7280" : "#9ca3af"} fontSize={11} tickLine={false} axisLine={false} dy={10} minTickGap={30} />
+                                    <YAxis stroke={theme === 'dark' ? "#6b7280" : "#9ca3af"} fontSize={11} tickLine={false} axisLine={false} tickFormatter={(v) => v >= 1000 ? `R$${(v / 1000).toFixed(0)}k` : `R$${v}`} />
+                                    <Tooltip content={<CustomTooltip />} />
+                                    <Area type="monotone" dataKey="balance" stroke="#6366f1" strokeWidth={3} fillOpacity={1} fill="url(#colorForecast)" name="Previsão de Saldo" />
+                                </AreaChart>
+                            </ResponsiveContainer>
+                        )}
+
+                        {(chartMode === 'history' && dailyData.length === 0) && (
                             <div className="h-full flex flex-col items-center justify-center text-gray-400 border border-dashed border-gray-200 dark:border-white/10 rounded-xl bg-gray-50 dark:bg-white/[0.02]">
                                 <Activity className="w-8 h-8 mb-2 opacity-50" />
                                 <p>{t('no_transactions_yet')}</p>
+                            </div>
+                        )}
+
+                        {(chartMode === 'forecast' && forecastData.length === 0) && (
+                            <div className="h-full flex flex-col items-center justify-center text-gray-400 border border-dashed border-gray-200 dark:border-white/10 rounded-xl bg-gray-50 dark:bg-white/[0.02]">
+                                <LineChartIcon className="w-8 h-8 mb-2 opacity-50" />
+                                <p>Previsão Indisponível (Histórico Insuficiente)</p>
                             </div>
                         )}
                     </div>
@@ -330,7 +414,7 @@ export default function Dashboard() {
                         <div className="flex items-center justify-between mb-4">
                             <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
                                 <Target className="w-5 h-5 text-blue-500" />
-                                {t('planning')}
+                                {t('planning') || 'Metas e Alvos'}
                             </h3>
                         </div>
 
@@ -338,12 +422,12 @@ export default function Dashboard() {
                             {goals.map((goal) => (
                                 <div key={goal.id} className="space-y-2">
                                     <div className="flex justify-between text-xs">
-                                        <span className="text-gray-500 dark:text-gray-300">{goal.name}</span>
-                                        <span className="text-gray-900 dark:text-white font-medium">{fmt(goal.current)} / {fmt(goal.target)}</span>
+                                        <span className="text-gray-500 dark:text-gray-300 font-medium">{goal.name}</span>
+                                        <span className="text-gray-900 dark:text-white font-bold">{fmt(goal.current)} / {fmt(goal.target)}</span>
                                     </div>
-                                    <div className="h-2 w-full bg-gray-200 dark:bg-surface-700 rounded-full overflow-hidden">
+                                    <div className="h-2 w-full bg-gray-200 dark:bg-surface-700/50 rounded-full overflow-hidden">
                                         <div
-                                            className={`h-full ${goal.color} rounded-full transition-all duration-700`}
+                                            className={`h-full ${goal.color} rounded-full transition-all duration-700 shadow-inner`}
                                             style={{ width: `${Math.min((goal.current / goal.target) * 100, 100)}%` }}
                                         />
                                     </div>
@@ -351,16 +435,16 @@ export default function Dashboard() {
                             ))}
                         </div>
 
-                        <button className="w-full mt-5 py-2.5 rounded-xl border border-dashed border-gray-300 dark:border-white/20 text-gray-500 dark:text-gray-400 text-sm hover:text-brand-600 dark:hover:text-white hover:border-brand-500 hover:bg-brand-50 dark:hover:bg-white/5 transition-all flex items-center justify-center gap-2">
-                            {t('new_goal')}
-                        </button>
+                        <Link to="/app/financial-health" className="w-full block mt-5 py-2.5 rounded-xl border border-dashed text-center border-gray-300 dark:border-white/20 text-gray-500 dark:text-gray-400 text-sm font-bold hover:text-brand-600 dark:hover:text-brand-400 hover:border-brand-500 hover:bg-brand-50 dark:hover:bg-brand-500/10 transition-all">
+                            Adequar Orçamentos
+                        </Link>
                     </div>
 
                     {/* Quick Access List (Recent Transactions Mini) */}
                     <div className="glass-card p-0 overflow-hidden flex flex-col h-[200px]">
                         <div className="px-5 py-4 border-b border-gray-100 dark:border-white/5 flex items-center justify-between bg-gray-50/50 dark:bg-white/[0.02]">
                             <h3 className="text-sm font-semibold text-gray-900 dark:text-white">{t('last_transactions')}</h3>
-                            <Link to="/app/transactions" className="p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-white/10 transition-colors">
+                            <Link to="/app/transactions" className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-white/10 transition-colors">
                                 <ChevronRight className="w-4 h-4 text-gray-400" />
                             </Link>
                         </div>
@@ -373,12 +457,12 @@ export default function Dashboard() {
                                                 <div className={`w-8 h-8 rounded-full flex items-center justify-center ${tx.type === 'income' ? 'bg-brand-100 dark:bg-brand-500/10 text-brand-600 dark:text-brand-400' : 'bg-red-100 dark:bg-red-500/10 text-red-600 dark:text-red-400'}`}>
                                                     {tx.type === 'income' ? <ArrowUpRight className="w-4 h-4" /> : <ArrowDownRight className="w-4 h-4" />}
                                                 </div>
-                                                <div className="max-w-[100px] truncate">
-                                                    <p className="text-sm text-gray-700 dark:text-gray-200 truncate group-hover:text-gray-900 dark:group-hover:text-white transition-colors">{tx.description}</p>
-                                                    <p className="text-[10px] text-gray-500">{categoryConfig[tx.category]?.label || t('general')}</p>
+                                                <div className="max-w-[120px] truncate">
+                                                    <p className="text-sm font-bold text-gray-700 dark:text-gray-200 truncate group-hover:text-gray-900 dark:group-hover:text-white transition-colors">{tx.description}</p>
+                                                    <p className="text-[10px] uppercase tracking-widest text-gray-400 font-semibold">{categoryConfig[tx.category]?.label || t('general')}</p>
                                                 </div>
                                             </div>
-                                            <span className={`text-sm font-medium ${tx.type === 'income' ? 'text-brand-600 dark:text-brand-400' : 'text-gray-800 dark:text-gray-300'}`}>
+                                            <span className={`text-sm font-bold ${tx.type === 'income' ? 'text-brand-600 dark:text-brand-400' : 'text-gray-800 dark:text-gray-300'}`}>
                                                 {tx.type === 'income' ? '+' : '-'}{fmt(Math.abs(tx.amount))}
                                             </span>
                                         </div>
@@ -391,6 +475,12 @@ export default function Dashboard() {
                     </div>
                 </div>
             </div>
+            {showXRay && (
+                <XRayDiagnosis
+                    onClose={() => setShowXRay(false)}
+                    onComplete={() => setShowXRay(false)}
+                />
+            )}
         </div>
     );
 }

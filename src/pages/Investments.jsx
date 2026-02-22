@@ -5,7 +5,6 @@ import { usePluggy } from '../hooks/usePluggy';
 import {
     TrendingUp,
     Briefcase,
-    Link2,
     CheckCircle,
     Building2,
     Trash2,

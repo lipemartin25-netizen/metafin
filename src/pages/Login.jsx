@@ -63,11 +63,11 @@ export default function Login() {
                 {/* Header */}
                 <div className="text-center mb-8">
                     <Link to="/" className="inline-flex items-center gap-3 mb-6 group">
-                        <div className="w-12 h-12 bg-gradient-to-br from-brand-500 to-brand-600 rounded-xl shadow-lg shadow-brand-500/25 flex items-center justify-center group-hover:scale-105 group-hover:shadow-brand-500/40 transition-all duration-300">
-                            <Wallet className="w-6 h-6 text-white" />
+                        <div className="w-12 h-12 bg-gradient-to-br from-brand-500 via-brand-400 to-accent rounded-xl shadow-[0_0_20px_rgba(6,182,212,0.3)] flex items-center justify-center group-hover:scale-105 group-hover:shadow-[0_0_25px_rgba(57,255,20,0.4)] transition-all duration-300">
+                            <Wallet className="w-6 h-6 text-surface-950 drop-shadow-sm" />
                         </div>
                         <span className="text-2xl font-bold text-gray-900 dark:text-white bg-clip-text text-transparent dark:bg-gradient-to-r dark:from-white dark:to-gray-400">
-                            SmartFinance
+                            MetaFin
                         </span>
                     </Link>
                     <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Bem-vindo de volta!</h1>
@@ -154,14 +154,14 @@ export default function Login() {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="w-full py-3.5 rounded-xl bg-gradient-to-r from-brand-600 to-brand-500 hover:from-brand-500 hover:to-brand-400 text-white font-bold shadow-lg shadow-brand-500/25 hover:shadow-brand-500/40 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] transition-all flex items-center justify-center gap-2 group"
+                            className="w-full py-3.5 rounded-xl bg-gradient-to-r from-brand-600 via-brand-500 to-accent hover:from-brand-500 hover:to-accent text-surface-950 font-black tracking-wide shadow-[0_0_15px_rgba(6,182,212,0.4)] hover:shadow-[0_0_25px_rgba(57,255,20,0.5)] border border-brand-400/50 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] transition-all flex items-center justify-center gap-2 group"
                         >
                             {loading ? (
-                                <Loader2 className="w-5 h-5 animate-spin" />
+                                <Loader2 className="w-5 h-5 animate-spin text-surface-950" />
                             ) : (
                                 <>
-                                    <span>Entrar na Plataforma</span>
-                                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                                    <span className="uppercase">Entrar no Sistema</span>
+                                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                                 </>
                             )}
                         </button>

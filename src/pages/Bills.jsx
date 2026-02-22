@@ -1,5 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
-import { CalendarDays, Plus, Trash2, X, AlertTriangle, CheckCircle, Clock, RefreshCw, ArrowUpRight, ArrowDownRight } from 'lucide-react';
+import { detectSubscriptions } from '../lib/detectSubscriptions';
+import { useTransactions } from '../hooks/useTransactions';
+import { CalendarDays, Plus, Trash2, X, AlertTriangle, CheckCircle, Clock, RefreshCw, ArrowUpRight, ArrowDownRight, Bot, Sparkles } from 'lucide-react';
 
 function fmt(v) {
     return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v);
@@ -13,9 +15,10 @@ const RECURRENCE_OPTIONS = [
 ];
 
 export default function Bills() {
+    const { transactions } = useTransactions();
     const [bills, setBills] = useState([]);
     const [showAdd, setShowAdd] = useState(false);
-    const [filter, setFilter] = useState('all'); // all, pending, paid, overdue
+    const [filter, setFilter] = useState('all'); // all, pending, paid, overdue, subscriptions
     const [form, setForm] = useState({
         description: '', amount: '', dueDate: '', type: 'expense', recurrence: 'none', category: 'geral'
     });
@@ -81,8 +84,12 @@ export default function Bills() {
             const diff = Math.ceil((new Date(b.dueDate) - new Date()) / (1000 * 60 * 60 * 24));
             return diff >= 0 && diff <= 7;
         });
-        return { pending: pending.length, overdue: overdue.length, totalPending, totalOverdue, upcoming: upcoming.length };
-    }, [bills]);
+
+        const subscriptions = detectSubscriptions(transactions);
+        const totalYearlySubs = subscriptions.reduce((s, b) => s + b.annualCost, 0);
+
+        return { pending: pending.length, overdue: overdue.length, totalPending, totalOverdue, upcoming: upcoming.length, subscriptions, totalYearlySubs };
+    }, [bills, transactions]);
 
     return (
         <div className="py-6 space-y-6 animate-fade-in pb-20">
@@ -90,13 +97,15 @@ export default function Bills() {
                 <div>
                     <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
                         <CalendarDays className="w-6 h-6 text-blue-500" />
-                        Contas e Recorrencias
+                        Contas e Recorrências
                     </h1>
-                    <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">Gerencie suas contas a pagar e receber.</p>
+                    <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">Gerencie suas faturas, dívidas e monitore assinaturas ativas.</p>
                 </div>
-                <button onClick={() => setShowAdd(true)} className="gradient-btn px-4 py-2 text-sm flex items-center gap-2">
-                    <Plus className="w-4 h-4" /> Nova Conta
-                </button>
+                {filter !== 'subscriptions' && (
+                    <button onClick={() => setShowAdd(true)} className="gradient-btn px-4 py-2 text-sm flex items-center gap-2">
+                        <Plus className="w-4 h-4" /> Nova Conta
+                    </button>
+                )}
             </div>
 
             {/* Alert banners */}
@@ -120,9 +129,12 @@ export default function Bills() {
                     <p className="text-2xl font-bold text-red-500">{stats.overdue}</p>
                     <p className="text-[10px] text-gray-500 uppercase font-bold">Vencidas</p>
                 </div>
-                <div className="glass-card text-center">
-                    <p className="text-2xl font-bold text-yellow-500">{stats.upcoming}</p>
-                    <p className="text-[10px] text-gray-500 uppercase font-bold">Prox. 7 dias</p>
+                <div className="glass-card text-center hover:border-purple-500/30 transition-all cursor-pointer group" onClick={() => setFilter('subscriptions')}>
+                    <p className={`text-2xl font-bold flex items-center justify-center gap-1 transition-colors ${filter === 'subscriptions' ? 'text-purple-500' : 'text-gray-900 dark:text-white group-hover:text-purple-500'}`}>
+                        <Sparkles className={`w-5 h-5 ${filter === 'subscriptions' ? 'text-purple-500' : 'text-purple-500/50 group-hover:text-purple-500'} transition-colors`} />
+                        {stats.subscriptions.length}
+                    </p>
+                    <p className="text-[10px] text-gray-500 uppercase font-bold mt-0.5">Assinaturas Info</p>
                 </div>
                 <div className="glass-card text-center">
                     <p className="text-2xl font-bold text-blue-500">{fmt(stats.totalPending)}</p>
@@ -131,113 +143,173 @@ export default function Bills() {
             </div>
 
             {/* Filter tabs */}
-            <div className="flex gap-2">
+            <div className="flex gap-2 flex-wrap pb-2">
                 {[
                     { id: 'all', label: 'Todas' },
                     { id: 'pending', label: 'Pendentes' },
                     { id: 'overdue', label: 'Vencidas' },
                     { id: 'paid', label: 'Pagas' },
+                    { id: 'subscriptions', label: 'Assinaturas Inteligentes ✨' },
                 ].map(f => (
                     <button key={f.id} onClick={() => setFilter(f.id)}
-                        className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${filter === f.id ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30' : 'bg-gray-50 dark:bg-white/5 text-gray-500 border border-gray-200 dark:border-white/10 hover:border-blue-500/30'}`}
+                        className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${filter === f.id ? (f.id === 'subscriptions' ? 'bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-500/30 shadow-[0_0_15px_-3px_rgba(168,85,247,0.2)]' : 'bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/30') : 'bg-gray-50 dark:bg-white/5 text-gray-500 border border-gray-200 dark:border-white/10 hover:border-blue-500/30 dark:hover:bg-white/10'}`}
                     >{f.label}</button>
                 ))}
             </div>
 
-            {/* Bills list */}
-            <div className="space-y-2">
-                {filtered.length === 0 ? (
-                    <div className="glass-card text-center py-12 border-dashed border-2 border-gray-200 dark:border-white/10 bg-transparent">
-                        <CalendarDays className="w-12 h-12 text-blue-500 mx-auto mb-4 opacity-50" />
-                        <p className="text-gray-500 text-sm">Nenhuma conta encontrada.</p>
-                    </div>
-                ) : filtered.map(bill => {
-                    const status = getStatus(bill);
-                    const StatusIcon = status.icon;
-                    return (
-                        <div key={bill.id} className={`glass-card flex items-center gap-4 ${bill.paid ? 'opacity-60' : ''}`}>
-                            <button onClick={() => togglePaid(bill.id)}
-                                className={`w-8 h-8 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all ${bill.paid ? 'bg-emerald-500/20 border-emerald-500 text-emerald-400' : 'border-gray-300 dark:border-white/20 hover:border-blue-500'}`}>
-                                {bill.paid && <CheckCircle className="w-4 h-4" />}
-                            </button>
-                            <div className="flex-1 min-w-0">
-                                <div className="flex items-center gap-2">
-                                    <p className={`text-sm font-medium ${bill.paid ? 'line-through text-gray-400' : 'text-gray-900 dark:text-white'}`}>{bill.description}</p>
-                                    {bill.recurrence !== 'none' && (
-                                        <span className="text-[9px] px-1.5 py-0.5 rounded bg-purple-500/10 text-purple-400 flex items-center gap-0.5">
-                                            <RefreshCw className="w-2.5 h-2.5" /> {RECURRENCE_OPTIONS.find(r => r.id === bill.recurrence)?.label}
-                                        </span>
-                                    )}
-                                </div>
-                                <p className="text-[10px] text-gray-500 flex items-center gap-1 mt-0.5">
-                                    <CalendarDays className="w-2.5 h-2.5" /> {new Date(bill.dueDate + 'T12:00:00').toLocaleDateString('pt-BR')}
-                                </p>
-                            </div>
-                            <div className="flex items-center gap-3">
-                                <div className="text-right">
-                                    <p className={`text-sm font-bold flex items-center gap-1 ${bill.type === 'income' ? 'text-emerald-500' : 'text-gray-900 dark:text-white'}`}>
-                                        {bill.type === 'income' ? <ArrowUpRight className="w-3 h-3" /> : <ArrowDownRight className="w-3 h-3 text-red-400" />}
-                                        {fmt(bill.amount)}
-                                    </p>
-                                    <span className={`text-[9px] px-1.5 py-0.5 rounded border ${status.color} inline-flex items-center gap-0.5`}>
-                                        <StatusIcon className="w-2.5 h-2.5" /> {status.label}
-                                    </span>
-                                </div>
-                                <button onClick={() => handleDelete(bill.id)} className="p-1.5 rounded-lg text-red-500/40 hover:text-red-400 hover:bg-red-500/10 transition-all">
-                                    <Trash2 className="w-3.5 h-3.5" />
-                                </button>
-                            </div>
+            {/* List Views */}
+            {filter === 'subscriptions' ? (
+                <div className="space-y-4 animate-fade-in">
+                    <div className="glass-card p-4 sm:p-5 border-l-4 border-l-purple-500 relative overflow-hidden">
+                        <div className="absolute top-0 right-0 p-8 opacity-5">
+                            <Bot className="w-32 h-32" />
                         </div>
-                    );
-                })}
-            </div>
+                        <p className="text-sm font-semibold text-gray-900 dark:text-white flex items-center gap-2 relative z-10">
+                            <Bot className="w-5 h-5 text-purple-500" /> Insight do Assistente
+                        </p>
+                        <p className="text-sm text-gray-600 dark:text-gray-300 mt-2 relative z-10 max-w-2xl leading-relaxed">
+                            A inteligência do Hub varreu suas transações e detectou <strong className="text-purple-600 dark:text-purple-400">{stats.subscriptions.length} assinaturas constantes</strong>.
+                            Somadas, elas removem <strong className="text-red-500">{fmt(stats.totalYearlySubs)} do seu patrimônio por ano</strong>.
+                            Revisá-las e cancelar as não-utilizadas é o {'"caminho fácil"'} para poupar dinheiro.
+                        </p>
+                    </div>
+
+                    <div className="grid md:grid-cols-2 gap-4">
+                        {stats.subscriptions.map((sub, i) => (
+                            <div key={i} className="glass-card p-5 hover:border-purple-500/30 transition-all group hover:shadow-lg hover:shadow-purple-500/5 cursor-default relative overflow-hidden">
+                                <div className="absolute -right-4 -top-4 w-16 h-16 bg-purple-500/5 rounded-full blur-xl group-hover:bg-purple-500/20 transition-all"></div>
+                                <div className="flex justify-between items-start mb-5">
+                                    <div className="flex items-center gap-3.5">
+                                        <div className="w-12 h-12 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-500 font-extrabold text-xl shadow-inner border border-purple-500/20">
+                                            {sub.name.charAt(0)}
+                                        </div>
+                                        <div>
+                                            <p className="font-bold text-gray-900 dark:text-white capitalize text-base">{sub.name}</p>
+                                            <p className="text-xs text-purple-600 dark:text-purple-400 font-medium flex items-center gap-1 mt-0.5">
+                                                <RefreshCw className="w-3 h-3" /> Cobrança {sub.frequency}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div className="text-right">
+                                        <p className="font-bold text-gray-900 dark:text-white text-lg">{fmt(sub.amount)}</p>
+                                        <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">/ {sub.frequency === 'Mensal' ? 'mês' : 'ano'}</p>
+                                    </div>
+                                </div>
+
+                                <div className="space-y-2 mb-5">
+                                    <div className="flex justify-between items-center text-xs py-1 border-b border-gray-100 dark:border-white/5">
+                                        <span className="text-gray-500 font-medium tracking-wide">Previsão Renovação</span>
+                                        <span className="font-semibold text-gray-900 dark:text-white flex items-center gap-1.5"><CalendarDays className="w-3 h-3 text-gray-400" /> {new Date(sub.nextRenewal).toLocaleDateString('pt-BR')}</span>
+                                    </div>
+                                    <div className="flex justify-between items-center text-xs py-1">
+                                        <span className="text-gray-500 font-medium tracking-wide">Impacto do Recurso</span>
+                                        <span className="font-bold text-red-500 bg-red-500/10 px-2 py-0.5 rounded-md border border-red-500/20">{fmt(sub.annualCost)} / ano</span>
+                                    </div>
+                                </div>
+
+                                <div className="text-[10px] text-gray-400 text-center font-medium bg-gray-50 dark:bg-white/5 py-1.5 rounded-lg border border-gray-100 dark:border-white/5">
+                                    Convicção baseada em <strong className="text-gray-600 dark:text-gray-300">{sub.chargeCount}</strong> pagamentos repetidos.
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            ) : (
+                <div className="space-y-2">
+                    {filtered.length === 0 ? (
+                        <div className="glass-card text-center py-12 border-dashed border-2 border-gray-200 dark:border-white/10 bg-transparent">
+                            <CalendarDays className="w-12 h-12 text-blue-500 mx-auto mb-4 opacity-50" />
+                            <p className="text-gray-500 text-sm">Nenhuma conta encontrada nesta categoria.</p>
+                        </div>
+                    ) : filtered.map(bill => {
+                        const status = getStatus(bill);
+                        const StatusIcon = status.icon;
+                        return (
+                            <div key={bill.id} className={`glass-card flex items-center gap-4 ${bill.paid ? 'opacity-60' : ''}`}>
+                                <button onClick={() => togglePaid(bill.id)}
+                                    className={`w-8 h-8 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all ${bill.paid ? 'bg-emerald-500/20 border-emerald-500 text-emerald-500' : 'border-gray-300 dark:border-white/20 hover:border-blue-500'}`}>
+                                    {bill.paid && <CheckCircle className="w-4 h-4" />}
+                                </button>
+                                <div className="flex-1 min-w-0">
+                                    <div className="flex items-center gap-2">
+                                        <p className={`text-sm font-bold ${bill.paid ? 'line-through text-gray-500' : 'text-gray-900 dark:text-white'}`}>{bill.description}</p>
+                                        {bill.recurrence !== 'none' && (
+                                            <span className="text-[9px] px-1.5 py-0.5 rounded font-bold bg-indigo-500/10 border border-indigo-500/20 text-indigo-500 flex items-center gap-1">
+                                                <RefreshCw className="w-2.5 h-2.5" /> {RECURRENCE_OPTIONS.find(r => r.id === bill.recurrence)?.label}
+                                            </span>
+                                        )}
+                                    </div>
+                                    <p className="text-[10px] text-gray-500 flex items-center gap-1 mt-0.5 font-medium">
+                                        <CalendarDays className="w-3 h-3 text-gray-400" /> {new Date(bill.dueDate + 'T12:00:00').toLocaleDateString('pt-BR')}
+                                    </p>
+                                </div>
+                                <div className="flex items-center gap-3">
+                                    <div className="text-right">
+                                        <p className={`text-sm font-bold flex items-center justify-end gap-1 ${bill.type === 'income' ? 'text-emerald-500' : 'text-gray-900 dark:text-white'}`}>
+                                            {bill.type === 'income' ? <ArrowUpRight className="w-3 h-3" /> : <ArrowDownRight className="w-3 h-3 text-red-500" />}
+                                            {fmt(bill.amount)}
+                                        </p>
+                                        <span className={`text-[9px] px-1.5 py-0.5 rounded font-bold border ${status.color} inline-flex items-center gap-1 mt-1`}>
+                                            <StatusIcon className="w-2.5 h-2.5" /> {status.label}
+                                        </span>
+                                    </div>
+                                    <div className="w-px h-8 bg-gray-200 dark:bg-white/10 mx-1"></div>
+                                    <button onClick={() => handleDelete(bill.id)} className="p-2 rounded-xl text-red-500/50 hover:text-red-500 hover:bg-red-500/10 transition-all">
+                                        <Trash2 className="w-4 h-4" />
+                                    </button>
+                                </div>
+                            </div>
+                        );
+                    })}
+                </div>
+            )}
 
             {/* Add Modal */}
             {showAdd && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
-                    <form onSubmit={handleAdd} className="glass-card w-full max-w-md p-6 space-y-4 animate-slide-up relative">
-                        <button type="button" onClick={() => setShowAdd(false)} className="absolute top-4 right-4 text-gray-500 hover:text-white"><X className="w-5 h-5" /></button>
-                        <h2 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2"><CalendarDays className="w-5 h-5 text-blue-500" /> Nova Conta</h2>
+                <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
+                    <form onSubmit={handleAdd} className="glass-card w-full max-w-md p-6 space-y-4 animate-slide-up relative bg-white dark:bg-surface-900 border border-gray-200 dark:border-white/10">
+                        <button type="button" onClick={() => setShowAdd(false)} className="absolute top-4 right-4 text-gray-500 hover:text-gray-900 dark:hover:text-white transition-colors"><X className="w-5 h-5" /></button>
+                        <h2 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2 mb-6"><CalendarDays className="w-5 h-5 text-blue-500" /> Nova Conta / Receita</h2>
 
                         <div>
-                            <label className="text-[10px] text-gray-500 uppercase font-bold">Descricao</label>
-                            <input value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} className="w-full bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-gray-900 dark:text-white text-sm outline-none focus:border-blue-500/50 mt-1" placeholder="Ex: Aluguel, Netflix, Luz..." />
+                            <label className="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Descrição</label>
+                            <input required value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} className="w-full bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 text-gray-900 dark:text-white text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 mt-1 transition-all" placeholder="Ex: Aluguel, Provedor Internet..." />
                         </div>
 
-                        <div className="grid grid-cols-2 gap-3">
+                        <div className="grid grid-cols-2 gap-4">
                             <div>
-                                <label className="text-[10px] text-gray-500 uppercase font-bold">Valor (R$)</label>
-                                <input value={form.amount} onChange={e => setForm({ ...form, amount: e.target.value })} className="w-full bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-gray-900 dark:text-white text-sm outline-none mt-1" placeholder="0,00" />
+                                <label className="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Valor (R$)</label>
+                                <input required value={form.amount} onChange={e => setForm({ ...form, amount: e.target.value })} className="w-full bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 text-gray-900 dark:text-white text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 mt-1 transition-all" placeholder="125,90" />
                             </div>
                             <div>
-                                <label className="text-[10px] text-gray-500 uppercase font-bold">Vencimento</label>
-                                <input type="date" value={form.dueDate} onChange={e => setForm({ ...form, dueDate: e.target.value })} className="w-full bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-gray-900 dark:text-white text-sm outline-none mt-1" />
+                                <label className="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Vencimento</label>
+                                <input required type="date" value={form.dueDate} onChange={e => setForm({ ...form, dueDate: e.target.value })} className="w-full bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 text-gray-900 dark:text-white text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 mt-1 transition-all" />
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-2 gap-3">
+                        <div className="grid grid-cols-2 gap-4 pt-1">
                             <div>
-                                <label className="text-[10px] text-gray-500 uppercase font-bold">Tipo</label>
-                                <div className="flex gap-2 mt-1">
+                                <label className="text-[10px] text-gray-500 uppercase font-bold tracking-widest mb-1 block">Tipo de Fluxo</label>
+                                <div className="grid grid-cols-2 gap-2 mt-1">
                                     <button type="button" onClick={() => setForm({ ...form, type: 'expense' })}
-                                        className={`flex-1 py-2 text-[10px] font-bold rounded-lg border ${form.type === 'expense' ? 'bg-red-500/10 border-red-500/30 text-red-400' : 'bg-gray-50 dark:bg-white/5 border-gray-200 dark:border-white/10 text-gray-500'}`}>
-                                        A PAGAR
+                                        className={`w-full py-2.5 text-xs font-bold rounded-xl border transition-all ${form.type === 'expense' ? 'bg-red-500/10 border-red-500/30 text-red-500 shadow-[0_0_15px_-3px_rgba(239,68,68,0.2)]' : 'bg-gray-50 dark:bg-white/5 border-gray-200 dark:border-white/10 text-gray-500 hover:bg-gray-100 dark:hover:bg-white/10'}`}>
+                                        SAÍDA
                                     </button>
                                     <button type="button" onClick={() => setForm({ ...form, type: 'income' })}
-                                        className={`flex-1 py-2 text-[10px] font-bold rounded-lg border ${form.type === 'income' ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' : 'bg-gray-50 dark:bg-white/5 border-gray-200 dark:border-white/10 text-gray-500'}`}>
-                                        A RECEBER
+                                        className={`w-full py-2.5 text-xs font-bold rounded-xl border transition-all ${form.type === 'income' ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-500 shadow-[0_0_15px_-3px_rgba(16,185,129,0.2)]' : 'bg-gray-50 dark:bg-white/5 border-gray-200 dark:border-white/10 text-gray-500 hover:bg-gray-100 dark:hover:bg-white/10'}`}>
+                                        ENTRADA
                                     </button>
                                 </div>
                             </div>
                             <div>
-                                <label className="text-[10px] text-gray-500 uppercase font-bold">Repeticao</label>
-                                <select value={form.recurrence} onChange={e => setForm({ ...form, recurrence: e.target.value })} className="w-full bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-gray-900 dark:text-white text-sm outline-none mt-1">
+                                <label className="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Recorrência Automática</label>
+                                <select value={form.recurrence} onChange={e => setForm({ ...form, recurrence: e.target.value })} className="w-full bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 text-gray-900 dark:text-white text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 mt-1 transition-all">
                                     {RECURRENCE_OPTIONS.map(r => <option key={r.id} value={r.id}>{r.label}</option>)}
                                 </select>
                             </div>
                         </div>
 
-                        <button type="submit" className="gradient-btn w-full py-3 text-sm font-bold">Adicionar Conta</button>
+                        <button type="submit" className="gradient-btn w-full py-3.5 mt-4 text-sm font-bold shadow-lg shadow-blue-500/20 hover:shadow-blue-500/40 rounded-xl transition-shadow">Registrar</button>
                     </form>
                 </div>
             )}

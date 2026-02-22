@@ -41,6 +41,10 @@ export default async function handler(req, res) {
         return res.status(500).json({ error: 'Missing Supabase env vars' });
     }
 
+    console.log('[Pluggy API] Diagnostics:');
+    console.log(`- CLIENT_ID: "${PLUGGY_CLIENT_ID}" (len: ${PLUGGY_CLIENT_ID.length})`);
+    console.log(`- CLIENT_SECRET: "${PLUGGY_CLIENT_SECRET.substring(0, 4)}...${PLUGGY_CLIENT_SECRET.slice(-4)}" (len: ${PLUGGY_CLIENT_SECRET.length})`);
+
     try {
         // Autenticar usuário via Supabase
         const authHeader = req.headers.authorization || "";
@@ -61,8 +65,8 @@ export default async function handler(req, res) {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                clientId: PLUGGY_CLIENT_ID,
-                clientSecret: PLUGGY_CLIENT_SECRET,
+                clientId: PLUGGY_CLIENT_ID.trim(),
+                clientSecret: PLUGGY_CLIENT_SECRET.trim(),
             }),
         });
 

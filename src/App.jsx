@@ -20,6 +20,7 @@ import Goals from './pages/Goals';
 import FinancialHealth from './pages/FinancialHealth';
 import Budget from './pages/Budget';
 import NetWorth from './pages/NetWorth';
+import Simulators from './pages/Simulators';
 import Reports from './pages/Reports';
 import DeveloperAPI from './pages/DeveloperAPI';
 import Upgrade from './pages/Upgrade';
@@ -79,6 +80,7 @@ export default function App() {
           <Route path="goals" element={<Goals />} />
           <Route path="budget" element={<Budget />} />
           <Route path="networth" element={<NetWorth />} />
+          <Route path="wealth" element={<Simulators />} />
           <Route path="reports" element={<Reports />} />
           <Route path="health" element={<FinancialHealth />} />
           <Route path="advisor" element={<AIAssistant />} />

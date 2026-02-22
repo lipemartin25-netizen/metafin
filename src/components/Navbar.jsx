@@ -2,60 +2,38 @@ import { NavLink, Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useSubscription } from '../hooks/useSubscription';
+import { useTransactions } from '../hooks/useTransactions';
+import { parseISO, isSameMonth } from 'date-fns';
 import {
-    LayoutDashboard,
-    ArrowRightLeft,
-    Wallet,
-    PieChart,
-    Bot,
-    Crown,
-    Settings,
-    ChevronDown,
-    LogOut,
-    Menu,
-    X,
-    Sparkles,
-    CreditCard,
-    CalendarDays,
-    Target,
-    Heart,
-    Landmark,
-    FileText,
-    Code2,
-    PiggyBank
+    LayoutDashboard, ArrowRightLeft, Wallet, PieChart, Bot, Crown, Settings,
+    ChevronDown, LogOut, Menu, X, Sparkles, CreditCard, CalendarDays,
+    Target, Heart, Landmark, FileText, Code2, PiggyBank, Bell
 } from 'lucide-react';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import ThemeToggle from './ThemeToggle';
 
-const FLAGS = {
-    pt: '🇧🇷',
-    en: '🇺🇸',
-    es: '🇪🇸',
-    fr: '🇫🇷',
-    cn: '🇨🇳',
-    hi: '🇮🇳',
-};
+const FLAGS = { pt: '🇧🇷', en: '🇺🇸', es: '🇪🇸', fr: '🇫🇷', cn: '🇨🇳', hi: '🇮🇳' };
 
 export default function Navbar() {
     const { user, signOut } = useAuth();
     const { language, changeLanguage, t } = useLanguage();
     const { isPro } = useSubscription();
+    const { transactions } = useTransactions();
     const navigate = useNavigate();
     const [mobileOpen, setMobileOpen] = useState(false);
     const [profileOpen, setProfileOpen] = useState(false);
     const [langOpen, setLangOpen] = useState(false);
+    const [notifOpen, setNotifOpen] = useState(false);
     const profileRef = useRef(null);
     const langRef = useRef(null);
+    const notifRef = useRef(null);
 
     // Fechar dropdowns ao clicar fora
     useEffect(() => {
         function handleClickOutside(event) {
-            if (profileRef.current && !profileRef.current.contains(event.target)) {
-                setProfileOpen(false);
-            }
-            if (langRef.current && !langRef.current.contains(event.target)) {
-                setLangOpen(false);
-            }
+            if (profileRef.current && !profileRef.current.contains(event.target)) setProfileOpen(false);
+            if (langRef.current && !langRef.current.contains(event.target)) setLangOpen(false);
+            if (notifRef.current && !notifRef.current.contains(event.target)) setNotifOpen(false);
         }
         document.addEventListener('mousedown', handleClickOutside);
         return () => document.removeEventListener('mousedown', handleClickOutside);
@@ -65,6 +43,44 @@ export default function Navbar() {
         await signOut();
         navigate('/');
     };
+
+    // Calculate Budget Notifications
+    const notifications = useMemo(() => {
+        const notifs = [];
+        try {
+            const budgets = JSON.parse(localStorage.getItem('sf_category_budgets') || '{}');
+            if (Object.keys(budgets).length === 0) return notifs;
+
+            const now = new Date();
+            const currentMonthTxs = transactions.filter(t => t.type === 'expense' && t.status !== 'pending' && isSameMonth(parseISO(t.date), now));
+            const catTotals = {};
+
+            currentMonthTxs.forEach(t => {
+                const c = t.category || 'outros';
+                catTotals[c] = (catTotals[c] || 0) + Math.abs(t.amount);
+            });
+
+            Object.entries(budgets).forEach(([cat, limit]) => {
+                const spent = catTotals[cat] || 0;
+                if (spent > limit) {
+                    notifs.push({
+                        id: `over_${cat}`,
+                        title: 'Orçamento Excedido!',
+                        message: `Você gastou R$ ${spent.toFixed(2)} em ${cat.toUpperCase()}, ultrapassando o limite de R$ ${limit.toFixed(2)}.`,
+                        type: 'danger'
+                    });
+                } else if (spent >= limit * 0.8) {
+                    notifs.push({
+                        id: `warn_${cat}`,
+                        title: 'Aviso de Orçamento',
+                        message: `Atenção: Você consumiu ${((spent / limit) * 100).toFixed(0)}% do limite planejado para ${cat.toUpperCase()}.`,
+                        type: 'warning'
+                    });
+                }
+            });
+        } catch (e) { console.error(e); }
+        return notifs;
+    }, [transactions]);
 
     const navItems = [
         { to: '/app', label: t('dashboard'), icon: LayoutDashboard, end: true },
@@ -126,6 +142,48 @@ export default function Navbar() {
                     {/* Right Actions */}
                     <div className="flex items-center gap-3">
 
+                        {/* Theme Toggle */}
+                        <ThemeToggle />
+
+                        {/* Notifications Bell */}
+                        <div className="relative" ref={notifRef}>
+                            <button
+                                onClick={() => setNotifOpen(!notifOpen)}
+                                className="relative w-9 h-9 flex items-center justify-center rounded-lg text-gray-500 dark:text-gray-400 hover:text-brand-600 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/5 transition-colors"
+                            >
+                                <Bell className="w-5 h-5" />
+                                {notifications.length > 0 && (
+                                    <span className="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white dark:border-surface-900 shadow-sm" />
+                                )}
+                            </button>
+
+                            {notifOpen && (
+                                <div className="absolute right-0 mt-2 w-80 rounded-xl bg-white dark:bg-surface-800 border border-gray-100 dark:border-white/10 shadow-2xl dark:shadow-black/50 py-2 animate-fade-in origin-top-right ring-1 ring-black/5">
+                                    <div className="px-4 py-2 border-b border-gray-100 dark:border-white/5">
+                                        <h3 className="font-bold text-gray-900 dark:text-white">Notificações</h3>
+                                    </div>
+                                    <div className="max-h-64 overflow-y-auto custom-scrollbar p-2 space-y-1">
+                                        {notifications.length === 0 ? (
+                                            <div className="p-4 text-center text-sm text-gray-500">Nenhum alerta recente.</div>
+                                        ) : notifications.map(n => (
+                                            <div key={n.id} className="p-3 bg-gray-50 dark:bg-white/5 rounded-lg border border-transparent hover:border-white/10 transition-colors">
+                                                <div className="flex items-start gap-3">
+                                                    <div className={`mt-0.5 w-2 h-2 rounded-full flex-shrink-0 ${n.type === 'danger' ? 'bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.5)]' : 'bg-yellow-500'}`} />
+                                                    <div>
+                                                        <p className="text-sm font-semibold text-gray-900 dark:text-white leading-tight">{n.title}</p>
+                                                        <p className="text-xs text-gray-600 dark:text-gray-400 mt-1 leading-snug">{n.message}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                    <div className="px-4 py-2 border-t border-gray-100 dark:border-white/5 mt-1 text-center">
+                                        <Link to="/app/health" className="text-xs font-semibold text-brand-600 dark:text-brand-400 hover:underline">Ir para Metas de Orçamento</Link>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+
                         {/* Language Selector */}
                         <div className="relative" ref={langRef}>
                             <button
@@ -152,9 +210,6 @@ export default function Navbar() {
                                 </div>
                             )}
                         </div>
-
-                        {/* Theme Toggle */}
-                        <ThemeToggle />
 
                         {/* Pro Badge / Upgrade Button */}
                         <div className="hidden sm:block">

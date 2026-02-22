@@ -304,7 +304,12 @@ export default function AIAssistant() {
         // Check for initial query only when loading is finished
         if (!loading) {
             const initialQuery = searchParams.get('q');
-            if (initialQuery) {
+            const sessionPrompt = sessionStorage.getItem('sf_ai_initial_prompt');
+
+            if (sessionPrompt) {
+                sendMessage(sessionPrompt);
+                sessionStorage.removeItem('sf_ai_initial_prompt');
+            } else if (initialQuery) {
                 sendMessage(initialQuery);
                 // Clear param so it doesn't re-trigger on refresh
                 const newParams = new URLSearchParams(searchParams);

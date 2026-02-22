@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { CreditCard, Plus, Trash2, X, Calendar, AlertTriangle, CheckCircle, TrendingUp } from 'lucide-react';
+import { CreditCard, Plus, Trash2, X, Calendar, AlertTriangle, CheckCircle } from 'lucide-react';
 
 function fmt(v) {
     return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v);

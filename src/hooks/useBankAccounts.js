@@ -17,23 +17,18 @@ export function useBankAccounts() {
 
         try {
             if (isSupabaseConfigured && user?.id && user.id !== 'demo') {
-                // 1. Carregar contas manuais
-                const { data: manual, error: manualErr } = await supabase
+                // Carregar todas as contas da tabela unificada
+                const { data: accounts, error: err } = await supabase
                     .from('bank_accounts')
                     .select('*')
                     .eq('user_id', user.id)
                     .order('created_at', { ascending: false });
 
-                if (manualErr) throw manualErr;
+                if (err) throw err;
 
-                // 2. Carregar contas do Pluggy
-                const { data: pluggy, error: pluggyErr } = await supabase
-                    .from('pluggy_bank_accounts')
-                    .select('*')
-                    .eq('user_id', user.id)
-                    .order('created_at', { ascending: false });
-
-                if (pluggyErr) throw pluggyErr;
+                // Separar contas manuais e conectadas via Pluggy Open Finance
+                const manual = accounts.filter(acc => !acc.provider_account_id);
+                const pluggy = accounts.filter(acc => !!acc.provider_account_id);
 
                 setManualAccounts(manual || []);
                 setPluggyAccounts(pluggy || []);
@@ -91,7 +86,8 @@ export function useBankAccounts() {
 
     const deleteAccount = async (id, type = 'manual') => {
         try {
-            const table = type === 'manual' ? 'bank_accounts' : 'pluggy_bank_accounts';
+            // Conta unificada usa somente a tabela bank_accounts agora
+            const table = 'bank_accounts';
             if (isSupabaseConfigured && user?.id && user.id !== 'demo') {
                 const { error: dbError } = await supabase
                     .from(table)
@@ -126,8 +122,8 @@ export function useBankAccounts() {
             id: acc.id,
             name: acc.display_name,
             bank_name: acc.bank_name,
-            balance: acc.balance_current,
-            account_number: acc.number,
+            balance: acc.balance,
+            account_number: acc.account_number,
             logo: acc.logo_url,
             isPluggy: true
         }))

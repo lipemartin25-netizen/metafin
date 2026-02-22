@@ -40,6 +40,7 @@ export function AuthProvider({ children }) {
     }, []);
 
     const signIn = useCallback(async (email, password) => {
+        if (!isSupabaseConfigured) throw new Error('Conexão recusada: Supabase offline.');
         return await supabase.auth.signInWithPassword({ email, password });
     }, []);
 
@@ -53,6 +54,7 @@ export function AuthProvider({ children }) {
     }, [signIn]);
 
     const signInWithGoogle = useCallback(async (googleIdToken) => {
+        if (!isSupabaseConfigured) throw new Error('Conexão recusada: Supabase offline.');
         const { data, error } = await supabase.auth.signInWithIdToken({
             provider: 'google',
             token: googleIdToken,

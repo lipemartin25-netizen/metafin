@@ -11,8 +11,8 @@ export default function CouplesFinance() {
     const [expenses, setExpenses] = useState(4000);
 
     const totalIncome = income1 + income2;
-    const prop1 = income1 / totalIncome;
-    const prop2 = income2 / totalIncome;
+    const prop1 = totalIncome > 0 ? (income1 / totalIncome) : 0;
+    const prop2 = totalIncome > 0 ? (income2 / totalIncome) : 0;
 
     const share5050 = expenses / 2;
     const shareProp1 = expenses * prop1;

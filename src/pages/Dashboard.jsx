@@ -32,6 +32,7 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { useTheme } from '../contexts/ThemeContext';
 import ProGate from '../components/ProGate';
 import XRayDiagnosis from '../components/XRayDiagnosis';
+import SmartReconciliation from '../components/SmartReconciliation';
 
 const categoryConfig = categoriesData.categories;
 
@@ -409,6 +410,9 @@ export default function Dashboard() {
 
                 {/* Right Column: Planning & Quick Actions */}
                 <div className="space-y-6">
+                    {/* Widget de Conciliação Inteligente */}
+                    <SmartReconciliation />
+
                     {/* Objetivos / Planejamento Rápido */}
                     <div className="glass-card p-6">
                         <div className="flex items-center justify-between mb-4">

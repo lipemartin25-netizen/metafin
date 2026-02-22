@@ -75,6 +75,8 @@ export function detectSubscriptions(transactions) {
                 nextRenewal: nextRenewalDate.toISOString(),
                 annualCost: isMonthly ? Math.abs(lastCharge.amount) * 12 : Math.abs(lastCharge.amount),
                 chargeCount: txns.length,
+                hasIncreasedPrice: txns.length >= 2 ? Math.abs(lastCharge.amount) > Math.abs(txns[txns.length - 2].amount) : false,
+                priceDiff: txns.length >= 2 ? Math.abs(lastCharge.amount) - Math.abs(txns[txns.length - 2].amount) : 0,
             });
         }
     });

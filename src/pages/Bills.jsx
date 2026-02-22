@@ -149,7 +149,7 @@ export default function Bills() {
                     { id: 'pending', label: 'Pendentes' },
                     { id: 'overdue', label: 'Vencidas' },
                     { id: 'paid', label: 'Pagas' },
-                    { id: 'subscriptions', label: 'Assinaturas Inteligentes ✨' },
+                    { id: 'subscriptions', label: '🛡️ Kill-Switch (Assinaturas)' },
                 ].map(f => (
                     <button key={f.id} onClick={() => setFilter(f.id)}
                         className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${filter === f.id ? (f.id === 'subscriptions' ? 'bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-500/30 shadow-[0_0_15px_-3px_rgba(168,85,247,0.2)]' : 'bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/30') : 'bg-gray-50 dark:bg-white/5 text-gray-500 border border-gray-200 dark:border-white/10 hover:border-blue-500/30 dark:hover:bg-white/10'}`}
@@ -159,56 +159,72 @@ export default function Bills() {
 
             {/* List Views */}
             {filter === 'subscriptions' ? (
-                <div className="space-y-4 animate-fade-in">
-                    <div className="glass-card p-4 sm:p-5 border-l-4 border-l-purple-500 relative overflow-hidden">
-                        <div className="absolute top-0 right-0 p-8 opacity-5">
-                            <Bot className="w-32 h-32" />
+                <div className="space-y-6 animate-fade-in">
+                    <div className="glass-card p-6 border-l-4 border-l-red-500 relative overflow-hidden bg-black/40">
+                        <div className="absolute top-0 right-0 p-8 opacity-10">
+                            <Bot className="w-48 h-48 text-red-500" />
                         </div>
-                        <p className="text-sm font-semibold text-gray-900 dark:text-white flex items-center gap-2 relative z-10">
-                            <Bot className="w-5 h-5 text-purple-500" /> Insight do Assistente
-                        </p>
-                        <p className="text-sm text-gray-600 dark:text-gray-300 mt-2 relative z-10 max-w-2xl leading-relaxed">
-                            A inteligência do Hub varreu suas transações e detectou <strong className="text-purple-600 dark:text-purple-400">{stats.subscriptions.length} assinaturas constantes</strong>.
-                            Somadas, elas removem <strong className="text-red-500">{fmt(stats.totalYearlySubs)} do seu patrimônio por ano</strong>.
-                            Revisá-las e cancelar as não-utilizadas é o {'"caminho fácil"'} para poupar dinheiro.
+                        <h2 className="text-xl font-black text-white flex items-center gap-2 relative z-10 mb-2 uppercase tracking-widest">
+                            <AlertTriangle className="w-6 h-6 text-red-500 animate-pulse" /> Sub-Tracker Ativado
+                        </h2>
+                        <p className="text-sm text-gray-300 relative z-10 max-w-2xl leading-relaxed">
+                            A IA MetaFin detectou <strong className="text-red-400 font-bold">{stats.subscriptions.length} assinaturas recorrentes</strong> drenando seu patrimônio.
+                            Coletivamente, elas geram um vazamento de <strong className="text-red-500 font-bold bg-red-500/20 px-2 py-0.5 rounded">{fmt(stats.totalYearlySubs)} por ano</strong>.
                         </p>
                     </div>
 
-                    <div className="grid md:grid-cols-2 gap-4">
+                    <div className="grid md:grid-cols-2 gap-6">
                         {stats.subscriptions.map((sub, i) => (
-                            <div key={i} className="glass-card p-5 hover:border-purple-500/30 transition-all group hover:shadow-lg hover:shadow-purple-500/5 cursor-default relative overflow-hidden">
-                                <div className="absolute -right-4 -top-4 w-16 h-16 bg-purple-500/5 rounded-full blur-xl group-hover:bg-purple-500/20 transition-all"></div>
-                                <div className="flex justify-between items-start mb-5">
-                                    <div className="flex items-center gap-3.5">
-                                        <div className="w-12 h-12 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-500 font-extrabold text-xl shadow-inner border border-purple-500/20">
+                            <div key={i} className={`glass-card p-6 transition-all group cursor-default relative overflow-hidden backdrop-blur-2xl ${sub.hasIncreasedPrice ? 'border-red-500/50 shadow-[0_0_30px_-5px_rgba(239,68,68,0.3)]' : 'border-gray-800 hover:border-accent/30'}`}>
+                                <div className={`absolute -right-4 -top-4 w-32 h-32 rounded-full blur-[50px] transition-all opacity-20 ${sub.hasIncreasedPrice ? 'bg-red-500' : 'bg-accent'}`}></div>
+
+                                {sub.hasIncreasedPrice && (
+                                    <div className="absolute top-0 right-0 bg-red-600 text-white text-[10px] font-black tracking-widest px-3 py-1 rounded-bl-xl uppercase flex items-center gap-1 shadow-[0_0_15px_rgba(239,68,68,0.8)]">
+                                        <AlertTriangle className="w-3 h-3" /> Aumento Detectado (+{fmt(sub.priceDiff)})
+                                    </div>
+                                )}
+
+                                <div className="flex justify-between items-start mb-6">
+                                    <div className="flex items-center gap-4">
+                                        <div className={`w-14 h-14 rounded-2xl flex items-center justify-center font-black text-2xl shadow-inner border ${sub.hasIncreasedPrice ? 'bg-red-500/10 text-red-500 border-red-500/30' : 'bg-accent/10 text-accent border-accent/20'}`}>
                                             {sub.name.charAt(0)}
                                         </div>
                                         <div>
-                                            <p className="font-bold text-gray-900 dark:text-white capitalize text-base">{sub.name}</p>
-                                            <p className="text-xs text-purple-600 dark:text-purple-400 font-medium flex items-center gap-1 mt-0.5">
-                                                <RefreshCw className="w-3 h-3" /> Cobrança {sub.frequency}
+                                            <p className="font-black text-white capitalize text-lg tracking-tight">{sub.name}</p>
+                                            <p className="text-xs text-gray-400 font-medium flex items-center gap-1 mt-1">
+                                                <RefreshCw className="w-3 h-3" /> Renovação {sub.frequency}
                                             </p>
                                         </div>
                                     </div>
-                                    <div className="text-right">
-                                        <p className="font-bold text-gray-900 dark:text-white text-lg">{fmt(sub.amount)}</p>
+                                    <div className="text-right mt-1">
+                                        <p className="font-black text-white text-2xl">{fmt(sub.amount)}</p>
                                         <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">/ {sub.frequency === 'Mensal' ? 'mês' : 'ano'}</p>
                                     </div>
                                 </div>
 
-                                <div className="space-y-2 mb-5">
-                                    <div className="flex justify-between items-center text-xs py-1 border-b border-gray-100 dark:border-white/5">
-                                        <span className="text-gray-500 font-medium tracking-wide">Previsão Renovação</span>
-                                        <span className="font-semibold text-gray-900 dark:text-white flex items-center gap-1.5"><CalendarDays className="w-3 h-3 text-gray-400" /> {new Date(sub.nextRenewal).toLocaleDateString('pt-BR')}</span>
+                                <div className="space-y-3 mb-6 bg-black/30 p-4 rounded-xl border border-white/5">
+                                    <div className="flex justify-between items-center text-xs">
+                                        <span className="text-gray-400 font-medium tracking-wide">Próximo Débito</span>
+                                        <span className="font-bold text-white flex items-center gap-1.5"><CalendarDays className="w-3 h-3 text-accent" /> {new Date(sub.nextRenewal).toLocaleDateString('pt-BR')}</span>
                                     </div>
-                                    <div className="flex justify-between items-center text-xs py-1">
-                                        <span className="text-gray-500 font-medium tracking-wide">Impacto do Recurso</span>
-                                        <span className="font-bold text-red-500 bg-red-500/10 px-2 py-0.5 rounded-md border border-red-500/20">{fmt(sub.annualCost)} / ano</span>
+                                    <div className="flex justify-between items-center text-xs">
+                                        <span className="text-gray-400 font-medium tracking-wide">Vazamento Anual</span>
+                                        <span className="font-black text-red-400">{fmt(sub.annualCost)}</span>
                                     </div>
                                 </div>
 
-                                <div className="text-[10px] text-gray-400 text-center font-medium bg-gray-50 dark:bg-white/5 py-1.5 rounded-lg border border-gray-100 dark:border-white/5">
-                                    Convicção baseada em <strong className="text-gray-600 dark:text-gray-300">{sub.chargeCount}</strong> pagamentos repetidos.
+                                <a
+                                    href={`https://www.google.com/search?q=como+cancelar+assinatura+${encodeURIComponent(sub.name)}`}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-red-600/10 hover:bg-red-600/20 border border-red-500/30 hover:border-red-500/80 text-red-500 hover:text-red-400 font-black text-sm uppercase tracking-widest transition-all shadow-inner group-hover:shadow-[0_0_20px_rgba(239,68,68,0.2)]"
+                                >
+                                    <Trash2 className="w-4 h-4 group-hover/btn:animate-bounce" />
+                                    Derrubar Assinatura
+                                </a>
+
+                                <div className="mt-4 text-[9px] text-gray-500 text-center font-bold uppercase tracking-widest">
+                                    Padrão confirmado em {sub.chargeCount} débitos.
                                 </div>
                             </div>
                         ))}

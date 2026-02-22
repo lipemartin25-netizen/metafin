@@ -14,6 +14,9 @@ import InvestmentSimulator from '../components/InvestmentSimulator';
 import TaxPlanner from '../components/TaxPlanner';
 import Goals from './Goals';
 import FinancialEducation from '../components/FinancialEducation';
+import CouplesFinance from '../components/CouplesFinance';
+import FreelaMEIHub from '../components/FreelaMEIHub';
+import { Users, Briefcase } from 'lucide-react';
 
 const SIMULATORS = [
     {
@@ -81,6 +84,28 @@ const SIMULATORS = [
         bgDark: 'dark:bg-amber-950/20',
         textColor: 'text-amber-600 dark:text-amber-400',
         component: FinancialEducation
+    },
+    {
+        id: 'couples',
+        name: 'Casais Inteligentes',
+        subtitle: 'Divisão justa de despesas 50/50',
+        icon: Users,
+        color: 'from-pink-500 to-rose-600',
+        bgLight: 'bg-pink-50',
+        bgDark: 'dark:bg-pink-950/20',
+        textColor: 'text-pink-600 dark:text-pink-400',
+        component: CouplesFinance
+    },
+    {
+        id: 'freela',
+        name: 'Toolkit MEI & Freelas',
+        subtitle: 'Gestão de caixa e imposto (DAS)',
+        icon: Briefcase,
+        color: 'from-cyan-500 to-sky-600',
+        bgLight: 'bg-cyan-50',
+        bgDark: 'dark:bg-cyan-950/20',
+        textColor: 'text-cyan-600 dark:text-cyan-400',
+        component: FreelaMEIHub
     }
 ];
 

@@ -2,8 +2,20 @@ import { useMemo, useState, useEffect } from 'react';
 import { useTransactions } from '../hooks/useTransactions';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
-import { Heart, TrendingUp, TrendingDown, AlertTriangle, CheckCircle, Shield, Lightbulb, ArrowRight } from 'lucide-react';
+import { Heart, TrendingUp, TrendingDown, AlertTriangle, CheckCircle, Shield, Lightbulb, ArrowRight, Leaf, Zap } from 'lucide-react';
 import { Link } from 'react-router-dom';
+
+/* Eco-Finance Mappings: KG de CO2 emitidos por R$ gasto (estimativa abstrata para gamificação) */
+const CO2_MULT = {
+    carro: 0.8,
+    transporte: 0.5,
+    alimentacao: 0.3,
+    supermercado: 0.3,
+    casa: 0.2,
+    lazer: 0.1,
+    saude: 0.1,
+    default: 0.15
+};
 
 function fmt(v) {
     return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v);
@@ -153,15 +165,19 @@ export default function FinancialHealth() {
             if (completedGoals > 0) tips.push({ text: `Voce ja completou ${completedGoals} meta(s)! Continue assim.`, type: 'success' });
         }
 
-        // Credit cards check
-        const cards = JSON.parse(localStorage.getItem('sf_credit_cards') || '[]');
-        const totalCardUsed = cards.reduce((s, c) => s + c.used, 0);
-        const totalCardLimit = cards.reduce((s, c) => s + c.limit, 0);
-        if (totalCardLimit > 0 && (totalCardUsed / totalCardLimit) > 0.7) {
-            tips.push({ text: `Voce esta usando ${Math.round((totalCardUsed / totalCardLimit) * 100)}% do limite dos cartoes. Tente manter abaixo de 30%.`, type: 'warning' });
-        }
+        // Eco-Finance Calculation
+        let totalCO2 = 0;
+        transactions.filter(t => t.type === 'expense').forEach(t => {
+            const cat = t.category || 'outros';
+            const mult = CO2_MULT[cat] || CO2_MULT.default;
+            totalCO2 += Math.abs(t.amount) * mult;
+        });
 
-        return { score, savingsRate, balance, income, expenses, topCategories, tips };
+        const ecoScore = expenses > 0 ? (totalCO2 / expenses) : 0; // Avg CO2 per real
+        if (ecoScore > 0.4) tips.push({ text: 'Sua pegada de carbono está alta (muitos gastos em transporte/carro). Considere modais alternativos!', type: 'warning' });
+        else if (totalCO2 > 0) tips.push({ text: 'Boa! Seus hábitos de consumo estão mantendo uma pegada ecológica baixa neste mês.', type: 'success' });
+
+        return { score, savingsRate, balance, income, expenses, topCategories, tips, totalCO2 };
     }, [transactions, summary]);
 
     const circumference = 2 * Math.PI * 70;
@@ -249,6 +265,32 @@ export default function FinancialHealth() {
                                 </div>
                             );
                         })}
+                    </div>
+
+                    {/* Eco-Finance Gamification Widget */}
+                    <div className="glass-card mt-6 p-6 border-l-4 border-l-emerald-500 relative overflow-hidden bg-black/40 group">
+                        <div className="absolute -right-4 -top-4 w-32 h-32 bg-emerald-500/10 rounded-full blur-[40px] group-hover:bg-emerald-500/20 transition-all" />
+                        <h3 className="text-lg font-black text-white flex items-center gap-2 mb-2 uppercase tracking-widest relative z-10">
+                            <Leaf className="w-5 h-5 text-emerald-500" /> Eco-Finance Tracker
+                        </h3>
+                        <div className="flex items-end justify-between relative z-10">
+                            <div>
+                                <p className="text-sm text-gray-400 mb-1">Pegada de Carbono (Mensal)</p>
+                                <p className="text-3xl font-black text-emerald-400 drop-shadow-[0_0_10px_rgba(16,185,129,0.5)]">
+                                    {(analysis.totalCO2).toFixed(1)} <span className="text-sm text-emerald-500/60 uppercase">KG CO₂</span>
+                                </p>
+                            </div>
+                            <div className="text-right">
+                                <Zap className={`w-8 h-8 ${analysis.totalCO2 > 500 ? 'text-red-500 animate-pulse' : 'text-emerald-500'}`} />
+                            </div>
+                        </div>
+                        <div className="mt-4 pt-4 border-t border-white/10 relative z-10">
+                            <p className="text-xs text-gray-500 font-bold">
+                                {analysis.totalCO2 > 500
+                                    ? "⚠️ ALERTA: Seu padrão de consumo está agressivo ao meio ambiente."
+                                    : "🌱 Geração Alpha: Seu impacto está controlado. Mantenha os gastos locais."}
+                            </p>
+                        </div>
                     </div>
                 </div>
 

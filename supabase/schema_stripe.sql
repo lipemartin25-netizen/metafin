@@ -1,5 +1,5 @@
 -- ============================================
--- SmartFinance Hub — Stripe Subscriptions v1.1
+-- MetaFin — Stripe Subscriptions v1.1
 -- Execute APÓS o schema principal (schema.sql)
 -- Idempotente: pode rodar múltiplas vezes
 -- ============================================

@@ -1,4 +1,4 @@
-# 💳 SmartFinance Hub — Guia de Setup do Stripe
+# 💳 MetaFin — Guia de Setup do Stripe
 
 > Guia completo para configurar pagamentos reais com Stripe + Supabase Edge Functions.
 > Tempo estimado: ~30 minutos.

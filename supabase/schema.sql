@@ -1,5 +1,5 @@
 -- ============================================
--- SmartFinance Hub - Database Schema v3.0
+-- MetaFin - Database Schema v3.0
 -- Corrigido, otimizado e seguro
 -- Idempotente: pode rodar múltiplas vezes
 -- ============================================
@@ -283,7 +283,7 @@ CREATE INDEX IF NOT EXISTS idx_feedback_user_id
 -- Listar todas as policies criadas (verificação)
 DO $$
 BEGIN
-  RAISE NOTICE '✅ Schema SmartFinance Hub v3.0 executado com sucesso!';
+  RAISE NOTICE '✅ Schema MetaFin v3.0 executado com sucesso!';
   RAISE NOTICE '📋 Tabelas: profiles, transactions, waitlist, feedback';
   RAISE NOTICE '🔒 RLS ativo em todas as tabelas';
   RAISE NOTICE '⚡ Indexes otimizados para consultas com RLS';

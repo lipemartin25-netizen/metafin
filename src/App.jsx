@@ -1,32 +1,40 @@
-import { useEffect, useState, useRef, useCallback } from 'react';
+import { useEffect, useState, useRef, useCallback, lazy, Suspense } from 'react';
 import { Routes, Route, useLocation, Navigate, useNavigate } from 'react-router-dom';
 import { trackPageView } from './hooks/useAnalytics';
 import { useAuth } from './contexts/AuthContext';
-import Home from './pages/Home';
-import Login from './pages/Login';
-import SignUp from './pages/SignUp';
-import Dashboard from './pages/Dashboard';
-import Transactions from './pages/Transactions';
 import Layout from './components/Layout';
 import ProtectedRoute from './components/ProtectedRoute';
 import NpsSurvey from './components/NpsSurvey';
 import OnboardingTour from './components/OnboardingTour';
+import { ErrorBoundary } from './components/ErrorBoundary';
 
-import AIAssistant from './pages/AIAssistant';
-import BankAccounts from './pages/BankAccounts';
-import Investments from './pages/Investments';
-import CreditCards from './pages/CreditCards';
-import Bills from './pages/Bills';
-import Goals from './pages/Goals';
-import FinancialHealth from './pages/FinancialHealth';
-import Budget from './pages/Budget';
-import NetWorth from './pages/NetWorth';
-import Simulators from './pages/Simulators';
-import Reports from './pages/Reports';
-import DeveloperAPI from './pages/DeveloperAPI';
-import Upgrade from './pages/Upgrade';
-import AiChat from './components/AiChat';
-import Settings from './pages/Settings';
+// Lazy Loaded Pages
+const Home = lazy(() => import('./pages/Home'));
+const Login = lazy(() => import('./pages/Login'));
+const SignUp = lazy(() => import('./pages/SignUp'));
+const Dashboard = lazy(() => import('./pages/Dashboard'));
+const Transactions = lazy(() => import('./pages/Transactions'));
+const AIAssistant = lazy(() => import('./pages/AIAssistant'));
+const BankAccounts = lazy(() => import('./pages/BankAccounts'));
+const Investments = lazy(() => import('./pages/Investments'));
+const CreditCards = lazy(() => import('./pages/CreditCards'));
+const Bills = lazy(() => import('./pages/Bills'));
+const Goals = lazy(() => import('./pages/Goals'));
+const FinancialHealth = lazy(() => import('./pages/FinancialHealth'));
+const Budget = lazy(() => import('./pages/Budget'));
+const NetWorth = lazy(() => import('./pages/NetWorth'));
+const Simulators = lazy(() => import('./pages/Simulators'));
+const Reports = lazy(() => import('./pages/Reports'));
+const DeveloperAPI = lazy(() => import('./pages/DeveloperAPI'));
+const Upgrade = lazy(() => import('./pages/Upgrade'));
+const Settings = lazy(() => import('./pages/Settings'));
+const AiChat = lazy(() => import('./components/AiChat'));
+
+const LoadingFallback = () => (
+  <div className="flex h-screen items-center justify-center bg-gray-50 dark:bg-black">
+    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+  </div>
+);
 
 export default function App() {
   const location = useLocation();
@@ -100,38 +108,37 @@ export default function App() {
   const isAppRoute = location.pathname.startsWith('/app');
 
   return (
-    <>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/app" element={<ProtectedRoute><Layout /></ProtectedRoute>}>
-          <Route index element={<Dashboard />} />
-          <Route path="transactions" element={<Transactions />} />
-          <Route path="accounts" element={<BankAccounts />} />
-          <Route path="cards" element={<CreditCards />} />
-          <Route path="bills" element={<Bills />} />
-          <Route path="investments" element={<Investments />} />
-          <Route path="goals" element={<Goals />} />
-          <Route path="budget" element={<Budget />} />
-          <Route path="networth" element={<NetWorth />} />
-          <Route path="wealth" element={<Simulators />} />
-          <Route path="reports" element={<Reports />} />
-          <Route path="health" element={<FinancialHealth />} />
-          <Route path="advisor" element={<AIAssistant />} />
-          <Route path="api" element={<DeveloperAPI />} />
-          <Route path="upgrade" element={<Upgrade />} />
-          <Route path="settings" element={<Settings />} />
-        </Route>
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
+    <Suspense fallback={<LoadingFallback />}>
+      <ErrorBoundary fallbackMessage="Ocorreu um erro ao carregar a aplicação.">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/app" element={<ProtectedRoute><Layout /></ProtectedRoute>}>
+            <Route index element={<Dashboard />} />
+            <Route path="transactions" element={<Transactions />} />
+            <Route path="accounts" element={<BankAccounts />} />
+            <Route path="cards" element={<CreditCards />} />
+            <Route path="bills" element={<Bills />} />
+            <Route path="investments" element={<Investments />} />
+            <Route path="goals" element={<Goals />} />
+            <Route path="budget" element={<Budget />} />
+            <Route path="networth" element={<NetWorth />} />
+            <Route path="wealth" element={<Simulators />} />
+            <Route path="reports" element={<Reports />} />
+            <Route path="health" element={<FinancialHealth />} />
+            <Route path="advisor" element={<AIAssistant />} />
+            <Route path="api" element={<DeveloperAPI />} />
+            <Route path="upgrade" element={<Upgrade />} />
+            <Route path="settings" element={<Settings />} />
+          </Route>
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
 
-      {/* AI Chat FAB — só no app */}
-      {isAppRoute && <AiChat />}
-
-      {showNps && <NpsSurvey onClose={handleNpsClose} />}
-
-      {showOnboarding && <OnboardingTour onComplete={() => setShowOnboarding(false)} />}
-    </>
+        {isAppRoute && <AiChat />}
+        {showNps && <NpsSurvey onClose={handleNpsClose} />}
+        {showOnboarding && <OnboardingTour onComplete={() => setShowOnboarding(false)} />}
+      </ErrorBoundary>
+    </Suspense>
   );
 }

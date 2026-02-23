@@ -64,7 +64,7 @@ export default function AiChat() {
             const financialContext = buildFinancialContext(transactions, adaptedSummary, { budgets, goals });
 
             const chatMessages = [
-                { role: 'system', content: `Você é o metafin AI Assistente.\n\n${financialContext}` },
+                { role: 'system', content: `Você é o MetaFin AI Assistente.\n\n${financialContext}` },
                 ...messages.map((m) => ({ role: m.role, content: m.content })),
                 { role: 'user', content: text },
             ];
@@ -188,7 +188,7 @@ export default function AiChat() {
                                 <Wallet className="w-6 h-6 text-white" />
                             </div>
                             <div>
-                                <h3 className="font-bold text-white text-base leading-tight">metafin AI</h3>
+                                <h3 className="font-bold text-white text-base leading-tight">MetaFin AI</h3>
                                 <div className="flex items-center gap-1.5 mt-0.5">
                                     <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
                                     <span className="text-[10px] text-gray-500 font-medium uppercase tracking-wider">Neural Assistant Online</span>
@@ -249,7 +249,7 @@ export default function AiChat() {
                                 <div className="w-16 h-16 bg-sky-500/10 rounded-2xl flex items-center justify-center mb-4">
                                     <Bot className="w-8 h-8 text-sky-400" />
                                 </div>
-                                <h3 className="text-white font-bold text-lg mb-2">Olá, eu sou o metafin AI</h3>
+                                <h3 className="text-white font-bold text-lg mb-2">Olá, eu sou o MetaFin AI</h3>
                                 <p className="text-gray-500 text-sm mb-8">Como posso ajudar com suas finanças hoje?</p>
                                 <div className="grid grid-cols-1 gap-2 w-full">
                                     {Object.entries(AI_ACTIONS).slice(0, 3).map(([key, action]) => (

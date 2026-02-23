@@ -46,7 +46,7 @@ export default function Reports() {
             const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
 
             pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-            pdf.save(`relatorio_smartfinance_${month}.pdf`);
+            pdf.save(`relatorio_metafin_${month}.pdf`);
             analytics.featureUsed('pdf_export');
         } catch (error) {
             console.error('Erro ao gerar PDF:', error);

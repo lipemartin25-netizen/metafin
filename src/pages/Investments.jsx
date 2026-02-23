@@ -161,7 +161,7 @@ export default function Investments() {
                 <ShieldCheck className="w-5 h-5 text-emerald-500 flex-shrink-0" />
                 <div>
                     <p className="text-xs font-medium text-emerald-600 dark:text-emerald-400">Conexao segura via Open Finance</p>
-                    <p className="text-[10px] text-gray-500">Dados criptografados end-to-end. Suas credenciais nunca passam pelo SmartFinance — elas ficam dentro do Pluggy (regulado pelo Banco Central).</p>
+                    <p className="text-[10px] text-gray-500">Dados criptografados end-to-end. Suas credenciais nunca passam pelo MetaFin — elas ficam dentro do Pluggy (regulado pelo Banco Central).</p>
                 </div>
             </div>
 

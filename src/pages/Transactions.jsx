@@ -146,7 +146,7 @@ export default function Transactions() {
         const csv = Papa.unparse(csvData);
         const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
         const url = URL.createObjectURL(blob);
-        const a = document.createElement('a'); a.href = url; a.download = `smartfinance_export_${new Date().toISOString().split('T')[0]}.csv`; a.click();
+        const a = document.createElement('a'); a.href = url; a.download = `metafin_export_${new Date().toISOString().split('T')[0]}.csv`; a.click();
         URL.revokeObjectURL(url);
         analytics.featureUsed('csv_export');
     };
@@ -221,7 +221,7 @@ export default function Transactions() {
             {/* Import */}
             <div className="glass-card">
                 <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-                    <div className="flex-1"><h3 className="text-sm font-semibold text-white flex items-center gap-2"><FileSpreadsheet className="w-4 h-4 text-emerald-400" />Smart Import Multi-Formato</h3><p className="text-xs text-gray-500 mt-1">CSV, Excel, JSON, TXT, XML, HTML, PDF, Word, imagens e mais</p></div>
+                    <div className="flex-1"><h3 className="text-sm font-semibold text-white flex items-center gap-2"><FileSpreadsheet className="w-4 h-4 text-emerald-400" />MetaFin Import Multi-Formato</h3><p className="text-xs text-gray-500 mt-1">CSV, Excel, JSON, TXT, XML, HTML, PDF, Word, imagens e mais</p></div>
                     <div className="flex items-center gap-2">
                         <button onClick={downloadSampleCsv} className="px-3 py-2 rounded-lg border border-white/10 text-gray-400 hover:bg-white/5 transition-all text-xs">📄 Modelo CSV</button>
                         <label className="gradient-btn text-sm cursor-pointer flex items-center gap-2">

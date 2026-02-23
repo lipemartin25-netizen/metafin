@@ -9,7 +9,7 @@ function createWindow() {
         height: 800,
         minWidth: 900,
         minHeight: 600,
-        title: 'SmartFinance Hub',
+        title: 'MetaFin',
         icon: path.join(__dirname, '../public/favicon.svg'),
         backgroundColor: '#030712',
         titleBarStyle: 'hiddenInset',

@@ -5,35 +5,23 @@
 /* ========== METAFIN HIGH-AESTHETICS DESIGN SYSTEM ========== */
 
 :root {
-    /* Brand Pallete - Future Cyan & Deep Indigo */
-    --brand-50: #f0f9ff;
-    --brand-100: #e0f2fe;
-    --brand-500: #0ea5e9;
-    --brand-600: #0284c7;
-    --brand-700: #0369a1;
+    /* Brand Pallete - Sober Emerald & Deep Sapphire */
+    --brand-500: #10b981;
+    --brand-600: #059669;
+    --brand-sapphire: #0ea5e9;
 
-    /* Accent - Neon Fuchsia (Cyberpunk touch) */
-    --accent-400: #fb7185;
-    --accent-500: #f43f5e;
+    /* Surfaces - Deep Obsidian */
+    --bg-deep: #040b15;
+    --surface-800: #0a1628;
+    --surface-900: #0f1f35;
+    --surface-950: #040b15;
 
-    /* Surfaces - Cyberpunk Deep Matter */
-    --bg-deep: #020617;
-    --surface-800: #0f172a;
-    --surface-900: #1e293b;
-    --surface-950: #030712;
+    /* Glassmorphism - Smoked Obsidian */
+    --glass-bg: rgba(10, 22, 40, 0.75);
+    --glass-border: rgba(255, 255, 255, 0.05);
+    --glass-highlight: rgba(16, 185, 129, 0.1);
 
-    /* Typography Colors */
-    --text-main: #f8fafc;
-    --text-dim: #94a3b8;
-    --text-muted: #64748b;
-
-    /* Glassmorphism Specs */
-    --glass-bg: rgba(15, 23, 42, 0.7);
-    --glass-border: rgba(255, 255, 255, 0.08);
-    --glass-highlight: rgba(14, 165, 233, 0.1);
-
-    --shadow-premium: 0 10px 40px -10px rgba(0, 0, 0, 0.5);
-    --shadow-glow: 0 0 20px -5px rgba(14, 165, 233, 0.3);
+    --shadow-premium: 0 20px 50px -12px rgba(0, 0, 0, 0.6);
 }
 
 :root.light {
@@ -136,11 +124,16 @@ h6 {
 
 .meta-gradient-text {
     @apply bg-clip-text text-transparent;
-    background-image: linear-gradient(135deg, #fff 0%, #0ea5e9 100%);
+    background-image: linear-gradient(135deg, #fff 0%, #10b981 50%, #0ea5e9 100%);
 }
 
 .meta-glow-brand {
-    box-shadow: 0 0 30px -10px rgba(14, 165, 233, 0.5);
+    box-shadow: 0 0 30px -10px rgba(16, 185, 129, 0.4);
+}
+
+.meta-sober-grid {
+    background-image: radial-gradient(circle at 2px 2px, rgba(255, 255, 255, 0.03) 1px, transparent 0);
+    background-size: 40px 40px;
 }
 
 /* Scrollbar Future */
@@ -166,8 +159,8 @@ h6 {
     z-index: -1;
     pointer-events: none;
     background:
-        radial-gradient(at 0% 0%, rgba(14, 165, 233, 0.15) 0px, transparent 50%),
-        radial-gradient(at 100% 0%, rgba(244, 63, 94, 0.1) 0px, transparent 50%),
-        radial-gradient(at 100% 100%, rgba(2, 132, 199, 0.1) 0px, transparent 50%),
-        radial-gradient(at 0% 100%, rgba(217, 70, 239, 0.05) 0px, transparent 50%);
+        radial-gradient(at 0% 0%, rgba(16, 185, 129, 0.1) 0px, transparent 50%),
+        radial-gradient(at 100% 0%, rgba(14, 165, 233, 0.08) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(16, 185, 129, 0.05) 0px, transparent 50%),
+        radial-gradient(at 0% 100%, rgba(14, 165, 233, 0.05) 0px, transparent 50%);
 }

@@ -78,18 +78,18 @@ export default function Login() {
     }
 
     return (
-        <div className="min-h-screen bg-bg-deep flex items-center justify-center p-6 relative overflow-hidden">
+        <div className="min-h-screen bg-bg-deep flex items-center justify-center p-6 relative overflow-hidden meta-sober-grid">
             {/* Immersive Background */}
-            <div className="mesh-bg opacity-40 animate-pulse" style={{ animationDuration: '10s' }} />
-            <div className="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] bg-brand-500/10 blur-[150px] rounded-full" />
-            <div className="absolute bottom-[-10%] left-[-10%] w-[50%] h-[50%] bg-accent-500/5 blur-[150px] rounded-full" />
+            <div className="mesh-bg opacity-30" />
+            <div className="absolute top-[-20%] right-[-10%] w-[60%] h-[60%] bg-brand-500/5 blur-[120px] rounded-full" />
+            <div className="absolute bottom-[-20%] left-[-10%] w-[60%] h-[60%] bg-sapphire-600/5 blur-[120px] rounded-full" />
 
             <div className="meta-card w-full max-w-md !p-10 border-white/5 shadow-2xl animate-fade-in relative z-10">
                 {/* Logo / Header */}
                 <div className="text-center mb-10">
-                    <div className="w-20 h-20 bg-brand-500 rounded-[2.5rem] flex items-center justify-center mx-auto mb-6 shadow-2xl shadow-brand-500/30 animate-float border-4 border-white/10 relative group">
-                        <div className="absolute inset-[-8px] rounded-[3rem] border border-brand-500/20 animate-spin" style={{ animationDuration: '8s' }} />
-                        <span className="text-surface-950 font-black text-3xl italic tracking-tighter">MF</span>
+                    <div className="w-20 h-20 bg-brand-600 rounded-[2.5rem] flex items-center justify-center mx-auto mb-6 shadow-2xl shadow-brand-600/30 animate-float border-4 border-white/10 relative group">
+                        <div className="absolute inset-[-8px] rounded-[3rem] border border-brand-500/10 animate-spin" style={{ animationDuration: '12s' }} />
+                        <span className="text-white font-display font-black text-3xl italic tracking-tighter">MF</span>
                     </div>
                     <h1 className="text-4xl font-black meta-gradient-text tracking-tighter mb-2">MetaFin</h1>
                     <p className="text-gray-500 text-[10px] uppercase font-black tracking-[0.3em]">

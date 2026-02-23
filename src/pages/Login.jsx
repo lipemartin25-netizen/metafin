@@ -3,13 +3,26 @@ import { useState, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { aiAPI } from '../lib/apiClient'
 import { useAuth } from '../contexts/AuthContext'
+import { GoogleLogin } from '@react-oauth/google'
 
 export default function Login() {
     const navigate = useNavigate()
     const location = useLocation()
-    const { loginWithToken } = useAuth()
+    const { loginWithToken, signInWithGoogle } = useAuth()
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState('')
+
+    // Destruir Vercel Toolbar (estética hacker/clean)
+    useEffect(() => {
+        const removeVercelToolbar = () => {
+            const toolbars = document.querySelectorAll('vercel-live-feedback, #__vercel-toolbar');
+            toolbars.forEach(el => el.remove());
+        };
+        removeVercelToolbar();
+        // Repete após load para garantir
+        window.addEventListener('load', removeVercelToolbar);
+        return () => window.removeEventListener('load', removeVercelToolbar);
+    }, []);
 
     // Se já tem token válido, redireciona
     useEffect(() => {
@@ -49,6 +62,21 @@ export default function Login() {
         }
     }
 
+    async function handleGoogleSuccess(response) {
+        setError('')
+        setIsLoading(true)
+        try {
+            await signInWithGoogle(response.credential)
+            const destination = location.state?.from || '/app'
+            navigate(destination, { replace: true })
+        } catch (err) {
+            setError('Falha na autenticação Google. Tente novamente.')
+            console.error(err)
+        } finally {
+            setIsLoading(false)
+        }
+    }
+
     return (
         <div className="min-h-screen bg-bg-deep flex items-center justify-center p-6 relative overflow-hidden">
             {/* Immersive Background */}
@@ -56,7 +84,7 @@ export default function Login() {
             <div className="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] bg-brand-500/10 blur-[150px] rounded-full" />
             <div className="absolute bottom-[-10%] left-[-10%] w-[50%] h-[50%] bg-accent-500/5 blur-[150px] rounded-full" />
 
-            <div className="meta-card w-full max-w-md !p-10 border-white/5 shadow-2xl animate-fade-in">
+            <div className="meta-card w-full max-w-md !p-10 border-white/5 shadow-2xl animate-fade-in relative z-10">
                 {/* Logo / Header */}
                 <div className="text-center mb-10">
                     <div className="w-20 h-20 bg-brand-500 rounded-[2.5rem] flex items-center justify-center mx-auto mb-6 shadow-2xl shadow-brand-500/30 animate-float border-4 border-white/10 relative group">
@@ -67,6 +95,28 @@ export default function Login() {
                     <p className="text-gray-500 text-[10px] uppercase font-black tracking-[0.3em]">
                         Intelligence & Assets Control
                     </p>
+                </div>
+
+                {/* Google Login Section */}
+                <div className="mb-8">
+                    <div className="flex justify-center">
+                        <GoogleLogin
+                            onSuccess={handleGoogleSuccess}
+                            onError={() => setError('Erro ao conectar com Google')}
+                            useOneTap
+                            theme="filled_black"
+                            shape="pill"
+                            width="100%"
+                            text="signin_with"
+                        />
+                    </div>
+                </div>
+
+                {/* Divider */}
+                <div className="relative flex items-center gap-4 mb-8">
+                    <div className="flex-1 h-[1px] bg-white/5" />
+                    <span className="text-[10px] font-black text-gray-700 uppercase tracking-widest">Ou utilize credenciais</span>
+                    <div className="flex-1 h-[1px] bg-white/5" />
                 </div>
 
                 {/* Formulário */}

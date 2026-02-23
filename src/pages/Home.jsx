@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { ArrowRight, Wallet, Shield, Zap, TrendingUp, PieChart, Clock, Smartphone, Globe, Lock, CheckCircle2, Star, Sparkles, ChevronRight, Play } from 'lucide-react';
+import { ArrowRight, Wallet, Shield, Zap, TrendingUp, PieChart, Clock, Smartphone, Globe, Lock, CheckCircle2, Sparkles, Play } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export default function Home() {
@@ -44,20 +44,20 @@ export default function Home() {
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
-                            className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold"
+                            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-500/10 border border-brand-500/20 text-brand-400 text-[10px] font-black uppercase tracking-widest"
                         >
-                            <Sparkles className="w-3 h-3" />
-                            <span>V-PRO OPEN FINANCE TECHNOLOGY</span>
+                            <Sparkles className="w-3 h-3 animate-pulse" />
+                            <span>PROTOCOL NEXUS 2024 ACTIVE</span>
                         </motion.div>
 
                         <motion.h1
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.1 }}
-                            className="text-5xl md:text-7xl font-black tracking-tighter leading-[0.9]"
+                            className="text-6xl md:text-8xl font-black tracking-tighter leading-[0.85]"
                         >
                             SUA VIDA FINANCEIRA <br />
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">
+                            <span className="meta-gradient-text italic">
                                 EM ALTA DEFINIÇÃO.
                             </span>
                         </motion.h1>
@@ -76,15 +76,15 @@ export default function Home() {
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.3 }}
-                            className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4"
+                            className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-6"
                         >
-                            <Link to="/signup" className="group px-8 py-4 bg-white text-black text-base font-black rounded-2xl flex items-center gap-2 hover:bg-emerald-400 transition-all hover:scale-105 active:scale-95 shadow-xl shadow-white/5">
-                                Começar Grátis
-                                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                            <Link to="/signup" className="group meta-btn-primary !px-10 !py-5 !rounded-2xl transition-all shadow-2xl shadow-brand-500/20">
+                                <span className="uppercase tracking-[0.2em] text-xs font-black">Começar Agora</span>
+                                <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform text-surface-950" />
                             </Link>
-                            <button className="flex items-center gap-3 px-8 py-4 bg-gray-900/50 border border-white/10 text-white rounded-2xl hover:bg-gray-800 transition-all">
-                                <Play className="w-5 h-5 fill-current" />
-                                Ver Demonstração
+                            <button className="flex items-center gap-3 px-10 py-5 bg-white/5 border border-white/10 text-white rounded-2xl hover:bg-white/10 transition-all backdrop-blur-xl">
+                                <Play className="w-5 h-5 fill-brand-400 text-brand-400" />
+                                <span className="uppercase tracking-[0.2em] text-[10px] font-black">Ver Protocolo</span>
                             </button>
                         </motion.div>
 
@@ -171,14 +171,14 @@ export default function Home() {
                         ].map((feature, i) => (
                             <motion.div
                                 key={i}
-                                whileHover={{ y: -5 }}
-                                className="p-8 bg-gray-900/40 border border-white/5 rounded-[2rem] hover:bg-gray-900/60 transition-all group"
+                                whileHover={{ y: -10 }}
+                                className="meta-card !p-8 group shadow-none"
                             >
-                                <div className="w-12 h-12 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-400 mb-6 group-hover:bg-emerald-500 group-hover:text-black transition-all">
+                                <div className="w-14 h-14 rounded-2xl bg-brand-500/10 flex items-center justify-center text-brand-400 mb-8 group-hover:bg-brand-500 group-hover:text-surface-950 transition-all duration-500 border border-brand-500/10 group-hover:rotate-6 group-hover:shadow-2xl group-hover:shadow-brand-500/40">
                                     {feature.icon}
                                 </div>
-                                <h3 className="text-xl font-bold mb-3">{feature.title}</h3>
-                                <p className="text-gray-400 text-sm leading-relaxed">{feature.desc}</p>
+                                <h3 className="text-xl font-black mb-4 tracking-tighter text-white">{feature.title}</h3>
+                                <p className="text-gray-500 text-sm leading-relaxed font-medium">{feature.desc}</p>
                             </motion.div>
                         ))}
                     </div>

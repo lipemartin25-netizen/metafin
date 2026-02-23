@@ -3,10 +3,11 @@ import { Routes, Route, useLocation, Navigate, useNavigate } from 'react-router-
 import { trackPageView } from './hooks/useAnalytics';
 import { useAuth } from './contexts/AuthContext';
 import Layout from './components/Layout';
-import ProtectedRoute from './components/ProtectedRoute';
+import { ProtectedRoute } from './components/ProtectedRoute';
 import NpsSurvey from './components/NpsSurvey';
 import OnboardingTour from './components/OnboardingTour';
 import { ErrorBoundary } from './components/ErrorBoundary';
+import { NetworkBanner } from './components/NetworkBanner';
 
 // Lazy Loaded Pages
 const Home = lazy(() => import('./pages/Home'));
@@ -105,11 +106,28 @@ export default function App() {
     localStorage.setItem('sf_nps_done', new Date().toISOString());
   };
 
+  // Handle session expiration from anywhere in the app
+  useEffect(() => {
+    const handleAuthExpired = () => {
+      if (isAuthenticated) {
+        signOut();
+        navigate('/login', { replace: true, state: { from: location.pathname, expired: true } });
+      }
+    };
+    window.addEventListener('auth:expired', handleAuthExpired);
+    window.addEventListener('metafin:session-expired', handleAuthExpired);
+    return () => {
+      window.removeEventListener('auth:expired', handleAuthExpired);
+      window.removeEventListener('metafin:session-expired', handleAuthExpired);
+    };
+  }, [isAuthenticated, signOut, navigate, location.pathname]);
+
   const isAppRoute = location.pathname.startsWith('/app');
 
   return (
     <Suspense fallback={<LoadingFallback />}>
       <ErrorBoundary fallbackMessage="Ocorreu um erro ao carregar a aplicação.">
+        <NetworkBanner />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />

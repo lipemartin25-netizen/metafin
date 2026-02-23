@@ -1,102 +1,70 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import {
-    Send, X, Loader2, Bot,
-    ChevronDown, Sparkles, Lock, RotateCcw, Copy, Check, Wallet, Maximize2, Minimize2
+    Send, X, Bot,
+    ChevronDown, Sparkles, Lock, RotateCcw, Wallet, Maximize2, Minimize2
 } from 'lucide-react';
-import { AI_MODELS, AI_ACTIONS, callAI, buildFinancialContext } from '../lib/aiProviders';
+import { AI_MODELS, AI_ACTIONS } from '../lib/aiProviders';
 import { usePlan } from '../hooks/usePlan';
 import { useTransactions } from '../hooks/useTransactions';
 import { analytics } from '../hooks/useAnalytics';
+import { useAIChat } from '../hooks/useAIChat';
+import { secureStorage } from '../lib/secureStorage';
+import { formatBRL } from '../lib/financialMath';
+import { anonymizeForAI } from '../lib/lgpd';
 
 export default function AiChat() {
     const { isPro, limits } = usePlan();
     const { transactions, summary } = useTransactions();
+    const { messages, isLoading, error: aiError, sendMessage, clearChat } = useAIChat();
 
     const [isOpen, setIsOpen] = useState(false);
-    const [messages, setMessages] = useState([]);
     const [input, setInput] = useState('');
-    const [loading, setLoading] = useState(false);
-    const [selectedModel, setSelectedModel] = useState('gemini-flash');
+    const [selectedModel, setSelectedModel] = useState('gpt-4o-mini');
     const [showModelPicker, setShowModelPicker] = useState(false);
     const [isExpanded, setIsExpanded] = useState(false);
     const [copiedId, setCopiedId] = useState(null);
-    const [error, setError] = useState('');
     const messagesEndRef = useRef(null);
     const inputRef = useRef(null);
 
-    const availableModels = limits?.aiModels || [];
+    const availableModels = limits?.aiModels || ['gpt-4o-mini', 'gemini-flash'];
 
     // Auto scroll
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }, [messages]);
+    }, [messages, isLoading]);
 
     // Focus input when chat opens
     useEffect(() => {
         if (isOpen) inputRef.current?.focus();
     }, [isOpen]);
 
-    const handleSend = async (customPrompt) => {
+    const handleSend = useCallback(async (customPrompt) => {
         const text = customPrompt || input.trim();
-        if (!text || loading) return;
+        if (!text || isLoading) return;
 
-        if (!isPro) return;
-
-        setError('');
-        const userMessage = { id: Date.now(), role: 'user', content: text };
-        setMessages((prev) => [...prev, userMessage]);
-        setInput('');
-        setLoading(true);
+        if (!isPro) {
+            setIsOpen(true);
+            return;
+        }
 
         analytics.featureUsed(`ai_chat_${selectedModel}`);
 
-        try {
-            const adaptedSummary = {
-                income: summary.income || 0,
-                expense: summary.expense || 0,
-                balance: summary.balance || 0,
-                count: transactions.length
-            };
+        // Build context from secure storage or hooks
+        const budgets = secureStorage.get('budgets', []);
+        const goals = secureStorage.get('goals', []);
 
-            const budgets = JSON.parse(localStorage.getItem('sf_budgets') || '[]');
-            const goals = JSON.parse(localStorage.getItem('sf_goals') || '[]');
+        const context = anonymizeForAI(`
+            Contexto: O usuário possui ${transactions.length} transações.
+            Saldo Atual: ${formatBRL(summary.balance || 0)}
+            Receitas: ${formatBRL(summary.income || 0)}
+            Despesas: ${formatBRL(summary.expense || 0)}
+            Metas: ${goals.length} ativas.
+            Orçamentos: ${budgets.length} definidos.
+        `);
 
-            const financialContext = buildFinancialContext(transactions, adaptedSummary, { budgets, goals });
-
-            const chatMessages = [
-                { role: 'system', content: `Você é o MetaFin AI Assistente.\n\n${financialContext}` },
-                ...messages.map((m) => ({ role: m.role, content: m.content })),
-                { role: 'user', content: text },
-            ];
-
-            const response = await callAI(selectedModel, chatMessages);
-
-            const aiMessage = {
-                id: Date.now() + 1,
-                role: 'assistant',
-                content: response.content,
-                model: response.modelName,
-                provider: response.provider,
-                latency: response.latency,
-            };
-
-            setMessages((prev) => [...prev, aiMessage]);
-        } catch (err) {
-            console.error('AI Error:', err);
-            setError(err.message);
-            setMessages((prev) => [
-                ...prev,
-                {
-                    id: Date.now() + 1,
-                    role: 'assistant',
-                    content: `❌ Erro: ${err.message}`,
-                    isError: true,
-                },
-            ]);
-        } finally {
-            setLoading(false);
-        }
-    };
+        await sendMessage(`${context}\n\nPergunta do usuário: ${anonymizeForAI(text)}`, selectedModel);
+        if (!customPrompt) setInput('');
+    }, [input, isLoading, isPro, selectedModel, transactions.length, summary, sendMessage]);
 
     const handleCopy = (text, id) => {
         navigator.clipboard.writeText(text);
@@ -105,8 +73,7 @@ export default function AiChat() {
     };
 
     const handleClear = () => {
-        setMessages([]);
-        setError('');
+        clearChat();
     };
 
     const currentModel = AI_MODELS[selectedModel];
@@ -245,45 +212,56 @@ export default function AiChat() {
                     {/* Messages Area */}
                     <div className="flex-1 overflow-y-auto p-4 space-y-6 custom-scrollbar bg-surface-950">
                         {messages.length === 0 && (
-                            <div className="h-full flex flex-col items-center justify-center text-center px-6">
-                                <div className="w-16 h-16 bg-sky-500/10 rounded-2xl flex items-center justify-center mb-4">
+                            <div className="h-full flex flex-col items-center justify-center text-center px-6 transition-all animate-fade-in">
+                                <div className="w-16 h-16 bg-sky-500/10 rounded-2xl flex items-center justify-center mb-4 border border-sky-500/20 shadow-lg shadow-sky-500/10">
                                     <Bot className="w-8 h-8 text-sky-400" />
                                 </div>
                                 <h3 className="text-white font-bold text-lg mb-2">Olá, eu sou o MetaFin AI</h3>
                                 <p className="text-gray-500 text-sm mb-8">Como posso ajudar com suas finanças hoje?</p>
                                 <div className="grid grid-cols-1 gap-2 w-full">
-                                    {Object.entries(AI_ACTIONS).slice(0, 3).map(([key, action]) => (
+                                    {Object.entries(AI_ACTIONS).map(([key, action]) => (
                                         <button
                                             key={key}
-                                            onClick={() => handleSend(action.prompt)}
-                                            className="p-3 bg-white/5 border border-white/5 rounded-xl text-xs text-gray-300 hover:bg-sky-500/10 hover:border-sky-500/50 transition-all text-left font-medium"
+                                            onClick={() => handleSend(action.label)}
+                                            className="p-3 bg-white/5 border border-white/5 rounded-xl text-xs text-gray-300 hover:bg-sky-500/10 hover:border-sky-500/50 transition-all text-left font-medium group"
                                         >
-                                            {action.label}
+                                            <span className="group-hover:translate-x-1 inline-block transition-transform">{action.label}</span>
                                         </button>
                                     ))}
                                 </div>
                             </div>
                         )}
 
-                        {messages.map((msg) => (
-                            <div key={msg.id} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                        {messages.map((msg, idx) => (
+                            <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'} animate-slide-up`}>
                                 <div className={`max-w-[85%] ${msg.role === 'user' ? 'bg-sky-600 text-white rounded-2xl rounded-tr-none px-4 py-3 shadow-lg shadow-sky-900/20' : 'bg-surface-800 text-gray-200 rounded-2xl rounded-tl-none px-4 py-3 border border-white/5'}`}>
                                     <div className="text-sm leading-relaxed whitespace-pre-wrap">{msg.content}</div>
                                     <div className="mt-2 flex items-center justify-between opacity-50 text-[9px] font-bold uppercase tracking-wider">
-                                        <span>{msg.role === 'user' ? 'Você' : msg.model}</span>
+                                        <span>{msg.role === 'user' ? 'Você' : 'MetaFin AI'}</span>
                                         {msg.role === 'assistant' && (
-                                            <button onClick={() => handleCopy(msg.content, msg.id)} className="hover:text-white transition-colors">
-                                                {copiedId === msg.id ? 'Copiado!' : 'Copiar'}
+                                            <button onClick={() => handleCopy(msg.content, idx)} className="hover:text-white transition-colors">
+                                                {copiedId === idx ? 'Copiado!' : 'Copiar'}
                                             </button>
                                         )}
                                     </div>
                                 </div>
                             </div>
                         ))}
-                        {loading && (
-                            <div className="flex justify-start">
-                                <div className="bg-surface-800 rounded-2xl rounded-tl-none px-6 py-4 border border-white/5">
-                                    <Loader2 className="w-5 h-5 text-sky-400 animate-spin" />
+
+                        {aiError && (
+                            <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-red-400 text-xs animate-shake">
+                                🚨 {aiError}
+                            </div>
+                        )}
+
+                        {isLoading && (
+                            <div className="flex justify-start animate-pulse">
+                                <div className="bg-surface-800 rounded-2xl rounded-tl-none px-6 py-4 border border-white/5 border-sky-500/30">
+                                    <div className="flex gap-1">
+                                        <div className="w-1.5 h-1.5 bg-sky-400 rounded-full animate-bounce [animation-delay:-0.3s]" />
+                                        <div className="w-1.5 h-1.5 bg-sky-400 rounded-full animate-bounce [animation-delay:-0.15s]" />
+                                        <div className="w-1.5 h-1.5 bg-sky-400 rounded-full animate-bounce" />
+                                    </div>
                                 </div>
                             </div>
                         )}
@@ -302,12 +280,12 @@ export default function AiChat() {
                                 value={input}
                                 onChange={(e) => setInput(e.target.value)}
                                 placeholder="Pergunte qualquer coisa sobre seu dinheiro..."
-                                className="w-full bg-surface-800 border border-white/10 rounded-2xl pl-4 pr-14 py-3 text-sm text-white focus:outline-none focus:border-sky-500 transition-all placeholder:text-gray-600"
+                                className="w-full bg-surface-800 border border-white/10 rounded-2xl pl-4 pr-14 py-3.5 text-sm text-white focus:outline-none focus:border-sky-500 transition-all placeholder:text-gray-600 shadow-inner"
                             />
                             <button
                                 type="submit"
-                                disabled={loading || !input.trim()}
-                                className="absolute right-2 p-2 bg-sky-500 text-white rounded-xl hover:bg-sky-400 disabled:opacity-30 transition-all"
+                                disabled={isLoading || !input.trim()}
+                                className="absolute right-2 p-2 bg-sky-500 text-white rounded-xl hover:bg-sky-400 disabled:opacity-30 disabled:grayscale transition-all shadow-lg active:scale-95"
                             >
                                 <Send className="w-4 h-4" />
                             </button>

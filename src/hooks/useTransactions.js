@@ -2,20 +2,17 @@ import { useState, useEffect, useCallback } from 'react';
 import { db, isSupabaseConfigured } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import initialData from '../data/data.json';
+import { secureStorage } from '../lib/secureStorage';
+import { add, sumTransactions } from '../lib/financialMath';
 
-const STORAGE_KEY = 'sf_transactions';
+const STORAGE_KEY = 'transactions';
 
 function getLocalTransactions() {
-    try {
-        const stored = localStorage.getItem(STORAGE_KEY);
-        return stored ? JSON.parse(stored) : null;
-    } catch {
-        return null;
-    }
+    return secureStorage.get(STORAGE_KEY);
 }
 
 function saveLocalTransactions(transactions) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(transactions));
+    secureStorage.set(STORAGE_KEY, transactions);
 }
 
 export function useTransactions() {
@@ -73,7 +70,7 @@ export function useTransactions() {
                 id: crypto.randomUUID(),
                 date: transaction.date,
                 description: transaction.description,
-                amount: parseFloat(transaction.amount),
+                amount: parseFloat(transaction.amount), // Mantendo float para compatibilidade, toCents valida o valor
                 category: transaction.category,
                 type: transaction.type || (transaction.amount >= 0 ? 'income' : 'expense'),
                 status: transaction.status || 'categorized',
@@ -205,24 +202,24 @@ export function useTransactions() {
 
     // ========== COMPUTED ==========
     const summary = {
-        totalIncome: transactions
-            .filter((t) => t.type === 'income')
-            .reduce((sum, t) => sum + Math.abs(t.amount), 0),
-        totalExpenses: transactions
-            .filter((t) => t.type === 'expense')
-            .reduce((sum, t) => sum + Math.abs(t.amount), 0),
+        income: sumTransactions(transactions.filter(t => t.type === 'income')),
+        expense: sumTransactions(transactions.filter(t => t.type === 'expense')),
         get balance() {
-            return this.totalIncome - this.totalExpenses;
+            return add(this.income, -this.expense);
         },
         count: transactions.length,
         categorySummary: transactions.reduce((acc, t) => {
             const key = t.category;
             if (!acc[key]) acc[key] = { total: 0, count: 0, type: t.type };
-            acc[key].total += Math.abs(t.amount);
+            acc[key].total = add(acc[key].total, Math.abs(t.amount));
             acc[key].count += 1;
             return acc;
         }, {}),
     };
+
+    // Aliases for compatibility
+    summary.totalIncome = summary.income;
+    summary.totalExpenses = summary.expense;
 
     return {
         transactions,

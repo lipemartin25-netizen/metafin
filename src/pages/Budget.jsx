@@ -2,6 +2,8 @@ import { useState, useEffect, useMemo } from 'react';
 import { useTransactions } from '../hooks/useTransactions';
 import { PiggyBank, Plus, X, AlertTriangle, CheckCircle, Edit3, Trash2 } from 'lucide-react';
 import categoriesData from '../data/data.json';
+import { CurrencyInput } from '../components/CurrencyInput';
+import { secureStorage } from '../lib/secureStorage';
 
 const categoryConfig = categoriesData.categories;
 
@@ -17,17 +19,20 @@ export default function Budget() {
     const [form, setForm] = useState({ category: '', limit: '' });
 
     useEffect(() => {
-        const s = localStorage.getItem('sf_budgets');
-        if (s) setBudgets(JSON.parse(s));
+        const data = secureStorage.get('budgets', []);
+        setBudgets(data);
     }, []);
 
-    const save = (b) => { setBudgets(b); localStorage.setItem('sf_budgets', JSON.stringify(b)); };
+    const save = (b) => {
+        setBudgets(b);
+        secureStorage.set('budgets', b);
+    };
 
     // Current month spending by category
     const currentMonth = new Date().toISOString().slice(0, 7);
     const spending = useMemo(() => {
         const result = {};
-        transactions.filter(t => t.type === 'expense' && t.date.startsWith(currentMonth)).forEach(t => {
+        transactions.filter(t => t.type === 'expense' && t.date?.startsWith(currentMonth)).forEach(t => {
             const cat = t.category || 'outros';
             result[cat] = (result[cat] || 0) + Math.abs(t.amount);
         });
@@ -36,28 +41,34 @@ export default function Budget() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+
+        const limitValue = typeof form.limit === 'string'
+            ? parseFloat(form.limit.replace(/\./g, '').replace(',', '.'))
+            : form.limit;
+
         const budget = {
             id: editId || Date.now().toString(),
             category: form.category,
-            limit: parseFloat(form.limit.replace(/\./g, '').replace(',', '.')) || 500,
+            limit: limitValue || 0,
+            savedAt: Date.now()
         };
 
         if (editId) {
             save(budgets.map(b => b.id === editId ? budget : b));
         } else {
             if (budgets.some(b => b.category === form.category)) {
-                alert('Ja existe um orcamento para esta categoria!');
+                alert('Já existe um orçamento para esta categoria!');
                 return;
             }
             save([...budgets, budget]);
         }
-        setForm({ category: '', limit: '' });
+        setForm({ category: '', limit: 0 });
         setShowAdd(false);
         setEditId(null);
     };
 
     const handleEdit = (budget) => {
-        setForm({ category: budget.category, limit: budget.limit.toString() });
+        setForm({ category: budget.category, limit: budget.limit });
         setEditId(budget.id);
         setShowAdd(true);
     };
@@ -204,8 +215,13 @@ export default function Budget() {
                         </div>
 
                         <div>
-                            <label className="text-[10px] text-gray-500 uppercase font-bold">Limite Mensal (R$)</label>
-                            <input value={form.limit} onChange={e => setForm({ ...form, limit: e.target.value })} className="w-full bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-gray-900 dark:text-white text-sm outline-none mt-1" placeholder="500,00" />
+                            <label className="text-[10px] text-gray-500 uppercase font-bold">Limite Mensal</label>
+                            <CurrencyInput
+                                value={form.limit}
+                                onChange={val => setForm({ ...form, limit: val })}
+                                placeholder="0,00"
+                                className="mt-1"
+                            />
                         </div>
 
                         {form.category && spending[form.category] > 0 && (

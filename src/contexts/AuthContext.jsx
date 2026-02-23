@@ -12,30 +12,56 @@ export function AuthProvider({ children }) {
     useEffect(() => {
         isMounted.current = true;
 
-        if (!isSupabaseConfigured) {
-            setLoading(false);
-            return;
-        }
-
-        supabase.auth.getSession().then(({ data: { session } }) => {
-            if (isMounted.current) {
-                setUser(session?.user ?? null);
-                setLoading(false);
-            }
-        });
-
-        const { data: { subscription } } = supabase.auth.onAuthStateChange(
-            (_event, session) => {
-                if (isMounted.current) {
-                    setUser(session?.user ?? null);
-                    setIsDemo(false);
+        const initAuth = async () => {
+            // Priority 1: Supabase Session
+            if (isSupabaseConfigured) {
+                const { data: { session } } = await supabase.auth.getSession();
+                if (isMounted.current && session) {
+                    setUser(session.user);
+                    setLoading(false);
+                    return;
                 }
             }
-        );
+
+            // Priority 2: Custom HMAC Token (mf_auth_token)
+            const backupToken = localStorage.getItem('mf_auth_token');
+            if (backupToken && isMounted.current) {
+                try {
+                    // Decodifica parte do payload (userId.timestamp.sig)
+                    const payload = backupToken.split('.')[0];
+                    if (payload) {
+                        setUser({
+                            id: payload,
+                            email: payload.includes('@') ? payload : `${payload}@metafin.internal`,
+                            is_custom: true
+                        });
+                    }
+                } catch (_e) {
+                    localStorage.removeItem('mf_auth_token');
+                }
+            }
+
+            if (isMounted.current) setLoading(false);
+        };
+
+        initAuth();
+
+        let subscription = null;
+        if (isSupabaseConfigured) {
+            const { data } = supabase.auth.onAuthStateChange(
+                (_event, session) => {
+                    if (isMounted.current) {
+                        setUser(session?.user ?? null);
+                        if (session?.user) setIsDemo(false);
+                    }
+                }
+            );
+            subscription = data.subscription;
+        }
 
         return () => {
             isMounted.current = false;
-            subscription.unsubscribe();
+            if (subscription) subscription.unsubscribe();
         };
     }, []);
 
@@ -119,6 +145,9 @@ export function AuthProvider({ children }) {
     }, []);
 
     const signOut = useCallback(async () => {
+        // Limpa token customizado se existir
+        localStorage.removeItem('mf_auth_token');
+
         if (isDemo || !isSupabaseConfigured) {
             setUser(null);
             setIsDemo(false);
@@ -127,6 +156,20 @@ export function AuthProvider({ children }) {
         await supabase.auth.signOut();
         setUser(null);
     }, [isDemo]);
+
+    const loginWithToken = useCallback((token) => {
+        localStorage.setItem('mf_auth_token', token);
+        const payload = token.split('.')[0];
+        if (payload) {
+            setUser({
+                id: payload,
+                email: payload.includes('@') ? payload : `${payload}@metafin.internal`,
+                is_custom: true
+            });
+            return true;
+        }
+        return false;
+    }, []);
 
     const value = {
         user,
@@ -137,6 +180,7 @@ export function AuthProvider({ children }) {
         signUp,
         signInWithGoogle,
         signOut,
+        loginWithToken,
         requestPasswordReset,
         updateEmail,
         getMfaFactors,

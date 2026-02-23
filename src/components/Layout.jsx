@@ -7,7 +7,10 @@ export default function Layout() {
     const [mobileOpen, setMobileOpen] = useState(false);
 
     return (
-        <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex">
+        <div className="min-h-screen bg-bg-deep transition-colors duration-500 flex">
+            {/* Mesh Background for depth */}
+            <div className="mesh-bg" />
+
             {/* Sidebar */}
             <Sidebar
                 collapsed={collapsed}

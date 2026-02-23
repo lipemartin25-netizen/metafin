@@ -3,6 +3,7 @@ import { Target, Plus, Trash2, X, Sparkles, Loader2, RefreshCw } from 'lucide-re
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import GoalThermometer from '../components/GoalThermometer';
+import { CurrencyInput } from '../components/CurrencyInput';
 
 function fmt(v) {
     return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v);
@@ -52,16 +53,20 @@ export default function Goals() {
         setSaving(true);
 
         try {
+            const targetVal = typeof form.target === 'string' ? parseFloat(form.target.replace(/\./g, '').replace(',', '.')) : form.target;
+            const currentVal = typeof form.current === 'string' ? parseFloat(form.current.replace(/\./g, '').replace(',', '.')) : form.current;
+            const contributionVal = typeof form.monthlyContribution === 'string' ? parseFloat(form.monthlyContribution.replace(/\./g, '').replace(',', '.')) : form.monthlyContribution;
+
             const payload = {
                 user_id: user.id,
                 name: form.name || 'Nova Meta',
-                target_amount: parseFloat(form.target.replace(/\./g, '').replace(',', '.')) || 1000,
-                current_amount: parseFloat(form.current.replace(/\./g, '').replace(',', '.')) || 0,
+                target_amount: targetVal || 0,
+                current_amount: currentVal || 0,
                 icon: form.icon,
                 color: form.color,
                 category: form.category,
                 target_date: form.deadline || null,
-                monthly_contribution: parseFloat(form.monthlyContribution.replace(/\./g, '').replace(',', '.')) || 0,
+                monthly_contribution: contributionVal || 0,
             };
 
             if (editId) {
@@ -272,19 +277,31 @@ export default function Goals() {
 
                         <div className="grid grid-cols-2 gap-4 pt-2">
                             <div>
-                                <label className="text-[10px] text-gray-400 uppercase font-black tracking-widest block mb-1">Alvo (R$)</label>
-                                <input required value={form.target} onChange={e => setForm({ ...form, target: e.target.value })} className="w-full bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 text-gray-900 dark:text-white text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" placeholder="10.000,00" />
+                                <label className="text-[10px] text-gray-400 uppercase font-black tracking-widest block mb-1">Alvo</label>
+                                <CurrencyInput
+                                    value={form.target}
+                                    onChange={val => setForm({ ...form, target: val })}
+                                    placeholder="0,00"
+                                />
                             </div>
                             <div>
-                                <label className="text-[10px] text-gray-400 uppercase font-black tracking-widest block mb-1">Já Guardou (R$)</label>
-                                <input value={form.current} onChange={e => setForm({ ...form, current: e.target.value })} className="w-full bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 text-gray-900 dark:text-white text-sm outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500" placeholder="0,00" />
+                                <label className="text-[10px] text-gray-400 uppercase font-black tracking-widest block mb-1">Já Guardou</label>
+                                <CurrencyInput
+                                    value={form.current}
+                                    onChange={val => setForm({ ...form, current: val })}
+                                    placeholder="0,00"
+                                />
                             </div>
                         </div>
 
                         <div className="grid grid-cols-2 gap-4">
                             <div>
-                                <label className="text-[10px] text-gray-400 uppercase font-black tracking-widest block mb-1">Aporte Mensal (R$)</label>
-                                <input required value={form.monthlyContribution} onChange={e => setForm({ ...form, monthlyContribution: e.target.value })} className="w-full bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 text-gray-900 dark:text-white text-sm outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500" placeholder="500,00" />
+                                <label className="text-[10px] text-gray-400 uppercase font-black tracking-widest block mb-1">Aporte Mensal</label>
+                                <CurrencyInput
+                                    value={form.monthlyContribution}
+                                    onChange={val => setForm({ ...form, monthlyContribution: val })}
+                                    placeholder="0,00"
+                                />
                             </div>
                             <div>
                                 <label className="text-[10px] text-gray-400 uppercase font-black tracking-widest block mb-1">Prazo (opcional)</label>

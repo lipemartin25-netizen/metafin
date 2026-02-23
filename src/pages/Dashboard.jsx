@@ -10,7 +10,6 @@ import {
     ArrowDownRight,
     Loader2,
     Sparkles,
-    Calendar,
     ChevronRight,
     Target,
     Landmark,
@@ -33,58 +32,58 @@ import { useTheme } from '../contexts/ThemeContext';
 import ProGate from '../components/ProGate';
 import XRayDiagnosis from '../components/XRayDiagnosis';
 import SmartReconciliation from '../components/SmartReconciliation';
+import { secureStorage } from '../lib/secureStorage';
+import { add, toCents, fromCents, formatBRL as fmt } from '../lib/financialMath';
 
 const categoryConfig = categoriesData.categories;
 
-function fmt(value) {
-    return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
-}
-
-// Componente de Card de Resumo (Estilo Mobills)
+// Componente de Card de Resumo (Estilo MetaFin Premium)
 function SummaryCard({ title, value, type, icon: Icon, trend }) {
-    let iconColor = 'text-accent dark:text-accent border-accent/20';
-    let bgColor = 'bg-accent/10';
-    let gradient = 'from-green-400 to-accent';
-    let shadow = 'group-hover:shadow-[0_0_20px_rgba(57,255,20,0.2)]';
+    let accentColor = 'from-emerald-400 to-cyan-500';
+    let iconBg = 'bg-emerald-500/10 text-emerald-400';
+    let glow = 'group-hover:shadow-emerald-500/20';
 
     if (type === 'expense') {
-        iconColor = 'text-pink-600 dark:text-pink-400 border-pink-500/20';
-        bgColor = 'bg-pink-500/10';
-        gradient = 'from-pink-500 to-fuchsia-600';
-        shadow = 'group-hover:shadow-[0_0_20px_rgba(236,72,153,0.2)]';
+        accentColor = 'from-rose-500 to-pink-600';
+        iconBg = 'bg-rose-500/10 text-rose-400';
+        glow = 'group-hover:shadow-rose-500/20';
     } else if (type === 'balance') {
-        iconColor = 'text-brand-600 dark:text-brand-400 border-brand-500/20';
-        bgColor = 'bg-brand-500/10';
-        gradient = 'from-brand-400 to-brand-600';
-        shadow = 'group-hover:shadow-[0_0_20px_rgba(6,182,212,0.3)]';
+        accentColor = 'from-brand-400 to-brand-600';
+        iconBg = 'bg-brand-500/10 text-brand-400';
+        glow = 'group-hover:shadow-brand-500/20';
     }
 
     return (
-        <div className={`glass-card relative overflow-hidden group hover:translate-y-[-2px] transition-all duration-300 border border-transparent hover:border-white/10 ${shadow}`}>
-            {/* Background Blob */}
-            <div className={`absolute -right-6 -top-6 w-24 h-24 rounded-full blur-2xl opacity-30 ${bgColor}`} />
+        <div className={`meta-card group hover:translate-y-[-4px] transition-all duration-500 ${glow}`}>
+            {/* Ambient Background Glow */}
+            <div className={`absolute -right-10 -top-10 w-32 h-32 rounded-full blur-3xl opacity-20 bg-gradient-to-br ${accentColor}`} />
 
             <div className="relative z-10">
-                <div className="flex items-center justify-between mb-4">
-                    <div className={`p-2.5 rounded-xl ${bgColor} border border-transparent dark:border-white/5`}>
-                        <Icon className={`w-5 h-5 ${iconColor}`} />
+                <div className="flex items-center justify-between mb-6">
+                    <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${iconBg} border border-white/5 shadow-inner`}>
+                        <Icon className="w-6 h-6" />
                     </div>
                     {trend !== null && trend !== undefined && (
-                        <span className={`text-xs font-medium px-2 py-1 rounded-lg ${trend >= 0
-                            ? 'text-emerald-700 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-500/10'
-                            : 'text-red-700 dark:text-red-400 bg-red-100 dark:bg-red-500/10'
-                            }`}>
-                            {trend > 0 ? '+' : ''}{trend}%
-                        </span>
+                        <div className={`flex flex-col items-end`}>
+                            <span className={`text-[10px] font-black uppercase tracking-widest opacity-50 mb-1`}>Mensal</span>
+                            <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${trend >= 0
+                                ? 'text-emerald-400 bg-emerald-500/10'
+                                : 'text-rose-400 bg-rose-500/10'
+                                }`}>
+                                {trend > 0 ? '↑' : '↓'} {Math.abs(trend)}%
+                            </span>
+                        </div>
                     )}
                 </div>
 
-                <h3 className="text-gray-500 dark:text-gray-400 text-sm font-medium mb-1">{title}</h3>
-                <p className="text-2xl font-bold text-gray-900 dark:text-white tracking-tight">{fmt(value)}</p>
+                <h3 className="text-gray-500 dark:text-gray-400 text-xs font-black uppercase tracking-widest mb-2">{title}</h3>
+                <p className="text-3xl font-black text-white tracking-tighter mb-4">
+                    {fmt(value)}
+                </p>
 
-                <div className="mt-4 h-1.5 w-full bg-gray-200 dark:bg-surface-700/50 rounded-full overflow-hidden">
+                <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
                     <div
-                        className={`h-full rounded-full bg-gradient-to-r ${gradient} opacity-80 transition-all duration-700`}
+                        className={`h-full rounded-full bg-gradient-to-r ${accentColor} transition-all duration-1000 shadow-[0_0_10px_rgba(0,0,0,0.5)]`}
                         style={{ width: `${Math.min(Math.max(Math.abs(trend || 50), 10), 100)}%` }}
                     />
                 </div>
@@ -104,11 +103,11 @@ export default function Dashboard() {
 
     useEffect(() => {
         analytics.dashboardViewed();
-        const s = localStorage.getItem('sf_bills');
-        if (s) setBills(JSON.parse(s));
+        const billsData = secureStorage.get('bills', []);
+        setBills(billsData);
 
-        // Check if X-Ray is needed (no score in localStorage)
-        const hasScore = localStorage.getItem('sf_xray_latest');
+        // Check if X-Ray is needed (no score in secureStorage)
+        const hasScore = secureStorage.get('xray_latest');
         if (!hasScore) {
             setShowXRay(true);
         }
@@ -158,12 +157,11 @@ export default function Dashboard() {
         return { incomeTrend, expenseTrend, balanceTrend };
     }, [transactions]);
 
-    // Metas dinâmicas (persistidas em localStorage)
+    // Metas dinâmicas (persistidas em secureStorage)
     const goals = useMemo(() => {
-        const stored = localStorage.getItem('sf_goals');
-        if (stored) {
-            try { return JSON.parse(stored); } catch { /* ignore */ }
-        }
+        const stored = secureStorage.get('goals');
+        if (stored) return stored;
+
         const defaults = [
             { id: 1, name: t('vacation') || 'Viagem', target: 5000, current: 2500, color: 'bg-blue-500' },
             { id: 2, name: t('emergency_fund') || 'Segurança', target: 10000, current: 1200, color: 'bg-brand-500' },
@@ -173,17 +171,17 @@ export default function Dashboard() {
 
     // NetWorth Calculado (Puxando de accounts + invest + carts)
     const netWorth = useMemo(() => {
-        const accounts = JSON.parse(localStorage.getItem('sf_bank_accounts') || '[]');
-        const brokers = JSON.parse(localStorage.getItem('sf_connected_brokers') || '[]');
-        const cards = JSON.parse(localStorage.getItem('sf_credit_cards') || '[]');
+        const accounts = secureStorage.get('bank_accounts', []);
+        const brokers = secureStorage.get('connected_brokers', []);
+        const cards = secureStorage.get('credit_cards', []);
 
-        const totalAccounts = accounts.reduce((s, a) => s + (parseFloat(a.balance) || 0), 0);
-        const totalInvestments = brokers.reduce((s, b) => s + (b.totalValue || 0), 0);
-        const totalCardDebt = cards.reduce((s, c) => s + (c.used || 0), 0);
+        const totalAccountsCents = accounts.reduce((s, a) => s + toCents(a.balance), 0);
+        const totalInvestmentsCents = brokers.reduce((s, b) => s + toCents(b.totalValue), 0);
+        const totalCardDebtCents = cards.reduce((s, c) => s + toCents(c.used), 0);
 
-        const assets = totalAccounts + totalInvestments + Math.max(summary.balance, 0);
-        const liabilities = totalCardDebt;
-        return assets - liabilities;
+        const assets = add(fromCents(totalAccountsCents + totalInvestmentsCents), Math.max(summary.balance, 0));
+        const liabilities = fromCents(totalCardDebtCents);
+        return add(assets, -liabilities);
     }, [summary]);
 
     // Preparar dados para o gráfico principal histórico
@@ -252,28 +250,28 @@ export default function Dashboard() {
             {/* Header Section */}
             <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+                    <h1 className="text-4xl font-black meta-gradient-text mb-2 py-1">
                         {t('overview')}
                     </h1>
-                    <p className="text-gray-500 dark:text-gray-400 flex items-center gap-2">
-                        <Calendar className="w-4 h-4" />
-                        <span>Resumo Financeiro e Projeções</span>
+                    <p className="text-gray-500 dark:text-gray-400 flex items-center gap-2 font-medium">
+                        <Activity className="w-4 h-4 text-brand-500" />
+                        <span>Sincronização de Dados • {new Date().toLocaleDateString()}</span>
                     </p>
                 </div>
 
                 <div className="flex items-center gap-3">
-                    {localStorage.getItem('sf_xray_latest') && (
+                    {secureStorage.get('xray_latest') && (
                         <button
                             onClick={() => setShowXRay(true)}
-                            className="glass-card !p-2 !rounded-xl !border-transparent !bg-emerald-500/10 hover:!bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center gap-2 group transition-all"
+                            className="meta-glass !p-2 !rounded-2xl !bg-emerald-500/5 hover:!bg-emerald-500/10 text-emerald-400 flex items-center justify-center gap-2 group transition-all border-emerald-500/20"
                         >
                             <div className="text-right mr-1">
-                                <p className="text-[10px] uppercase font-bold text-emerald-500/70">Health Score</p>
+                                <p className="text-[10px] uppercase font-black text-emerald-500/50 leading-none">Health</p>
                                 <p className="text-sm font-bold tracking-tight">
-                                    {JSON.parse(localStorage.getItem('sf_xray_latest')).score}/100
+                                    {secureStorage.get('xray_latest').score}/100
                                 </p>
                             </div>
-                            <div className="p-1.5 bg-emerald-500/20 rounded-lg group-hover:bg-emerald-500/30 transition-colors">
+                            <div className="p-2 bg-emerald-500/20 rounded-xl group-hover:scale-110 transition-transform">
                                 <Activity className="w-4 h-4" />
                             </div>
                         </button>
@@ -281,13 +279,13 @@ export default function Dashboard() {
 
                     <Link
                         to="/app/networth"
-                        className="glass-card !p-2 !rounded-xl !border-transparent !bg-indigo-500/10 hover:!bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 flex items-center justify-center gap-2 group transition-all"
+                        className="meta-glass !p-2 !rounded-2xl !bg-brand-500/5 hover:!bg-brand-500/10 text-brand-400 flex items-center justify-center gap-2 group transition-all border-brand-500/20"
                     >
                         <div className="text-right mr-1">
-                            <p className="text-[10px] uppercase font-bold text-indigo-500/70">{t('net_worth') || 'Patrimônio'}</p>
+                            <p className="text-[10px] uppercase font-black text-brand-500/50 leading-none">{t('net_worth') || 'Patrimônio'}</p>
                             <p className="text-sm font-bold tracking-tight">{fmt(netWorth)}</p>
                         </div>
-                        <div className="p-1.5 bg-indigo-500/20 rounded-lg group-hover:bg-indigo-500/30 transition-colors">
+                        <div className="p-2 bg-brand-500/20 rounded-xl group-hover:scale-110 transition-transform text-white">
                             <Landmark className="w-4 h-4" />
                         </div>
                     </Link>
@@ -295,10 +293,10 @@ export default function Dashboard() {
                     <ProGate feature="aiInsights">
                         <Link
                             to="/app/advisor"
-                            className="bg-brand-500/10 hover:bg-brand-500/20 text-brand-600 dark:text-brand-400 border border-brand-500/30 hover:border-brand-400 px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-2 transition-all group shadow-[0_0_15px_rgba(6,182,212,0.15)] hover:shadow-[0_0_20px_rgba(6,182,212,0.4)]"
+                            className="meta-btn-primary !px-5 !py-2.5 !rounded-2xl meta-glow-brand"
                         >
-                            <Sparkles className="w-4 h-4 group-hover:scale-110 transition-transform text-white drop-shadow-[0_0_5px_rgba(255,255,255,0.8)]" />
-                            <span className="uppercase tracking-widest text-xs font-black">{t('ai_insights') || 'Insights de IA'}</span>
+                            <Sparkles className="w-4 h-4 text-white animate-pulse" />
+                            <span className="uppercase tracking-widest text-[10px] font-black">{t('ai_insights') || 'Insights IA'}</span>
                         </Link>
                     </ProGate>
                 </div>
@@ -333,20 +331,20 @@ export default function Dashboard() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
                 {/* Main Dynamic Chart Section */}
-                <div className="lg:col-span-2 glass-card p-6 flex flex-col h-[400px]">
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-4">
+                <div className="lg:col-span-2 meta-card p-6 flex flex-col h-[400px]">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4">
                         <div>
-                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
-                                {chartMode === 'history' ? <Activity className="w-5 h-5 text-brand-500" /> : <LineChartIcon className="w-5 h-5 text-indigo-500" />}
-                                {chartMode === 'history' ? 'Fluxo Histórico (14d)' : 'Previsão de Saldo Mínimo (90d)'}
+                            <h3 className="text-xl font-black text-white flex items-center gap-2 tracking-tight">
+                                {chartMode === 'history' ? <Activity className="w-5 h-5 text-emerald-400" /> : <LineChartIcon className="w-5 h-5 text-brand-400" />}
+                                {chartMode === 'history' ? 'Fluxo de Caixa' : 'Projeção Patrimonial'}
                             </h3>
-                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                                {chartMode === 'history' ? t('income_vs_expenses') : 'Inteligência conectada a Contas, Assinaturas e Velocidade de Gastos'}
+                            <p className="text-[10px] text-gray-400 font-black uppercase tracking-widest mt-1">
+                                {chartMode === 'history' ? 'Últimos 14 dias de atividade' : 'Inteligência preditiva MetaFin'}
                             </p>
                         </div>
-                        <div className="flex gap-1.5 bg-gray-100 dark:bg-black/20 p-1 rounded-xl w-min">
-                            <button onClick={() => setChartMode('history')} className={`px-4 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all whitespace-nowrap ${chartMode === 'history' ? 'bg-white dark:bg-surface-800 shadow shadow-black/5 text-gray-900 dark:text-white' : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'}`}>Passado</button>
-                            <button onClick={() => setChartMode('forecast')} className={`px-4 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all whitespace-nowrap ${chartMode === 'forecast' ? 'bg-indigo-500/20 text-indigo-500 shadow-[0_0_10px_-3px_rgba(99,102,241,0.2)]' : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'}`}>Previsão</button>
+                        <div className="flex gap-1.5 bg-white/5 p-1 rounded-2xl w-min border border-white/5">
+                            <button onClick={() => setChartMode('history')} className={`px-5 py-2 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all whitespace-nowrap ${chartMode === 'history' ? 'bg-white text-surface-950 shadow-lg' : 'text-gray-500 hover:text-white'}`}>Passado</button>
+                            <button onClick={() => setChartMode('forecast')} className={`px-5 py-2 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all whitespace-nowrap ${chartMode === 'forecast' ? 'bg-brand-500 text-white shadow-lg shadow-brand-500/20' : 'text-gray-500 hover:text-white'}`}>Futuro</button>
                         </div>
                     </div>
 
@@ -411,27 +409,34 @@ export default function Dashboard() {
                 {/* Right Column: Planning & Quick Actions */}
                 <div className="space-y-6">
                     {/* Widget de Conciliação Inteligente */}
-                    <SmartReconciliation />
+                    <div className="meta-card !p-0 overflow-hidden">
+                        <SmartReconciliation />
+                    </div>
 
                     {/* Objetivos / Planejamento Rápido */}
-                    <div className="glass-card p-6">
-                        <div className="flex items-center justify-between mb-4">
-                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
-                                <Target className="w-5 h-5 text-blue-500" />
-                                {t('planning') || 'Metas e Alvos'}
+                    <div className="meta-card p-6">
+                        <div className="flex items-center justify-between mb-6">
+                            <h3 className="text-lg font-black text-white flex items-center gap-2">
+                                <Target className="w-5 h-5 text-brand-500" />
+                                {t('planning') || 'Metas Proativas'}
                             </h3>
                         </div>
 
-                        <div className="space-y-4">
+                        <div className="space-y-6">
                             {goals.map((goal) => (
-                                <div key={goal.id} className="space-y-2">
-                                    <div className="flex justify-between text-xs">
-                                        <span className="text-gray-500 dark:text-gray-300 font-medium">{goal.name}</span>
-                                        <span className="text-gray-900 dark:text-white font-bold">{fmt(goal.current)} / {fmt(goal.target)}</span>
+                                <div key={goal.id} className="space-y-3">
+                                    <div className="flex justify-between items-end">
+                                        <div className="flex flex-col">
+                                            <span className="text-[10px] text-gray-500 font-black uppercase tracking-widest">{goal.name}</span>
+                                            <span className="text-sm font-bold text-white tracking-tight">{fmt(goal.current)}</span>
+                                        </div>
+                                        <span className="text-[10px] font-black text-brand-400 bg-brand-500/10 px-2 py-0.5 rounded-full border border-brand-500/20">
+                                            {Math.round((goal.current / goal.target) * 100)}%
+                                        </span>
                                     </div>
-                                    <div className="h-2 w-full bg-gray-200 dark:bg-surface-700/50 rounded-full overflow-hidden">
+                                    <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden border border-white/5 shadow-inner">
                                         <div
-                                            className={`h-full ${goal.color} rounded-full transition-all duration-700 shadow-inner`}
+                                            className={`h-full ${goal.color.replace('bg-', 'bg-gradient-to-r from-')} to-white/20 rounded-full transition-all duration-1000 shadow-[0_0_10px_rgba(0,0,0,0.5)]`}
                                             style={{ width: `${Math.min((goal.current / goal.target) * 100, 100)}%` }}
                                         />
                                     </div>
@@ -439,41 +444,47 @@ export default function Dashboard() {
                             ))}
                         </div>
 
-                        <Link to="/app/financial-health" className="w-full block mt-5 py-2.5 rounded-xl border border-dashed text-center border-gray-300 dark:border-white/20 text-gray-500 dark:text-gray-400 text-sm font-bold hover:text-brand-600 dark:hover:text-brand-400 hover:border-brand-500 hover:bg-brand-50 dark:hover:bg-brand-500/10 transition-all">
-                            Adequar Orçamentos
+                        <Link to="/app/goals" className="w-full block mt-8 py-3 rounded-2xl border border-white/5 text-center bg-white/5 text-gray-400 text-[10px] font-black uppercase tracking-[0.2em] hover:text-white hover:bg-white/10 hover:border-white/10 transition-all">
+                            Gerenciar Todas as Metas
                         </Link>
                     </div>
 
                     {/* Quick Access List (Recent Transactions Mini) */}
-                    <div className="glass-card p-0 overflow-hidden flex flex-col h-[200px]">
-                        <div className="px-5 py-4 border-b border-gray-100 dark:border-white/5 flex items-center justify-between bg-gray-50/50 dark:bg-white/[0.02]">
-                            <h3 className="text-sm font-semibold text-gray-900 dark:text-white">{t('last_transactions')}</h3>
-                            <Link to="/app/transactions" className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-white/10 transition-colors">
-                                <ChevronRight className="w-4 h-4 text-gray-400" />
+                    <div className="meta-card p-0 overflow-hidden flex flex-col h-[280px]">
+                        <div className="px-6 py-4 border-b border-white/5 flex items-center justify-between bg-white/[0.02]">
+                            <h3 className="text-xs font-black text-white uppercase tracking-widest">{t('last_transactions')}</h3>
+                            <Link to="/app/transactions" className="p-2 rounded-xl hover:bg-white/5 transition-colors border border-transparent hover:border-white/5">
+                                <ChevronRight className="w-4 h-4 text-brand-500" />
                             </Link>
                         </div>
-                        <div className="overflow-y-auto custom-scrollbar p-2">
+                        <div className="overflow-y-auto custom-scrollbar p-3">
                             {recentTransactions.length > 0 ? (
-                                <div className="space-y-1">
+                                <div className="space-y-2">
                                     {recentTransactions.map((tx) => (
-                                        <div key={tx.id} className="flex items-center justify-between p-2.5 hover:bg-gray-50 dark:hover:bg-white/5 rounded-lg transition-colors cursor-pointer group">
-                                            <div className="flex items-center gap-3">
-                                                <div className={`w-8 h-8 rounded-full flex items-center justify-center ${tx.type === 'income' ? 'bg-brand-100 dark:bg-brand-500/10 text-brand-600 dark:text-brand-400' : 'bg-red-100 dark:bg-red-500/10 text-red-600 dark:text-red-400'}`}>
-                                                    {tx.type === 'income' ? <ArrowUpRight className="w-4 h-4" /> : <ArrowDownRight className="w-4 h-4" />}
+                                        <div key={tx.id} className="flex items-center justify-between p-3 hover:bg-white/5 rounded-2xl transition-all cursor-pointer group border border-transparent hover:border-white/5">
+                                            <div className="flex items-center gap-4">
+                                                <div className={`w-10 h-10 rounded-2xl flex items-center justify-center transition-transform group-hover:scale-110 ${tx.type === 'income' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-rose-500/10 text-rose-400 border border-rose-500/20'}`}>
+                                                    {tx.type === 'income' ? <ArrowUpRight className="w-5 h-5" /> : <ArrowDownRight className="w-5 h-5" />}
                                                 </div>
-                                                <div className="max-w-[120px] truncate">
-                                                    <p className="text-sm font-bold text-gray-700 dark:text-gray-200 truncate group-hover:text-gray-900 dark:group-hover:text-white transition-colors">{tx.description}</p>
-                                                    <p className="text-[10px] uppercase tracking-widest text-gray-400 font-semibold">{categoryConfig[tx.category]?.label || t('general')}</p>
+                                                <div className="max-w-[130px] truncate">
+                                                    <p className="text-sm font-bold text-white truncate transition-colors">{tx.description}</p>
+                                                    <p className="text-[10px] uppercase tracking-widest text-gray-500 font-black">{categoryConfig[tx.category]?.label || t('general')}</p>
                                                 </div>
                                             </div>
-                                            <span className={`text-sm font-bold ${tx.type === 'income' ? 'text-brand-600 dark:text-brand-400' : 'text-gray-800 dark:text-gray-300'}`}>
-                                                {tx.type === 'income' ? '+' : '-'}{fmt(Math.abs(tx.amount))}
-                                            </span>
+                                            <div className="text-right">
+                                                <p className={`text-sm font-black ${tx.type === 'income' ? 'text-emerald-400' : 'text-white'}`}>
+                                                    {tx.type === 'income' ? '+' : '-'}{fmt(Math.abs(tx.amount))}
+                                                </p>
+                                                <p className="text-[9px] text-gray-600 font-bold">{new Date(tx.date).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' })}</p>
+                                            </div>
                                         </div>
                                     ))}
                                 </div>
                             ) : (
-                                <p className="text-center text-xs text-gray-500 mt-10">{t('no_recent_transactions')}</p>
+                                <div className="h-full flex flex-col items-center justify-center py-10 opacity-30">
+                                    <Activity className="w-8 h-8 mb-2" />
+                                    <p className="text-[10px] font-black uppercase tracking-widest">{t('no_recent_transactions')}</p>
+                                </div>
                             )}
                         </div>
                     </div>

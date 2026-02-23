@@ -1,34 +1,46 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useTransactions } from '../hooks/useTransactions';
 import { useAuth } from '../contexts/AuthContext';
 import { analytics } from '../hooks/useAnalytics';
 import { Bot, Send, User, Loader2, RotateCcw } from 'lucide-react';
 import categoriesData from '../data/data.json';
+import { toCents, fromCents, add, formatBRL as fmt } from '../lib/financialMath';
+import { secureStorage } from '../lib/secureStorage';
 
 const categoryConfig = categoriesData.categories;
-
-function fmt(value) {
-    return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
-}
 
 // ========== AI FINANCIAL ENGINE ==========
 function analyzeTransactions(transactions) {
     if (!transactions.length) return null;
 
-    const budgets = JSON.parse(localStorage.getItem('sf_budgets') || '[]');
-    const goals = JSON.parse(localStorage.getItem('sf_goals') || '[]');
+    const budgets = secureStorage.get('budgets', []);
+    const goals = secureStorage.get('goals', []);
 
-    const totalIncome = transactions.filter((t) => t.type === 'income').reduce((s, t) => s + Math.abs(t.amount), 0);
-    const totalExpenses = transactions.filter((t) => t.type === 'expense').reduce((s, t) => s + Math.abs(t.amount), 0);
-    const balance = totalIncome - totalExpenses;
+    const totalIncomeCents = transactions
+        .filter((t) => t.type === 'income')
+        .reduce((s, t) => s + toCents(Math.abs(t.amount)), 0);
+
+    const totalExpensesCents = transactions
+        .filter((t) => t.type === 'expense')
+        .reduce((s, t) => s + toCents(Math.abs(t.amount)), 0);
+
+    const totalIncome = fromCents(totalIncomeCents);
+    const totalExpenses = fromCents(totalExpensesCents);
+    const balance = add(totalIncome, -totalExpenses);
     const savingsRate = totalIncome > 0 ? ((totalIncome - totalExpenses) / totalIncome) * 100 : 0;
 
-    // Category breakdown
-    const categoryTotals = {};
+    // Category breakdown using cents
+    const categoryTotalsCents = {};
     transactions.filter((t) => t.type === 'expense').forEach((t) => {
-        categoryTotals[t.category] = (categoryTotals[t.category] || 0) + Math.abs(t.amount);
+        categoryTotalsCents[t.category] = (categoryTotalsCents[t.category] || 0) + toCents(Math.abs(t.amount));
     });
+
+    const categoryTotals = {};
+    Object.keys(categoryTotalsCents).forEach(cat => {
+        categoryTotals[cat] = fromCents(categoryTotalsCents[cat]);
+    });
+
     const sortedCategories = Object.entries(categoryTotals).sort((a, b) => b[1] - a[1]);
     const topCategory = sortedCategories[0];
 

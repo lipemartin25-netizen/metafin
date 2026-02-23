@@ -1,110 +1,121 @@
 // api/ai-chat.js
 import { checkRateLimit } from './_lib/rateLimit.js'
 import { sanitizeMessages, sanitizeModel, ValidationError } from './_lib/sanitize.js'
+import { validateSession } from './_lib/auth.js'
 
 const CORS_HEADERS = {
     'Content-Type': 'application/json',
     'Access-Control-Allow-Origin': process.env.ALLOWED_ORIGIN || '*',
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Request-ID',
+    'Cache-Control': 'no-store',
     'X-Content-Type-Options': 'nosniff'
 }
 
 export default async function handler(req, res) {
+    // Configurar headers CORS
     Object.entries(CORS_HEADERS).forEach(([k, v]) => res.setHeader(k, v))
 
-    if (req.method === 'OPTIONS') {
-        return res.status(204).end()
+    if (req.method === 'OPTIONS') return res.status(204).end()
+    if (req.method !== 'POST') return res.status(405).json({ error: 'Método não permitido' })
+
+    // 1. Validação de Sessão (Auth)
+    const session = await validateSession(req)
+    if (!session.valid) {
+        return res.status(401).json({ error: `Não autorizado: ${session.reason}` })
     }
 
-    if (req.method !== 'POST') {
-        return res.status(405).json({ error: 'Método não permitido' })
-    }
+    // 2. Rate Limit (por userId se autenticado, senão por IP)
+    const ip = (req.headers['x-forwarded-for'] || 'unknown').split(',')[0].trim()
+    const rateLimitKey = `chat:${session.userId || ip}`
+    const limit = checkRateLimit(rateLimitKey, 15, 60000)
 
-    const ip = (req.headers['x-forwarded-for'] || '').split(',')[0].trim() || 'unknown'
-    const rateCheck = checkRateLimit(`chat:${ip}`, 15, 60000)
-
-    if (!rateCheck.allowed) {
-        res.setHeader('Retry-After', rateCheck.retryAfter)
+    if (!limit.allowed) {
+        res.setHeader('Retry-After', String(limit.retryAfter))
         return res.status(429).json({
-            error: 'Muitas requisições. Aguarde antes de tentar novamente.',
-            retryAfter: rateCheck.retryAfter
+            error: 'Muitas requisições. Tente novamente em breve.',
+            retryAfter: limit.retryAfter
         })
+    }
+
+    // 3. Parsing e Sanitização
+    let body
+    try {
+        body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body
+    } catch {
+        return res.status(400).json({ error: 'Payload JSON inválido' })
     }
 
     let messages, model
     try {
-        const body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body
-        messages = sanitizeMessages(body?.messages)
-        model = sanitizeModel(body?.model)
-    } catch (error) {
-        if (error instanceof ValidationError) {
-            return res.status(400).json({ error: error.message })
+        messages = sanitizeMessages(body.messages)
+        model = sanitizeModel(body.model)
+    } catch (err) {
+        if (err instanceof ValidationError) {
+            return res.status(400).json({ error: err.message })
         }
-        return res.status(400).json({ error: 'Requisição inválida' })
+        return res.status(400).json({ error: 'Dados de entrada inválidos' })
     }
 
+    // 4. Seleção de Provedor e Chave
+    const isAnthropic = model.startsWith('claude')
+    const apiKey = isAnthropic ? process.env.ANTHROPIC_API_KEY : process.env.OPENAI_API_KEY
+
+    if (!apiKey) {
+        console.error(`[ai-chat] Chave ausente para modelo: ${model}`)
+        return res.status(503).json({ error: 'Serviço de IA não configurado para este modelo' })
+    }
+
+    // 5. Execução do Chat
     try {
-        const response = await callAIProvider(model, messages)
+        const response = await callAIProvider(model, messages, isAnthropic, apiKey)
         return res.status(200).json(response)
     } catch (error) {
-        console.error('[ai-chat] Erro ao chamar API:', {
-            model,
-            errorCode: error.status || error.code,
-            message: error.message,
-            timestamp: new Date().toISOString()
+        console.error('[ai-chat] Erro no provedor:', error.message)
+        return res.status(error.status || 500).json({
+            error: 'Falha na comunicação com o assistente de IA'
         })
-
-        if (error.status === 401) {
-            return res.status(503).json({ error: 'Serviço de IA indisponível (Erro de Auth)' })
-        }
-        if (error.status === 429) {
-            return res.status(503).json({ error: 'Limite da IA atingido. Tente em alguns minutos.' })
-        }
-
-        return res.status(500).json({ error: 'Erro interno na IA. Tente novamente.' })
     }
 }
 
-async function callAIProvider(model, messages) {
-    const isAnthropic = model.startsWith('claude')
-
+async function callAIProvider(model, messages, isAnthropic, apiKey) {
     if (isAnthropic) {
-        const Anthropic = (await import('@anthropic-ai/sdk')).default
-        const client = new Anthropic({
-            apiKey: process.env.ANTHROPIC_API_KEY
-        })
+        const { default: Anthropic } = await import('@anthropic-ai/sdk')
+        const client = new Anthropic({ apiKey })
 
-        const systemMessage = messages.find(m => m.role === 'system')?.content
-        const userMessages = messages.filter(m => m.role !== 'system')
+        // Anthropic separa system prompt
+        const systemMessage = messages.find(m => m.role === 'system')?.content || ''
+        const chatMessages = messages.filter(m => m.role !== 'system')
 
-        const response = await client.messages.create({
+        const resp = await client.messages.create({
             model,
-            max_tokens: 2048,
+            max_tokens: 1500,
             system: systemMessage,
-            messages: userMessages
+            messages: chatMessages
         })
 
         return {
-            choices: [{
-                message: {
-                    role: 'assistant',
-                    content: response.content[0].text
-                }
-            }],
-            model: response.model
+            content: resp.content[0].text,
+            modelName: resp.model,
+            provider: 'anthropic',
+            usage: resp.usage
         }
     }
 
-    const OpenAI = (await import('openai')).default
-    const client = new OpenAI({
-        apiKey: process.env.OPENAI_API_KEY
-    })
+    const { default: OpenAI } = await import('openai')
+    const client = new OpenAI({ apiKey })
 
-    return client.chat.completions.create({
+    const completion = await client.chat.completions.create({
         model,
         messages,
-        max_tokens: 2048,
+        max_tokens: 1500,
         temperature: 0.7
     })
+
+    return {
+        content: completion.choices[0].message.content,
+        modelName: completion.model,
+        provider: 'openai',
+        usage: completion.usage
+    }
 }

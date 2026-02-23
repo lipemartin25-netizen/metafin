@@ -61,12 +61,12 @@ export default function Sidebar({ collapsed, setCollapsed, mobileOpen, setMobile
         <div className="flex flex-col h-full">
             {/* Logo */}
             <div className={`flex items-center h-16 px-4 border-b border-gray-200 dark:border-white/5 ${collapsed ? 'justify-center' : 'gap-3'}`}>
-                <Link to="/app" className="flex items-center gap-2.5 group" onClick={() => setMobileOpen(false)}>
-                    <div className="relative w-9 h-9 flex-shrink-0 flex items-center justify-center bg-gradient-to-br from-brand-500 to-brand-700 rounded-xl shadow-lg shadow-brand-500/20 group-hover:shadow-brand-500/30 transition-all duration-300">
-                        <Wallet className="w-5 h-5 text-white" strokeWidth={2.5} />
+                <Link to="/app" className="flex items-center gap-3 group" onClick={() => setMobileOpen(false)}>
+                    <div className="relative w-10 h-10 flex-shrink-0 flex items-center justify-center bg-brand-500 rounded-2xl shadow-lg shadow-brand-500/20 group-hover:shadow-brand-500/40 transition-all duration-500 hover:rotate-6">
+                        <Wallet className="w-5 h-5 text-surface-950" strokeWidth={3} />
                     </div>
                     {!collapsed && (
-                        <span className="text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-500 dark:from-white dark:to-gray-400 tracking-tight whitespace-nowrap">
+                        <span className="text-xl font-black meta-gradient-text tracking-tighter">
                             MetaFin
                         </span>
                     )}
@@ -91,15 +91,19 @@ export default function Sidebar({ collapsed, setCollapsed, mobileOpen, setMobile
                         onClick={() => setMobileOpen(false)}
                         title={collapsed ? item.label : undefined}
                         className={({ isActive }) =>
-                            `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 group ${collapsed ? 'justify-center' : ''
+                            `flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-bold transition-all duration-300 group ${collapsed ? 'justify-center' : ''
                             } ${isActive
-                                ? 'bg-brand-500/10 text-brand-600 dark:text-brand-400 shadow-[0_0_20px_-5px_rgba(16,185,129,0.15)] border border-brand-500/20'
-                                : 'text-gray-600 dark:text-gray-400 hover:text-brand-600 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/5 border border-transparent'
+                                ? 'bg-brand-500/20 text-white shadow-[0_0_20px_-5px_rgba(14,165,233,0.3)] border border-brand-500/30'
+                                : 'text-gray-500 dark:text-gray-400 hover:text-brand-500 dark:hover:text-white hover:bg-white/5 border border-transparent'
                             }`
                         }
                     >
-                        <item.icon className="w-5 h-5 flex-shrink-0" />
-                        {!collapsed && <span>{item.label}</span>}
+                        {({ isActive }) => (
+                            <>
+                                <item.icon className={`w-5 h-5 flex-shrink-0 transition-transform duration-300 group-hover:scale-110 ${isActive ? 'text-brand-400' : ''}`} />
+                                {!collapsed && <span>{item.label}</span>}
+                            </>
+                        )}
                     </NavLink>
                 ))}
 
@@ -188,7 +192,7 @@ export default function Sidebar({ collapsed, setCollapsed, mobileOpen, setMobile
         <>
             {/* Desktop sidebar */}
             <aside
-                className={`hidden md:flex flex-col fixed top-0 left-0 h-screen bg-white/95 dark:bg-surface-900/95 backdrop-blur-xl border-r border-gray-200 dark:border-white/5 z-40 transition-all duration-300 ${collapsed ? 'w-20' : 'w-64'
+                className={`hidden md:flex flex-col fixed top-0 left-0 h-screen meta-glass border-r-0 z-40 transition-all duration-500 rounded-none border-y-0 ${collapsed ? 'w-20' : 'w-64'
                     }`}
             >
                 {sidebarContent}
@@ -196,7 +200,7 @@ export default function Sidebar({ collapsed, setCollapsed, mobileOpen, setMobile
 
             {/* Mobile sidebar */}
             <aside
-                className={`md:hidden fixed top-0 left-0 h-screen w-72 bg-white dark:bg-surface-900 border-r border-gray-200 dark:border-white/5 z-40 transition-transform duration-300 ${mobileOpen ? 'translate-x-0' : '-translate-x-full'
+                className={`md:hidden fixed top-0 left-0 h-screen w-72 bg-surface-950/95 backdrop-blur-2xl border-r border-white/5 z-40 transition-transform duration-500 ${mobileOpen ? 'translate-x-0' : '-translate-x-full'
                     }`}
             >
                 {sidebarContent}

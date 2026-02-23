@@ -6,38 +6,36 @@ export default {
         extend: {
             colors: {
                 brand: {
-                    50: '#ecfeff',
-                    100: '#cffafe',
-                    200: '#a5f3fc',
-                    300: '#67e8f9',
-                    400: '#22d3ee',
-                    500: '#06b6d4', // Cyan Neon Accent
-                    600: '#0891b2',
-                    700: '#0e7490',
-                    800: '#155e75',
-                    900: '#164e63',
-                    DEFAULT: '#06b6d4', // The new MetaFin Cyberpunk Cyan
+                    50: '#f0f9ff',
+                    100: '#e0f2fe',
+                    200: '#bae6fd',
+                    300: '#7dd3fc',
+                    400: '#38bdf8',
+                    500: '#0ea5e9', // High-alpha Sky Cyan
+                    600: '#0284c7',
+                    700: '#0369a1',
+                    800: '#075985',
+                    900: '#0c4a6e',
+                    DEFAULT: '#0ea5e9',
                 },
-                accent: {
-                    DEFAULT: '#39ff14', // Hacker Green / Toxic Green for highlights
-                    glow: 'rgba(57, 255, 20, 0.4)'
-                },
+                'bg-deep': '#020617',
                 surface: {
                     50: '#f8fafc',
-                    100: '#cbd5e1',
-                    200: '#94a3b8',
-                    300: '#64748b',
-                    400: '#475569',
-                    500: '#334155',
-                    600: '#1e293b',
-                    700: '#0f172a',
-                    800: '#0a0a0a', // Almost black
-                    900: '#050505', // Void
-                    950: '#000000', // Pure Black
+                    100: '#f1f5f9',
+                    200: '#e2e8f0',
+                    300: '#cbd5e1',
+                    400: '#94a3b8',
+                    500: '#64748b',
+                    600: '#475569',
+                    700: '#334155',
+                    800: '#1e293b',
+                    900: '#0f172a',
+                    950: '#030712',
                 },
             },
             fontFamily: {
-                sans: ['Inter', 'system-ui', 'sans-serif'],
+                sans: ['"Plus Jakarta Sans"', 'Inter', 'system-ui', 'sans-serif'],
+                display: ['Outfit', 'sans-serif'],
             },
             animation: {
                 'fade-in': 'fadeIn 0.5s ease-out forwards',

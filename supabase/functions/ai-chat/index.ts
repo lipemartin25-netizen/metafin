@@ -1,5 +1,5 @@
 /**
- * SmartFinance Hub - AI Chat Edge Function (Supabase)
+ * MetaFin - AI Chat Edge Function (Supabase)
  * Proxy seguro para chamadas de IA.
  * As API keys ficam APENAS no servidor (Supabase Secrets).
  *

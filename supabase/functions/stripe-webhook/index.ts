@@ -161,7 +161,7 @@ Deno.serve(async (req) => {
                         amount: invoice.amount_paid / 100,
                         currency: invoice.currency || "brl",
                         status: "succeeded",
-                        description: `SmartFinance Pro — ${new Date().toLocaleDateString("pt-BR")}`,
+                        description: `MetaFin Pro — ${new Date().toLocaleDateString("pt-BR")}`,
                     });
 
                     console.log(

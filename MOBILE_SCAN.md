@@ -1,6 +1,6 @@
 # Guia: APK Packaging & MobSF Mobile Scan 📱
 
-Este guia descreve os passos exatos para transformar seu Web App (Smart Finance Hub) em um aplicativo Android (APK) instalável e homologado, para validar em scanners de segurança mobile e subir para a Play Store.
+Este guia descreve os passos exatos para transformar seu Web App (MetaFin) em um aplicativo Android (APK) instalável e homologado, para validar em scanners de segurança mobile e subir para a Play Store.
 
 ## 1. Transformar React Web App em Mobile via Capacitor
 
@@ -10,7 +10,7 @@ Abra o terminal e execute:
 ```bash
 npm install @capacitor/core
 npm install -D @capacitor/cli @capacitor/android
-npx cap init "Smart Finance Hub" "com.felipe.smartfinance" --web-dir dist
+npx cap init "MetaFin" "com.metafin.app" --web-dir dist
 npx cap add android
 ```
 

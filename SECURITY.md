@@ -2,7 +2,7 @@
 
 ## Supported Versions
 
-O Smart Finance Hub mantém ativamente os patches de segurança para as seguintes versões:
+O MetaFin mantém ativamente os patches de segurança para as seguintes versões:
 
 | Version | Supported          |
 | ------- | ------------------ |
@@ -11,13 +11,13 @@ O Smart Finance Hub mantém ativamente os patches de segurança para as seguinte
 
 ## Responsabilidade de Divulgação (Responsible Disclosure)
 
-A segurança dos dados bancários e das informações de nossos usuários é a maior prioridade do **Smart Finance Hub**. Seguimos os rigorosos padrões estabelecidos pela LGPD e as normativas do Open Finance no Brasil.
+A segurança dos dados bancários e das informações de nossos usuários é a maior prioridade do **MetaFin**. Seguimos os rigorosos padrões estabelecidos pela LGPD e as normativas do Open Finance no Brasil.
 
 Se você descobrir qualquer vulnerabilidade ou falha de segurança no nosso sistema, **por favor, não divulgue publicamente**. Em vez disso, pedimos que você nos reporte confidenciais.
 
 ### Como reportar uma vulnerabilidade (Bug Bounty Program)
 
-Para reportar uma vulnerabilidade, envie um email para `security@smartfinancehub.app` contendo:
+Para reportar uma vulnerabilidade, envie um email para `security@metafin.app` contendo:
 - A descrição detalhada do bug.
 - Um passo a passo (Proof of Concept - PoC) para reproduzirmos a falha localmente.
 - O impacto potencial que isso teria nos dados ou no serviço.

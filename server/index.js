@@ -22,6 +22,7 @@ const pluggy = new PluggyClient({
 // CORS — restringir origens permitidas
 const ALLOWED_ORIGINS = [
     'https://metafin.vercel.app',
+    'https://metafin-app.vercel.app',
     'http://localhost:5173',
     'http://localhost:3000',
 ];

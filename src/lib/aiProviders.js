@@ -1,6 +1,7 @@
+/**
  * MetaFin — AI Provider Hub
-    * Suporta: OpenAI, Gemini, Claude, DeepSeek, Grok, Qwen
-        *
+ * Suporta: OpenAI, Gemini, Claude, DeepSeek, Grok, Qwen
+ *
  * IMPORTANTE: Em produção, as API keys devem ficar no BACKEND(Supabase Edge Functions).
  * Esta implementação usa proxy via Edge Function para segurança.
  * Para MVP / teste, chamadas diretas são usadas com keys no.env(apenas dev).

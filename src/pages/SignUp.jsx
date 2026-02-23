@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { Eye, EyeOff, Loader2, Lock, Sparkles, MoveRight } from 'lucide-react';
+import { Eye, EyeOff, Loader2, Lock, Sparkles, MoveRight, AlertTriangle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { analytics } from '../hooks/useAnalytics';
 

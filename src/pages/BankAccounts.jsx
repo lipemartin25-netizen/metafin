@@ -39,16 +39,13 @@ export default function BankAccounts() {
     const [connectingState, setConnectingState] = useState('idle');
     const [syncing, setSyncing] = useState(null);
 
-    // States para customização e dados reais
     const [customNickname, setCustomNickname] = useState('');
     const [customBalance, setCustomBalance] = useState('');
     const [agency, setAgency] = useState('');
     const [accountNum, setAccountNum] = useState('');
-    const [dataSource, setDataSource] = useState('empty'); // empty, demo, file
+    const [dataSource, setDataSource] = useState('empty');
     const [importFile, setImportFile] = useState(null);
     const [importError, setImportError] = useState('');
-
-    // Gerenciado pelo hook useBankAccounts
 
     const handleConnectClick = (bank) => {
         setSelectedBank(bank);
@@ -59,12 +56,11 @@ export default function BankAccounts() {
         setDataSource('empty');
         setImportFile(null);
         setImportError('');
-        setConnectingState('choosing'); // Nova tela: escolher método
+        setConnectingState('choosing');
         setShowConnectModal(true);
         analytics.featureUsed(`connect_bank_start_${bank.id}`);
     };
 
-    // Conectar diretamente via Pluggy (Open Finance)
     const handlePluggyDirect = () => {
         setShowConnectModal(false);
         openWidget();
@@ -136,9 +132,9 @@ export default function BankAccounts() {
         setSyncing(null);
     };
 
-    const handleDisconnect = async (bankId) => {
-        if (!confirm('Tem certeza que deseja desconectar esta conta? Todos os dados importados serão mantidos no histórico, mas a sincronização será interrompida.')) return;
-        await deleteAccount(bankId);
+    const handleDisconnect = async (bank) => {
+        if (!confirm(`Tem certeza que deseja desconectar a conta ${bank.display_name || bank.name}? Todos os dados importados serão mantidos no histórico, mas a sincronização será interrompida.`)) return;
+        await deleteAccount(bank.id, bank.isPluggy ? 'pluggy' : 'manual');
         analytics.featureUsed('disconnect_bank');
     };
 
@@ -146,7 +142,6 @@ export default function BankAccounts() {
 
     return (
         <div className="py-6 space-y-6 animate-fade-in pb-20">
-            {/* Header */}
             <div>
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
@@ -181,7 +176,6 @@ export default function BankAccounts() {
                 )}
             </div>
 
-            {/* Total Balance Card */}
             <div className="glass-card bg-gradient-to-br from-gray-900 to-gray-800 border-emerald-500/20">
                 <div className="flex items-center justify-between">
                     <div>
@@ -198,7 +192,6 @@ export default function BankAccounts() {
                 </div>
             </div>
 
-            {/* My Connected Accounts */}
             <div>
                 <h3 className="text-lg font-semibold text-white mb-3 flex items-center gap-2">
                     Minhas Contas <span className="bg-white/10 text-xs px-2 py-0.5 rounded-full text-gray-300">{accounts?.length || 0}</span>
@@ -245,7 +238,7 @@ export default function BankAccounts() {
                                         <RefreshCw className="w-4 h-4" />
                                     </button>
                                     <button
-                                        onClick={() => handleDisconnect(bank.id)}
+                                        onClick={() => handleDisconnect(bank)}
                                         className="p-2 rounded-lg text-red-500/50 hover:text-red-400 hover:bg-red-500/10 transition-all"
                                         title="Remover Conta"
                                     >
@@ -258,7 +251,6 @@ export default function BankAccounts() {
                 )}
             </div>
 
-            {/* Add New Connection */}
             <div id="new-connection">
                 <h3 className="text-lg font-semibold text-white mb-3">Conectar Nova Instituição</h3>
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
@@ -277,13 +269,11 @@ export default function BankAccounts() {
                 </div>
             </div>
 
-            {/* Connect Modal */}
             {showConnectModal && selectedBank && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
                     <div className="glass-card w-full max-w-md p-0 overflow-hidden animate-slide-up relative">
                         <button onClick={() => setShowConnectModal(false)} className="absolute top-4 right-4 text-gray-500 hover:text-white"><X className="w-5 h-5" /></button>
 
-                        {/* Header */}
                         <div className="bg-white/5 p-6 text-center border-b border-white/5">
                             <div className="w-16 h-16 rounded-2xl mx-auto flex items-center justify-center text-white font-bold text-3xl shadow-lg mb-4" style={{ backgroundColor: selectedBank.color, color: selectedBank.textColor }}>
                                 {selectedBank.logo}
@@ -292,14 +282,11 @@ export default function BankAccounts() {
                             <p className="text-sm text-gray-400 mt-1">Ambiente seguro Open Finance</p>
                         </div>
 
-                        {/* Content based on state */}
                         <div className="p-6">
-                            {/* Choosing: Pluggy or Manual */}
                             {connectingState === 'choosing' && (
                                 <div className="space-y-3">
                                     <p className="text-sm text-gray-400 text-center mb-4">Escolha como deseja conectar:</p>
 
-                                    {/* Pluggy - Automatic */}
                                     <button
                                         onClick={handlePluggyDirect}
                                         className="w-full flex items-center gap-4 p-4 rounded-xl bg-purple-500/10 border border-purple-500/30 hover:bg-purple-500/20 hover:border-purple-500/50 transition-all group text-left"
@@ -314,7 +301,6 @@ export default function BankAccounts() {
                                         <span className="ml-auto bg-purple-500/30 text-purple-300 text-[9px] font-bold px-2 py-1 rounded-lg flex-shrink-0">RECOMENDADO</span>
                                     </button>
 
-                                    {/* Manual */}
                                     <button
                                         onClick={() => setConnectingState('consenting')}
                                         className="w-full flex items-center gap-4 p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all group text-left"

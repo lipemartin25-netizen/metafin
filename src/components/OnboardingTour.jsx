@@ -4,7 +4,7 @@ import { Wallet, ArrowRight, Plug, BarChart3, Bot, Target, CreditCard, Sparkles,
 const STEPS = [
     {
         icon: Wallet,
-        title: 'Bem-vindo ao SmartFinance Hub!',
+        title: 'Bem-vindo ao MetaFin!',
         description: 'Sua plataforma completa de financas pessoais. Vamos configurar tudo em poucos passos.',
         color: '#10b981',
         image: '💰'
@@ -50,7 +50,7 @@ const STEPS = [
     {
         icon: Sparkles,
         title: 'Tudo Pronto!',
-        description: 'Seu SmartFinance Hub ja esta configurado. Explore todas as funcionalidades e tome controle das suas financas!',
+        description: 'Seu MetaFin ja esta configurado. Explore todas as funcionalidades e tome controle das suas financas!',
         color: '#10b981',
         image: '🚀'
     }

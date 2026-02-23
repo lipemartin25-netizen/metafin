@@ -1,5 +1,5 @@
 /**
- * SmartFinance Hub — Multi-Format File Parser
+ * MetaFin — Multi-Format File Parser
  * Suporta: CSV, XLSX/XLS, JSON, TXT, XML, HTML, PDF*, DOCX*, imagens*
  * (*) formatos marcados mostram mensagem de suporte futuro com OCR/IA
  */

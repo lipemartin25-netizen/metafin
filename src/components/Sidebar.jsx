@@ -67,7 +67,7 @@ export default function Sidebar({ collapsed, setCollapsed, mobileOpen, setMobile
                     </div>
                     {!collapsed && (
                         <span className="text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-500 dark:from-white dark:to-gray-400 tracking-tight whitespace-nowrap">
-                            SmartFinance
+                            MetaFin
                         </span>
                     )}
                 </Link>

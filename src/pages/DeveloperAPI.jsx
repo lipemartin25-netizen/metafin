@@ -29,7 +29,7 @@ export default function DeveloperAPI() {
         setTimeout(() => setCopied(false), 2000);
     };
 
-    const webhookUrl = "https://smartfinancehub.vercel.app/api/webhooks/transactions";
+    const webhookUrl = "https://metafin.vercel.app/api/webhooks/transactions";
 
     const curlExample = `curl -X POST ${webhookUrl} \\
   -H "Authorization: Bearer ${apiKey || 'SUA_API_KEY_AQUI'}" \\
@@ -50,7 +50,7 @@ export default function DeveloperAPI() {
                     <Code2 className="w-6 h-6 text-fuchsia-500" />
                     Webhooks & API
                 </h1>
-                <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">Conecte o SmartFinance Hub a qualquer plataforma (Zapier, Make, n8n).</p>
+                <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">Conecte o MetaFin a qualquer plataforma (Zapier, Make, n8n).</p>
             </div>
 
             <div className="grid md:grid-cols-3 gap-6">
@@ -152,7 +152,7 @@ export default function DeveloperAPI() {
                             <div className="bg-emerald-500/10 p-2 rounded-lg text-emerald-500"><Code2 className="w-5 h-5" /></div>
                             <div>
                                 <h4 className="font-bold text-gray-900 dark:text-white text-sm group-hover:text-emerald-500 transition-colors">Sistema Interno</h4>
-                                <p className="text-[11px] text-gray-500 mt-1">Dispare eventos do seu backend direto para o seu dashboard do SmartFinance.</p>
+                                <p className="text-[11px] text-gray-500 mt-1">Dispare eventos do seu backend direto para o seu dashboard do MetaFin.</p>
                             </div>
                         </div>
                     </div>

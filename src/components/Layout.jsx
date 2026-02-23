@@ -40,7 +40,7 @@ export default function Layout() {
                         </svg>
                     </button>
                     <span className="ml-3 text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-500 dark:from-white dark:to-gray-400">
-                        SmartFinance
+                        MetaFin
                     </span>
                 </div>
 

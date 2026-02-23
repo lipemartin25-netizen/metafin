@@ -147,7 +147,7 @@ export default function Upgrade() {
 
                 <div className="mb-6">
                     <h2 className="text-xl font-bold text-white flex items-center gap-2">
-                        💎 SmartFinance Pro
+                        💎 MetaFin Pro
                     </h2>
                     <div className="flex items-baseline gap-1 mt-2">
                         <span className="text-4xl font-bold text-white">{selected.label}</span>

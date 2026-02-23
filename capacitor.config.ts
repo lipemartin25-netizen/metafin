@@ -1,8 +1,8 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-    appId: 'com.smartfinance.hub',
-    appName: 'SmartFinance Hub',
+    appId: 'com.metafin.app',
+    appName: 'MetaFin',
     webDir: 'dist',
     server: {
         androidScheme: 'https',

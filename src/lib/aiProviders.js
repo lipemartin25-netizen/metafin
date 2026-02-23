@@ -1,10 +1,9 @@
-/**
- * SmartFinance Hub — AI Provider Hub
- * Suporta: OpenAI, Gemini, Claude, DeepSeek, Grok, Qwen
- *
- * IMPORTANTE: Em produção, as API keys devem ficar no BACKEND (Supabase Edge Functions).
+ * MetaFin — AI Provider Hub
+    * Suporta: OpenAI, Gemini, Claude, DeepSeek, Grok, Qwen
+        *
+ * IMPORTANTE: Em produção, as API keys devem ficar no BACKEND(Supabase Edge Functions).
  * Esta implementação usa proxy via Edge Function para segurança.
- * Para MVP/teste, chamadas diretas são usadas com keys no .env (apenas dev).
+ * Para MVP / teste, chamadas diretas são usadas com keys no.env(apenas dev).
  */
 
 // ========== MODELOS DISPONÍVEIS ==========
@@ -96,7 +95,7 @@ export const AI_MODELS = {
 };
 
 // ========== SYSTEM PROMPT ==========
-const SYSTEM_PROMPT = `Você é o SmartFinance AI, um assistente financeiro especializado em finanças pessoais brasileiras.
+const SYSTEM_PROMPT = `Você é o MetaFin AI, um assistente financeiro especializado em finanças pessoais brasileiras.
 
 Regras:
 - Responda SEMPRE em Português do Brasil

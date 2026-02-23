@@ -51,7 +51,7 @@ export default function NpsSurvey({ onClose }) {
                             Obrigado pelo feedback!
                         </h3>
                         <p className="text-gray-400 text-sm">
-                            Sua opinião nos ajuda a melhorar o SmartFinance Hub.
+                            Sua opinião nos ajuda a melhorar o MetaFin.
                         </p>
                     </div>
                 ) : (
@@ -72,7 +72,7 @@ export default function NpsSurvey({ onClose }) {
                         {/* Question */}
                         <p className="text-gray-300 text-sm mb-4">
                             Em uma escala de 0 a 10, qual a probabilidade de recomendar o
-                            SmartFinance Hub para um amigo?
+                            MetaFin para um amigo?
                         </p>
 
                         {/* Score Grid */}
@@ -82,8 +82,8 @@ export default function NpsSurvey({ onClose }) {
                                     key={i}
                                     onClick={() => setScore(i)}
                                     className={`aspect-square rounded-lg text-xs font-medium transition-all ${score === i
-                                            ? 'bg-emerald-500 text-white scale-110 shadow-lg shadow-emerald-500/30'
-                                            : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white'
+                                        ? 'bg-emerald-500 text-white scale-110 shadow-lg shadow-emerald-500/30'
+                                        : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white'
                                         }`}
                                 >
                                     {i}

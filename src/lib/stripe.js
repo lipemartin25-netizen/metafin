@@ -1,5 +1,5 @@
 /**
- * SmartFinance Hub — Stripe Client
+ * MetaFin — Stripe Client
  * Gerencia checkout, portal e status de assinatura
  */
 

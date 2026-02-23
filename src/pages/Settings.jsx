@@ -298,7 +298,7 @@ export default function Settings() {
                         <div className="space-y-8 animate-fade-in">
                             <div>
                                 <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
-                                    <HelpCircle className="w-5 h-5 text-brand-500" /> Como Usar o SmartFinance Hub
+                                    <HelpCircle className="w-5 h-5 text-brand-500" /> Como Usar o MetaFin
                                 </h2>
 
                                 <div className="space-y-6">
@@ -306,7 +306,7 @@ export default function Settings() {
                                     <div className="glass-card p-6 border-l-4 border-l-brand-500">
                                         <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">Visão Geral</h3>
                                         <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed mb-4">
-                                            O SmartFinance é o seu copiloto inteligente para gerenciar suas finanças. Monitore transações, crie planos de orçamento, acompanhe seu patrimônio líquido e use IA avançada para analisar sua saúde financeira de maneira automática.
+                                            O MetaFin é o seu copiloto inteligente para gerenciar suas finanças. Monitore transações, crie planos de orçamento, acompanhe seu patrimônio líquido e use IA avançada para analisar sua saúde financeira de maneira automática.
                                         </p>
                                     </div>
 
@@ -321,6 +321,7 @@ export default function Settings() {
                                             <li>Selecione seus arquivos CSV, Excel ou outros suportados.</li>
                                             <li>A nossa plataforma lerá e identificará automaticamente as colunas, assim como categorizar as despesas.</li>
                                             <li>Certifique-se de que os arquivos possuam colunas semelhantes a &quot;data&quot;, &quot;valor&quot; e &quot;descricao&quot;.</li>
+                                            <li>O MetaFin salvará tudo com segurança total.</li>
                                         </ul>
                                     </div>
 
@@ -330,7 +331,7 @@ export default function Settings() {
                                             <Zap className="w-5 h-5 text-fuchsia-500" /> Conectando Webhooks e Automações
                                         </h3>
                                         <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed mb-4">
-                                            Você pode integrar o SmartFinance com serviços como <strong>Zapier, Make, n8n</strong> para receber transações automaticamente (por ex: do MercadoPago, Stripe, ou notificações do celular).
+                                            Você pode integrar o MetaFin com serviços como <strong>Zapier, Make, n8n</strong> para receber transações automaticamente (por ex: do MercadoPago, Stripe, ou notificações do celular).
                                         </p>
                                         <ul className="text-sm text-gray-500 dark:text-gray-400 space-y-3 pl-4 list-decimal">
                                             <li>Vá na página <strong>Webhooks</strong>, clicando sobre o ícone <code>&lt;/&gt;</code> no menu (Webhooks).</li>

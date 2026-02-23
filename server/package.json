@@ -1,7 +1,7 @@
 {
-    "name": "smart-finance-hub-api",
+    "name": "metafin-api",
     "version": "1.0.0",
-    "description": "Backend API for Smart Finance Hub - Pluggy Integration",
+    "description": "Backend API for MetaFin - Pluggy Integration",
     "main": "index.js",
     "scripts": {
         "start": "node index.js",

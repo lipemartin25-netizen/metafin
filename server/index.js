@@ -21,7 +21,7 @@ const pluggy = new PluggyClient({
 
 // CORS — restringir origens permitidas
 const ALLOWED_ORIGINS = [
-    'https://smart-finance-hub-tau.vercel.app',
+    'https://metafin.vercel.app',
     'http://localhost:5173',
     'http://localhost:3000',
 ];
@@ -38,7 +38,7 @@ app.use(morgan('dev'));
 
 // Health Check
 app.get('/api/pluggy/health', (req, res) => {
-    res.json({ status: 'ok', message: 'Smart Finance API is running on Vercel' });
+    res.json({ status: 'ok', message: 'MetaFin API is running on Vercel' });
 });
 
 // Middleware: Autenticação via Supabase JWT

@@ -1,5 +1,5 @@
 /**
- * SmartFinance Hub — Planos e Limites
+ * MetaFin — Planos e Limites
  */
 
 export const PLANS = {

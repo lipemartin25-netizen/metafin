@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import {
     Send, X, Loader2, Bot,
-    ChevronDown, Sparkles, Lock, RotateCcw, Copy, Check,
+    ChevronDown, Sparkles, Lock, RotateCcw, Copy, Check, Wallet, Maximize2, Minimize2
 } from 'lucide-react';
 import { AI_MODELS, AI_ACTIONS, callAI, buildFinancialContext } from '../lib/aiProviders';
 import { usePlan } from '../hooks/usePlan';
@@ -18,6 +18,7 @@ export default function AiChat() {
     const [loading, setLoading] = useState(false);
     const [selectedModel, setSelectedModel] = useState('gemini-flash');
     const [showModelPicker, setShowModelPicker] = useState(false);
+    const [isExpanded, setIsExpanded] = useState(false);
     const [copiedId, setCopiedId] = useState(null);
     const [error, setError] = useState('');
     const messagesEndRef = useRef(null);
@@ -50,9 +51,6 @@ export default function AiChat() {
         analytics.featureUsed(`ai_chat_${selectedModel}`);
 
         try {
-            // Build context
-            // Note: useTransactions returns summary object { income, expense, balance } but buildFinancialContext expects { totalIncome, totalExpenses... }
-            // Let's adapt here
             const adaptedSummary = {
                 income: summary.income || 0,
                 expense: summary.expense || 0,
@@ -60,14 +58,13 @@ export default function AiChat() {
                 count: transactions.length
             };
 
-            // Send goals and budgets to AI Context
             const budgets = JSON.parse(localStorage.getItem('sf_budgets') || '[]');
             const goals = JSON.parse(localStorage.getItem('sf_goals') || '[]');
 
             const financialContext = buildFinancialContext(transactions, adaptedSummary, { budgets, goals });
 
             const chatMessages = [
-                { role: 'system', content: `Você é o SmartFinance AI.\n\n${financialContext}` },
+                { role: 'system', content: `Você é o metafin AI Assistente.\n\n${financialContext}` },
                 ...messages.map((m) => ({ role: m.role, content: m.content })),
                 { role: 'user', content: text },
             ];
@@ -92,7 +89,7 @@ export default function AiChat() {
                 {
                     id: Date.now() + 1,
                     role: 'assistant',
-                    content: `❌ Erro: ${err.message}\n\nVerifique se a API key do provedor está configurada corretamente no .env.local`,
+                    content: `❌ Erro: ${err.message}`,
                     isError: true,
                 },
             ]);
@@ -118,17 +115,18 @@ export default function AiChat() {
     if (!isPro) {
         return (
             <>
-                {/* FAB Button (Locked) */}
                 <button
                     onClick={() => setIsOpen(true)}
-                    className="fixed bottom-6 right-6 z-40 w-14 h-14 rounded-full bg-gradient-to-r from-gray-700 to-gray-800 shadow-lg flex items-center justify-center hover:scale-110 transition-transform border border-white/10"
+                    className="fixed bottom-6 right-6 z-40 w-14 h-14 rounded-2xl bg-gray-900 border border-white/10 shadow-xl flex items-center justify-center hover:scale-105 transition-all group"
                 >
-                    <Lock className="w-6 h-6 text-gray-400" />
+                    <div className="absolute inset-0 bg-emerald-500/10 blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <Wallet className="w-6 h-6 text-emerald-400 relative z-10" />
+                    <Lock className="w-3 h-3 text-white absolute top-3 right-3 z-20" />
                 </button>
 
                 {isOpen && (
                     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
-                        <div className="glass-card w-full max-w-md text-center animate-slide-up relative overflow-hidden bg-gray-900 border-emerald-500/30">
+                        <div className="glass-card w-full max-w-md text-center animate-slide-up relative overflow-hidden bg-surface-900 border-emerald-500/30">
                             <button
                                 onClick={() => setIsOpen(false)}
                                 className="absolute top-4 right-4 text-gray-500 hover:text-white"
@@ -136,26 +134,18 @@ export default function AiChat() {
                                 <X className="w-5 h-5" />
                             </button>
 
-                            <div className="w-20 h-20 bg-emerald-500/10 rounded-full flex items-center justify-center mx-auto mb-6 ring-4 ring-emerald-500/5">
-                                <Sparkles className="w-10 h-10 text-emerald-400 animate-pulse" />
+                            <div className="w-20 h-20 bg-emerald-500/10 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                                <Sparkles className="w-10 h-10 text-emerald-400" />
                             </div>
 
                             <h2 className="text-2xl font-bold text-white mb-2">
-                                IA Financeira <span className="text-emerald-400">Pro</span>
+                                Inteligência Artificial <span className="text-emerald-400">Pro</span>
                             </h2>
 
-                            <p className="text-gray-400 text-sm mb-8 leading-relaxed px-4">
-                                Acesse <strong className="text-white">7 modelos de IA</strong> (GPT-5, Gemini, Claude, DeepSeek...)
-                                para análises financeiras inteligentes, categorização automática
-                                e insights personalizados sobre seu dinheiro.
+                            <p className="text-gray-400 text-sm mb-8 leading-relaxed">
+                                Acesse modelos de ponta para análises financeiras em tempo real.
+                                GPT-4, Claude 3 e muito mais.
                             </p>
-
-                            <div className="grid grid-cols-2 gap-2 mb-8 text-left text-xs text-gray-300 px-4">
-                                <div className="flex items-center gap-2"><Check className="w-4 h-4 text-emerald-400" /> GPT-5 & Claude Sonnet</div>
-                                <div className="flex items-center gap-2"><Check className="w-4 h-4 text-emerald-400" /> Categorização Auto</div>
-                                <div className="flex items-center gap-2"><Check className="w-4 h-4 text-emerald-400" /> DeepSeek & Grok</div>
-                                <div className="flex items-center gap-2"><Check className="w-4 h-4 text-emerald-400" /> Dicas de Investimento</div>
-                            </div>
 
                             <div className="flex flex-col gap-3 px-4">
                                 <button className="gradient-btn w-full py-3 text-sm font-bold shadow-lg shadow-emerald-500/20">
@@ -165,7 +155,7 @@ export default function AiChat() {
                                     onClick={() => setIsOpen(false)}
                                     className="text-xs text-gray-500 hover:text-white transition-colors"
                                 >
-                                    Continuar no plano Gratuito
+                                    Voltar
                                 </button>
                             </div>
                         </div>
@@ -178,237 +168,150 @@ export default function AiChat() {
     // ========== FULL CHAT (PRO) ==========
     return (
         <>
-            {/* FAB Button */}
             {!isOpen && (
                 <button
                     onClick={() => setIsOpen(true)}
-                    className="fixed bottom-6 right-6 z-40 w-14 h-14 rounded-xl bg-black border border-accent flex items-center justify-center hover:scale-110 transition-transform group shadow-[0_0_20px_rgba(57,255,20,0.4)] animate-pulse"
+                    className="fixed bottom-6 right-6 z-40 w-14 h-14 rounded-2xl bg-gray-950 border border-emerald-500/30 shadow-2xl flex items-center justify-center hover:scale-105 transition-all group overflow-hidden"
                 >
-                    <div className="absolute inset-0 bg-accent/20 blur-md pointer-events-none" />
-                    <Bot className="w-6 h-6 text-accent group-hover:animate-ping relative z-10" />
+                    <div className="absolute inset-0 bg-emerald-500/20 blur-xl group-hover:bg-emerald-500/30 transition-all" />
+                    <Wallet className="w-6 h-6 text-emerald-400 relative z-10" />
                 </button>
             )}
 
-            {/* Chat Panel */}
             {isOpen && (
-                <div className="fixed bottom-0 right-0 sm:bottom-6 sm:right-6 z-50 w-full sm:w-[400px] md:w-[440px] h-[100dvh] sm:h-[650px] flex flex-col bg-black sm:rounded-none sm:border-2 border-t-2 border-accent shadow-2xl animate-slide-up overflow-hidden ring-1 ring-accent/30 font-mono">
+                <div className={`fixed bottom-0 right-0 sm:bottom-6 sm:right-6 z-50 w-full flex flex-col bg-surface-950 border border-white/10 shadow-2xl transition-all duration-300 overflow-hidden ${isExpanded ? 'sm:w-[600px] h-[100dvh]' : 'sm:w-[400px] h-[100dvh] sm:h-[600px] sm:rounded-2xl'}`}>
 
-                    {/* Header */}
-                    <div className="flex items-center justify-between px-4 py-3 border-b-2 border-accent bg-black">
+                    {/* Modern Header estilo SmartFinance */}
+                    <div className="bg-surface-900 border-b border-white/5 p-4 flex items-center justify-between shadow-sm">
                         <div className="flex items-center gap-3">
-                            <div className="bg-accent/10 border border-accent/50 p-1.5 rounded-sm">
-                                <Bot className="w-5 h-5 text-accent animate-pulse" />
+                            <div className="w-10 h-10 rounded-xl bg-sky-500 flex items-center justify-center shadow-lg shadow-sky-500/20">
+                                <Wallet className="w-6 h-6 text-white" />
                             </div>
                             <div>
-                                <span className="font-black text-white text-sm block tracking-widest uppercase">Nexus AI_Link</span>
-                                <span className="text-[9px] text-accent font-black tracking-widest bg-accent/10 px-1.5 py-0.5 border border-accent/20 uppercase">SECURE connection</span>
+                                <h3 className="font-bold text-white text-base leading-tight">metafin AI</h3>
+                                <div className="flex items-center gap-1.5 mt-0.5">
+                                    <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                                    <span className="text-[10px] text-gray-500 font-medium uppercase tracking-wider">Neural Assistant Online</span>
+                                </div>
                             </div>
                         </div>
                         <div className="flex items-center gap-2">
                             <button
-                                onClick={handleClear}
-                                className="p-1.5 rounded-sm border border-red-500/50 text-red-500 hover:text-white hover:bg-red-500 transition-all font-black text-[10px] uppercase tracking-widest flex items-center gap-1"
-                                title="Limpar conversa"
+                                onClick={() => setIsExpanded(!isExpanded)}
+                                className="p-2 text-gray-500 hover:text-white hover:bg-white/5 rounded-lg transition-all hidden sm:block"
                             >
-                                <RotateCcw className="w-3 h-3" /> WIPE
+                                {isExpanded ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
                             </button>
                             <button
                                 onClick={() => setIsOpen(false)}
-                                className="p-1.5 border border-accent/50 text-accent hover:bg-accent hover:text-black transition-all"
+                                className="p-2 text-gray-500 hover:text-white hover:bg-white/5 rounded-lg transition-all"
                             >
-                                <X className="w-4 h-4" />
+                                <X className="w-5 h-5" />
                             </button>
                         </div>
                     </div>
 
-                    {/* Model Picker */}
-                    <div className="px-4 py-2 border-b border-white/10 bg-black/50">
+                    {/* Model Selector Strip */}
+                    <div className="px-4 py-2 bg-surface-900/50 border-b border-white/5 flex items-center justify-between">
                         <button
                             onClick={() => setShowModelPicker(!showModelPicker)}
-                            className="flex items-center gap-2 text-[10px] uppercase font-bold tracking-widest text-brand-400 hover:text-brand-300 transition-colors w-full bg-black border border-brand-500/30 hover:border-brand-500 p-2 rounded-none"
+                            className="text-[10px] font-bold text-sky-400 flex items-center gap-1 hover:text-sky-300"
                         >
-                            <span className="text-base">{currentModel?.icon}</span>
-                            <span>{currentModel?.name}</span>
-                            <span className="text-gray-500 ml-auto opacity-50">{currentModel?.provider}</span>
-                            <ChevronDown className={`w-3 h-3 transition-transform ${showModelPicker ? 'rotate-180' : ''}`} />
+                            {currentModel?.icon} {currentModel?.name} <ChevronDown className="w-3 h-3" />
+                        </button>
+                        <button onClick={handleClear} className="text-[10px] font-bold text-gray-500 hover:text-red-400 transition-colors uppercase tracking-widest">
+                            <RotateCcw className="w-3 h-3 inline mr-1" /> Limpar
                         </button>
 
                         {showModelPicker && (
-                            <div className="mt-2 space-y-1 pb-2 animate-fade-in max-h-48 overflow-y-auto custom-scrollbar border border-white/10 p-1 bg-black">
-                                {availableModels.map((modelId) => {
-                                    const m = AI_MODELS[modelId];
-                                    if (!m) return null;
-                                    const isActive = selectedModel === modelId;
-                                    return (
-                                        <button
-                                            key={modelId}
-                                            onClick={() => {
-                                                setSelectedModel(modelId);
-                                                setShowModelPicker(false);
-                                            }}
-                                            className={`flex items-center gap-3 w-full px-3 py-2 text-xs transition-all ${isActive
-                                                ? 'bg-brand-500/20 text-brand-400 border border-brand-500'
-                                                : 'text-gray-500 hover:bg-white/10 hover:text-white border border-transparent'
-                                                }`}
-                                        >
-                                            <span className="text-base">{m.icon}</span>
-                                            <div className="flex-1 text-left">
-                                                <div className="font-bold uppercase flex items-center gap-2 tracking-widest">
-                                                    {m.name}
-                                                    <span className="text-[9px] bg-white/10 px-1 text-gray-400 border border-white/20">{m.costTier}</span>
-                                                </div>
-                                                <div className="text-[9px] text-gray-600 truncate max-w-[200px] normal-case font-sans">{m.description}</div>
-                                            </div>
-                                            {isActive && <Check className="w-3 h-3 text-brand-500" />}
-                                        </button>
-                                    );
-                                })}
+                            <div className="absolute top-[72px] left-4 right-4 z-40 bg-surface-900 border border-white/10 rounded-xl shadow-2xl p-2 animate-slide-up">
+                                {availableModels.map((modelId) => (
+                                    <button
+                                        key={modelId}
+                                        onClick={() => {
+                                            setSelectedModel(modelId);
+                                            setShowModelPicker(false);
+                                        }}
+                                        className={`flex items-center gap-3 w-full p-3 rounded-lg text-xs transition-all ${selectedModel === modelId ? 'bg-sky-500/10 text-sky-400' : 'text-gray-400 hover:bg-white/5'}`}
+                                    >
+                                        <span className="text-lg">{AI_MODELS[modelId]?.icon}</span>
+                                        <div className="text-left font-bold">{AI_MODELS[modelId]?.name}</div>
+                                    </button>
+                                ))}
                             </div>
                         )}
                     </div>
 
-                    {/* Messages */}
-                    <div className="flex-1 overflow-y-auto px-4 py-4 space-y-6 custom-scrollbar bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+PGRlZnM+PG1hdHRlcm4gaWQ9ImciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTTAgNDBoNDBWMEgweiIgZmlsbD0ibm9uZSIvPjxwYXRoIGQ9Ik0wIDEwaDQwTTAgMjBoNDBNMCAzMGg0ME0xMCAwdjQwTTIwIDB2NDBNMzAgMHY0MCIgc3Ryb2tlPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMDMpIiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZykiLz48L3N2Zz4=')]">
-                        {/* Empty State */}
+                    {/* Messages Area */}
+                    <div className="flex-1 overflow-y-auto p-4 space-y-6 custom-scrollbar bg-surface-950">
                         {messages.length === 0 && (
-                            <div className="text-center py-10 px-4">
-                                <div className="w-16 h-16 bg-black border-2 border-accent flex items-center justify-center mx-auto mb-6 shadow-[0_0_20px_rgba(57,255,20,0.3)] animate-pulse">
-                                    <Bot className="w-8 h-8 text-accent" />
+                            <div className="h-full flex flex-col items-center justify-center text-center px-6">
+                                <div className="w-16 h-16 bg-sky-500/10 rounded-2xl flex items-center justify-center mb-4">
+                                    <Bot className="w-8 h-8 text-sky-400" />
                                 </div>
-                                <h3 className="text-white font-black mb-2 uppercase tracking-widest text-lg">AI_CORE STATUS: WAITING</h3>
-                                <p className="text-gray-500 text-xs mb-8 max-w-[260px] mx-auto leading-relaxed">
-                                    Init command sequence or ask for direct financial extraction.
-                                </p>
-                                <div className="grid grid-cols-1 gap-2.5">
-                                    {Object.entries(AI_ACTIONS).slice(0, 4).map(([key, action]) => (
+                                <h3 className="text-white font-bold text-lg mb-2">Olá, eu sou o metafin AI</h3>
+                                <p className="text-gray-500 text-sm mb-8">Como posso ajudar com suas finanças hoje?</p>
+                                <div className="grid grid-cols-1 gap-2 w-full">
+                                    {Object.entries(AI_ACTIONS).slice(0, 3).map(([key, action]) => (
                                         <button
                                             key={key}
                                             onClick={() => handleSend(action.prompt)}
-                                            className="p-3 bg-black border border-white/10 text-xs text-brand-400 hover:bg-brand-500/10 hover:border-brand-500 transition-all text-left flex items-center gap-3 group uppercase tracking-widest shadow-inner"
+                                            className="p-3 bg-white/5 border border-white/5 rounded-xl text-xs text-gray-300 hover:bg-sky-500/10 hover:border-sky-500/50 transition-all text-left font-medium"
                                         >
-                                            <span className="text-lg opacity-50 group-hover:opacity-100 transition-opacity">&gt;_</span>
-                                            <span className="font-bold">{action.label}</span>
+                                            {action.label}
                                         </button>
                                     ))}
                                 </div>
                             </div>
                         )}
 
-                        {/* Message Bubbles */}
                         {messages.map((msg) => (
-                            <div
-                                key={msg.id}
-                                className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'} animate-fade-in`}
-                            >
-                                <div className={`flex flex-col max-w-[85%] ${msg.role === 'user' ? 'items-end' : 'items-start'}`}>
-
-                                    {/* Name Label */}
-                                    <span className="text-[9px] font-bold text-gray-500 mb-1 px-1 uppercase tracking-widest">
-                                        {msg.role === 'user' ? 'OPERATOR' : msg.model || 'NEXUS_AI'}
-                                    </span>
-
-                                    <div
-                                        className={`px-4 py-3 text-sm leading-relaxed shadow-sm ${msg.role === 'user'
-                                            ? 'bg-accent/10 border-r-4 border-r-accent border-y border-l border-white/10 text-accent shadow-[0_0_10px_rgba(57,255,20,0.1)]'
-                                            : msg.isError
-                                                ? 'bg-red-500/10 text-red-400 border border-red-500/30'
-                                                : 'bg-black border-l-4 border-l-brand-500 border-y border-r border-white/10 text-gray-300 shadow-[0_0_10px_rgba(6,182,212,0.1)]'
-                                            }`}
-                                    >
-                                        <div className="whitespace-pre-wrap break-words font-medium">
-                                            {msg.content}
-                                        </div>
-                                    </div>
-
-                                    {/* Metadata / Actions */}
-                                    <div className="flex items-center gap-2 mt-1 px-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                        {msg.role === 'assistant' && !msg.isError && (
-                                            <>
-                                                <span className="text-[9px] text-gray-600 font-bold">
-                                                    {(msg.latency / 1000).toFixed(1)}s LATENCY
-                                                </span>
-                                                <div className="w-1 h-1 rounded-full bg-gray-700"></div>
-                                                <button
-                                                    onClick={() => handleCopy(msg.content, msg.id)}
-                                                    className="text-[9px] uppercase tracking-widest text-brand-400 font-black hover:text-brand-300 flex items-center gap-1 transition-colors"
-                                                >
-                                                    {copiedId === msg.id ? (
-                                                        <><Check className="w-3 h-3" /> EXPORTED</>
-                                                    ) : (
-                                                        <><Copy className="w-3 h-3" /> EXPORT</>
-                                                    )}
-                                                </button>
-                                            </>
+                            <div key={msg.id} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                                <div className={`max-w-[85%] ${msg.role === 'user' ? 'bg-sky-600 text-white rounded-2xl rounded-tr-none px-4 py-3 shadow-lg shadow-sky-900/20' : 'bg-surface-800 text-gray-200 rounded-2xl rounded-tl-none px-4 py-3 border border-white/5'}`}>
+                                    <div className="text-sm leading-relaxed whitespace-pre-wrap">{msg.content}</div>
+                                    <div className="mt-2 flex items-center justify-between opacity-50 text-[9px] font-bold uppercase tracking-wider">
+                                        <span>{msg.role === 'user' ? 'Você' : msg.model}</span>
+                                        {msg.role === 'assistant' && (
+                                            <button onClick={() => handleCopy(msg.content, msg.id)} className="hover:text-white transition-colors">
+                                                {copiedId === msg.id ? 'Copiado!' : 'Copiar'}
+                                            </button>
                                         )}
                                     </div>
                                 </div>
                             </div>
                         ))}
-
-                        {/* Loading */}
                         {loading && (
-                            <div className="flex justify-start animate-fade-in">
-                                <div className="bg-black border border-accent/50 px-4 py-3 flex items-center gap-3">
-                                    <Bot className="w-4 h-4 text-accent animate-pulse" />
-                                    <span className="text-xs text-accent uppercase tracking-widest font-black">
-                                        Processing<span className="animate-pulse">_</span>
-                                    </span>
+                            <div className="flex justify-start">
+                                <div className="bg-surface-800 rounded-2xl rounded-tl-none px-6 py-4 border border-white/5">
+                                    <Loader2 className="w-5 h-5 text-sky-400 animate-spin" />
                                 </div>
                             </div>
                         )}
-
                         <div ref={messagesEndRef} />
                     </div>
 
-                    {/* Quick Actions (if chat active) */}
-                    {messages.length > 0 && !loading && (
-                        <div className="px-4 py-2 bg-black border-t border-white/10 flex gap-2 overflow-x-auto custom-scrollbar">
-                            {Object.entries(AI_ACTIONS).map(([key, action]) => (
-                                <button
-                                    key={key}
-                                    onClick={() => handleSend(action.prompt)}
-                                    className="shrink-0 px-3 py-1.5 border border-brand-500/30 text-[9px] uppercase tracking-widest font-bold text-gray-400 hover:text-brand-400 hover:bg-brand-500/10 hover:border-brand-500 transition-all whitespace-nowrap"
-                                >
-                                    [&gt;] {action.label}
-                                </button>
-                            ))}
-                        </div>
-                    )}
-
-                    {/* Input */}
-                    <div className="p-4 border-t-2 border-accent bg-black">
-                        {error && (
-                            <div className="text-xs text-red-500 font-bold uppercase tracking-widest mb-2 bg-red-500/10 border border-red-500 p-2 flex items-center gap-2">
-                                <X className="w-3 h-3" /> {error}
-                            </div>
-                        )}
+                    {/* Input Area */}
+                    <div className="p-4 bg-surface-900 border-t border-white/5">
                         <form
-                            onSubmit={(e) => {
-                                e.preventDefault();
-                                handleSend();
-                            }}
-                            className="flex items-center gap-2 bg-black p-1 border border-white/20 focus-within:border-accent transition-colors shadow-inner"
+                            onSubmit={(e) => { e.preventDefault(); handleSend(); }}
+                            className="relative flex items-center"
                         >
                             <input
                                 ref={inputRef}
                                 type="text"
                                 value={input}
                                 onChange={(e) => setInput(e.target.value)}
-                                placeholder="&gt; AWAITING COMMAND..."
-                                disabled={loading}
-                                className="flex-1 px-3 py-2 bg-transparent text-accent font-bold placeholder-gray-600 text-sm focus:outline-none disabled:opacity-50"
+                                placeholder="Pergunte qualquer coisa sobre seu dinheiro..."
+                                className="w-full bg-surface-800 border border-white/10 rounded-2xl pl-4 pr-14 py-3 text-sm text-white focus:outline-none focus:border-sky-500 transition-all placeholder:text-gray-600"
                             />
                             <button
                                 type="submit"
                                 disabled={loading || !input.trim()}
-                                className="p-2.5 bg-accent text-black font-black hover:bg-white hover:shadow-[0_0_15px_rgba(57,255,20,0.6)] transition-all disabled:opacity-30 disabled:cursor-not-allowed group"
+                                className="absolute right-2 p-2 bg-sky-500 text-white rounded-xl hover:bg-sky-400 disabled:opacity-30 transition-all"
                             >
-                                {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />}
+                                <Send className="w-4 h-4" />
                             </button>
                         </form>
-                        <div className="text-[9px] uppercase tracking-widest font-black text-gray-700 text-center mt-2 flex justify-center items-center gap-1">
-                            <Lock className="w-2 h-2" /> ENCRYPTED NEURAL NETWORK
-                        </div>
                     </div>
                 </div>
             )}

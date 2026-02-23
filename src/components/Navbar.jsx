@@ -114,7 +114,7 @@ export default function Navbar() {
                                 <div className="absolute inset-0 bg-white/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity" />
                             </div>
                             <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-gray-900 via-gray-600 to-gray-500 dark:from-white dark:to-gray-400 tracking-tight">
-                                SmartFinance
+                                MetaFin
                             </span>
                         </Link>
 

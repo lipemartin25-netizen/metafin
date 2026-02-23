@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">SmartFinance Hub</string>
-    <string name="title_activity_main">SmartFinance Hub</string>
+    <string name="app_name">MetaFin</string>
+    <string name="title_activity_main">MetaFin</string>
     <string name="package_name">com.smartfinance.hub</string>
     <string name="custom_url_scheme">com.smartfinance.hub</string>
 </resources>

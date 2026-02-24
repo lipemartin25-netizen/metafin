@@ -61,7 +61,7 @@
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.28.0",
     "read-excel-file": "^6.0.3",
-    "recharts": "^2.13.3"
+    "recharts": "^2.15.4"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",

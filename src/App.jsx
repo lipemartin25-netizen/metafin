@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef, useCallback, lazy, Suspense } from 'react';
-import { Routes, Route, useLocation, Navigate, useNavigate } from 'react-router-dom';
+import { Routes, Route, useLocation, Navigate, useNavigate, Outlet } from 'react-router-dom';
 import { trackPageView } from './hooks/useAnalytics';
 import { useAuth } from './contexts/AuthContext';
 import Layout from './components/Layout';
@@ -132,23 +132,25 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
-          <Route path="/app" element={<ProtectedRoute><Layout /></ProtectedRoute>}>
+          <Route path="/app" element={<ProtectedRoute><Outlet /></ProtectedRoute>}>
             <Route index element={<Dashboard />} />
-            <Route path="transactions" element={<Transactions />} />
-            <Route path="accounts" element={<BankAccounts />} />
-            <Route path="cards" element={<CreditCards />} />
-            <Route path="bills" element={<Bills />} />
-            <Route path="investments" element={<Investments />} />
-            <Route path="goals" element={<Goals />} />
-            <Route path="budget" element={<Budget />} />
-            <Route path="networth" element={<NetWorth />} />
-            <Route path="wealth" element={<Simulators />} />
-            <Route path="reports" element={<Reports />} />
-            <Route path="health" element={<FinancialHealth />} />
-            <Route path="advisor" element={<AIAssistant />} />
-            <Route path="api" element={<DeveloperAPI />} />
-            <Route path="upgrade" element={<Upgrade />} />
-            <Route path="settings" element={<Settings />} />
+            <Route element={<Layout />}>
+              <Route path="transactions" element={<Transactions />} />
+              <Route path="accounts" element={<BankAccounts />} />
+              <Route path="cards" element={<CreditCards />} />
+              <Route path="bills" element={<Bills />} />
+              <Route path="investments" element={<Investments />} />
+              <Route path="goals" element={<Goals />} />
+              <Route path="budget" element={<Budget />} />
+              <Route path="networth" element={<NetWorth />} />
+              <Route path="wealth" element={<Simulators />} />
+              <Route path="reports" element={<Reports />} />
+              <Route path="health" element={<FinancialHealth />} />
+              <Route path="advisor" element={<AIAssistant />} />
+              <Route path="api" element={<DeveloperAPI />} />
+              <Route path="upgrade" element={<Upgrade />} />
+              <Route path="settings" element={<Settings />} />
+            </Route>
           </Route>
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

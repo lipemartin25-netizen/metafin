@@ -143,7 +143,7 @@ export default function Home() {
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.2 }}
-                            className="text-lg text-gray-400 max-w-3xl mx-auto leading-relaxed font-medium"
+                            className="text-lg text-gray-300 max-w-3xl mx-auto leading-relaxed font-medium"
                         >
                             A MetaFin não apenas rastreia, ela antecipa. Combine Open Finance
                             com análise preditiva de última geração para tomar as melhores
@@ -251,7 +251,7 @@ export default function Home() {
                                     {feature.icon}
                                 </div>
                                 <h3 className="text-lg font-black mb-4 uppercase tracking-tighter">{feature.title}</h3>
-                                <p className="text-gray-400 text-sm leading-relaxed font-medium">{feature.desc}</p>
+                                <p className="text-gray-300 text-sm leading-relaxed font-medium">{feature.desc}</p>
                             </motion.div>
                         ))}
                     </div>
@@ -265,7 +265,7 @@ export default function Home() {
                 <div className="max-w-7xl mx-auto relative z-10">
                     <div className="text-center max-w-2xl mx-auto mb-24">
                         <h2 className="text-4xl md:text-5xl font-black mb-6 tracking-tighter">Escolha sua jornada.</h2>
-                        <p className="text-gray-400 font-medium">Planos desenhados para todos os níveis de ambição financeira.</p>
+                        <p className="text-gray-300 font-medium font-bold">Planos desenhados para todos os níveis de ambição financeira.</p>
                     </div>
 
                     <div className="grid lg:grid-cols-3 gap-8">
@@ -285,7 +285,7 @@ export default function Home() {
 
                                 <div className="mb-10">
                                     <h3 className="text-xl font-black uppercase tracking-tighter mb-2">{plan.name}</h3>
-                                    <p className="text-gray-500 text-xs font-medium leading-relaxed">{plan.desc}</p>
+                                    <p className="text-gray-300 text-xs font-bold leading-relaxed">{plan.desc}</p>
                                 </div>
 
                                 <div className="mb-10 flex items-baseline gap-2">
@@ -295,7 +295,7 @@ export default function Home() {
 
                                 <div className="space-y-4 mb-12 flex-1">
                                     {plan.features.map(f => (
-                                        <div key={f} className="flex items-start gap-3 text-xs font-bold text-gray-400">
+                                        <div key={f} className="flex items-start gap-3 text-xs font-bold text-gray-200">
                                             <CheckCircle2 className="w-4 h-4 text-emerald-500 flex-shrink-0" />
                                             <span>{f}</span>
                                         </div>
@@ -305,8 +305,8 @@ export default function Home() {
                                 <Link
                                     to="/signup"
                                     className={`w-full py-5 text-center text-[10px] font-black uppercase tracking-[0.3em] rounded-[2rem] transition-all ${plan.popular
-                                            ? 'bg-emerald-500 text-black hover:bg-emerald-400 shadow-xl shadow-emerald-500/20'
-                                            : 'bg-white/5 text-white hover:bg-white/10 border border-white/5'
+                                        ? 'bg-emerald-500 text-black hover:bg-emerald-400 shadow-xl shadow-emerald-500/20'
+                                        : 'bg-white/5 text-white hover:bg-white/10 border border-white/5'
                                         }`}
                                 >
                                     {plan.buttonText}

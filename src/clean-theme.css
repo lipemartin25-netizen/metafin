@@ -1,0 +1,105 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ========== METAFIN CLEAN DESIGN SYSTEM (MOBILLS INSPIRED) ========== */
+
+:root {
+    /* Brand Pallete - Professional Indigo & Vibrant Gold */
+    --brand-primary: #6515DD;
+    --brand-dark: #2B1464;
+    --brand-accent: #FBB81B;
+    --brand-accent-hover: #E5A410;
+
+    /* Surfaces - Clean & Spacious */
+    --bg-main: #FFFFFF;
+    --bg-alt: #F8F9FA;
+    --surface-white: #FFFFFF;
+
+    /* Typography Colors */
+    --text-header: #2B1464;
+    --text-body: #4A5568;
+    --text-muted: #718096;
+
+    --shadow-soft: 0 4px 20px rgba(43, 20, 100, 0.05);
+    --shadow-medium: 0 10px 30px rgba(43, 20, 100, 0.08);
+}
+
+/* ========== BASE SETUP ========== */
+
+body {
+    font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+    @apply bg-white text-gray-700 transition-colors duration-300 overflow-x-hidden;
+    background-color: var(--bg-main);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    @apply font-bold tracking-tight text-[#2B1464];
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+/* ========== CLEAN COMPONENTS ========== */
+
+@layer components {
+
+    /* Card Style - Mobills like */
+    .meta-clean-card {
+        @apply bg-white p-8 rounded-[1.5rem] border border-gray-100 transition-all duration-300;
+        box-shadow: var(--shadow-soft);
+    }
+
+    .meta-clean-card:hover {
+        @apply transform -translate-y-1;
+        box-shadow: var(--shadow-medium);
+    }
+
+    /* Buttons - Pill shaped and Vibrant */
+    .btn-clean {
+        @apply px-8 py-3 rounded-full font-bold text-sm transition-all duration-300 flex items-center justify-center gap-2;
+    }
+
+    .btn-clean-primary {
+        @apply btn-clean bg-[#FBB81B] text-[#2B1464] hover:bg-[#E5A410] active:scale-95;
+    }
+
+    .btn-clean-secondary {
+        @apply btn-clean bg-[#6515DD] text-white hover:bg-[#5210B3] active:scale-95;
+    }
+
+    .btn-clean-outline {
+        @apply btn-clean bg-transparent border-2 border-[#6515DD] text-[#6515DD] hover:bg-[#6515DD] hover:text-white;
+    }
+
+    /* Input Fields - Clean & Modern */
+    .input-clean {
+        @apply w-full px-6 py-4 rounded-2xl bg-gray-50 border border-gray-200 text-gray-800 placeholder-gray-400 focus:outline-none focus:border-[#6515DD] focus:ring-4 focus:ring-[#6515DD]/5 transition-all;
+    }
+}
+
+/* ========== UTILS ========== */
+
+.gradient-text-clean {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-[#6515DD] to-[#2B1464];
+}
+
+.section-alt {
+    background-color: var(--bg-alt);
+}
+
+/* Scrollbar Clean */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    @apply bg-gray-50;
+}
+
+::-webkit-scrollbar-thumb {
+    @apply bg-gray-200 rounded-full hover:bg-gray-300 transition-colors;
+}

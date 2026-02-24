@@ -4,31 +4,31 @@ import { motion } from 'framer-motion';
 
 export default function Home() {
     return (
-        <div className="min-h-screen bg-[#020617] text-white selection:bg-emerald-500/30 overflow-x-hidden">
+        <div className="min-h-screen bg-white text-gray-800 selection:bg-mobills-purple/10 overflow-x-hidden">
             {/* Header / Nav */}
-            <header className="fixed top-0 left-0 right-0 z-50 bg-[#020617]/80 backdrop-blur-md border-b border-white/5">
-                <nav className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 rounded-lg bg-emerald-500 flex items-center justify-center">
-                            <Wallet className="w-5 h-5 text-[#020617]" />
+            <header className="fixed top-0 left-0 right-0 z-50 bg-[#2B1464] text-white shadow-lg">
+                <nav className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-xl bg-mobills-yellow flex items-center justify-center shadow-md">
+                            <Wallet className="w-6 h-6 text-[#2B1464]" />
                         </div>
-                        <span className="font-bold text-xl tracking-tight">metafin</span>
+                        <span className="font-bold text-2xl tracking-tight lowercase">metafin</span>
                     </div>
 
-                    <div className="hidden md:flex items-center gap-8">
-                        {['Recursos', 'Segurança', 'Planos', 'Institucional'].map((item) => (
-                            <a key={item} href={`#${item.toLowerCase()}`} className="text-sm text-gray-400 hover:text-white transition-colors">
+                    <div className="hidden lg:flex items-center gap-10">
+                        {['Recursos', 'Segurança', 'Planos', 'Ajuda'].map((item) => (
+                            <a key={item} href={`#${item.toLowerCase()}`} className="text-sm font-semibold hover:text-mobills-yellow transition-colors">
                                 {item}
                             </a>
                         ))}
                     </div>
 
-                    <div className="flex items-center gap-4">
-                        <Link to="/login" className="text-sm font-medium text-gray-400 hover:text-white transition-colors">
+                    <div className="flex items-center gap-6">
+                        <Link to="/login" className="text-sm font-bold hover:text-mobills-yellow transition-colors">
                             Entrar
                         </Link>
-                        <Link to="/signup" className="px-4 py-2 bg-emerald-500 hover:bg-emerald-400 text-[#020617] text-sm font-bold rounded-full transition-all hover:scale-105 active:scale-95 shadow-lg shadow-emerald-500/20">
-                            Criar Conta
+                        <Link to="/signup" className="px-6 py-2.5 bg-mobills-yellow hover:bg-mobills-yellow-hover text-[#2B1464] text-sm font-black rounded-full transition-all hover:scale-105 shadow-xl">
+                            Teste Grátis
                         </Link>
                     </div>
                 </nav>
@@ -54,11 +54,11 @@ export default function Home() {
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.1 }}
-                            className="text-6xl md:text-8xl font-black tracking-tighter leading-[0.85]"
+                            className="text-5xl md:text-7xl font-black tracking-tight leading-[1.1] text-[#2B1464]"
                         >
-                            SUA VIDA FINANCEIRA <br />
-                            <span className="meta-gradient-text italic">
-                                EM ALTA DEFINIÇÃO.
+                            A melhor solução para uma <br />
+                            <span className="text-mobills-purple">
+                                vida financeira saudável.
                             </span>
                         </motion.h1>
 
@@ -78,13 +78,12 @@ export default function Home() {
                             transition={{ delay: 0.3 }}
                             className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-6"
                         >
-                            <Link to="/signup" className="group meta-btn-primary !px-10 !py-5 !rounded-2xl transition-all shadow-2xl shadow-brand-500/20">
-                                <span className="uppercase tracking-[0.2em] text-xs font-black">Começar Agora</span>
-                                <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform text-surface-950" />
+                            <Link to="/signup" className="px-10 py-5 bg-mobills-yellow hover:bg-mobills-yellow-hover text-[#2B1464] font-black rounded-full transition-all transform hover:scale-105 shadow-2xl flex items-center gap-3">
+                                <span className="uppercase tracking-widest text-xs">Começar Grátis</span>
+                                <ArrowRight className="w-5 h-5" />
                             </Link>
-                            <button className="flex items-center gap-3 px-10 py-5 bg-white/5 border border-white/10 text-white rounded-2xl hover:bg-white/10 transition-all backdrop-blur-xl">
-                                <Play className="w-5 h-5 fill-brand-400 text-brand-400" />
-                                <span className="uppercase tracking-[0.2em] text-[10px] font-black">Ver Protocolo</span>
+                            <button className="px-10 py-5 bg-white border-2 border-mobills-purple text-mobills-purple font-black rounded-full hover:bg-mobills-purple hover:text-white transition-all">
+                                <span className="uppercase tracking-widest text-xs">Saiba Mais</span>
                             </button>
                         </motion.div>
 
@@ -109,76 +108,53 @@ export default function Home() {
                         transition={{ delay: 0.6, duration: 0.8 }}
                         className="mt-20 relative px-4"
                     >
-                        <div className="max-w-5xl mx-auto bg-gradient-to-b from-gray-800/10 to-transparent p-[1px] rounded-[2rem]">
-                            <div className="bg-[#020617] rounded-[2rem] overflow-hidden shadow-2xl shadow-emerald-500/10 border border-white/5 aspect-video relative">
-                                <div className="absolute inset-0 bg-gradient-to-b from-emerald-500/5 to-transparent" />
-                                <img
-                                    src="https://images.unsplash.com/photo-1642790106117-e829e14a795f?auto=format&fit=crop&q=80&w=2000"
-                                    alt="App Preview"
-                                    className="w-full h-full object-cover opacity-20"
-                                />
-                                <div className="absolute inset-0 flex items-center justify-center">
-                                    <div className="w-20 h-20 rounded-full bg-emerald-500 flex items-center justify-center shadow-2xl shadow-emerald-500/50 cursor-pointer hover:scale-110 transition-transform">
-                                        <Play className="w-8 h-8 text-[#020617] ml-1" />
-                                    </div>
-                                </div>
-                            </div>
+                        <div className="max-w-5xl mx-auto bg-gray-50 rounded-[2.5rem] p-4 shadow-2xl border border-gray-100 overflow-hidden">
+                            <img
+                                src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=2000"
+                                alt="App Dashboard Preview"
+                                className="w-full h-full object-cover rounded-[2rem]"
+                            />
                         </div>
                     </motion.div>
                 </div>
             </section>
 
             {/* Features Grid */}
-            <section id="recursos" className="py-32 px-4">
+            <section id="recursos" className="py-32 px-4 bg-gray-50">
                 <div className="max-w-7xl mx-auto">
-                    <div className="mb-20 space-y-4">
-                        <h2 className="text-4xl font-black tracking-tight">TECNOLOGIA DE PONTA<br />PARA SEU CAPITAL.</h2>
-                        <div className="h-1 w-20 bg-emerald-500" />
+                    <div className="mb-20 space-y-4 text-center">
+                        <h2 className="text-4xl font-black text-[#2B1464]">Controle suas finanças em um só lugar.</h2>
+                        <p className="text-gray-500 max-w-2xl mx-auto">Cuidar do seu dinheiro pode ser simples. Com nosso gerenciador, você organiza e planeja sua vida financeira em um único lugar.</p>
                     </div>
 
-                    <div className="grid md:grid-cols-3 gap-6">
+                    <div className="grid md:grid-cols-3 gap-8">
                         {[
                             {
-                                icon: <Globe className="w-6 h-6" />,
-                                title: "Open Finance BR",
-                                desc: "Conexão direta com mais de 800 instituições bancárias do Brasil via APIs reguladas pelo Banco Central."
+                                icon: <Globe className="w-8 h-8" />,
+                                title: "Conecte suas contas",
+                                desc: "Saiba exatamente para onde seu dinheiro está indo com nossa integração automática Open Finance."
                             },
                             {
-                                icon: <TrendingUp className="w-6 h-6" />,
-                                title: "IA de Patrimônio",
-                                desc: "Análises de caixa e tendências baseadas em Deep Learning para maximizar sua rentabilidade."
+                                icon: <TrendingUp className="w-8 h-8" />,
+                                title: "Planeje seus gastos",
+                                desc: "Faça orçamentos mensais, mantenha seus gastos sob controle para juntar dinheiro e alcançar seus sonhos."
                             },
                             {
-                                icon: <Shield className="w-6 h-6" />,
-                                title: "Criptografia Militar",
-                                desc: "Seus dados financeiros são protegidos por padrão AES-256 e MFA em todas as operações críticas."
-                            },
-                            {
-                                icon: <PieChart className="w-6 h-6" />,
-                                title: "Smart Dashboard",
-                                desc: "Visualização consolidada de faturas, investimentos e saldos em uma única interface Ultra-HD."
-                            },
-                            {
-                                icon: <Clock className="w-6 h-6" />,
-                                title: "Tempo Real",
-                                desc: "Suas faturas e transações são processadas instantaneamente conforme acontecem no seu banco."
-                            },
-                            {
-                                icon: <Smartphone className="w-6 h-6" />,
-                                title: "Experiência Nativa",
-                                desc: "Desenvolvido com tecnologia híbrida para performance máxima em Desktop, iOS e Android."
+                                icon: <Shield className="w-8 h-8" />,
+                                title: "Segurança total",
+                                desc: "Seus dados são protegidos com os mesmos padrões de segurança dos grandes bancos."
                             }
                         ].map((feature, i) => (
                             <motion.div
                                 key={i}
                                 whileHover={{ y: -10 }}
-                                className="meta-card !p-8 group shadow-none"
+                                className="bg-white p-10 rounded-[2rem] shadow-xl border border-gray-100 group transition-all"
                             >
-                                <div className="w-14 h-14 rounded-2xl bg-brand-500/10 flex items-center justify-center text-brand-400 mb-8 group-hover:bg-brand-500 group-hover:text-surface-950 transition-all duration-500 border border-brand-500/10 group-hover:rotate-6 group-hover:shadow-2xl group-hover:shadow-brand-500/40">
+                                <div className="w-16 h-16 rounded-2xl bg-mobills-purple/5 flex items-center justify-center text-mobills-purple mb-8 group-hover:bg-mobills-purple group-hover:text-white transition-all duration-300">
                                     {feature.icon}
                                 </div>
-                                <h3 className="text-xl font-black mb-4 tracking-tighter text-white">{feature.title}</h3>
-                                <p className="text-gray-500 text-sm leading-relaxed font-medium">{feature.desc}</p>
+                                <h3 className="text-xl font-bold mb-4 text-[#2B1464]">{feature.title}</h3>
+                                <p className="text-gray-500 text-sm leading-relaxed">{feature.desc}</p>
                             </motion.div>
                         ))}
                     </div>

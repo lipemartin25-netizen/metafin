@@ -18,7 +18,15 @@ export default {
                     900: '#0c4a6e',
                     DEFAULT: '#0ea5e9',
                 },
-                'bg-deep': '#020617',
+                mobills: {
+                    purple: '#6515DD',
+                    dark: '#2B1464',
+                    yellow: '#FBB81B',
+                    'yellow-hover': '#E5A410',
+                    gray: '#4A5568',
+                    light: '#F8F9FA'
+                },
+                'bg-deep': '#FFFFFF',
                 surface: {
                     50: '#f8fafc',
                     100: '#f1f5f9',

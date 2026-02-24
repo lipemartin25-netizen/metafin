@@ -12,7 +12,10 @@ import {
     Cpu,
     Layers,
     LineChart,
-    ChevronDown
+    ChevronDown,
+    Lock,
+    PieChart,
+    BarChart3
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
@@ -23,11 +26,10 @@ export default function Home() {
 
     useEffect(() => {
         const handleScroll = () => {
-            setScrolled(window.scrollY > 50);
+            setScrolled(window.scrollY > 20);
         };
         window.addEventListener('scroll', handleScroll);
 
-        // Robust Vercel Toolbar Removal
         const removeVercelToolbar = () => {
             const toolbars = document.querySelectorAll('vercel-live-feedback, #__vercel-toolbar, .vercel-toolbar');
             toolbars.forEach(el => {
@@ -51,346 +53,281 @@ export default function Home() {
             name: "Essencial",
             price: "R$ 0",
             period: "/sempre",
-            desc: "Ideal para começar a organizar sua vida financeira de forma manual.",
+            desc: "O ponto de partida ideal para quem busca controle e organização manual com ferramentas profissionais.",
             features: [
-                "Dashboard consolidado",
-                "Lançamentos manuais ilimitados",
-                "Metas financeiras básicas",
-                "Relatórios mensais simplificados",
-                "Suporte via comunidade"
+                "Dashboard Financeiro Consolidado",
+                "Lançamentos Manuais Ilimitados",
+                "Controle de Metas de Economia",
+                "Relatórios de Fluxo de Caixa",
+                "Suporte via Central de Ajuda"
             ],
-            buttonText: "Começar Grátis",
+            buttonText: "Começar Agora",
             popular: false,
-            highlight: "bg-surface-900/50 border-white/5"
+            variant: "secondary"
         },
         {
             name: "Premium",
             price: "R$ 19,90",
             period: "/mês",
-            desc: "A experiência completa com monitoramento automático e IA.",
+            desc: "Produtividade total com automação bancária em tempo real e inteligência preditiva Nexus IA.",
             features: [
-                "Conexão bancária automática (Open Finance)",
-                "Nexus IA: Insights inteligentes",
-                "Gestão de cartões ultra-avançada",
-                "Categorização automática com Machine Learning",
-                "Suporte prioritário"
+                "Open Finance: Conexão Automática",
+                "Nexus IA: Insights Preditivos",
+                "Dashboard de Cartões de Crédito",
+                "Categorização Inteligente (ML)",
+                "Suporte Especializado Prioritário"
             ],
             buttonText: "Assinar Premium",
             popular: true,
-            highlight: "bg-emerald-500/10 border-emerald-500/20"
+            variant: "primary"
         },
         {
             name: "Elite",
             price: "R$ 49,90",
             period: "/mês",
-            desc: "Para quem busca excelência e gestão patrimonial sofisticada.",
+            desc: "A solução definitiva para investidores e gestão de patrimônio de alta complexidade.",
             features: [
-                "Tudo do plano Premium",
-                "Laboratório Wealth: Simulações avançadas",
-                "Webhooks & API para desenvolvedores",
-                "Assessoria exclusiva trimestral",
-                "Acesso antecipado a novas funções"
+                "Tudo do Plano Premium",
+                "Wealth Lab: Simuladores de Ativos",
+                "Acesso a API para Desenvolvedores",
+                "Mentoria Financeira Trimestral",
+                "Funcionalidades Beta Exclusivas"
             ],
             buttonText: "Seja Elite",
             popular: false,
-            highlight: "bg-brand-500/10 border-brand-500/20"
+            variant: "secondary"
         }
     ];
 
     return (
-        <div className="min-h-screen bg-[#020617] text-white selection:bg-emerald-500/20 overflow-x-hidden">
-            {/* Mesh Background for depth */}
-            <div className="fixed inset-0 z-0 pointer-events-none opacity-40">
-                <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-emerald-500/10 blur-[120px] rounded-full" />
-                <div className="absolute bottom-[0%] right-[-10%] w-[40%] h-[40%] bg-brand-500/10 blur-[120px] rounded-full" />
+        <div className="min-h-screen bg-[#020617] text-white overflow-x-hidden selection:bg-emerald-500/30 font-sans">
+            {/* Extremely subtle depth background */}
+            <div className="fixed inset-0 pointer-events-none opacity-20">
+                <div className="absolute top-[-20%] right-[-10%] w-[60%] h-[60%] bg-emerald-500/10 blur-[180px] rounded-full" />
             </div>
 
-            {/* Header / Nav */}
-            <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled ? 'bg-[#020617]/80 backdrop-blur-xl border-b border-white/5 py-4' : 'bg-transparent py-6'}`}>
+            {/* Header */}
+            <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'bg-[#020617]/90 backdrop-blur-md border-b border-white/10 py-4 shadow-xl' : 'bg-transparent py-8'}`}>
                 <nav className="max-w-7xl mx-auto px-6 flex items-center justify-between">
-                    <Link to="/" className="flex items-center gap-3 group">
-                        <MetaFinLogo className="h-9 w-auto" />
+                    <Link to="/" className="flex items-center gap-2 group">
+                        <MetaFinLogo className="h-8 w-auto" />
                     </Link>
 
                     <div className="hidden lg:flex items-center gap-10">
-                        {['Recursos', 'Tecnologia', 'Segurança', 'Planos'].map((item) => (
-                            <a key={item} href={`#${item.toLowerCase()}`} className="text-xs font-black uppercase tracking-[0.2em] text-slate-300 hover:text-emerald-400 transition-colors">
+                        {['Tecnologia', 'Funcionalidades', 'Segurança', 'Planos'].map((item) => (
+                            <a key={item} href={`#${item.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")}`}
+                                className="text-[13px] font-semibold tracking-wide text-slate-300 hover:text-white transition-colors">
                                 {item}
                             </a>
                         ))}
                     </div>
 
                     <div className="flex items-center gap-6">
-                        <Link to="/login" className="text-xs font-black uppercase tracking-widest hover:text-emerald-400 transition-colors">
-                            Login
+                        <Link to="/login" className="text-[13px] font-bold text-slate-100 hover:text-emerald-400 transition-colors">
+                            Entrar
                         </Link>
-                        <Link to="/signup" className="px-6 py-3 bg-emerald-500 hover:bg-emerald-400 text-black text-[10px] font-black uppercase tracking-[0.2em] rounded-2xl transition-all hover:scale-105 shadow-lg shadow-emerald-500/20">
-                            Get Started
+                        <Link to="/signup" className="px-6 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-[13px] font-bold rounded-xl transition-all shadow-lg shadow-emerald-500/20">
+                            Experimentar Grátis
                         </Link>
                     </div>
                 </nav>
             </header>
 
             {/* Hero Section */}
-            <section className="relative pt-48 pb-32 px-4 z-10">
-                <div className="max-w-7xl mx-auto">
-                    <div className="text-center space-y-10 max-w-5xl mx-auto">
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.9 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] font-black uppercase tracking-[0.2em]"
-                        >
-                            <Sparkles className="w-3 h-3 animate-pulse" />
-                            <span>Powered by Nexus AI Technology</span>
-                        </motion.div>
-
-                        <motion.h1
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.1 }}
-                            className="text-6xl md:text-8xl font-black tracking-tighter leading-[0.9] text-white"
-                        >
-                            Inteligência que <br />
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-brand-400">
-                                escala seu patrimônio.
-                            </span>
-                        </motion.h1>
-
-                        <motion.p
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.2 }}
-                            className="text-lg text-slate-100 max-w-3xl mx-auto leading-relaxed font-medium"
-                        >
-                            A MetaFin não apenas rastreia, ela antecipa. Combine Open Finance
-                            com análise preditiva de última geração para tomar as melhores
-                            decisões financeiras da sua vida.
-                        </motion.p>
-
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.3 }}
-                            className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-4"
-                        >
-                            <Link to="/signup" className="group px-10 py-6 bg-white text-black font-black rounded-[2rem] transition-all transform hover:scale-105 shadow-2xl flex items-center gap-3">
-                                <span className="uppercase tracking-[0.2em] text-[10px]">Abrir conta gratuita</span>
-                                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                            </Link>
-                            <a href="#planos" className="px-10 py-6 bg-white/5 border border-white/10 text-white font-black rounded-[2rem] hover:bg-white/10 transition-all">
-                                <span className="uppercase tracking-[0.2em] text-[10px]">Ver planos premium</span>
-                            </a>
-                        </motion.div>
-                    </div>
-
-                    {/* App Preview Window */}
+            <section className="relative pt-64 pb-32 px-6 z-10">
+                <div className="max-w-7xl mx-auto text-center">
                     <motion.div
-                        initial={{ opacity: 0, y: 40 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.5, duration: 1 }}
-                        className="mt-32 relative group"
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-900 border border-white/10 text-emerald-400 text-[11px] font-bold uppercase tracking-wider mb-8"
                     >
-                        <div className="absolute inset-0 bg-emerald-500/20 blur-[100px] opacity-0 group-hover:opacity-40 transition-opacity duration-1000" />
-                        <div className="max-w-6xl mx-auto bg-[#0a0f1e] rounded-[3rem] p-3 shadow-[0_0_50px_-12px_rgba(16,185,129,0.3)] border border-white/10 overflow-hidden relative z-10">
-                            {/* Window Header */}
-                            <div className="h-10 border-b border-white/5 flex items-center px-6 gap-2 bg-white/[0.02]">
-                                <div className="w-2 h-2 rounded-full bg-rose-500/50" />
-                                <div className="w-2 h-2 rounded-full bg-amber-500/50" />
-                                <div className="w-2 h-2 rounded-full bg-emerald-500/50" />
-                            </div>
-                            <img
-                                src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=2000"
-                                alt="MetaFin Interface"
-                                className="w-full grayscale hover:grayscale-0 transition-all duration-1000"
-                            />
-                        </div>
+                        <Sparkles className="w-4 h-4" />
+                        <span>Infraestrutura Nexus IA Ativa</span>
+                    </motion.div>
+
+                    <motion.h1
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.1 }}
+                        className="text-6xl md:text-8xl font-extrabold tracking-tight leading-[1.05] text-white mb-10 text-balance"
+                    >
+                        O futuro da sua gestão <br />
+                        <span className="text-emerald-500">financeira é agora.</span>
+                    </motion.h1>
+
+                    <motion.p
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.2 }}
+                        className="text-xl md:text-2xl text-slate-300 max-w-3xl mx-auto leading-relaxed mb-16 font-medium text-balance"
+                    >
+                        Domine seu patrimônio com uma plataforma que combina Open Finance
+                        e Inteligência Artificial para antecipar movimentos e otimizar resultados.
+                    </motion.p>
+
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.3 }}
+                        className="flex flex-col sm:flex-row items-center justify-center gap-4"
+                    >
+                        <Link to="/signup" className="btn-clean-white w-full sm:w-auto min-w-[240px]">
+                            Começar sua Jornada
+                            <ArrowRight className="w-5 h-5" />
+                        </Link>
+                        <a href="#planos" className="btn-clean-secondary w-full sm:w-auto min-w-[240px]">
+                            Conhecer Planos
+                        </a>
                     </motion.div>
                 </div>
             </section>
 
-            {/* Features Stats Section */}
-            <section id="tecnologia" className="py-20 z-10 relative border-y border-white/5 bg-white/[0.01]">
+            {/* Core Stats - High Clarity */}
+            <section id="tecnologia" className="py-24 border-y border-white/10 bg-slate-900/50 relative z-10">
                 <div className="max-w-7xl mx-auto px-6">
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-12 text-center">
-                        <div>
-                            <p className="text-3xl font-black text-emerald-400">100k+</p>
-                            <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mt-2">Usuários Ativos</p>
-                        </div>
-                        <div>
-                            <p className="text-3xl font-black text-brand-400">BRL 2B+</p>
-                            <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mt-2">Patrimônio Gerido</p>
-                        </div>
-                        <div>
-                            <p className="text-3xl font-black text-emerald-400">99.9%</p>
-                            <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mt-2">Uptime Bancário</p>
-                        </div>
-                        <div>
-                            <p className="text-3xl font-black text-brand-400">256-bit</p>
-                            <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mt-2">Criptografia AES</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            {/* Deep Tech Features Grid */}
-            <section id="recursos" className="py-32 px-4">
-                <div className="max-w-7xl mx-auto">
-                    <div className="grid md:grid-cols-3 gap-6">
                         {[
-                            {
-                                icon: <Cpu className="w-6 h-6" />,
-                                title: "Nexus IA Core",
-                                desc: "Algoritmos de rede neural que analisam seu padrão de consumo e sugerem otimizações em tempo real.",
-                                color: "text-emerald-400",
-                                border: "border-emerald-500/10"
-                            },
-                            {
-                                icon: <Layers className="w-6 h-6" />,
-                                title: "Open Finance Multi-Tier",
-                                desc: "Conexão direta com mais de 50 instituições financeiras para uma visão 360 do seu capital.",
-                                color: "text-brand-400",
-                                border: "border-brand-500/10"
-                            },
-                            {
-                                icon: <Shield className="w-6 h-6" />,
-                                title: "Security Matrix",
-                                desc: "Proteção de nível militar para todos os seus dados e transações, com auditoria constante.",
-                                color: "text-white",
-                                border: "border-white/10"
-                            }
-                        ].map((feature, i) => (
-                            <motion.div
-                                key={i}
-                                whileHover={{ y: -8 }}
-                                className={`bg-[#0a0f1e] p-10 rounded-[2.5rem] border ${feature.border} group transition-all duration-500 hover:shadow-2xl hover:shadow-emerald-500/5`}
-                            >
-                                <div className={`w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center ${feature.color} mb-8 group-hover:scale-110 transition-transform`}>
-                                    {feature.icon}
-                                </div>
-                                <h3 className="text-lg font-black mb-4 uppercase tracking-tighter">{feature.title}</h3>
-                                <p className="text-slate-200 text-sm leading-relaxed font-medium">{feature.desc}</p>
-                            </motion.div>
+                            { val: "100k+", label: "Usuários Ativos" },
+                            { val: "R$ 4.2B", label: "Patrimônio Integrado" },
+                            { val: "256-bit", label: "Segurança Bancária" },
+                            { val: "Nexus 4.0", label: "Engine Preditiva" }
+                        ].map((stat, i) => (
+                            <div key={i} className="space-y-2">
+                                <p className="text-4xl font-bold text-white">{stat.val}</p>
+                                <p className="text-[12px] font-bold uppercase tracking-widest text-slate-400">{stat.label}</p>
+                            </div>
                         ))}
                     </div>
                 </div>
             </section>
 
-            {/* Professional Pricing Section */}
-            <section id="planos" className="py-32 px-4 relative overflow-hidden">
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-[800px] bg-brand-500/5 blur-[150px] rounded-full pointer-events-none" />
+            {/* Serious Features Grid */}
+            <section id="funcionalidades" className="py-32 px-6">
+                <div className="max-w-7xl mx-auto">
+                    <div className="grid md:grid-cols-3 gap-8">
+                        {[
+                            {
+                                icon: <Cpu className="w-7 h-7 text-emerald-500" />,
+                                title: "Análise Preditiva",
+                                desc: "Otimize seu fluxo de caixa com algoritmos que aprendem seus hábitos e previnem gastos desnecessários."
+                            },
+                            {
+                                icon: <Layers className="w-7 h-7 text-emerald-500" />,
+                                title: "Conexão Bancária",
+                                desc: "Open Finance nativo para consolidar contas, cartões e investimentos em uma visão única e automática."
+                            },
+                            {
+                                icon: <Lock className="w-7 h-7 text-emerald-500" />,
+                                title: "Segurança de Elite",
+                                desc: "Criptografia de ponta e conformidade com os mais rigorosos padrões de proteção de dados financeiros."
+                            }
+                        ].map((feature, i) => (
+                            <div key={i} className="clean-card group">
+                                <div className="w-16 h-16 rounded-2xl bg-slate-800 flex items-center justify-center mb-8 border border-white/5 group-hover:bg-emerald-500/10 group-hover:border-emerald-500/20 transition-all">
+                                    {feature.icon}
+                                </div>
+                                <h3 className="text-xl font-bold mb-4 text-white">{feature.title}</h3>
+                                <p className="text-slate-400 leading-relaxed text-sm font-medium">{feature.desc}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
 
-                <div className="max-w-7xl mx-auto relative z-10">
-                    <div className="text-center max-w-2xl mx-auto mb-24">
-                        <h2 className="text-4xl md:text-5xl font-black mb-6 tracking-tighter">Escolha sua jornada.</h2>
-                        <p className="text-slate-100 font-medium font-bold">Planos desenhados para todos os níveis de ambição financeira.</p>
+            {/* Pricing Section - High Clarity */}
+            <section id="planos" className="py-32 px-6 relative z-10 bg-slate-900/30">
+                <div className="max-w-7xl mx-auto">
+                    <div className="text-center mb-24 space-y-4">
+                        <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight">Potencialize sua gestão.</h2>
+                        <p className="text-slate-300 text-lg md:text-xl font-medium">Soluções profissionais adaptadas à sua ambição.</p>
                     </div>
 
                     <div className="grid lg:grid-cols-3 gap-8">
                         {plans.map((plan, i) => (
-                            <motion.div
-                                key={plan.name}
-                                initial={{ opacity: 0, y: 20 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                transition={{ delay: i * 0.1 }}
-                                className={`p-10 rounded-[3rem] border ${plan.highlight} flex flex-col group relative overflow-hidden`}
-                            >
+                            <div key={i} className={`clean-card flex flex-col relative ${plan.popular ? 'border-emerald-500/50 shadow-2xl shadow-emerald-500/5' : ''}`}>
                                 {plan.popular && (
-                                    <div className="absolute top-6 right-10">
-                                        <div className="bg-emerald-500 text-black px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-[0.2em]">Recomendado</div>
+                                    <div className="absolute top-8 right-8">
+                                        <span className="bg-emerald-500 text-slate-950 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">
+                                            Mais Assinado
+                                        </span>
                                     </div>
                                 )}
 
-                                <div className="mb-10">
-                                    <h3 className="text-xl font-black uppercase tracking-tighter mb-2">{plan.name}</h3>
-                                    <p className="text-slate-200 text-xs font-bold leading-relaxed">{plan.desc}</p>
+                                <div className="mb-8">
+                                    <h3 className="text-2xl font-bold text-white mb-2">{plan.name}</h3>
+                                    <p className="text-slate-400 text-sm font-medium leading-relaxed">{plan.desc}</p>
                                 </div>
 
                                 <div className="mb-10 flex items-baseline gap-2">
-                                    <span className="text-4xl font-black">{plan.price}</span>
-                                    <span className="text-slate-400 text-sm font-bold">{plan.period}</span>
+                                    <span className="text-5xl font-extrabold text-white">{plan.price}</span>
+                                    <span className="text-slate-400 font-bold">{plan.period}</span>
                                 </div>
 
                                 <div className="space-y-4 mb-12 flex-1">
-                                    {plan.features.map(f => (
-                                        <div key={f} className="flex items-start gap-3 text-xs font-bold text-gray-200">
-                                            <CheckCircle2 className="w-4 h-4 text-emerald-500 flex-shrink-0" />
-                                            <span>{f}</span>
+                                    {plan.features.map((feat, idx) => (
+                                        <div key={idx} className="flex gap-3 text-slate-200 text-[13px] font-medium items-center">
+                                            <CheckCircle2 className="w-5 h-5 text-emerald-500 flex-shrink-0" />
+                                            <span>{feat}</span>
                                         </div>
                                     ))}
                                 </div>
 
-                                <Link
-                                    to="/signup"
-                                    className={`w-full py-5 text-center text-[10px] font-black uppercase tracking-[0.3em] rounded-[2rem] transition-all ${plan.popular
-                                        ? 'bg-emerald-500 text-black hover:bg-emerald-400 shadow-xl shadow-emerald-500/20'
-                                        : 'bg-white/5 text-white hover:bg-white/10 border border-white/5'
-                                        }`}
-                                >
+                                <Link to="/signup" className={plan.variant === 'primary' ? 'btn-clean-primary w-full' : 'btn-clean-secondary w-full'}>
                                     {plan.buttonText}
                                 </Link>
-                            </motion.div>
+                            </div>
                         ))}
                     </div>
                 </div>
             </section>
 
-            {/* Modern Footer */}
-            <footer className="py-24 border-t border-white/5 px-6 relative z-10 bg-[#01030a]">
-                <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16">
-                    <div className="space-y-8 col-span-1 lg:col-span-1">
-                        <MetaFinLogo className="h-8 w-auto opacity-80" />
-                        <p className="text-slate-400 text-xs font-medium leading-relaxed max-w-xs">
-                            Elevando a gestão de patrimônio ao estado da arte.
-                            Tecnologia proprietária Nexus AI integrada ao Open Finance global.
+            {/* Footer */}
+            <footer className="pt-32 pb-16 px-6 border-t border-white/10 bg-[#01030a]">
+                <div className="max-w-7xl mx-auto grid md:grid-cols-4 gap-16 mb-24">
+                    <div className="md:col-span-1 space-y-6">
+                        <MetaFinLogo className="h-7 w-auto" />
+                        <p className="text-slate-400 text-sm leading-relaxed font-medium pr-8">
+                            Referência em inteligência financeira integrada.
+                            Sua jornada para a liberdade começa com dados.
                         </p>
                         <div className="flex gap-4">
-                            {[Globe, Smartphone, Shield, Activity].map((Icon, i) => (
-                                <div key={i} className="w-10 h-10 rounded-xl bg-white/5 border border-white/5 flex items-center justify-center hover:bg-emerald-500 group transition-all cursor-pointer">
-                                    <Icon className="w-4 h-4 text-slate-400 group-hover:text-black" />
+                            {[Smartphone, Shield, Globe, Activity].map((Icon, i) => (
+                                <div key={i} className="p-3 rounded-xl bg-slate-900 border border-white/5 hover:border-emerald-500/50 transition-all cursor-pointer">
+                                    <Icon className="w-4 h-4 text-slate-400" />
                                 </div>
                             ))}
                         </div>
                     </div>
 
-                    <div>
-                        <h4 className="text-[10px] font-black uppercase tracking-widest text-emerald-400 mb-8">Ecossistema</h4>
-                        <ul className="space-y-4 text-xs font-bold text-slate-400">
-                            <li><a href="#" className="hover:text-white transition-colors">Nexus Intelligent Engine</a></li>
-                            <li><a href="#" className="hover:text-white transition-colors">Open Finance Connect</a></li>
-                            <li><a href="#" className="hover:text-white transition-colors">Wealth Matrix Simulator</a></li>
-                            <li><a href="#" className="hover:text-white transition-colors">Mobile Experience</a></li>
-                        </ul>
-                    </div>
-
-                    <div>
-                        <h4 className="text-[10px] font-black uppercase tracking-widest text-emerald-400 mb-8">Transparência</h4>
-                        <ul className="space-y-4 text-xs font-bold text-slate-400">
-                            <li><a href="#" className="hover:text-white transition-colors">Políticas de Privacidade</a></li>
-                            <li><a href="#" className="hover:text-white transition-colors">Compliance Financeiro</a></li>
-                            <li><a href="#" className="hover:text-white transition-colors">Socorro & Suporte</a></li>
-                            <li><a href="#" className="hover:text-white transition-colors">Status do Sistema</a></li>
-                        </ul>
-                    </div>
-
-                    <div>
-                        <h4 className="text-[10px] font-black uppercase tracking-widest text-emerald-400 mb-8">Newsletter Tech</h4>
-                        <p className="text-slate-400 text-[10px] font-bold mb-4">Receba insights semanais da Nexus IA.</p>
-                        <div className="flex gap-2">
-                            <input type="email" placeholder="E-mail" className="bg-white/5 border border-white/5 rounded-xl px-4 py-2 text-xs w-full focus:outline-none focus:border-emerald-500/50" />
-                            <button className="bg-emerald-500 p-2 rounded-xl text-black hover:bg-emerald-400">
-                                <ArrowRight className="w-4 h-4" />
-                            </button>
+                    {[
+                        { title: "Empresa", links: ["Recursos", "Segurança", "Ajuda", "Contatos"] },
+                        { title: "Plataforma", links: ["Versão Desktop", "App iOS", "App Android", "API"] },
+                        { title: "Jurídico", links: ["Privacidade", "Termos de Uso", "Cookies", "LGDP"] }
+                    ].map((col, i) => (
+                        <div key={i}>
+                            <h4 className="text-white font-bold text-sm mb-8 uppercase tracking-widest">{col.title}</h4>
+                            <ul className="space-y-4">
+                                {col.links.map((link, idx) => (
+                                    <li key={idx}>
+                                        <a href="#" className="text-slate-400 hover:text-white transition-colors text-sm font-medium">{link}</a>
+                                    </li>
+                                ))}
+                            </ul>
                         </div>
-                    </div>
+                    ))}
                 </div>
 
-                <div className="max-w-7xl mx-auto mt-24 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
-                    <p className="text-[9px] text-slate-500 font-bold uppercase tracking-[0.3em]">
-                        © {new Date().getFullYear()} METAFIN GLOBAL OPERATIONS.
+                <div className="max-w-7xl mx-auto pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
+                    <p className="text-[11px] font-semibold text-slate-500 tracking-[0.05em]">
+                        © {new Date().getFullYear()} METAFIN HOLDINGS. TODOS OS DIREITOS RESERVADOS.
                     </p>
-                    <div className="flex items-center gap-8 text-[9px] text-slate-500 font-bold uppercase tracking-widest">
-                        <span className="flex items-center gap-2 hover:text-emerald-500 transition-colors pointer-events-auto cursor-pointer"><Globe className="w-3 h-3" /> LATAM REGION</span>
-                        <span className="flex items-center gap-2"><Cpu className="w-3 h-3" /> NEXUS V4.2 CORE</span>
+                    <div className="flex items-center gap-8">
+                        <span className="text-[11px] font-bold text-slate-500 flex items-center gap-2">
+                            <Shield className="w-3 h-3" /> AWS SECURE INFRA
+                        </span>
+                        <span className="text-[11px] font-bold text-slate-500">
+                            v4.2.0-STABLE
+                        </span>
                     </div>
                 </div>
             </footer>

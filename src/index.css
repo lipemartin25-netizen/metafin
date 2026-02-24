@@ -1,175 +1,113 @@
-﻿@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&family=Orbitron:wght@400;500;600;700;800;900&display=swap');
+﻿@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800;900&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* ========== METAFIN HIGH-AESTHETICS DESIGN SYSTEM ========== */
+/* ========== METAFIN ENTERPRISE CLEAN DESIGN SYSTEM ========== */
 
 :root {
-    /* Brand Pallete - Future Cyan & Deep Indigo */
-    --brand-50: #f0f9ff;
-    --brand-100: #e0f2fe;
-    --brand-500: #0ea5e9;
-    --brand-600: #0284c7;
-    --brand-700: #0369a1;
+    --bg-main: #020617;
+    --surface-level-1: #0a0f1e;
+    --surface-level-2: #1e293b;
 
-    /* Accent - Neon Fuchsia (Cyberpunk touch) */
-    --accent-400: #fb7185;
-    --accent-500: #f43f5e;
-
-    /* Surfaces - Cyberpunk Deep Matter */
-    --bg-deep: #020617;
-    --surface-800: #0f172a;
-    --surface-900: #1e293b;
-    --surface-950: #030712;
-
-    /* Typography Colors */
-    --text-main: #f8fafc;
-    --text-dim: #94a3b8;
-    --text-muted: #64748b;
-
-    /* Glassmorphism Specs */
-    --glass-bg: rgba(15, 23, 42, 0.7);
-    --glass-border: rgba(255, 255, 255, 0.08);
-    --glass-highlight: rgba(14, 165, 233, 0.1);
-
-    --shadow-premium: 0 10px 40px -10px rgba(0, 0, 0, 0.5);
-    --shadow-glow: 0 0 20px -5px rgba(14, 165, 233, 0.3);
-}
-
-:root.light {
-    --bg-deep: #f8fafc;
-    --surface-800: #ffffff;
-    --surface-900: #f1f5f9;
-    --surface-950: #e2e8f0;
-
-    --text-main: #0f172a;
-    --text-dim: #475569;
+    /* High Contrast Typography */
+    --text-primary: #ffffff;
+    --text-secondary: #cbd5e1;
+    /* Slate 300 - High legibility */
     --text-muted: #94a3b8;
+    /* Slate 400 */
 
-    --glass-bg: rgba(255, 255, 255, 0.8);
-    --glass-border: rgba(0, 0, 0, 0.05);
-    --shadow-premium: 0 10px 40px -10px rgba(0, 0, 0, 0.08);
+    /* Branding */
+    --brand-primary: #10b981;
+    /* Emerald 500 */
+    --brand-secondary: #0ea5e9;
+    /* Sky 500 */
+
+    --border-clean: rgba(255, 255, 255, 0.1);
+    --border-highlight: rgba(16, 185, 129, 0.3);
 }
-
-/* ========== BASE SETUP ========== */
 
 body {
-    font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
-    @apply bg-surface-950 text-white transition-colors duration-500 overflow-x-hidden;
-    background-color: var(--bg-deep);
+    font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+    @apply bg-[#020617] text-white antialiased selection:bg-emerald-500/30;
+    scroll-behavior: smooth;
 }
 
+/* Clearer Headings */
 h1,
 h2,
 h3,
 h4,
-h5,
-h6 {
-    font-family: 'Outfit', sans-serif;
-    letter-spacing: -0.02em;
+.font-display {
+    @apply tracking-tighter font-bold;
 }
 
-/* ========== PREMIUM COMPONENTS ========== */
+/* ========== CLEAN COMPONENTS ========== */
 
 @layer components {
-    .meta-glass {
-        @apply backdrop-blur-2xl border transition-all duration-300;
-        background: var(--glass-bg);
-        border-color: var(--glass-border);
-        box-shadow: var(--shadow-premium);
+
+    /* Serious Card System */
+    .clean-card {
+        @apply bg-[#0a0f1e] border border-white/10 rounded-3xl p-8 transition-all duration-300;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     }
 
-    /* Card Premium v2 */
-    .meta-card {
-        @apply meta-glass p-6 rounded-[2rem] overflow-hidden relative;
+    .clean-card:hover {
+        @apply border-emerald-500/30;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
     }
 
-    .meta-card::before {
-        content: '';
-        @apply absolute inset-0 opacity-0 transition-opacity duration-500;
-        background: radial-gradient(circle at top right, var(--glass-highlight), transparent 70%);
+    /* High Clarity Buttons */
+    .btn-clean-primary {
+        @apply px-8 py-4 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold rounded-2xl transition-all active:scale-[0.98] shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2;
     }
 
-    .meta-card:hover::before {
-        @apply opacity-100;
+    .btn-clean-secondary {
+        @apply px-8 py-4 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-2xl border border-white/5 transition-all active:scale-[0.98] flex items-center justify-center gap-2;
     }
 
-    /* Interactive Elements */
-    .meta-btn {
-        @apply px-6 py-3 rounded-2xl font-black text-sm tracking-widest uppercase transition-all duration-300 flex items-center justify-center gap-2;
+    .btn-clean-white {
+        @apply px-8 py-4 bg-white hover:bg-slate-100 text-slate-950 font-bold rounded-2xl transition-all active:scale-[0.98] shadow-xl flex items-center justify-center gap-2;
     }
 
-    .meta-btn-primary {
-        @apply meta-btn bg-brand-600 hover:bg-brand-500 text-white shadow-lg active:scale-95;
-        box-shadow: 0 4px 20px -5px rgba(2, 132, 199, 0.4);
-    }
-
-    .meta-btn-secondary {
-        @apply meta-btn bg-surface-800/50 hover:bg-surface-800 text-brand-400 border border-brand-500/20;
-    }
-
-    /* Input Fields Cyber */
-    .meta-input {
-        @apply w-full px-5 py-4 rounded-2xl bg-surface-900/40 border border-white/5 text-white placeholder-gray-500 focus:outline-none focus:border-brand-500/50 focus:ring-4 focus:ring-brand-500/10 transition-all;
+    /* Clear Inputs */
+    .input-clean {
+        @apply w-full px-6 py-4 bg-[#0a0f1e] border border-white/10 rounded-2xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all;
     }
 }
 
-/* ========== ANIMATIONS & VIBE ========== */
+/* Utility for better legibility */
+.text-balance {
+    text-wrap: balance;
+}
 
-@keyframes float {
-    0% {
-        transform: translateY(0px) rotate(0deg);
+/* Animations - Subtle & Serious */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
     }
 
-    50% {
-        transform: translateY(-10px) rotate(2deg);
-    }
-
-    100% {
-        transform: translateY(0px) rotate(0deg);
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }
 
-.animate-float {
-    animation: float 6s ease-in-out infinite;
+.animate-fade-in {
+    animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-.meta-gradient-text {
-    @apply bg-clip-text text-transparent;
-    background-image: linear-gradient(135deg, #fff 0%, #0ea5e9 100%);
-}
-
-.meta-glow-brand {
-    box-shadow: 0 0 30px -10px rgba(14, 165, 233, 0.5);
-}
-
-/* Scrollbar Future */
+/* Scrollbar */
 ::-webkit-scrollbar {
-    width: 5px;
+    width: 6px;
 }
 
 ::-webkit-scrollbar-track {
-    @apply bg-transparent;
+    @apply bg-[#020617];
 }
 
 ::-webkit-scrollbar-thumb {
-    @apply bg-brand-500/20 rounded-full hover:bg-brand-500/40 transition-colors;
-}
-
-/* Mesh Background Utils */
-.mesh-bg {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
-    pointer-events: none;
-    background:
-        radial-gradient(at 0% 0%, rgba(14, 165, 233, 0.15) 0px, transparent 50%),
-        radial-gradient(at 100% 0%, rgba(244, 63, 94, 0.1) 0px, transparent 50%),
-        radial-gradient(at 100% 100%, rgba(2, 132, 199, 0.1) 0px, transparent 50%),
-        radial-gradient(at 0% 100%, rgba(217, 70, 239, 0.05) 0px, transparent 50%);
+    @apply bg-slate-800 rounded-full hover:bg-slate-700 transition-colors;
 }

@@ -1,5 +1,6 @@
 import { X, LayoutDashboard, ArrowLeftRight, CreditCard, PieChart, Target, Settings, LogOut, Wallet } from "lucide-react";
 import { Link } from "react-router-dom";
+import MetaFinLogo from "./MetaFinLogo";
 
 const navItems = [
     { icon: LayoutDashboard, label: "Dashboard", active: true, to: "/app" },
@@ -33,12 +34,7 @@ export default function Sidebar({ open, onClose }) {
                 {/* Logo */}
                 <div className="flex items-center justify-between px-6 py-6 border-b border-white/5">
                     <Link to="/" className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-violet-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-violet-500/30">
-                            <Wallet size={18} className="text-white" />
-                        </div>
-                        <span className="text-lg font-bold bg-gradient-to-r from-white to-white/60 bg-clip-text text-transparent">
-                            MetaFin
-                        </span>
+                        <MetaFinLogo className="h-9 w-auto" />
                     </Link>
                     <button onClick={onClose} className="lg:hidden text-white/40 hover:text-white transition-colors">
                         <X size={20} />

@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { ArrowRight, Wallet, Shield, Zap, TrendingUp, PieChart, Clock, Smartphone, Globe, Lock, CheckCircle2, Sparkles, Play } from 'lucide-react';
 import { motion } from 'framer-motion';
+import MetaFinLogo from '../components/MetaFinLogo';
 
 export default function Home() {
     return (
@@ -9,10 +10,7 @@ export default function Home() {
             <header className="fixed top-0 left-0 right-0 z-50 bg-[#2B1464] text-white shadow-lg">
                 <nav className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-mobills-yellow flex items-center justify-center shadow-md">
-                            <Wallet className="w-6 h-6 text-[#2B1464]" />
-                        </div>
-                        <span className="font-bold text-2xl tracking-tight lowercase">metafin</span>
+                        <MetaFinLogo className="h-10 w-auto" />
                     </div>
 
                     <div className="hidden lg:flex items-center gap-10">
@@ -231,10 +229,7 @@ export default function Home() {
                 <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start gap-12">
                     <div className="max-w-xs space-y-6">
                         <div className="flex items-center gap-2">
-                            <div className="w-6 h-6 rounded-md bg-emerald-500 flex items-center justify-center">
-                                <Wallet className="w-4 h-4 text-[#020617]" />
-                            </div>
-                            <span className="font-bold text-lg">metafin</span>
+                            <MetaFinLogo className="h-8 w-auto opacity-70" />
                         </div>
                         <p className="text-gray-500 text-sm leading-relaxed">
                             O hub definitivo para gestão de patrimônio inteligente.

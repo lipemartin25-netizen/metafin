@@ -13,10 +13,10 @@
 
     /* High Contrast Typography */
     --text-primary: #ffffff;
-    --text-secondary: #cbd5e1;
-    /* Slate 300 - High legibility */
-    --text-muted: #94a3b8;
-    /* Slate 400 */
+    --text-secondary: #f1f5f9;
+    /* Slate 100 - High legibility */
+    --text-muted: #cbd5e1;
+    /* Slate 300 */
 
     /* Branding */
     --brand-primary: #10b981;

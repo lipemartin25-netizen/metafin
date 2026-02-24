@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react'
-import { useNavigate, useLocation } from 'react-router-dom'
+import { useNavigate, useLocation, Link } from 'react-router-dom'
 import { aiAPI } from '../lib/apiClient'
 import { useAuth } from '../contexts/AuthContext'
 import { GoogleLogin } from '@react-oauth/google'
 import MetaFinLogo from '../components/MetaFinLogo'
-import { Shield, Sparkles, Lock } from 'lucide-react'
+import { Lock, ArrowRight } from 'lucide-react'
 
 export default function Login() {
     const navigate = useNavigate()

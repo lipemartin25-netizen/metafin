@@ -1,9 +1,10 @@
-// src/pages/Login.jsx
 import { useState, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { aiAPI } from '../lib/apiClient'
 import { useAuth } from '../contexts/AuthContext'
 import { GoogleLogin } from '@react-oauth/google'
+import MetaFinLogo from '../components/MetaFinLogo'
+import { Shield, Sparkles } from 'lucide-react'
 
 export default function Login() {
     const navigate = useNavigate()
@@ -12,19 +13,16 @@ export default function Login() {
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState('')
 
-    // Destruir Vercel Toolbar (estética hacker/clean)
     useEffect(() => {
         const removeVercelToolbar = () => {
             const toolbars = document.querySelectorAll('vercel-live-feedback, #__vercel-toolbar');
             toolbars.forEach(el => el.remove());
         };
         removeVercelToolbar();
-        // Repete após load para garantir
         window.addEventListener('load', removeVercelToolbar);
         return () => window.removeEventListener('load', removeVercelToolbar);
     }, []);
 
-    // Se já tem token válido, redireciona
     useEffect(() => {
         const token = localStorage.getItem('mf_auth_token')
         if (token) {
@@ -48,11 +46,8 @@ export default function Login() {
         }
 
         try {
-            // Obtém token do servidor
             const { token } = await aiAPI.getToken(userId)
             loginWithToken(token)
-
-            // Redireciona para a página que tentou acessar ou dashboard
             const destination = location.state?.from || '/app'
             navigate(destination, { replace: true })
         } catch (err) {
@@ -78,28 +73,28 @@ export default function Login() {
     }
 
     return (
-        <div className="min-h-screen bg-bg-deep flex items-center justify-center p-6 relative overflow-hidden">
+        <div className="min-h-screen bg-[#020617] flex items-center justify-center p-6 relative overflow-hidden text-white">
             {/* Immersive Background */}
-            <div className="mesh-bg opacity-40 animate-pulse" style={{ animationDuration: '10s' }} />
-            <div className="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] bg-brand-500/10 blur-[150px] rounded-full" />
-            <div className="absolute bottom-[-10%] left-[-10%] w-[50%] h-[50%] bg-accent-500/5 blur-[150px] rounded-full" />
+            <div className="absolute inset-0 z-0 pointer-events-none opacity-40">
+                <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-emerald-500/10 blur-[150px] rounded-full" />
+                <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-brand-500/5 blur-[150px] rounded-full" />
+            </div>
 
-            <div className="meta-card w-full max-w-md !p-10 border-white/5 shadow-2xl animate-fade-in relative z-10">
+            <div className="w-full max-w-md bg-[#0a0f1e]/80 backdrop-blur-2xl border border-white/5 p-10 rounded-[3rem] shadow-2xl relative z-10 animate-fade-in">
                 {/* Logo / Header */}
                 <div className="text-center mb-10">
-                    <div className="w-20 h-20 bg-brand-500 rounded-[2.5rem] flex items-center justify-center mx-auto mb-6 shadow-2xl shadow-brand-500/30 animate-float border-4 border-white/10 relative group">
-                        <div className="absolute inset-[-8px] rounded-[3rem] border border-brand-500/20 animate-spin" style={{ animationDuration: '8s' }} />
-                        <span className="text-surface-950 font-black text-3xl italic tracking-tighter">MF</span>
+                    <div className="flex justify-center mb-8">
+                        <MetaFinLogo className="h-12 w-auto" />
                     </div>
-                    <h1 className="text-4xl font-black meta-gradient-text tracking-tighter mb-2">MetaFin</h1>
-                    <p className="text-gray-500 text-[10px] uppercase font-black tracking-[0.3em]">
-                        Intelligence & Assets Control
-                    </p>
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] font-black uppercase tracking-[0.2em] mb-4">
+                        <Sparkles className="w-3 h-3 animate-pulse" />
+                        <span>Secure Nexus Login</span>
+                    </div>
                 </div>
 
                 {/* Google Login Section */}
                 <div className="mb-8">
-                    <div className="flex justify-center">
+                    <div className="flex justify-center flex-col items-center">
                         <GoogleLogin
                             onSuccess={handleGoogleSuccess}
                             onError={() => setError('Erro ao conectar com Google')}
@@ -109,19 +104,22 @@ export default function Login() {
                             width="100%"
                             text="signin_with"
                         />
+                        <p className="text-[9px] text-gray-600 mt-4 uppercase font-black tracking-widest flex items-center gap-2">
+                            <Shield className="w-3 h-3 text-emerald-500/50" /> Suporte a login nativo seguro
+                        </p>
                     </div>
                 </div>
 
                 {/* Divider */}
                 <div className="relative flex items-center gap-4 mb-8">
                     <div className="flex-1 h-[1px] bg-white/5" />
-                    <span className="text-[10px] font-black text-gray-700 uppercase tracking-widest">Ou utilize credenciais</span>
+                    <span className="text-[10px] font-black text-gray-700 uppercase tracking-widest">Ou ID de acesso</span>
                     <div className="flex-1 h-[1px] bg-white/5" />
                 </div>
 
                 {/* Formulário */}
                 <form onSubmit={handleLogin} className="space-y-6">
-                    <div className="space-y-2">
+                    <div className="space-y-3">
                         <label
                             htmlFor="userId"
                             className="block text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 ml-1"
@@ -136,20 +134,14 @@ export default function Login() {
                             minLength={3}
                             maxLength={100}
                             autoComplete="username"
-                            placeholder="USERID / E-MAIL"
-                            className="meta-input !bg-white/5 !border-white/10 focus:!border-brand-500/50 text-sm font-bold tracking-widest placeholder-gray-700"
+                            placeholder="DIRETO / E-MAIL"
+                            className="w-full px-5 py-4 rounded-2xl bg-white/5 border border-white/10 text-white placeholder-gray-700 focus:outline-none focus:border-emerald-500/50 focus:ring-4 focus:ring-emerald-500/10 transition-all text-sm font-bold tracking-widest"
                             disabled={isLoading}
                         />
                     </div>
 
-                    {/* Mensagem de erro */}
                     {error && (
-                        <div
-                            role="alert"
-                            className="bg-rose-500/10 border border-rose-500/20 rounded-2xl px-5 py-4
-                text-[10px] font-black uppercase tracking-widest text-rose-400 flex items-center gap-3 animate-shake overflow-hidden relative"
-                        >
-                            <div className="absolute left-0 top-0 bottom-0 w-1 bg-rose-500" />
+                        <div className="bg-rose-500/10 border border-rose-500/20 rounded-2xl px-5 py-4 text-[10px] font-black uppercase tracking-widest text-rose-400 animate-shake">
                             <span>{error}</span>
                         </div>
                     )}
@@ -157,23 +149,22 @@ export default function Login() {
                     <button
                         type="submit"
                         disabled={isLoading}
-                        className="w-full meta-btn-primary hover:scale-105 active:scale-95 py-5 text-surface-950 font-black"
+                        className="w-full py-5 bg-emerald-500 hover:bg-emerald-400 text-black rounded-2xl font-black transition-all hover:scale-[1.02] shadow-xl shadow-emerald-500/10"
                     >
                         {isLoading ? (
-                            <div className="flex items-center gap-3">
-                                <div className="w-5 h-5 border-4 border-surface-950/20 border-t-surface-950 rounded-full animate-spin" />
-                                <span className="uppercase tracking-widest text-xs">Acessando Nucleo...</span>
+                            <div className="flex items-center justify-center gap-3">
+                                <div className="w-4 h-4 border-2 border-black/20 border-t-black rounded-full animate-spin" />
+                                <span className="uppercase tracking-widest text-xs">Authenticating...</span>
                             </div>
                         ) : (
-                            <span className="uppercase tracking-[0.2em] text-xs">Inicializar Sistema</span>
+                            <span className="uppercase tracking-[0.2em] text-xs font-black">Inicializar Sistema</span>
                         )}
                     </button>
                 </form>
 
-                {/* Rodapé com LGPD */}
                 <div className="mt-10 pt-8 border-t border-white/5 text-center">
-                    <p className="text-[10px] text-gray-400 leading-relaxed font-bold uppercase tracking-widest">
-                        Protocolo de Segurança Ativo <span className="text-brand-500 px-2">•</span> <span className="text-white">LGPD 2024</span>
+                    <p className="text-[10px] text-gray-600 leading-relaxed font-bold uppercase tracking-widest">
+                        Protocolo de Segurança Ativo <span className="text-emerald-500 mx-2">•</span> 256-BIT AES
                     </p>
                 </div>
             </div>

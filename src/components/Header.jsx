@@ -6,7 +6,7 @@ export default function Header({ onMenuClick }) {
     const greeting = hour < 12 ? "Bom dia" : hour < 18 ? "Boa tarde" : "Boa noite";
 
     return (
-        <header className="flex items-center justify-between px-4 md:px-6 lg:px-8 py-4 border-b border-white/5 bg-[#0a0a0f]/80 backdrop-blur-xl sticky top-0 z-30">
+        <header className="flex items-center justify-between px-4 md:px-6 lg:px-8 py-4 border-b border-white/5 bg-[#020617]/80 backdrop-blur-xl sticky top-0 z-30">
             <div className="flex items-center gap-4">
                 <button
                     onClick={onMenuClick}

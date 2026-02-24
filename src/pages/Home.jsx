@@ -26,7 +26,24 @@ export default function Home() {
             setScrolled(window.scrollY > 50);
         };
         window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
+
+        // Robust Vercel Toolbar Removal
+        const removeVercelToolbar = () => {
+            const toolbars = document.querySelectorAll('vercel-live-feedback, #__vercel-toolbar, .vercel-toolbar');
+            toolbars.forEach(el => {
+                el.style.display = 'none';
+                el.remove();
+            });
+        };
+
+        const observer = new MutationObserver(removeVercelToolbar);
+        observer.observe(document.body, { childList: true, subtree: true });
+        removeVercelToolbar();
+
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+            observer.disconnect();
+        };
     }, []);
 
     const plans = [
@@ -97,7 +114,7 @@ export default function Home() {
 
                     <div className="hidden lg:flex items-center gap-10">
                         {['Recursos', 'Tecnologia', 'Segurança', 'Planos'].map((item) => (
-                            <a key={item} href={`#${item.toLowerCase()}`} className="text-xs font-black uppercase tracking-[0.2em] text-gray-400 hover:text-emerald-400 transition-colors">
+                            <a key={item} href={`#${item.toLowerCase()}`} className="text-xs font-black uppercase tracking-[0.2em] text-slate-300 hover:text-emerald-400 transition-colors">
                                 {item}
                             </a>
                         ))}
@@ -143,7 +160,7 @@ export default function Home() {
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.2 }}
-                            className="text-lg text-gray-300 max-w-3xl mx-auto leading-relaxed font-medium"
+                            className="text-lg text-slate-100 max-w-3xl mx-auto leading-relaxed font-medium"
                         >
                             A MetaFin não apenas rastreia, ela antecipa. Combine Open Finance
                             com análise preditiva de última geração para tomar as melhores
@@ -197,19 +214,19 @@ export default function Home() {
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-12 text-center">
                         <div>
                             <p className="text-3xl font-black text-emerald-400">100k+</p>
-                            <p className="text-[10px] font-black uppercase tracking-widest text-gray-500 mt-2">Usuários Ativos</p>
+                            <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mt-2">Usuários Ativos</p>
                         </div>
                         <div>
                             <p className="text-3xl font-black text-brand-400">BRL 2B+</p>
-                            <p className="text-[10px] font-black uppercase tracking-widest text-gray-500 mt-2">Patrimônio Gerido</p>
+                            <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mt-2">Patrimônio Gerido</p>
                         </div>
                         <div>
                             <p className="text-3xl font-black text-emerald-400">99.9%</p>
-                            <p className="text-[10px] font-black uppercase tracking-widest text-gray-500 mt-2">Uptime Bancário</p>
+                            <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mt-2">Uptime Bancário</p>
                         </div>
                         <div>
                             <p className="text-3xl font-black text-brand-400">256-bit</p>
-                            <p className="text-[10px] font-black uppercase tracking-widest text-gray-500 mt-2">Criptografia AES</p>
+                            <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mt-2">Criptografia AES</p>
                         </div>
                     </div>
                 </div>
@@ -251,7 +268,7 @@ export default function Home() {
                                     {feature.icon}
                                 </div>
                                 <h3 className="text-lg font-black mb-4 uppercase tracking-tighter">{feature.title}</h3>
-                                <p className="text-gray-300 text-sm leading-relaxed font-medium">{feature.desc}</p>
+                                <p className="text-slate-200 text-sm leading-relaxed font-medium">{feature.desc}</p>
                             </motion.div>
                         ))}
                     </div>
@@ -265,7 +282,7 @@ export default function Home() {
                 <div className="max-w-7xl mx-auto relative z-10">
                     <div className="text-center max-w-2xl mx-auto mb-24">
                         <h2 className="text-4xl md:text-5xl font-black mb-6 tracking-tighter">Escolha sua jornada.</h2>
-                        <p className="text-gray-300 font-medium font-bold">Planos desenhados para todos os níveis de ambição financeira.</p>
+                        <p className="text-slate-100 font-medium font-bold">Planos desenhados para todos os níveis de ambição financeira.</p>
                     </div>
 
                     <div className="grid lg:grid-cols-3 gap-8">
@@ -285,12 +302,12 @@ export default function Home() {
 
                                 <div className="mb-10">
                                     <h3 className="text-xl font-black uppercase tracking-tighter mb-2">{plan.name}</h3>
-                                    <p className="text-gray-300 text-xs font-bold leading-relaxed">{plan.desc}</p>
+                                    <p className="text-slate-200 text-xs font-bold leading-relaxed">{plan.desc}</p>
                                 </div>
 
                                 <div className="mb-10 flex items-baseline gap-2">
                                     <span className="text-4xl font-black">{plan.price}</span>
-                                    <span className="text-gray-500 text-sm font-bold">{plan.period}</span>
+                                    <span className="text-slate-400 text-sm font-bold">{plan.period}</span>
                                 </div>
 
                                 <div className="space-y-4 mb-12 flex-1">
@@ -322,14 +339,14 @@ export default function Home() {
                 <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16">
                     <div className="space-y-8 col-span-1 lg:col-span-1">
                         <MetaFinLogo className="h-8 w-auto opacity-80" />
-                        <p className="text-gray-500 text-xs font-medium leading-relaxed max-w-xs">
+                        <p className="text-slate-400 text-xs font-medium leading-relaxed max-w-xs">
                             Elevando a gestão de patrimônio ao estado da arte.
                             Tecnologia proprietária Nexus AI integrada ao Open Finance global.
                         </p>
                         <div className="flex gap-4">
                             {[Globe, Smartphone, Shield, Activity].map((Icon, i) => (
                                 <div key={i} className="w-10 h-10 rounded-xl bg-white/5 border border-white/5 flex items-center justify-center hover:bg-emerald-500 group transition-all cursor-pointer">
-                                    <Icon className="w-4 h-4 text-gray-500 group-hover:text-black" />
+                                    <Icon className="w-4 h-4 text-slate-400 group-hover:text-black" />
                                 </div>
                             ))}
                         </div>
@@ -337,7 +354,7 @@ export default function Home() {
 
                     <div>
                         <h4 className="text-[10px] font-black uppercase tracking-widest text-emerald-400 mb-8">Ecossistema</h4>
-                        <ul className="space-y-4 text-xs font-bold text-gray-500">
+                        <ul className="space-y-4 text-xs font-bold text-slate-400">
                             <li><a href="#" className="hover:text-white transition-colors">Nexus Intelligent Engine</a></li>
                             <li><a href="#" className="hover:text-white transition-colors">Open Finance Connect</a></li>
                             <li><a href="#" className="hover:text-white transition-colors">Wealth Matrix Simulator</a></li>
@@ -347,7 +364,7 @@ export default function Home() {
 
                     <div>
                         <h4 className="text-[10px] font-black uppercase tracking-widest text-emerald-400 mb-8">Transparência</h4>
-                        <ul className="space-y-4 text-xs font-bold text-gray-500">
+                        <ul className="space-y-4 text-xs font-bold text-slate-400">
                             <li><a href="#" className="hover:text-white transition-colors">Políticas de Privacidade</a></li>
                             <li><a href="#" className="hover:text-white transition-colors">Compliance Financeiro</a></li>
                             <li><a href="#" className="hover:text-white transition-colors">Socorro & Suporte</a></li>
@@ -357,7 +374,7 @@ export default function Home() {
 
                     <div>
                         <h4 className="text-[10px] font-black uppercase tracking-widest text-emerald-400 mb-8">Newsletter Tech</h4>
-                        <p className="text-gray-500 text-[10px] font-bold mb-4">Receba insights semanais da Nexus IA.</p>
+                        <p className="text-slate-400 text-[10px] font-bold mb-4">Receba insights semanais da Nexus IA.</p>
                         <div className="flex gap-2">
                             <input type="email" placeholder="E-mail" className="bg-white/5 border border-white/5 rounded-xl px-4 py-2 text-xs w-full focus:outline-none focus:border-emerald-500/50" />
                             <button className="bg-emerald-500 p-2 rounded-xl text-black hover:bg-emerald-400">
@@ -368,10 +385,10 @@ export default function Home() {
                 </div>
 
                 <div className="max-w-7xl mx-auto mt-24 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
-                    <p className="text-[9px] text-gray-600 font-bold uppercase tracking-[0.3em]">
+                    <p className="text-[9px] text-slate-500 font-bold uppercase tracking-[0.3em]">
                         © {new Date().getFullYear()} METAFIN GLOBAL OPERATIONS.
                     </p>
-                    <div className="flex items-center gap-8 text-[9px] text-gray-600 font-bold uppercase tracking-widest">
+                    <div className="flex items-center gap-8 text-[9px] text-slate-500 font-bold uppercase tracking-widest">
                         <span className="flex items-center gap-2 hover:text-emerald-500 transition-colors pointer-events-auto cursor-pointer"><Globe className="w-3 h-3" /> LATAM REGION</span>
                         <span className="flex items-center gap-2"><Cpu className="w-3 h-3" /> NEXUS V4.2 CORE</span>
                     </div>

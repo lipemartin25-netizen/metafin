@@ -294,16 +294,40 @@ export default function Home() {
                     </div>
 
                     {[
-                        { title: "Corporativo", links: ["Ecossistema", "Segurança", "Central de Ajuda", "Contatos"] },
-                        { title: "Plataforma", links: ["Painel Desktop", "iOS & Android", "API Developers", "Uptime & Status"] },
-                        { title: "Jurídico", links: ["Privacidade", "Termos de Uso", "LGPD", "BACEN Compliance"] }
+                        {
+                            title: "Corporativo",
+                            links: [
+                                { n: "Ecossistema", h: "/hub/ecosistema" },
+                                { n: "Segurança", h: "/hub/seguranca" },
+                                { n: "Central de Ajuda", h: "/hub/ajuda" },
+                                { n: "Contatos", h: "/hub/contatos" }
+                            ]
+                        },
+                        {
+                            title: "Plataforma",
+                            links: [
+                                { n: "Painel Desktop", h: "/hub/plataforma" },
+                                { n: "iOS & Android", h: "/hub/plataforma" },
+                                { n: "API Developers", h: "/app/api" },
+                                { n: "Uptime & Status", h: "/hub/status" }
+                            ]
+                        },
+                        {
+                            title: "Jurídico",
+                            links: [
+                                { n: "Privacidade", h: "/hub/privacidade" },
+                                { n: "Termos de Uso", h: "/hub/termos" },
+                                { n: "LGPD", h: "/hub/lgpd" },
+                                { n: "BACEN Compliance", h: "/hub/bacen" }
+                            ]
+                        }
                     ].map((col, i) => (
                         <div key={i}>
                             <h4 className="text-white font-bold text-[13px] mb-8 uppercase tracking-[0.15em]">{col.title}</h4>
                             <ul className="space-y-4">
                                 {col.links.map((link, idx) => (
                                     <li key={idx}>
-                                        <a href="#" className="text-slate-400 hover:text-white transition-colors text-[14px] font-semibold">{link}</a>
+                                        <Link to={link.h} className="text-slate-400 hover:text-white transition-colors text-[14px] font-semibold">{link.n}</Link>
                                     </li>
                                 ))}
                             </ul>

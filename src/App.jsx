@@ -29,6 +29,7 @@ const Reports = lazy(() => import('./pages/Reports'));
 const DeveloperAPI = lazy(() => import('./pages/DeveloperAPI'));
 const Upgrade = lazy(() => import('./pages/Upgrade'));
 const Settings = lazy(() => import('./pages/Settings'));
+const Institutional = lazy(() => import('./pages/Institutional'));
 const AiChat = lazy(() => import('./components/AiChat'));
 
 const LoadingFallback = () => (
@@ -132,6 +133,7 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
+          <Route path="/hub/:slug" element={<Institutional />} />
           <Route path="/app" element={<ProtectedRoute><Outlet /></ProtectedRoute>}>
             <Route index element={<Dashboard />} />
             <Route element={<Layout />}>

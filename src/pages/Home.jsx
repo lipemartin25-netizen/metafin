@@ -4,20 +4,20 @@ import { motion } from 'framer-motion';
 
 export default function Home() {
     return (
-        <div className="min-h-screen bg-bg-deep text-white selection:bg-brand-500/30 overflow-x-hidden meta-sober-grid">
+        <div className="min-h-screen bg-[#020617] text-white selection:bg-emerald-500/30 overflow-x-hidden">
             {/* Header / Nav */}
-            <header className="fixed top-0 left-0 right-0 z-50 bg-[#040b15]/60 backdrop-blur-2xl border-b border-white/5">
-                <nav className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-brand-600 flex items-center justify-center shadow-lg shadow-brand-600/20">
-                            <Wallet className="w-5 h-5 text-white" />
+            <header className="fixed top-0 left-0 right-0 z-50 bg-[#020617]/80 backdrop-blur-md border-b border-white/5">
+                <nav className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 rounded-lg bg-emerald-500 flex items-center justify-center">
+                            <Wallet className="w-5 h-5 text-[#020617]" />
                         </div>
-                        <span className="font-display font-black text-2xl tracking-tighter meta-gradient-text uppercase">MetaFin</span>
+                        <span className="font-bold text-xl tracking-tight">metafin</span>
                     </div>
 
-                    <div className="hidden lg:flex items-center gap-10">
-                        {['Recursos', 'Segurança', 'Nexus AI', 'Planos'].map((item) => (
-                            <a key={item} href={`#${item.toLowerCase()}`} className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 hover:text-white transition-all transform hover:translate-y-[-2px]">
+                    <div className="hidden md:flex items-center gap-8">
+                        {['Recursos', 'Segurança', 'Planos', 'Institucional'].map((item) => (
+                            <a key={item} href={`#${item.toLowerCase()}`} className="text-sm text-gray-400 hover:text-white transition-colors">
                                 {item}
                             </a>
                         ))}
@@ -51,14 +51,14 @@ export default function Home() {
                         </motion.div>
 
                         <motion.h1
-                            initial={{ opacity: 0, y: 30 }}
+                            initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.1, duration: 0.8 }}
-                            className="text-6xl md:text-9xl font-display font-black tracking-tighter leading-[0.8]"
+                            transition={{ delay: 0.1 }}
+                            className="text-6xl md:text-8xl font-black tracking-tighter leading-[0.85]"
                         >
-                            THE FUTURE OF <br />
-                            <span className="meta-gradient-text italic opacity-90">
-                                DIGITAL ASSETS.
+                            SUA VIDA FINANCEIRA <br />
+                            <span className="meta-gradient-text italic">
+                                EM ALTA DEFINIÇÃO.
                             </span>
                         </motion.h1>
 
@@ -110,16 +110,16 @@ export default function Home() {
                         className="mt-20 relative px-4"
                     >
                         <div className="max-w-5xl mx-auto bg-gradient-to-b from-gray-800/10 to-transparent p-[1px] rounded-[2rem]">
-                            <div className="bg-bg-deep rounded-[2rem] overflow-hidden shadow-2xl shadow-brand-500/10 border border-white/5 aspect-video relative">
-                                <div className="absolute inset-0 bg-gradient-to-b from-brand-500/10 to-transparent" />
+                            <div className="bg-[#020617] rounded-[2rem] overflow-hidden shadow-2xl shadow-emerald-500/10 border border-white/5 aspect-video relative">
+                                <div className="absolute inset-0 bg-gradient-to-b from-emerald-500/5 to-transparent" />
                                 <img
-                                    src="/src/assets/metafin_sober_hero_bg.png"
+                                    src="https://images.unsplash.com/photo-1642790106117-e829e14a795f?auto=format&fit=crop&q=80&w=2000"
                                     alt="App Preview"
-                                    className="w-full h-full object-cover opacity-60"
+                                    className="w-full h-full object-cover opacity-20"
                                 />
                                 <div className="absolute inset-0 flex items-center justify-center">
-                                    <div className="w-24 h-24 rounded-full bg-brand-500/20 backdrop-blur-xl border border-white/10 flex items-center justify-center shadow-2xl shadow-brand-500/30 cursor-pointer hover:scale-110 transition-transform">
-                                        <Play className="w-8 h-8 text-white ml-1 fill-white" />
+                                    <div className="w-20 h-20 rounded-full bg-emerald-500 flex items-center justify-center shadow-2xl shadow-emerald-500/50 cursor-pointer hover:scale-110 transition-transform">
+                                        <Play className="w-8 h-8 text-[#020617] ml-1" />
                                     </div>
                                 </div>
                             </div>
@@ -145,8 +145,8 @@ export default function Home() {
                             },
                             {
                                 icon: <TrendingUp className="w-6 h-6" />,
-                                title: "Nexus Analytics",
-                                desc: "Análises de caixa e tendências baseadas em Deep Learning para maximizar sua visão patrimonial em Web3."
+                                title: "IA de Patrimônio",
+                                desc: "Análises de caixa e tendências baseadas em Deep Learning para maximizar sua rentabilidade."
                             },
                             {
                                 icon: <Shield className="w-6 h-6" />,
@@ -211,42 +211,39 @@ export default function Home() {
                                     </div>
                                 ))}
                             </div>
-                            <Link to="/signup" className="block w-full py-4 bg-white/5 text-center font-bold rounded-2xl hover:bg-white/10 transition-colors border border-white/5">
-                                Ativar Protocolo
+                            <Link to="/signup" className="block w-full py-4 bg-gray-800 text-center font-bold rounded-2xl hover:bg-gray-700 transition-colors">
+                                Selecionar Plano
                             </Link>
                         </div>
 
                         {/* Pro Tier */}
-                        <div className="p-10 bg-gradient-to-br from-brand-600 to-sapphire-600 text-white rounded-[2.5rem] relative overflow-hidden shadow-2xl shadow-brand-600/20 group animate-float">
-                            <div className="absolute top-0 right-0 p-6">
-                                <div className="bg-black/20 backdrop-blur-md px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border border-white/10">Enterprise Ready</div>
+                        <div className="p-8 bg-emerald-500 text-[#020617] rounded-[2.5rem] relative overflow-hidden shadow-2xl shadow-emerald-500/20 group">
+                            <div className="absolute top-0 right-0 p-4">
+                                <div className="bg-black/10 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border border-black/5">Mais Escolhido</div>
                             </div>
-                            <div className="mb-10">
-                                <h3 className="text-2xl font-display font-black uppercase">Elite Protocol</h3>
-                                <p className="text-white/70 text-sm italic">Gestão completa de ativos digitais.</p>
-                                <div className="mt-6 flex items-baseline gap-1">
-                                    <span className="text-5xl font-black font-display tracking-tight">R$ 29</span>
-                                    <span className="text-white/60 text-sm">/ciclo</span>
+                            <div className="mb-8">
+                                <h3 className="text-xl font-bold">Premium</h3>
+                                <p className="text-[#020617]/70 text-sm">O arsenal completo.</p>
+                                <div className="mt-4 flex items-baseline gap-1">
+                                    <span className="text-4xl font-black">R$ 29</span>
+                                    <span className="text-[#020617]/70 text-sm">/mês</span>
                                 </div>
                             </div>
-                            <div className="space-y-5 mb-10">
+                            <div className="space-y-4 mb-8">
                                 {[
-                                    'Contas ilimitadas via Open Finance',
-                                    'Análise Preditiva Quantum AI',
-                                    'Monitoramento Global de Ativos',
-                                    'Múltiplos Cartões Virtuais 3.0',
-                                    'Suporte Alpha Prioritário'
+                                    'Contas ilimitadas via Pluggy',
+                                    'Análise Preditiva de IA (NEXUS)',
+                                    'Dashboard Ultra-Consolidado',
+                                    'Múltiplos Cartões Virtuais',
+                                    'Suporte Prioritário 24/7'
                                 ].map(f => (
                                     <div key={f} className="flex items-center gap-3 text-sm font-bold">
-                                        <div className="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center">
-                                            <CheckCircle2 className="w-3.5 h-3.5 text-white" />
-                                        </div>
-                                        {f}
+                                        <CheckCircle2 className="w-4 h-4 text-[#020617]" /> {f}
                                     </div>
                                 ))}
                             </div>
-                            <Link to="/signup" className="block w-full py-5 bg-white text-brand-700 text-center font-black uppercase tracking-widest text-xs rounded-2xl hover:scale-105 transition-transform shadow-2xl">
-                                Inicializar Assinatura
+                            <Link to="/signup" className="block w-full py-4 bg-gray-950 text-white text-center font-bold rounded-2xl hover:bg-black transition-colors shadow-xl">
+                                Assinar Agora
                             </Link>
                         </div>
                     </div>

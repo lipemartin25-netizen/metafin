@@ -238,10 +238,10 @@ export default function Home() {
 
                     <div className="grid lg:grid-cols-3 gap-8">
                         {plans.map((plan, i) => (
-                            <div key={i} className={`p-10 rounded-[3rem] bg-slate-900/40 border transition-all duration-500 flex flex-col relative ${plan.popular ? 'border-emerald-500/30 shadow-2xl ring-1 ring-emerald-500/10' : 'border-white/5'}`}>
+                            <div key={i} className={`p-10 rounded-[3rem] bg-slate-900/60 border transition-all duration-500 flex flex-col relative ${plan.popular ? 'border-emerald-500/40 shadow-2xl ring-1 ring-emerald-500/20' : 'border-white/5'}`}>
                                 {plan.popular && (
                                     <div className="absolute top-10 right-10">
-                                        <span className="bg-emerald-500/90 text-slate-950 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.1em]">
+                                        <span className="bg-emerald-500 text-slate-950 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.1em]">
                                             Estratégico
                                         </span>
                                     </div>
@@ -249,18 +249,18 @@ export default function Home() {
 
                                 <div className="mb-8">
                                     <h3 className="text-2xl font-bold text-white mb-3 uppercase tracking-tight">{plan.name}</h3>
-                                    <p className="text-slate-400 text-sm font-medium leading-relaxed min-h-[48px]">{plan.desc}</p>
+                                    <p className="text-slate-300 text-sm font-medium leading-relaxed min-h-[48px]">{plan.desc}</p>
                                 </div>
 
                                 <div className="mb-10 flex items-baseline gap-2">
                                     <span className="text-5xl font-extrabold text-white">{plan.price}</span>
-                                    <span className="text-slate-500 font-bold">{plan.period}</span>
+                                    <span className="text-slate-400 font-bold">{plan.period}</span>
                                 </div>
 
                                 <div className="space-y-4 mb-14 flex-1">
                                     {plan.features.map((feat, idx) => (
-                                        <div key={idx} className="flex gap-4 text-slate-300 text-[14px] font-semibold items-center">
-                                            <CheckCircle2 className="w-5 h-5 text-emerald-500/80 flex-shrink-0" />
+                                        <div key={idx} className="flex gap-4 text-slate-100 text-[14px] font-semibold items-center">
+                                            <CheckCircle2 className="w-5 h-5 text-emerald-500/90 flex-shrink-0" />
                                             <span>{feat}</span>
                                         </div>
                                     ))}
@@ -312,11 +312,11 @@ export default function Home() {
                 </div>
 
                 <div className="max-w-7xl mx-auto pt-10 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
-                    <p className="text-[11px] font-bold text-slate-500 tracking-[0.1em]">
+                    <p className="text-[11px] font-bold text-slate-400 tracking-[0.1em]">
                         © {new Date().getFullYear()} METAFIN GLOBAL OPERATIONS. TODOS OS DIREITOS RESERVADOS.
                     </p>
                     <div className="flex items-center gap-8">
-                        <span className="text-[11px] font-bold text-slate-500 flex items-center gap-2 uppercase tracking-widest bg-slate-900/50 px-4 py-1.5 rounded-full border border-white/5">
+                        <span className="text-[11px] font-bold text-slate-400 flex items-center gap-2 uppercase tracking-widest bg-slate-900/50 px-4 py-1.5 rounded-full border border-white/5">
                             <Lock className="w-3.5 h-3.5 text-emerald-500/80" /> 256-bit AES SECURE PROTOCOL
                         </span>
                     </div>

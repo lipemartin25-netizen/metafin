@@ -12,8 +12,8 @@ export default function Dashboard() {
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
     return (
-        <div className="flex h-screen bg-[#020617] text-white overflow-hidden">
-            <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+        <div className="flex h-screen bg-[#0f172a] text-white overflow-hidden">
+            <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} className="bg-[#0a0f1e] border-r border-white/5" />
 
             <div className="flex-1 flex flex-col overflow-hidden">
                 <Header onMenuClick={() => setSidebarOpen(true)} />

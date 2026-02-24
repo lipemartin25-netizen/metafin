@@ -1,4 +1,4 @@
-import { X, LayoutDashboard, ArrowLeftRight, CreditCard, PieChart, Target, Settings, LogOut, Wallet } from "lucide-react";
+import { X, LayoutDashboard, ArrowLeftRight, CreditCard, PieChart, Target, Settings, LogOut } from "lucide-react";
 import { Link } from "react-router-dom";
 import MetaFinLogo from "./MetaFinLogo";
 
@@ -25,7 +25,7 @@ export default function Sidebar({ open, onClose }) {
             <aside
                 className={`
           fixed lg:static inset-y-0 left-0 z-50 w-64
-          bg-[#030712] border-r border-white/5
+          bg-[#0a0f1e] border-r border-white/5
           flex flex-col
           transform transition-transform duration-300 ease-in-out
           ${open ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}

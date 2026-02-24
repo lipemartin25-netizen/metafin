@@ -7,25 +7,30 @@
 /* ========== METAFIN ENTERPRISE CLEAN DESIGN SYSTEM ========== */
 
 :root {
-    --bg-main: #020617;
-    --surface-level-1: #0a0f1e;
-    --surface-level-2: #1e293b;
+    /* Sophisticated Deep Slate - More 'air' and refined than pitch black */
+    --bg-main: #0f172a;
+    /* Slate 900 */
+    --surface-level-1: #1e293b;
+    /* Slate 800 */
+    --surface-level-2: #334155;
+    /* Slate 700 */
 
-    /* High Contrast Typography */
-    --text-primary: #ffffff;
-    --text-secondary: #f1f5f9;
-    /* Slate 100 - High legibility */
-    --text-muted: #cbd5e1;
+    /* High Clarity & Sober Typography */
+    --text-primary: #f8fafc;
+    /* Slate 50 */
+    --text-secondary: #cbd5e1;
     /* Slate 300 */
+    --text-muted: #94a3b8;
+    /* Slate 400 */
 
-    /* Branding */
+    /* Refined Branding - More desaturated/sober accent */
     --brand-primary: #10b981;
     /* Emerald 500 */
     --brand-secondary: #0ea5e9;
     /* Sky 500 */
 
-    --border-clean: rgba(255, 255, 255, 0.1);
-    --border-highlight: rgba(16, 185, 129, 0.3);
+    --border-clean: rgba(255, 255, 255, 0.06);
+    --border-highlight: rgba(16, 185, 129, 0.15);
 }
 
 body {

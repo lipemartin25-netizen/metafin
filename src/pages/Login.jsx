@@ -4,7 +4,7 @@ import { aiAPI } from '../lib/apiClient'
 import { useAuth } from '../contexts/AuthContext'
 import { GoogleLogin } from '@react-oauth/google'
 import MetaFinLogo from '../components/MetaFinLogo'
-import { Lock, ArrowRight } from 'lucide-react'
+import { ArrowRight, ShieldCheck } from 'lucide-react'
 
 export default function Login() {
     const navigate = useNavigate()
@@ -80,31 +80,31 @@ export default function Login() {
     }
 
     return (
-        <div className="min-h-screen bg-[#020617] flex items-center justify-center p-6 relative overflow-hidden text-white font-sans">
-            {/* Subtle high-end background */}
-            <div className="absolute inset-0 pointer-events-none opacity-30">
-                <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-emerald-500/5 blur-[120px] rounded-full" />
-                <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-brand-500/5 blur-[120px] rounded-full" />
+        <div className="min-h-screen bg-[#0f172a] flex items-center justify-center p-6 relative overflow-hidden text-white font-sans selection:bg-emerald-500/30">
+            {/* Subtle premium atmosphere */}
+            <div className="absolute inset-0 pointer-events-none opacity-20">
+                <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-emerald-500/10 blur-[120px] rounded-full" />
+                <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-blue-500/5 blur-[120px] rounded-full" />
             </div>
 
             <div className="w-full max-w-md animate-fade-in z-10">
                 {/* Logo Area */}
                 <div className="text-center mb-10 space-y-4">
-                    <div className="flex justify-center mb-4">
+                    <div className="flex justify-center mb-4 transition-transform hover:scale-105 duration-300">
                         <MetaFinLogo className="h-10 w-auto" />
                     </div>
                 </div>
 
-                <div className="bg-[#0a0f1e] border border-white/10 p-10 rounded-[2.5rem] shadow-[0_20px_50px_-20px_rgba(0,0,0,0.5)]">
-                    <div className="mb-8">
-                        <h1 className="text-2xl font-bold text-white mb-2 text-center">Acesse sua conta</h1>
-                        <p className="text-slate-400 text-sm font-medium text-center">Bem-vindo ao ecossistema MetaFin.</p>
+                <div className="bg-slate-900/60 border border-white/5 p-10 rounded-[3rem] shadow-[0_30px_70px_-20px_rgba(0,0,0,0.6)] backdrop-blur-3xl">
+                    <div className="mb-10">
+                        <h1 className="text-2xl font-bold text-white mb-2 text-center tracking-tight">Acesse sua conta</h1>
+                        <p className="text-slate-400 text-sm font-medium text-center">Gestão patrimonial de elite em um só lugar.</p>
                     </div>
 
                     {/* Google Login Section */}
-                    <div className="mb-8">
+                    <div className="mb-10">
                         <div className="flex justify-center flex-col items-center">
-                            <div className="w-full overflow-hidden rounded-xl border border-white/10 hover:border-white/20 transition-all">
+                            <div className="w-full overflow-hidden rounded-2xl border border-white/5 hover:border-white/10 transition-all shadow-lg active:scale-[0.99]">
                                 <GoogleLogin
                                     onSuccess={handleGoogleSuccess}
                                     onError={() => setError('Erro na conexão com o Google')}
@@ -115,12 +115,12 @@ export default function Login() {
                                     text="continue_with"
                                 />
                             </div>
-                            <div className="flex items-center gap-2 mt-6">
-                                <span className="h-[1px] w-8 bg-white/10"></span>
-                                <p className="text-[11px] text-slate-500 uppercase font-bold tracking-[0.1em]">
-                                    Ou use seu ID de acesso
+                            <div className="flex items-center gap-4 mt-8">
+                                <span className="h-[1px] w-12 bg-white/5"></span>
+                                <p className="text-[10px] text-slate-500 uppercase font-black tracking-[0.2em]">
+                                    Ou use seu ID MetaFin
                                 </p>
-                                <span className="h-[1px] w-8 bg-white/10"></span>
+                                <span className="h-[1px] w-12 bg-white/5"></span>
                             </div>
                         </div>
                     </div>
@@ -128,7 +128,7 @@ export default function Login() {
                     {/* Formulário */}
                     <form onSubmit={handleLogin} className="space-y-6">
                         <div className="space-y-2">
-                            <label htmlFor="userId" className="block text-xs font-bold text-slate-300 ml-1">
+                            <label htmlFor="userId" className="block text-xs font-bold text-slate-400 ml-1 uppercase tracking-wider">
                                 Identificação (E-mail ou ID)
                             </label>
                             <input
@@ -140,13 +140,13 @@ export default function Login() {
                                 maxLength={100}
                                 autoComplete="username"
                                 placeholder="ex: usuario.metafin"
-                                className="input-clean"
+                                className="w-full px-6 py-4 rounded-2xl bg-slate-800/40 border border-white/5 text-white placeholder-slate-600 focus:outline-none focus:border-emerald-500/50 focus:bg-slate-800/60 transition-all font-medium"
                                 disabled={isLoading}
                             />
                         </div>
 
                         {error && (
-                            <div className="bg-rose-500/10 border border-rose-500/20 rounded-2xl px-5 py-3 text-xs font-bold text-rose-400 text-center">
+                            <div className="bg-rose-500/10 border border-rose-500/20 rounded-2xl px-5 py-3 text-xs font-bold text-rose-400 text-center animate-shake">
                                 {error}
                             </div>
                         )}
@@ -154,31 +154,31 @@ export default function Login() {
                         <button
                             type="submit"
                             disabled={isLoading}
-                            className="w-full btn-clean-primary"
+                            className="w-full py-4 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black rounded-2xl transition-all active:scale-[0.98] shadow-2xl shadow-emerald-500/10 flex items-center justify-center gap-2 group"
                         >
                             {isLoading ? (
                                 <div className="flex items-center justify-center gap-2">
                                     <div className="w-4 h-4 border-2 border-slate-950/20 border-t-slate-950 rounded-full animate-spin" />
-                                    <span>Verificando...</span>
+                                    <span>Autenticando...</span>
                                 </div>
                             ) : (
                                 <span className="flex items-center gap-2">
-                                    Acessar Plataforma <ArrowRight className="w-4 h-4" />
+                                    Acessar Ecossistema <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                                 </span>
                             )}
                         </button>
                     </form>
 
                     <div className="mt-10 pt-8 border-t border-white/5 text-center">
-                        <div className="flex items-center justify-center gap-2 text-slate-500 text-[11px] font-bold tracking-wide">
-                            <Lock className="w-3.5 h-3.5 text-emerald-500" />
-                            <span>PROTOCOLO DE SEGURANÇA NEXUS ATIVO</span>
+                        <div className="flex items-center justify-center gap-2 text-slate-500 text-[10px] font-black tracking-widest uppercase">
+                            <ShieldCheck className="w-3.5 h-3.5 text-emerald-500/80" />
+                            <span>Protocolo Nexus: 256-bit AES</span>
                         </div>
                     </div>
                 </div>
 
-                <p className="mt-8 text-center text-slate-500 text-xs font-medium">
-                    Ainda não possui conta? <Link to="/signup" className="text-emerald-500 hover:text-emerald-400 font-bold transition-colors">Cadastre-se grátis</Link>
+                <p className="mt-10 text-center text-slate-500 text-xs font-bold">
+                    Ainda não possui conta? <Link to="/signup" className="text-emerald-500 hover:text-emerald-400 transition-colors ml-1 uppercase tracking-wider">Cadastre-se para a elite</Link>
                 </p>
             </div>
         </div>

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { Eye, EyeOff, Loader2, Lock, Sparkles, ArrowRight, Shield } from 'lucide-react';
+import { Eye, EyeOff, Loader2, Sparkles, ArrowRight, ShieldCheck } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import MetaFinLogo from '../components/MetaFinLogo';
 
@@ -62,41 +62,45 @@ export default function SignUp() {
 
     if (success) {
         return (
-            <div className="min-h-screen bg-[#020617] flex items-center justify-center p-6 text-white font-sans">
-                <div className="w-full max-w-md text-center animate-fade-in clean-card">
-                    <div className="w-20 h-20 bg-emerald-500/20 rounded-full flex items-center justify-center mx-auto mb-8">
+            <div className="min-h-screen bg-[#0f172a] flex items-center justify-center p-6 text-white font-sans">
+                <div className="w-full max-w-md text-center animate-fade-in p-12 bg-slate-900/60 border border-white/5 rounded-[3rem] backdrop-blur-3xl shadow-2xl">
+                    <div className="w-20 h-20 bg-emerald-500/10 rounded-full flex items-center justify-center mx-auto mb-10 shadow-inner">
                         <Sparkles className="w-10 h-10 text-emerald-500" />
                     </div>
-                    <h2 className="text-3xl font-bold mb-4">Bem-vindo, {name.split(' ')[0]}!</h2>
-                    <p className="text-slate-400 mb-8 font-medium">Configurando seu ambiente de alta performance...</p>
-                    <Loader2 className="w-6 h-6 animate-spin text-emerald-500 mx-auto" />
+                    <h2 className="text-3xl font-bold mb-4 tracking-tight">Bem-vindo, {name.split(' ')[0]}!</h2>
+                    <p className="text-slate-400 mb-10 font-medium">Configurando seu ambiente de alta performance...</p>
+                    <Loader2 className="w-8 h-8 animate-spin text-emerald-500 mx-auto" />
                 </div>
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen bg-[#020617] flex items-center justify-center p-6 relative overflow-hidden text-white font-sans">
+        <div className="min-h-screen bg-[#0f172a] flex items-center justify-center p-6 relative overflow-hidden text-white font-sans selection:bg-emerald-500/30">
+            {/* Extremely subtle premium atmosphere */}
             <div className="absolute inset-0 pointer-events-none opacity-20">
-                <div className="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] bg-emerald-500/5 blur-[120px] rounded-full" />
+                <div className="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] bg-emerald-500/10 blur-[140px] rounded-full" />
             </div>
 
-            <div className="w-full max-w-md z-10 animate-fade-in">
-                <div className="text-center mb-10">
-                    <div className="flex justify-center mb-6">
+            <div className="w-full max-w-md z-10 animate-fade-in py-10">
+                <div className="text-center mb-12">
+                    <div className="flex justify-center mb-8 hover:scale-105 transition-transform duration-300">
                         <MetaFinLogo className="h-10 w-auto" />
                     </div>
-                    <h1 className="text-2xl font-bold mb-2">
-                        {step === 1 ? 'Como deseja ser chamado?' : 'Falta apenas um passo.'}
+                    <h1 className="text-2xl font-bold mb-3 tracking-tight">
+                        {step === 1 ? 'Como deseja ser chamado?' : 'Configuração de Credenciais'}
                     </h1>
-                    <p className="text-slate-400 text-sm font-medium">
-                        {step === 1 ? 'Inicie sua jornada para a elite financeira.' : 'Proteja seu acesso com credenciais seguras.'}
+                    <p className="text-slate-400 text-sm font-medium px-4">
+                        {step === 1 ? 'Primeiro passo para o controle financeiro de elite.' : 'Proteja seu acesso corporativo com alta criptografia.'}
                     </p>
                 </div>
 
-                <div className="clean-card bg-[#0a0f1e] shadow-2xl">
+                <div className="bg-slate-900/60 border border-white/5 p-10 rounded-[3rem] shadow-[0_30px_70px_-20px_rgba(0,0,0,0.6)] backdrop-blur-3xl relative overflow-hidden">
+                    {/* Interior glow for depth */}
+                    <div className="absolute -top-24 -right-24 w-48 h-48 bg-emerald-500/10 rounded-full blur-[80px] pointer-events-none" />
+
                     {error && (
-                        <div className="mb-6 p-4 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs font-bold text-center">
+                        <div className="mb-8 p-4 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs font-bold text-center animate-shake">
                             {error}
                         </div>
                     )}
@@ -109,21 +113,22 @@ export default function SignUp() {
                                 animate={{ opacity: 1, x: 0 }}
                                 exit={{ opacity: 0, x: 10 }}
                                 onSubmit={handleNextStep}
-                                className="space-y-6"
+                                className="space-y-8"
                             >
-                                <div className="space-y-2">
-                                    <label className="text-xs font-bold text-slate-300 ml-1">Nome Completo</label>
+                                <div className="space-y-3">
+                                    <label className="text-[10px] font-black text-slate-500 ml-1 uppercase tracking-[0.15em]">Nome Completo ou Razão</label>
                                     <input
                                         type="text"
                                         value={name}
                                         onChange={(e) => setName(e.target.value)}
                                         placeholder="ex: João Silva"
                                         required
-                                        className="input-clean"
+                                        autoFocus
+                                        className="w-full px-6 py-4 rounded-2xl bg-slate-800/40 border border-white/5 text-white placeholder-slate-600 focus:outline-none focus:border-emerald-500/50 focus:bg-slate-800/60 transition-all font-medium shadow-inner"
                                     />
                                 </div>
-                                <button type="submit" className="w-full btn-clean-primary">
-                                    Continuar <ArrowRight className="w-4 h-4" />
+                                <button type="submit" className="w-full py-4 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black rounded-2xl transition-all active:scale-[0.98] shadow-2xl shadow-emerald-500/10 flex items-center justify-center gap-2 group">
+                                    Avançar <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                                 </button>
                             </motion.form>
                         ) : (
@@ -133,22 +138,22 @@ export default function SignUp() {
                                 animate={{ opacity: 1, x: 0 }}
                                 exit={{ opacity: 0, x: 10 }}
                                 onSubmit={handleFinalSubmit}
-                                className="space-y-6"
+                                className="space-y-8"
                             >
-                                <div className="space-y-4">
-                                    <div className="space-y-2">
-                                        <label className="text-xs font-bold text-slate-300 ml-1">E-mail Corporativo</label>
+                                <div className="space-y-5">
+                                    <div className="space-y-3">
+                                        <label className="text-[10px] font-black text-slate-500 ml-1 uppercase tracking-[0.15em]">E-mail Corporativo</label>
                                         <input
                                             type="email"
                                             value={email}
                                             onChange={(e) => setEmail(e.target.value)}
                                             placeholder="ex: joao@empresa.com"
                                             required
-                                            className="input-clean"
+                                            className="w-full px-6 py-4 rounded-2xl bg-slate-800/40 border border-white/5 text-white placeholder-slate-600 focus:outline-none focus:border-emerald-500/50 focus:bg-slate-800/60 transition-all font-medium shadow-inner"
                                         />
                                     </div>
-                                    <div className="space-y-2">
-                                        <label className="text-xs font-bold text-slate-300 ml-1">Senha de Acesso</label>
+                                    <div className="space-y-3">
+                                        <label className="text-[10px] font-black text-slate-500 ml-1 uppercase tracking-[0.15em]">Chave de Acesso</label>
                                         <div className="relative">
                                             <input
                                                 type={showPassword ? 'text' : 'password'}
@@ -156,45 +161,45 @@ export default function SignUp() {
                                                 onChange={(e) => setPassword(e.target.value)}
                                                 placeholder="Mínimo 6 caracteres"
                                                 required
-                                                className="input-clean pr-12"
+                                                className="w-full pl-6 pr-14 py-4 rounded-2xl bg-slate-800/40 border border-white/5 text-white placeholder-slate-600 focus:outline-none focus:border-emerald-500/50 focus:bg-slate-800/60 transition-all font-medium shadow-inner"
                                             />
                                             <button
                                                 type="button"
                                                 onClick={() => setShowPassword(!showPassword)}
-                                                className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white"
+                                                className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white transition-colors"
                                             >
-                                                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                                                {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                                             </button>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div className="flex gap-3">
+                                <div className="flex gap-4">
                                     <button
                                         type="button"
                                         onClick={() => setStep(1)}
-                                        className="px-6 py-4 bg-slate-800 rounded-2xl text-slate-400 hover:text-white transition-all"
+                                        className="px-6 py-4 bg-slate-800/60 border border-white/5 rounded-2xl text-slate-400 hover:text-white hover:bg-slate-800 transition-all font-bold"
                                     >
                                         Voltar
                                     </button>
-                                    <button type="submit" disabled={loading} className="flex-1 btn-clean-primary">
-                                        {loading ? <Loader2 className="w-5 h-5 animate-spin mx-auto" /> : 'Criar Conta'}
+                                    <button type="submit" disabled={loading} className="flex-1 py-4 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black rounded-2xl transition-all active:scale-[0.98] shadow-2xl shadow-emerald-500/10 flex items-center justify-center">
+                                        {loading ? <Loader2 className="w-6 h-6 animate-spin mx-auto text-slate-950" /> : 'Confirmar e Criar'}
                                     </button>
                                 </div>
                             </motion.form>
                         )}
                     </AnimatePresence>
 
-                    <div className="mt-10 pt-8 border-t border-white/5 text-center">
-                        <div className="flex items-center justify-center gap-2 text-slate-500 text-[11px] font-bold tracking-wide">
-                            <Shield className="w-3.5 h-3.5 text-emerald-500" />
-                            <span>CADASTRO EM AMBIENTE CRIPTOGRAFADO</span>
+                    <div className="mt-12 pt-8 border-t border-white/5 text-center">
+                        <div className="flex items-center justify-center gap-2 text-slate-500 text-[10px] font-black tracking-[0.2em] uppercase">
+                            <ShieldCheck className="w-4 h-4 text-emerald-500/80" />
+                            <span>Segurança de Dados NEXUS</span>
                         </div>
                     </div>
                 </div>
 
-                <p className="mt-8 text-center text-slate-500 text-xs font-medium">
-                    Já possui acesso? <Link to="/login" className="text-emerald-500 hover:text-emerald-400 font-bold">Faça Login</Link>
+                <p className="mt-10 text-center text-slate-500 text-xs font-bold leading-relaxed">
+                    Já possui acesso estratégico? <Link to="/login" className="text-emerald-500 hover:text-emerald-400 transition-colors ml-1 uppercase tracking-wider">Entrar no Painel</Link>
                 </p>
             </div>
         </div>

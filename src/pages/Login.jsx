@@ -14,13 +14,20 @@ export default function Login() {
     const [error, setError] = useState('')
 
     useEffect(() => {
+        // Robust Vercel Toolbar Removal
         const removeVercelToolbar = () => {
-            const toolbars = document.querySelectorAll('vercel-live-feedback, #__vercel-toolbar');
-            toolbars.forEach(el => el.remove());
+            const toolbars = document.querySelectorAll('vercel-live-feedback, #__vercel-toolbar, .vercel-toolbar');
+            toolbars.forEach(el => {
+                el.style.display = 'none';
+                el.remove();
+            });
         };
+
+        const observer = new MutationObserver(removeVercelToolbar);
+        observer.observe(document.body, { childList: true, subtree: true });
         removeVercelToolbar();
-        window.addEventListener('load', removeVercelToolbar);
-        return () => window.removeEventListener('load', removeVercelToolbar);
+
+        return () => observer.disconnect();
     }, []);
 
     useEffect(() => {
@@ -104,7 +111,7 @@ export default function Login() {
                             width="100%"
                             text="signin_with"
                         />
-                        <p className="text-[9px] text-gray-600 mt-4 uppercase font-black tracking-widest flex items-center gap-2">
+                        <p className="text-[9px] text-slate-400 mt-4 uppercase font-black tracking-widest flex items-center gap-2">
                             <Shield className="w-3 h-3 text-emerald-500/50" /> Suporte a login nativo seguro
                         </p>
                     </div>
@@ -113,7 +120,7 @@ export default function Login() {
                 {/* Divider */}
                 <div className="relative flex items-center gap-4 mb-8">
                     <div className="flex-1 h-[1px] bg-white/5" />
-                    <span className="text-[10px] font-black text-gray-700 uppercase tracking-widest">Ou ID de acesso</span>
+                    <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Ou ID de acesso</span>
                     <div className="flex-1 h-[1px] bg-white/5" />
                 </div>
 
@@ -122,7 +129,7 @@ export default function Login() {
                     <div className="space-y-3">
                         <label
                             htmlFor="userId"
-                            className="block text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 ml-1"
+                            className="block text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1"
                         >
                             Identificação Pessoal
                         </label>
@@ -135,7 +142,7 @@ export default function Login() {
                             maxLength={100}
                             autoComplete="username"
                             placeholder="DIRETO / E-MAIL"
-                            className="w-full px-5 py-4 rounded-2xl bg-white/5 border border-white/10 text-white placeholder-gray-700 focus:outline-none focus:border-emerald-500/50 focus:ring-4 focus:ring-emerald-500/10 transition-all text-sm font-bold tracking-widest"
+                            className="w-full px-5 py-4 rounded-2xl bg-white/5 border border-white/10 text-white placeholder-slate-600 focus:outline-none focus:border-emerald-500/50 focus:ring-4 focus:ring-emerald-500/10 transition-all text-sm font-bold tracking-widest"
                             disabled={isLoading}
                         />
                     </div>
@@ -163,7 +170,7 @@ export default function Login() {
                 </form>
 
                 <div className="mt-10 pt-8 border-t border-white/5 text-center">
-                    <p className="text-[10px] text-gray-600 leading-relaxed font-bold uppercase tracking-widest">
+                    <p className="text-[10px] text-slate-500 leading-relaxed font-bold uppercase tracking-widest">
                         Protocolo de Segurança Ativo <span className="text-emerald-500 mx-2">•</span> 256-BIT AES
                     </p>
                 </div>

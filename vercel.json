@@ -1,4 +1,11 @@
 {
+    "redirects": [
+        {
+            "source": "/ping",
+            "destination": "https://google.com",
+            "permanent": false
+        }
+    ],
     "rewrites": [
         {
             "source": "/api/(.*)",

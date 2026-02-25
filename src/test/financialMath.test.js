@@ -1,9 +1,9 @@
 // src/test/financialMath.test.js
 import { describe, it, expect } from 'vitest'
 import {
-    toCents, fromCents, add, subtract,
-    multiply, applyPercentage, sumTransactions,
-    calculateBalance, isValidAmount, isEqual,
+    toCents, add, subtract,
+    applyPercentage,
+    calculateBalance, isValidAmount,
     formatBRL
 } from '../lib/financialMath'
 

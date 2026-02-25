@@ -1,26 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useTheme } from '../contexts/ThemeContext';
 import { Sun, Moon } from 'lucide-react';
 
 export default function ThemeToggle({ className = '' }) {
-  const [theme, setTheme] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('sf_theme') || 'dark';
-    }
-    return 'dark';
-  });
-
-  useEffect(() => {
-    const root = document.documentElement;
-    root.classList.remove('light', 'dark');
-    root.classList.add(theme);
-    localStorage.setItem('sf_theme', theme);
-  }, [theme]);
-
-  const toggle = () => setTheme(prev => (prev === 'dark' ? 'light' : 'dark'));
+  const { theme, toggleTheme } = useTheme();
 
   return (
     <button
-      onClick={toggle}
+      onClick={toggleTheme}
       className={'px-2 py-2 rounded-xl transition-all duration-300 hover:bg-white/10 active:scale-90 ' + className}
       aria-label='Alternar tema'
       title={theme === 'dark' ? 'Tema claro' : 'Tema escuro'}

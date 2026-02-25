@@ -13,8 +13,11 @@ import {
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import MetaFinLogo from '../components/MetaFinLogo';
+import { useForceDark } from '../hooks/useForceDark';
 
 export default function Home() {
+    useForceDark();
+
     const [scrolled, setScrolled] = useState(false);
 
     useEffect(() => {
@@ -23,21 +26,8 @@ export default function Home() {
         };
         window.addEventListener('scroll', handleScroll);
 
-        const removeVercelToolbar = () => {
-            const toolbars = document.querySelectorAll('vercel-live-feedback, #__vercel-toolbar, .vercel-toolbar');
-            toolbars.forEach(el => {
-                el.style.display = 'none';
-                el.remove();
-            });
-        };
-
-        const observer = new MutationObserver(removeVercelToolbar);
-        observer.observe(document.body, { childList: true, subtree: true });
-        removeVercelToolbar();
-
         return () => {
             window.removeEventListener('scroll', handleScroll);
-            observer.disconnect();
         };
     }, []);
 
@@ -94,7 +84,7 @@ export default function Home() {
 
     return (
         <div className="min-h-screen bg-[#0f172a] text-white overflow-x-hidden selection:bg-emerald-500/30 font-sans antialiased">
-            {/* Refined Premium Background - Deep Slate with subtle atmosphere */}
+            {/* Background */}
             <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
                 <div className="absolute top-[-10%] right-[-5%] w-[50%] h-[50%] bg-emerald-500/[0.03] blur-[160px] rounded-full" />
                 <div className="absolute bottom-[-10%] left-[-5%] w-[50%] h-[50%] bg-blue-500/[0.02] blur-[160px] rounded-full" />
@@ -128,7 +118,7 @@ export default function Home() {
                 </nav>
             </header>
 
-            {/* Hero Section */}
+            {/* Hero */}
             <section className="relative pt-64 pb-48 px-6 z-10 text-center">
                 <div className="max-w-7xl mx-auto">
                     <motion.div
@@ -176,7 +166,7 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* Core Metrics Section - Sophisticated Slate */}
+            {/* Metrics */}
             <section id="tecnologia" className="py-24 border-y border-white/5 bg-slate-900/50 relative z-10">
                 <div className="max-w-7xl mx-auto px-6">
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-12 text-center">
@@ -195,7 +185,7 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* Refined Features Grid */}
+            {/* Features */}
             <section id="funcionalidades" className="py-32 px-6 relative z-10">
                 <div className="max-w-7xl mx-auto">
                     <div className="grid md:grid-cols-3 gap-8">
@@ -228,7 +218,7 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* Pricing Area - Premium Sober Aesthetic */}
+            {/* Pricing */}
             <section id="planos" className="py-32 px-6 relative z-10">
                 <div className="max-w-7xl mx-auto">
                     <div className="text-center mb-24 space-y-4">
@@ -275,7 +265,7 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* Footer - Sober Darkness */}
+            {/* Footer */}
             <footer className="pt-32 pb-16 px-6 border-t border-white/5 bg-[#0a0f1e] relative z-20">
                 <div className="max-w-7xl mx-auto grid md:grid-cols-4 gap-20 mb-24">
                     <div className="md:col-span-1 space-y-8">

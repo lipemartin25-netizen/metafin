@@ -10,11 +10,14 @@ import {
     Target, Heart, Landmark, FileText, Code2, PiggyBank, Bell
 } from 'lucide-react';
 import { useState, useRef, useEffect, useMemo } from 'react';
+import { useVisibility } from '../hooks/useVisibility';
+import { Eye, EyeOff } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 
 const FLAGS = { pt: '🇧🇷', en: '🇺🇸', es: '🇪🇸', fr: '🇫🇷', cn: '🇨🇳', hi: '🇮🇳' };
 
 export default function Navbar() {
+    const { isVisible, toggleVisibility } = useVisibility();
     const { user, signOut } = useAuth();
     const { language, changeLanguage, t } = useLanguage();
     const { isPro } = useSubscription();
@@ -141,6 +144,14 @@ export default function Navbar() {
 
                     {/* Right Actions */}
                     <div className="flex items-center gap-3">
+                        {/* Visibility (Privacy) Toggle */}
+                        <button
+                            onClick={() => toggleVisibility()}
+                            title={isVisible ? "Ocultar Valores" : "Mostrar Valores"}
+                            className="w-9 h-9 flex items-center justify-center rounded-lg text-gray-500 dark:text-gray-400 hover:text-brand-600 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/5 transition-colors"
+                        >
+                            {isVisible ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                        </button>
 
                         {/* Theme Toggle */}
                         <ThemeToggle />

@@ -10,11 +10,15 @@ import { analytics } from '../hooks/useAnalytics';
 const categoryConfig = categoriesData.categories;
 const COLORS = ['#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#14b8a6', '#f97316'];
 
-function fmt(v) {
-    return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v);
+import { useVisibility } from '../hooks/useVisibility';
+
+function fmt(v, isVisible = true) {
+    if (!isVisible) return 'R$ ••••';
+    return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v ?? 0);
 }
 
 export default function Reports() {
+    const { isVisible } = useVisibility();
     const { transactions } = useTransactions();
     const [month, setMonth] = useState(new Date().toISOString().slice(0, 7));
     const [isExporting, setIsExporting] = useState(false);
@@ -137,7 +141,7 @@ export default function Reports() {
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                     <div className="glass-card bg-emerald-500/5 border-emerald-500/10">
                         <p className="text-[10px] text-gray-500 dark:text-gray-400 uppercase font-bold mb-1">Receitas</p>
-                        <p className="text-xl font-bold text-emerald-500">{fmt(report.income)}</p>
+                        <p className="text-xl font-bold text-emerald-500">{fmt(report.income, isVisible)}</p>
                         {report.incomeChange !== 0 && (
                             <p className={`text-[10px] mt-1 flex items-center gap-0.5 ${report.incomeChange > 0 ? 'text-emerald-400' : 'text-red-400'}`}>
                                 {report.incomeChange > 0 ? <ArrowUpRight className="w-3 h-3" /> : <ArrowDownRight className="w-3 h-3" />}
@@ -147,7 +151,7 @@ export default function Reports() {
                     </div>
                     <div className="glass-card bg-red-500/5 border-red-500/10">
                         <p className="text-[10px] text-gray-500 dark:text-gray-400 uppercase font-bold mb-1">Despesas</p>
-                        <p className="text-xl font-bold text-red-500">{fmt(report.expenses)}</p>
+                        <p className="text-xl font-bold text-red-500">{fmt(report.expenses, isVisible)}</p>
                         {report.expenseChange !== 0 && (
                             <p className={`text-[10px] mt-1 flex items-center gap-0.5 ${report.expenseChange < 0 ? 'text-emerald-400' : 'text-red-400'}`}>
                                 {report.expenseChange < 0 ? <ArrowDownRight className="w-3 h-3" /> : <ArrowUpRight className="w-3 h-3" />}
@@ -157,7 +161,7 @@ export default function Reports() {
                     </div>
                     <div className="glass-card">
                         <p className="text-[10px] text-gray-500 dark:text-gray-400 uppercase font-bold mb-1">Resultado</p>
-                        <p className={`text-xl font-bold ${report.balance >= 0 ? 'text-blue-500' : 'text-red-500'}`}>{fmt(report.balance)}</p>
+                        <p className={`text-xl font-bold ${report.balance >= 0 ? 'text-blue-500' : 'text-red-500'}`}>{fmt(report.balance, isVisible)}</p>
                     </div>
                     <div className="glass-card">
                         <p className="text-[10px] text-gray-500 dark:text-gray-400 uppercase font-bold mb-1">Taxa de Poupanca</p>
@@ -176,7 +180,7 @@ export default function Reports() {
                                         <Pie data={report.pieData} cx="50%" cy="50%" innerRadius={50} outerRadius={80} paddingAngle={3} dataKey="value">
                                             {report.pieData.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
                                         </Pie>
-                                        <Tooltip formatter={v => fmt(v)} contentStyle={{ backgroundColor: '#1f2937', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', color: '#fff' }} />
+                                        <Tooltip formatter={v => fmt(v, isVisible)} contentStyle={{ backgroundColor: '#1f2937', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', color: '#fff' }} />
                                     </PieChart>
                                 </ResponsiveContainer>
                             </div>
@@ -196,7 +200,7 @@ export default function Reports() {
                                     <div className="flex-1 min-w-0">
                                         <div className="flex justify-between text-sm mb-1">
                                             <span className="text-gray-700 dark:text-gray-300 truncate">{cat.label}</span>
-                                            <span className="font-bold text-gray-900 dark:text-white ml-2">{fmt(cat.total)}</span>
+                                            <span className="font-bold text-gray-900 dark:text-white ml-2">{fmt(cat.total, isVisible)}</span>
                                         </div>
                                         <div className="h-1.5 bg-gray-200 dark:bg-white/10 rounded-full overflow-hidden">
                                             <div className="h-full rounded-full transition-all" style={{ width: `${cat.pct}%`, backgroundColor: COLORS[i % COLORS.length] }} />
@@ -225,7 +229,7 @@ export default function Reports() {
                                             <p className="text-[10px] text-gray-500">{new Date(tx.date + 'T12:00:00').toLocaleDateString('pt-BR')}</p>
                                         </div>
                                     </div>
-                                    <span className="text-sm font-bold text-red-500">{fmt(Math.abs(tx.amount))}</span>
+                                    <span className="text-sm font-bold text-red-500">{fmt(Math.abs(tx.amount), isVisible)}</span>
                                 </div>
                             ))}
                             {report.topExpenses.length === 0 && <p className="text-sm text-gray-500 text-center py-4">Sem despesas</p>}
@@ -246,7 +250,7 @@ export default function Reports() {
                                             <p className="text-[10px] text-gray-500">{new Date(tx.date + 'T12:00:00').toLocaleDateString('pt-BR')}</p>
                                         </div>
                                     </div>
-                                    <span className="text-sm font-bold text-emerald-500">{fmt(Math.abs(tx.amount))}</span>
+                                    <span className="text-sm font-bold text-emerald-500">{fmt(Math.abs(tx.amount), isVisible)}</span>
                                 </div>
                             ))}
                             {report.topIncomes.length === 0 && <p className="text-sm text-gray-500 text-center py-4">Sem receitas</p>}

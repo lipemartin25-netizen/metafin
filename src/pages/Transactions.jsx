@@ -1,4 +1,4 @@
-import { useState, useMemo, useRef } from 'react';
+﻿import { useState, useMemo, useRef } from 'react';
 import { useTransactions } from '../hooks/useTransactions';
 import StatusChip from '../components/StatusChip';
 import { Search, Filter, Upload, Plus, X, FileSpreadsheet, CheckCircle, AlertCircle, Loader2, Trash2, Download, BarChart2, List } from 'lucide-react';
@@ -21,14 +21,18 @@ export default function Transactions() {
     const [filterCategory, setFilterCategory] = useState('all');
     const [filterType, setFilterType] = useState('all');
     const [showAddModal, setShowAddModal] = useState(false);
+    const [showExportModal, setShowExportModal] = useState(false);
     const [importResult, setImportResult] = useState(null);
     const [importing, setImporting] = useState(false);
     const [deletingId, setDeletingId] = useState(null);
     const [editId, setEditId] = useState(null);
     const fileInputRef = useRef(null);
-    const [viewMode, setViewMode] = useState('list'); // 'list' or 'analysis'
-    const [selectedMonth, setSelectedMonth] = useState(new Date().toISOString().slice(0, 7)); // YYYY-MM
-    const [newTx, setNewTx] = useState({ date: new Date().toISOString().split('T')[0], description: '', amount: '', category: 'outros', type: 'expense', notes: '' });
+    const [viewMode, setViewMode] = useState('list');
+    const [selectedMonth, setSelectedMonth] = useState(new Date().toISOString().slice(0, 7));
+    const [newTx, setNewTx] = useState({
+        date: new Date().toISOString().split('T')[0],
+        description: '', amount: '', category: 'outros', type: 'expense', notes: ''
+    });
 
     const changeMonth = (offset) => {
         const [year, month] = selectedMonth.split('-').map(Number);
@@ -43,7 +47,6 @@ export default function Transactions() {
 
     const monthlyData = useMemo(() => {
         const months = {};
-        // Pegar últimos 12 meses
         const now = new Date();
         for (let i = 0; i < 12; i++) {
             const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
@@ -51,17 +54,12 @@ export default function Transactions() {
             const mLabel = d.toLocaleDateString('pt-BR', { month: 'short', year: '2-digit' }).replace('.', '');
             months[mKey] = { label: mLabel, total: 0, count: 0 };
         }
-
         transactions.forEach(t => {
             if (t.type === 'expense') {
                 const mk = t.date.slice(0, 7);
-                if (months[mk]) {
-                    months[mk].total += Math.abs(t.amount);
-                    months[mk].count += 1;
-                }
+                if (months[mk]) { months[mk].total += Math.abs(t.amount); months[mk].count += 1; }
             }
         });
-
         return Object.values(months).reverse();
     }, [transactions]);
 
@@ -69,7 +67,6 @@ export default function Transactions() {
         e.preventDefault();
         const amount = parseFloat(newTx.amount);
         const txData = { ...newTx, amount: newTx.type === 'expense' ? -Math.abs(amount) : Math.abs(amount), status: 'categorized' };
-
         if (editId) {
             await updateTransaction(editId, txData);
             setEditId(null);
@@ -82,35 +79,20 @@ export default function Transactions() {
     };
 
     const handleEditClick = (t) => {
-        setNewTx({
-            date: t.date,
-            description: t.description,
-            amount: Math.abs(t.amount).toString(),
-            category: t.category,
-            type: t.type,
-            notes: t.notes || ''
-        });
+        setNewTx({ date: t.date, description: t.description, amount: Math.abs(t.amount).toString(), category: t.category, type: t.type, notes: t.notes || '' });
         setEditId(t.id);
         setShowAddModal(true);
     };
 
     const handleDelete = async (id) => {
         if (!window.confirm('Tem certeza que deseja excluir este lançamento?')) return;
-
-        console.log('Excluindo transação:', id);
         setDeletingId(id);
         try {
             const success = await deleteTransaction(id);
-            if (success) {
-                analytics.transactionDeleted();
-            } else {
-                alert('Erro ao excluir transação. Tente novamente.');
-            }
-        } catch (err) {
-            console.error('Delete error:', err);
-        } finally {
-            setDeletingId(null);
-        }
+            if (success) { analytics.transactionDeleted(); }
+            else { alert('Erro ao excluir transação. Tente novamente.'); }
+        } catch (err) { console.error('Delete error:', err); }
+        finally { setDeletingId(null); }
     };
 
     const handleFileImport = async (e) => {
@@ -124,8 +106,7 @@ export default function Transactions() {
             const parsed = await parseFile(file);
             if (parsed.length === 0) {
                 setImportResult({ success: false, message: 'Nenhuma transação válida encontrada. Verifique se o arquivo contém colunas: data, descricao, valor' });
-                setImporting(false);
-                return;
+                setImporting(false); return;
             }
             await addBulkTransactions(parsed);
             const cat = parsed.filter((t) => t.status === 'categorized').length;
@@ -141,20 +122,103 @@ export default function Transactions() {
         }
     };
 
-    const handleExport = () => {
-        const csvData = filteredTransactions.map((t) => ({ data: t.date, descricao: t.description, valor: t.amount, categoria: categoryConfig[t.category]?.label || t.category, tipo: t.type === 'income' ? 'Receita' : 'Despesa', status: t.status }));
-        const csv = Papa.unparse(csvData);
-        const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a'); a.href = url; a.download = `metafin_export_${new Date().toISOString().split('T')[0]}.csv`; a.click();
-        URL.revokeObjectURL(url);
-        analytics.featureUsed('csv_export');
+    const handleExport = (format) => {
+        const dataToExport = filteredTransactions.map((t) => ({
+            data: t.date,
+            descricao: t.description,
+            valor: t.amount,
+            categoria: categoryConfig[t.category]?.label || t.category,
+            tipo: t.type === 'income' ? 'Receita' : 'Despesa',
+            status: t.status
+        }));
+
+        if (format === 'csv') {
+            const csv = Papa.unparse(dataToExport);
+            const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url; a.download = `metafin_export_${new Date().toISOString().split('T')[0]}.csv`; a.click();
+            URL.revokeObjectURL(url);
+
+        } else if (format === 'json') {
+            const blob = new Blob([JSON.stringify(dataToExport, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url; a.download = `metafin_export_${new Date().toISOString().split('T')[0]}.json`; a.click();
+            URL.revokeObjectURL(url);
+
+        } else if (format === 'pdf') {
+            const escapeHTML = (str) => String(str).replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
+            const win = window.open('', '_blank');
+            if (!win) { alert('Permita popups para gerar o PDF.'); return; }
+            win.document.write(`<!DOCTYPE html><html><head>
+            <title>Relatório Financeiro — MetaFin</title>
+            <style>
+                *{margin:0;padding:0;box-sizing:border-box}
+                body{font-family:'Segoe UI',Arial,sans-serif;padding:32px;color:#111;background:#fff}
+                .header{margin-bottom:28px;border-bottom:3px solid #8b5cf6;padding-bottom:16px}
+                .header h1{color:#8b5cf6;font-size:24px;font-weight:700}
+                .header p{color:#64748b;font-size:13px;margin-top:4px}
+                .summary{display:flex;gap:24px;margin-bottom:24px}
+                .summary-card{background:#f8fafc;border-radius:12px;padding:16px 24px;flex:1;border:1px solid #e2e8f0}
+                .summary-card .label{font-size:11px;color:#94a3b8;text-transform:uppercase;font-weight:600;letter-spacing:0.05em}
+                .summary-card .value{font-size:20px;font-weight:700;margin-top:4px}
+                .income-val{color:#10b981}.expense-val{color:#ef4444}.balance-pos{color:#10b981}.balance-neg{color:#ef4444}
+                table{width:100%;border-collapse:collapse;font-size:13px}
+                thead tr{background:#f1f5f9}
+                th{padding:11px 14px;text-align:left;font-weight:600;color:#334155;font-size:11px;text-transform:uppercase;letter-spacing:0.05em}
+                td{padding:11px 14px;border-bottom:1px solid #f1f5f9;color:#334155}
+                tr:hover td{background:#fafafa}
+                .badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:600}
+                .badge-income{background:#dcfce7;color:#16a34a}
+                .badge-expense{background:#fee2e2;color:#dc2626}
+                .footer{margin-top:32px;padding-top:16px;border-top:1px solid #e2e8f0;color:#94a3b8;font-size:11px;text-align:center}
+                @media print{@page{margin:16mm}body{padding:0}.no-print{display:none}}
+            </style></head>
+            <body>
+            <div class="header">
+                <h1>MetaFin — Relatório de Transações</h1>
+                <p>Exportado em ${new Date().toLocaleDateString('pt-BR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })} • ${dataToExport.length} transações • Período: ${monthLabel}</p>
+            </div>
+            <div class="summary">
+                <div class="summary-card">
+                    <div class="label">Receitas</div>
+                    <div class="value income-val">${fmt(dataToExport.filter(t => t.tipo === 'Receita').reduce((a, t) => a + Math.abs(t.valor), 0))}</div>
+                </div>
+                <div class="summary-card">
+                    <div class="label">Despesas</div>
+                    <div class="value expense-val">${fmt(dataToExport.filter(t => t.tipo === 'Despesa').reduce((a, t) => a + Math.abs(t.valor), 0))}</div>
+                </div>
+                <div class="summary-card">
+                    <div class="label">Saldo</div>
+                    ${(() => { const bal = dataToExport.reduce((a, t) => a + (t.tipo === 'Receita' ? Math.abs(t.valor) : -Math.abs(t.valor)), 0); return `<div class="value ${bal >= 0 ? 'balance-pos' : 'balance-neg'}">${fmt(bal)}</div>`; })()}
+                </div>
+            </div>
+            <table>
+                <thead><tr><th>Data</th><th>Descrição</th><th>Valor</th><th>Categoria</th><th>Tipo</th></tr></thead>
+                <tbody>${dataToExport.map(t => `<tr>
+                    <td>${new Date(t.data + 'T12:00:00').toLocaleDateString('pt-BR')}</td>
+                    <td>${escapeHTML(t.descricao)}</td>
+                    <td style="font-weight:700;color:${t.tipo === 'Receita' ? '#10b981' : '#ef4444'}">${t.tipo === 'Receita' ? '+' : '-'}${fmt(Math.abs(t.valor))}</td>
+                    <td>${escapeHTML(t.categoria)}</td>
+                    <td><span class="badge ${t.tipo === 'Receita' ? 'badge-income' : 'badge-expense'}">${t.tipo}</span></td>
+                </tr>`).join('')}</tbody>
+            </table>
+            <div class="footer">Relatório Gerado em ${new Date().toLocaleDateString('pt-BR')}</div>
+            <script>setTimeout(()=>{window.print();},400);</script>
+            </body></html>`);
+            win.document.close();
+        }
+
+        setShowExportModal(false);
+        analytics.featureUsed(`export_${format}`);
     };
 
     const downloadSampleCsv = () => {
-        const s = `data,descricao,valor,categoria\n2026-02-01,Salário Mensal,8500.00,renda\n2026-02-02,Supermercado Extra,-452.30,alimentacao\n2026-02-03,Uber Casa-Trabalho,-28.50,transporte\n2026-02-04,Netflix,-55.90,entretenimento\n2026-02-05,Aluguel,-2200.00,moradia\n2026-02-06,Farmácia,-87.60,saude\n2026-02-07,Freelance Design,2500.00,renda`;
+        const s = `data,descricao,valor,categoria\n2026-02-01,Salário Mensal,8500.00,renda\n2026-02-02,Supermercado Extra,-452.30,alimentacao\n2026-02-03,Uber Casa-Trabalho,-28.50,transporte\n2026-02-04,Netflix,-55.90,entretenimento\n2026-02-05,Aluguel,-2200.00,moradia`;
         const blob = new Blob(['\uFEFF' + s], { type: 'text/csv;charset=utf-8;' });
-        const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'sample_import.csv'; a.click(); URL.revokeObjectURL(url);
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a'); a.href = url; a.download = 'sample_import.csv'; a.click(); URL.revokeObjectURL(url);
     };
 
     const filteredTransactions = useMemo(() => {
@@ -179,40 +243,78 @@ export default function Transactions() {
 
     return (
         <div className="py-6 space-y-6 animate-fade-in">
+            {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div><h1 className="text-2xl font-bold text-white">Transações</h1><p className="text-gray-400 text-sm">{filteredTransactions.length} transações em {monthLabel}</p></div>
-                <div className="flex items-center gap-2">
-                    <div className="flex bg-white/5 p-1 rounded-xl items-center mr-2">
-                        <button onClick={() => changeMonth(-1)} className="p-2 text-gray-400 hover:text-white transition-all">←</button>
+                <div>
+                    <h1 className="text-2xl font-bold text-white dark:text-white">Transações</h1>
+                    <p className="text-slate-400 text-sm mt-0.5">{filteredTransactions.length} transações em <span className="capitalize">{monthLabel}</span></p>
+                </div>
+                <div className="flex items-center gap-2 flex-wrap">
+                    {/* Month navigator */}
+                    <div className="flex bg-white/5 p-1 rounded-xl items-center">
+                        <button onClick={() => changeMonth(-1)} className="p-2 text-slate-400 hover:text-white transition-all rounded-lg hover:bg-white/5">←</button>
                         <span className="px-3 text-sm font-bold text-white min-w-[140px] text-center capitalize">{monthLabel}</span>
-                        <button onClick={() => changeMonth(1)} className="p-2 text-gray-400 hover:text-white transition-all">→</button>
+                        <button onClick={() => changeMonth(1)} className="p-2 text-slate-400 hover:text-white transition-all rounded-lg hover:bg-white/5">→</button>
                     </div>
-                    <div className="flex bg-white/5 p-1 rounded-xl mr-2">
-                        <button onClick={() => setViewMode('list')} className={`p-2 rounded-lg transition-all ${viewMode === 'list' ? 'bg-emerald-500/20 text-emerald-400 shadow-lg shadow-emerald-500/10' : 'text-gray-500 hover:text-gray-300'}`} title="Lista">
-                            <List className="w-4 h-4" />
-                        </button>
-                        <button onClick={() => setViewMode('analysis')} className={`p-2 rounded-lg transition-all ${viewMode === 'analysis' ? 'bg-emerald-500/20 text-emerald-400 shadow-lg shadow-emerald-500/10' : 'text-gray-500 hover:text-gray-300'}`} title="Análise Mensal">
-                            <BarChart2 className="w-4 h-4" />
-                        </button>
+                    {/* View mode */}
+                    <div className="flex bg-white/5 p-1 rounded-xl">
+                        <button onClick={() => setViewMode('list')} className={`p-2 rounded-lg transition-all ${viewMode === 'list' ? 'bg-emerald-500/20 text-emerald-400' : 'text-slate-500 hover:text-slate-300'}`} title="Lista"><List className="w-4 h-4" /></button>
+                        <button onClick={() => setViewMode('analysis')} className={`p-2 rounded-lg transition-all ${viewMode === 'analysis' ? 'bg-emerald-500/20 text-emerald-400' : 'text-slate-500 hover:text-slate-300'}`} title="Análise"><BarChart2 className="w-4 h-4" /></button>
                     </div>
-                    <button onClick={handleExport} className="px-4 py-2 rounded-xl border border-white/10 text-gray-300 hover:bg-white/5 transition-all text-sm flex items-center gap-2"><Download className="w-4 h-4" /><span className="hidden sm:inline">Exportar</span></button>
-                    <button onClick={() => { setEditId(null); setNewTx({ date: new Date().toISOString().split('T')[0], description: '', amount: '', category: 'outros', type: 'expense', notes: '' }); setShowAddModal(true); }} className="gradient-btn text-sm flex items-center gap-2"><Plus className="w-4 h-4" /><span className="hidden sm:inline">Adicionar</span></button>
+                    {/* Export */}
+                    <div className="relative">
+                        <button
+                            onClick={() => setShowExportModal(!showExportModal)}
+                            className="px-4 py-2 rounded-xl border border-white/10 text-slate-300 hover:bg-white/5 hover:text-white transition-all text-sm flex items-center gap-2"
+                        >
+                            <Download className="w-4 h-4" />
+                            <span className="hidden sm:inline">Exportar</span>
+                        </button>
+                        {showExportModal && (
+                            <>
+                                <div className="fixed inset-0 z-20" onClick={() => setShowExportModal(false)} />
+                                <div className="absolute right-0 mt-2 w-52 bg-[#0d1424] border border-white/15 rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.7)] z-30 p-2 animate-slide-up">
+                                    <p className="text-[10px] text-slate-500 uppercase font-bold tracking-widest px-3 py-2">Escolha o formato</p>
+                                    <button onClick={() => handleExport('csv')} className="w-full text-left px-3 py-2.5 text-sm text-slate-300 hover:bg-white/5 hover:text-white rounded-xl flex items-center justify-between transition-all">
+                                        <span className="flex items-center gap-2">📊 Excel / CSV</span>
+                                        <span className="text-[10px] text-slate-600 font-mono">.csv</span>
+                                    </button>
+                                    <button onClick={() => handleExport('json')} className="w-full text-left px-3 py-2.5 text-sm text-slate-300 hover:bg-white/5 hover:text-white rounded-xl flex items-center justify-between transition-all">
+                                        <span className="flex items-center gap-2">🔧 JSON Data</span>
+                                        <span className="text-[10px] text-slate-600 font-mono">.json</span>
+                                    </button>
+                                    <button onClick={() => handleExport('pdf')} className="w-full text-left px-3 py-2.5 text-sm text-slate-300 hover:bg-white/5 hover:text-white rounded-xl flex items-center justify-between transition-all">
+                                        <span className="flex items-center gap-2">📄 Relatório PDF</span>
+                                        <span className="text-[10px] text-slate-600 font-mono">.pdf</span>
+                                    </button>
+                                </div>
+                            </>
+                        )}
+                    </div>
+                    {/* Add */}
+                    <button
+                        onClick={() => { setEditId(null); setNewTx({ date: new Date().toISOString().split('T')[0], description: '', amount: '', category: 'outros', type: 'expense', notes: '' }); setShowAddModal(true); }}
+                        className="gradient-btn text-sm"
+                    >
+                        <Plus className="w-4 h-4" />
+                        <span className="hidden sm:inline">Adicionar</span>
+                    </button>
                 </div>
             </div>
 
-            {/* Monthly Statement Summary */}
+            {/* Summary Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div className="glass-card p-5 !bg-transparent hover:border-emerald-500/30 transition-all">
-                    <p className="text-xs font-medium text-gray-500 mb-1 flex items-center gap-2">Receitas</p>
-                    <h5 className="text-3xl font-bold text-gray-900 dark:text-white">{fmt(monthSummary.income)}</h5>
+                <div className="glass-card p-5 border border-white/5 hover:border-emerald-500/30 transition-all">
+                    <p className="text-xs font-semibold text-slate-400 mb-1 uppercase tracking-wider">Receitas</p>
+                    <h5 className="text-2xl font-bold text-emerald-400">{fmt(monthSummary.income)}</h5>
                 </div>
-                <div className="glass-card p-5 !bg-transparent hover:border-rose-500/30 transition-all">
-                    <p className="text-xs font-medium text-gray-500 mb-1 flex items-center gap-2">Despesas</p>
-                    <h5 className="text-3xl font-bold text-gray-900 dark:text-white">-{fmt(monthSummary.expense)}</h5>
+                <div className="glass-card p-5 border border-white/5 hover:border-rose-500/30 transition-all">
+                    <p className="text-xs font-semibold text-slate-400 mb-1 uppercase tracking-wider">Despesas</p>
+                    <h5 className="text-2xl font-bold text-rose-400">-{fmt(monthSummary.expense)}</h5>
                 </div>
-                <div className="glass-card p-5 !bg-transparent hover:border-indigo-500/30 transition-all">
-                    <p className="text-xs font-medium text-gray-500 mb-1 flex items-center gap-2">Fluxo de Caixa</p>
-                    <h5 className={`text-3xl font-bold ${monthSummary.income - monthSummary.expense >= 0 ? 'text-emerald-500' : 'text-rose-500'}`}>
+                <div className="glass-card p-5 border border-white/5 hover:border-indigo-500/30 transition-all">
+                    <p className="text-xs font-semibold text-slate-400 mb-1 uppercase tracking-wider">Fluxo de Caixa</p>
+                    <h5 className={`text-2xl font-bold ${monthSummary.income - monthSummary.expense >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
                         {fmt(monthSummary.income - monthSummary.expense)}
                     </h5>
                 </div>
@@ -221,10 +323,18 @@ export default function Transactions() {
             {/* Import */}
             <div className="glass-card">
                 <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-                    <div className="flex-1"><h3 className="text-sm font-semibold text-white flex items-center gap-2"><FileSpreadsheet className="w-4 h-4 text-emerald-400" />MetaFin Import Multi-Formato</h3><p className="text-xs text-gray-500 mt-1">CSV, Excel, JSON, TXT, XML, HTML, PDF, Word, imagens e mais</p></div>
+                    <div className="flex-1">
+                        <h3 className="text-sm font-semibold text-white flex items-center gap-2">
+                            <FileSpreadsheet className="w-4 h-4 text-emerald-400" />
+                            MetaFin Import Multi-Formato
+                        </h3>
+                        <p className="text-xs text-slate-400 mt-1">CSV, Excel, JSON, TXT, XML, HTML, PDF, Word, imagens e mais</p>
+                    </div>
                     <div className="flex items-center gap-2">
-                        <button onClick={downloadSampleCsv} className="px-3 py-2 rounded-lg border border-white/10 text-gray-400 hover:bg-white/5 transition-all text-xs">📄 Modelo CSV</button>
-                        <label className="gradient-btn text-sm cursor-pointer flex items-center gap-2">
+                        <button onClick={downloadSampleCsv} className="px-3 py-2 rounded-lg border border-white/10 text-slate-400 hover:bg-white/5 hover:text-white transition-all text-xs">
+                            📄 Modelo CSV
+                        </button>
+                        <label className="gradient-btn text-sm cursor-pointer">
                             {importing ? <><Loader2 className="w-4 h-4 animate-spin" />Importando...</> : <><Upload className="w-4 h-4" />Importar Arquivo</>}
                             <input ref={fileInputRef} type="file" accept={ACCEPTED_EXTENSIONS} onChange={handleFileImport} disabled={importing} className="hidden" />
                         </label>
@@ -242,157 +352,157 @@ export default function Transactions() {
             {/* Filters */}
             <div className="flex flex-col sm:flex-row gap-3">
                 <div className="relative flex-1">
-                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
-                    <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Buscar por descrição ou categoria..." className="input-field pl-12 bg-white dark:bg-white/[0.02]" />
-                    {searchQuery && <button onClick={() => setSearchQuery('')} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-900 dark:hover:text-white"><X className="w-4 h-4" /></button>}
+                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+                    <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Buscar por descrição ou categoria..." className="w-full bg-white/[0.03] border border-white/10 rounded-2xl py-3.5 pl-12 pr-4 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-violet-500/50 transition-all" />
+                    {searchQuery && <button onClick={() => setSearchQuery('')} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white"><X className="w-4 h-4" /></button>}
                 </div>
                 <div className="relative">
-                    <Filter className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
-                    <select value={filterCategory} onChange={(e) => setFilterCategory(e.target.value)} className="input-field pl-12 pr-8 appearance-none cursor-pointer min-w-[200px] bg-white dark:bg-white/[0.02]">
-                        <option value="all">Todas as Categorias</option>
-                        {allCategories.map((c) => <option key={c} value={c}>{categoryConfig[c]?.icon} {categoryConfig[c]?.label || c}</option>)}
+                    <Filter className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+                    <select value={filterCategory} onChange={(e) => setFilterCategory(e.target.value)} className="bg-white/[0.03] border border-white/10 rounded-2xl py-3.5 pl-12 pr-10 text-sm text-slate-200 focus:outline-none focus:border-violet-500/50 transition-all appearance-none cursor-pointer min-w-[200px]">
+                        <option value="all" className="bg-[#0f172a]">Todas as Categorias</option>
+                        {allCategories.map((c) => <option key={c} value={c} className="bg-[#0f172a]">{categoryConfig[c]?.icon} {categoryConfig[c]?.label || c}</option>)}
                     </select>
                 </div>
-                <select value={filterType} onChange={(e) => setFilterType(e.target.value)} className="input-field appearance-none cursor-pointer min-w-[150px] bg-white dark:bg-white/[0.02]">
-                    <option value="all">Tipos</option>
-                    <option value="income">💰 Receitas</option>
-                    <option value="expense">💸 Despesas</option>
+                <select value={filterType} onChange={(e) => setFilterType(e.target.value)} className="bg-white/[0.03] border border-white/10 rounded-2xl py-3.5 px-4 text-sm text-slate-200 focus:outline-none focus:border-violet-500/50 transition-all appearance-none cursor-pointer min-w-[150px]">
+                    <option value="all" className="bg-[#0f172a]">Todos os Tipos</option>
+                    <option value="income" className="bg-[#0f172a]">💰 Receitas</option>
+                    <option value="expense" className="bg-[#0f172a]">💸 Despesas</option>
                 </select>
             </div>
 
-            {/* Content Mode Selection */}
+            {/* Content */}
             {viewMode === 'analysis' ? (
-                <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                <div className="space-y-6 animate-fade-in">
                     <div className="glass-card p-6">
                         <div className="flex items-center justify-between mb-8">
                             <div>
                                 <h3 className="text-lg font-semibold text-white">Comparativo Mensal</h3>
-                                <p className="text-xs text-gray-400">Total de gastos nos últimos 12 meses</p>
+                                <p className="text-xs text-slate-400">Total de gastos nos últimos 12 meses</p>
                             </div>
                             <div className="text-right">
-                                <p className="text-[10px] text-gray-500 uppercase tracking-widest font-bold">Média Mensal</p>
+                                <p className="text-[10px] text-slate-500 uppercase tracking-widest font-bold">Média Mensal</p>
                                 <p className="text-xl font-bold text-white">
-                                    {fmt(monthlyData.reduce((acc, m) => acc + m.total, 0) / monthlyData.filter(m => m.total > 0).length || 0)}
+                                    {fmt(monthlyData.reduce((acc, m) => acc + m.total, 0) / (monthlyData.filter(m => m.total > 0).length || 1))}
                                 </p>
                             </div>
                         </div>
-
                         <div className="h-[300px] w-full">
                             <ResponsiveContainer width="100%" height="100%">
                                 <BarChart data={monthlyData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
                                     <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
-                                    <XAxis dataKey="label" stroke="#6b7280" fontSize={11} tickLine={false} axisLine={false} />
-                                    <YAxis stroke="#6b7280" fontSize={11} tickLine={false} axisLine={false} tickFormatter={(v) => `R$ ${v >= 1000 ? (v / 1000).toFixed(1) + 'k' : v}`} />
-                                    <Tooltip
-                                        cursor={{ fill: 'rgba(255,255,255,0.03)' }}
-                                        contentStyle={{ backgroundColor: '#111827', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px' }}
-                                        formatter={(v) => [fmt(v), 'Gastos']}
-                                    />
+                                    <XAxis dataKey="label" stroke="#64748b" fontSize={11} tickLine={false} axisLine={false} />
+                                    <YAxis stroke="#64748b" fontSize={11} tickLine={false} axisLine={false} tickFormatter={(v) => `R$${v >= 1000 ? (v / 1000).toFixed(1) + 'k' : v}`} />
+                                    <Tooltip cursor={{ fill: 'rgba(255,255,255,0.03)' }} contentStyle={{ backgroundColor: '#0d1424', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px' }} formatter={(v) => [fmt(v), 'Gastos']} />
                                     <Bar dataKey="total" radius={[6, 6, 0, 0]} barSize={32}>
-                                        {monthlyData.map((entry, index) => (
-                                            <Cell key={`cell-${index}`} fill={index === monthlyData.length - 1 ? '#10b981' : '#374151'} fillOpacity={index === monthlyData.length - 1 ? 1 : 0.6} />
+                                        {monthlyData.map((_, index) => (
+                                            <Cell key={`cell-${index}`} fill={index === monthlyData.length - 1 ? '#10b981' : '#1e293b'} fillOpacity={index === monthlyData.length - 1 ? 1 : 0.8} />
                                         ))}
                                     </Bar>
                                 </BarChart>
                             </ResponsiveContainer>
                         </div>
                     </div>
-
                     <div className="grid sm:grid-cols-2 gap-4">
                         <div className="glass-card p-5 border-l-4 border-l-emerald-500">
-                            <p className="text-xs text-gray-400 font-medium">Mês Atual (Até agora)</p>
+                            <p className="text-xs text-slate-400 font-medium">Mês Atual (Até agora)</p>
                             <h4 className="text-2xl font-bold text-white mt-1">{fmt(monthlyData[monthlyData.length - 1]?.total || 0)}</h4>
-                            <div className="flex items-center gap-2 mt-2">
-                                <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold bg-gray-500/10 text-gray-400`}>
-                                    PROJEÇÃO ESTIMADA
-                                </span>
-                            </div>
                         </div>
                         <div className="glass-card p-5 border-l-4 border-l-blue-500">
-                            <p className="text-xs text-gray-400 font-medium">Economia vs Mês Anterior</p>
+                            <p className="text-xs text-slate-400 font-medium">Variação vs Mês Anterior</p>
                             {(() => {
                                 const curr = monthlyData[monthlyData.length - 1]?.total || 0;
-                                const prev = monthlyData[monthlyData.length - 2]?.total || 1; // evitar div zero
+                                const prev = monthlyData[monthlyData.length - 2]?.total || 1;
                                 const diff = ((curr - prev) / prev) * 100;
-                                return (
-                                    <>
-                                        <h4 className={`text-2xl font-bold mt-1 ${diff <= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
-                                            {diff <= 0 ? '↓' : '↑'} {Math.abs(diff).toFixed(1)}%
-                                        </h4>
-                                        <p className="text-[10px] text-gray-500 mt-2 uppercase font-bold tracking-wider">Baseado nos dados importados</p>
-                                    </>
-                                );
+                                return <h4 className={`text-2xl font-bold mt-1 ${diff <= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>{diff <= 0 ? '↓' : '↑'} {Math.abs(diff).toFixed(1)}%</h4>;
                             })()}
                         </div>
                     </div>
                 </div>
             ) : (
-                <>
-                    {/* List */}
-                    <div className="bg-transparent overflow-hidden mt-2">
-                        {filteredTransactions.length === 0 ? (
-                            <div className="p-12 text-center glass-card"><Search className="w-12 h-12 text-gray-400 dark:text-gray-700 mx-auto mb-4" /><p className="text-gray-500">Nenhuma transação encontrada</p></div>
-                        ) : (
-                            <div className="space-y-3">{filteredTransactions.map((t) => {
-                                const cat = categoryConfig[t.category];
-                                return (
-                                    <div key={t.id} onClick={() => handleEditClick(t)} className="glass-card !p-4 flex items-center justify-between hover:border-gray-300 dark:hover:border-white/20 transition-all cursor-pointer group">
-                                        <div className="flex items-center gap-4">
-                                            <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-xl shrink-0" style={{ backgroundColor: `${cat?.color || '#6b7280'}15` }}>{cat?.icon || '📦'}</div>
-                                            <div className="min-w-0">
-                                                <p className="text-base font-bold text-gray-900 dark:text-white truncate group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">{t.description}</p>
-                                                <p className="text-xs text-gray-500 flex items-center gap-2 mt-0.5">
-                                                    <span>{new Date(t.date + 'T12:00:00').toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' })}</span>
-                                                    <span className="w-1 h-1 bg-gray-300 dark:bg-gray-600 rounded-full" />
-                                                    <span style={{ color: cat?.color || '#6b7280' }}>{cat?.label || t.category}</span>
-                                                </p>
-                                            </div>
+                <div className="space-y-3">
+                    {filteredTransactions.length === 0 ? (
+                        <div className="p-12 text-center glass-card">
+                            <Search className="w-12 h-12 text-slate-600 mx-auto mb-4" />
+                            <p className="text-slate-400">Nenhuma transação encontrada</p>
+                        </div>
+                    ) : (
+                        filteredTransactions.map((t) => {
+                            const cat = categoryConfig[t.category];
+                            return (
+                                <div key={t.id} onClick={() => handleEditClick(t)} className="glass-card !p-4 flex items-center justify-between border border-white/5 hover:border-violet-500/30 transition-all cursor-pointer group relative overflow-hidden">
+                                    <div className="flex items-center gap-4">
+                                        <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-xl shrink-0" style={{ backgroundColor: `${cat?.color || '#6b7280'}20` }}>
+                                            {cat?.icon || '📦'}
                                         </div>
-
-                                        <div className="flex flex-col items-end gap-1">
-                                            <span className={`text-lg font-extrabold ${t.type === 'income' ? 'text-emerald-500' : 'text-gray-900 dark:text-white'}`}>
-                                                {t.type === 'income' ? '+' : '-'}{fmt(Math.abs(t.amount))}
-                                            </span>
-                                            <div className="flex items-center gap-3">
-                                                <div className="scale-75 origin-right"><StatusChip status={t.status} /></div>
-                                            </div>
+                                        <div className="min-w-0">
+                                            <p className="text-sm font-semibold text-white truncate group-hover:text-violet-400 transition-colors">{t.description}</p>
+                                            <p className="text-xs text-slate-400 flex items-center gap-2 mt-0.5">
+                                                <span>{new Date(t.date + 'T12:00:00').toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' })}</span>
+                                                <span className="w-1 h-1 bg-slate-600 rounded-full" />
+                                                <span style={{ color: cat?.color || '#94a3b8' }}>{cat?.label || t.category}</span>
+                                            </p>
                                         </div>
-
-                                        <button
-                                            onClick={(e) => { e.stopPropagation(); handleDelete(t.id); }}
-                                            disabled={deletingId === t.id}
-                                            className="absolute right-[-40px] top-1/2 -translate-y-1/2 p-2 rounded-xl bg-red-500 text-white shadow-xl hover:bg-red-600 transition-all disabled:opacity-50 opacity-0 group-hover:right-4 group-hover:opacity-100"
-                                            title="Excluir"
-                                        >
-                                            {deletingId === t.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
-                                        </button>
                                     </div>
-                                );
-                            })}</div>
-                        )}
-                    </div>
-                </>
+                                    <div className="flex flex-col items-end gap-1">
+                                        <span className={`text-base font-bold ${t.type === 'income' ? 'text-emerald-400' : 'text-slate-200'}`}>
+                                            {t.type === 'income' ? '+' : '-'}{fmt(Math.abs(t.amount))}
+                                        </span>
+                                        <div className="scale-75 origin-right"><StatusChip status={t.status} /></div>
+                                    </div>
+                                    <button
+                                        onClick={(e) => { e.stopPropagation(); handleDelete(t.id); }}
+                                        disabled={deletingId === t.id}
+                                        className="absolute right-[-40px] top-1/2 -translate-y-1/2 p-2 rounded-xl bg-red-500 text-white shadow-xl hover:bg-red-600 transition-all disabled:opacity-50 opacity-0 group-hover:right-4 group-hover:opacity-100"
+                                    >
+                                        {deletingId === t.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
+                                    </button>
+                                </div>
+                            );
+                        })
+                    )}
+                </div>
             )}
 
-            {/* Add Modal - Moved outside to work in both views if needed,
-                but keeping it consistent with the user's intended flow */}
+            {/* ADD/EDIT MODAL - Sólido */}
             {showAddModal && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-                    <div className="glass-card w-full max-w-md animate-slide-up">
-                        <div className="flex items-center justify-between mb-6"><h2 className="text-lg font-bold text-white">{editId ? 'Editar Transação' : 'Nova Transação'}</h2><button onClick={() => { setShowAddModal(false); setEditId(null); }} className="p-1.5 rounded-lg text-gray-500 hover:text-white hover:bg-white/10 transition-all"><X className="w-5 h-5" /></button></div>
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/90 backdrop-blur-sm">
+                    <div className="bg-[#0d1424] border border-white/15 w-full max-w-md rounded-3xl p-8 shadow-[0_25px_60px_rgba(0,0,0,0.85)] animate-slide-up">
+                        <div className="flex items-center justify-between mb-6">
+                            <h2 className="text-lg font-bold text-white">{editId ? 'Editar Transação' : 'Nova Transação'}</h2>
+                            <button onClick={() => { setShowAddModal(false); setEditId(null); }} className="p-1.5 rounded-lg text-slate-500 hover:text-white hover:bg-white/10 transition-all"><X className="w-5 h-5" /></button>
+                        </div>
                         <form onSubmit={handleAddTransaction} className="space-y-4">
                             <div className="flex rounded-xl bg-white/5 p-1">
-                                <button type="button" onClick={() => setNewTx((p) => ({ ...p, type: 'expense' }))} className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all ${newTx.type === 'expense' ? 'bg-red-500/20 text-red-400' : 'text-gray-500 hover:text-gray-300'}`}>💸 Despesa</button>
-                                <button type="button" onClick={() => setNewTx((p) => ({ ...p, type: 'income' }))} className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all ${newTx.type === 'income' ? 'bg-emerald-500/20 text-emerald-400' : 'text-gray-500 hover:text-gray-300'}`}>💰 Receita</button>
+                                <button type="button" onClick={() => setNewTx((p) => ({ ...p, type: 'expense' }))} className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all ${newTx.type === 'expense' ? 'bg-red-500/20 text-red-400' : 'text-slate-500 hover:text-slate-300'}`}>💸 Despesa</button>
+                                <button type="button" onClick={() => setNewTx((p) => ({ ...p, type: 'income' }))} className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all ${newTx.type === 'income' ? 'bg-emerald-500/20 text-emerald-400' : 'text-slate-500 hover:text-slate-300'}`}>💰 Receita</button>
                             </div>
-                            <div><label className="block text-sm text-gray-400 mb-1">Descrição</label><input type="text" value={newTx.description} onChange={(e) => setNewTx((p) => ({ ...p, description: e.target.value }))} placeholder="Ex: Supermercado Extra" required className="input-field" /></div>
+                            <div>
+                                <label className="block text-sm text-slate-400 mb-1">Descrição</label>
+                                <input type="text" value={newTx.description} onChange={(e) => setNewTx((p) => ({ ...p, description: e.target.value }))} placeholder="Ex: Supermercado Extra" required className="input-field" />
+                            </div>
                             <div className="grid grid-cols-2 gap-3">
-                                <div><label className="block text-sm text-gray-400 mb-1">Valor (R$)</label><input type="number" step="0.01" min="0.01" value={newTx.amount} onChange={(e) => setNewTx((p) => ({ ...p, amount: e.target.value }))} placeholder="0,00" required className="input-field" /></div>
-                                <div><label className="block text-sm text-gray-400 mb-1">Data</label><input type="date" value={newTx.date} onChange={(e) => setNewTx((p) => ({ ...p, date: e.target.value }))} required className="input-field" /></div>
+                                <div>
+                                    <label className="block text-sm text-slate-400 mb-1">Valor (R$)</label>
+                                    <input type="number" step="0.01" min="0.01" value={newTx.amount} onChange={(e) => setNewTx((p) => ({ ...p, amount: e.target.value }))} placeholder="0,00" required className="input-field" />
+                                </div>
+                                <div>
+                                    <label className="block text-sm text-slate-400 mb-1">Data</label>
+                                    <input type="date" value={newTx.date} onChange={(e) => setNewTx((p) => ({ ...p, date: e.target.value }))} required className="input-field" />
+                                </div>
                             </div>
-                            <div><label className="block text-sm text-gray-400 mb-1">Categoria</label><select value={newTx.category} onChange={(e) => setNewTx((p) => ({ ...p, category: e.target.value }))} className="input-field appearance-none cursor-pointer">{allCategories.map((c) => <option key={c} value={c}>{categoryConfig[c]?.icon} {categoryConfig[c]?.label || c}</option>)}</select></div>
-                            <div><label className="block text-sm text-gray-400 mb-1">Notas (opcional)</label><input type="text" value={newTx.notes} onChange={(e) => setNewTx((p) => ({ ...p, notes: e.target.value }))} placeholder="Observações..." className="input-field" /></div>
-                            <button type="submit" className="gradient-btn w-full">{editId ? 'Salvar Transação' : 'Adicionar Transação'}</button>
+                            <div>
+                                <label className="block text-sm text-slate-400 mb-1">Categoria</label>
+                                <select value={newTx.category} onChange={(e) => setNewTx((p) => ({ ...p, category: e.target.value }))} className="input-field appearance-none cursor-pointer">
+                                    {allCategories.map((c) => <option key={c} value={c} className="bg-[#0d1424]">{categoryConfig[c]?.icon} {categoryConfig[c]?.label || c}</option>)}
+                                </select>
+                            </div>
+                            <div>
+                                <label className="block text-sm text-slate-400 mb-1">Notas (opcional)</label>
+                                <input type="text" value={newTx.notes} onChange={(e) => setNewTx((p) => ({ ...p, notes: e.target.value }))} placeholder="Observações..." className="input-field" />
+                            </div>
+                            <button type="submit" className="gradient-btn w-full justify-center py-3">
+                                {editId ? 'Salvar Transação' : 'Adicionar Transação'}
+                            </button>
                         </form>
                     </div>
                 </div>

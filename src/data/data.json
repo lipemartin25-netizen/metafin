@@ -1,171 +1,52 @@
-{
-  "transactions": [
-    {
-      "id": "t001",
-      "date": "2026-02-01",
-      "description": "Salário Mensal",
-      "amount": 8500.00,
-      "category": "renda",
-      "type": "income",
-      "status": "categorized",
-      "notes": ""
-    },
-    {
-      "id": "t002",
-      "date": "2026-02-02",
-      "description": "Supermercado Extra",
-      "amount": -452.30,
-      "category": "alimentacao",
-      "type": "expense",
-      "status": "categorized",
-      "notes": ""
-    },
-    {
-      "id": "t003",
-      "date": "2026-02-03",
-      "description": "Uber - Casa ao Trabalho",
-      "amount": -28.50,
-      "category": "transporte",
-      "type": "expense",
-      "status": "categorized",
-      "notes": ""
-    },
-    {
-      "id": "t004",
-      "date": "2026-02-04",
-      "description": "Netflix Assinatura",
-      "amount": -55.90,
-      "category": "entretenimento",
-      "type": "expense",
-      "status": "categorized",
-      "notes": ""
-    },
-    {
-      "id": "t005",
-      "date": "2026-02-05",
-      "description": "Aluguel Apartamento",
-      "amount": -2200.00,
-      "category": "moradia",
-      "type": "expense",
-      "status": "categorized",
-      "notes": ""
-    },
-    {
-      "id": "t006",
-      "date": "2026-02-06",
-      "description": "Consulta Médica",
-      "amount": -350.00,
-      "category": "saude",
-      "type": "expense",
-      "status": "categorized",
-      "notes": ""
-    },
-    {
-      "id": "t007",
-      "date": "2026-02-07",
-      "description": "Curso Udemy - React",
-      "amount": -47.90,
-      "category": "educacao",
-      "type": "expense",
-      "status": "categorized",
-      "notes": ""
-    },
-    {
-      "id": "t008",
-      "date": "2026-02-08",
-      "description": "Freelance Design",
-      "amount": 2500.00,
-      "category": "renda",
-      "type": "income",
-      "status": "categorized",
-      "notes": ""
-    },
-    {
-      "id": "t009",
-      "date": "2026-02-09",
-      "description": "Conta de Luz - CPFL",
-      "amount": -189.40,
-      "category": "moradia",
-      "type": "expense",
-      "status": "pending",
-      "notes": "Verificar leitura"
-    },
-    {
-      "id": "t010",
-      "date": "2026-02-10",
-      "description": "iFood - Almoço",
-      "amount": -45.90,
-      "category": "alimentacao",
-      "type": "expense",
-      "status": "categorized",
-      "notes": ""
-    },
-    {
-      "id": "t011",
-      "date": "2026-02-11",
-      "description": "Rendimento Poupança",
-      "amount": 125.00,
-      "category": "investimentos",
-      "type": "income",
-      "status": "categorized",
-      "notes": ""
-    },
-    {
-      "id": "t012",
-      "date": "2026-02-12",
-      "description": "Farmácia Droga Raia",
-      "amount": -87.60,
-      "category": "saude",
-      "type": "expense",
-      "status": "categorized",
-      "notes": ""
-    }
-  ],
-  "categories": {
-    "alimentacao": {
-      "label": "Alimentação",
-      "color": "#f97316",
-      "icon": "🍽️"
-    },
-    "transporte": {
-      "label": "Transporte",
-      "color": "#3b82f6",
-      "icon": "🚗"
-    },
-    "moradia": {
-      "label": "Moradia",
-      "color": "#8b5cf6",
-      "icon": "🏠"
-    },
-    "saude": {
-      "label": "Saúde",
-      "color": "#ef4444",
-      "icon": "🏥"
-    },
-    "educacao": {
-      "label": "Educação",
-      "color": "#06b6d4",
-      "icon": "📚"
-    },
-    "entretenimento": {
-      "label": "Entretenimento",
-      "color": "#ec4899",
-      "icon": "🎬"
-    },
-    "renda": {
-      "label": "Renda",
-      "color": "#10b981",
-      "icon": "💰"
-    },
-    "investimentos": {
-      "label": "Investimentos",
-      "color": "#f59e0b",
-      "icon": "📈"
-    },
-    "outros": {
-      "label": "Outros",
-      "color": "#6b7280",
-      "icon": "📦"
-    }
-  }
+﻿{
+    "transactions":  [
+
+                     ],
+    "categories":  {
+                       "alimentacao":  {
+                                           "label":  "AlimentaÃ§Ã£o",
+                                           "color":  "#f97316",
+                                           "icon":  "ðŸ½ï¸"
+                                       },
+                       "transporte":  {
+                                          "label":  "Transporte",
+                                          "color":  "#3b82f6",
+                                          "icon":  "ðŸš—"
+                                      },
+                       "moradia":  {
+                                       "label":  "Moradia",
+                                       "color":  "#8b5cf6",
+                                       "icon":  "ðŸ "
+                                   },
+                       "saude":  {
+                                     "label":  "SaÃºde",
+                                     "color":  "#ef4444",
+                                     "icon":  "ðŸ¥"
+                                 },
+                       "educacao":  {
+                                        "label":  "EducaÃ§Ã£o",
+                                        "color":  "#06b6d4",
+                                        "icon":  "ðŸ“š"
+                                    },
+                       "entretenimento":  {
+                                              "label":  "Entretenimento",
+                                              "color":  "#ec4899",
+                                              "icon":  "ðŸŽ¬"
+                                          },
+                       "renda":  {
+                                     "label":  "Renda",
+                                     "color":  "#10b981",
+                                     "icon":  "ðŸ’°"
+                                 },
+                       "investimentos":  {
+                                             "label":  "Investimentos",
+                                             "color":  "#f59e0b",
+                                             "icon":  "ðŸ“ˆ"
+                                         },
+                       "outros":  {
+                                      "label":  "Outros",
+                                      "color":  "#6b7280",
+                                      "icon":  "ðŸ“¦"
+                                  }
+                   }
 }

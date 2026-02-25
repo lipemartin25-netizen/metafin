@@ -1,6 +1,6 @@
 import {
     AreaChart, Area, XAxis, YAxis, CartesianGrid,
-    Tooltip, ResponsiveContainer, Legend
+    Tooltip, ResponsiveContainer
 } from "recharts";
 
 const data = [
@@ -46,8 +46,8 @@ export default function SpendingChart() {
                         <button
                             key={p}
                             className={`text-xs px-3 py-1.5 rounded-lg transition-colors ${i === 0
-                                    ? "bg-violet-500/20 text-violet-400 border border-violet-500/20"
-                                    : "text-white/30 hover:text-white/60"
+                                ? "bg-violet-500/20 text-violet-400 border border-violet-500/20"
+                                : "text-white/30 hover:text-white/60"
                                 }`}
                         >
                             {p}

@@ -1,15 +1,15 @@
 import { useEffect, useState, useRef, useCallback, lazy, Suspense } from 'react';
-import { Routes, Route, useLocation, Navigate, useNavigate, Outlet } from 'react-router-dom';
+import { Routes, Route, useLocation, Navigate, useNavigate } from 'react-router-dom';
 import { trackPageView } from './hooks/useAnalytics';
 import { useAuth } from './contexts/AuthContext';
 import Layout from './components/Layout';
 import { ProtectedRoute } from './components/ProtectedRoute';
+import ScreenGuardProvider from './components/ScreenGuardProvider';
 import NpsSurvey from './components/NpsSurvey';
 import OnboardingTour from './components/OnboardingTour';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { NetworkBanner } from './components/NetworkBanner';
 
-// Lazy Loaded Pages
 const Home = lazy(() => import('./pages/Home'));
 const Login = lazy(() => import('./pages/Login'));
 const SignUp = lazy(() => import('./pages/SignUp'));
@@ -33,8 +33,8 @@ const Institutional = lazy(() => import('./pages/Institutional'));
 const AiChat = lazy(() => import('./components/AiChat'));
 
 const LoadingFallback = () => (
-  <div className="flex h-screen items-center justify-center bg-gray-50 dark:bg-black">
-    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+  <div className="flex h-screen items-center justify-center bg-[#020617]">
+    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-violet-500"></div>
   </div>
 );
 
@@ -46,7 +46,6 @@ export default function App() {
   const [showNps, setShowNps] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
 
-  // Fintech Compliance: Inactivity Logout (15 minutes = 900,000 ms)
   const inactivityTimer = useRef(null);
 
   const handleInactivityLogout = useCallback(async () => {
@@ -60,7 +59,7 @@ export default function App() {
   const resetInactivityTimer = useCallback(() => {
     if (inactivityTimer.current) clearTimeout(inactivityTimer.current);
     if (isAuthenticated) {
-      inactivityTimer.current = setTimeout(handleInactivityLogout, 900000); // 15 mins
+      inactivityTimer.current = setTimeout(handleInactivityLogout, 900000);
     }
   }, [handleInactivityLogout, isAuthenticated]);
 
@@ -68,7 +67,6 @@ export default function App() {
     trackPageView(location.pathname, document.title);
   }, [location]);
 
-  // Attach global inactivity listeners when authenticated
   useEffect(() => {
     const events = ['mousemove', 'keydown', 'scroll', 'click'];
     if (isAuthenticated) {
@@ -81,7 +79,6 @@ export default function App() {
     };
   }, [isAuthenticated, resetInactivityTimer]);
 
-  // NPS survey trigger
   useEffect(() => {
     const visitCount = parseInt(localStorage.getItem('sf_visits') || '0') + 1;
     localStorage.setItem('sf_visits', visitCount.toString());
@@ -93,13 +90,10 @@ export default function App() {
     }
   }, [location.pathname]);
 
-  // Onboarding trigger — only on first visit to /app
   useEffect(() => {
     const done = localStorage.getItem('sf_onboarding_done');
     const isAppRoute = location.pathname.startsWith('/app');
-    if (!done && isAppRoute) {
-      setShowOnboarding(true);
-    }
+    if (!done && isAppRoute) setShowOnboarding(true);
   }, [location.pathname]);
 
   const handleNpsClose = () => {
@@ -107,7 +101,6 @@ export default function App() {
     localStorage.setItem('sf_nps_done', new Date().toISOString());
   };
 
-  // Handle session expiration from anywhere in the app
   useEffect(() => {
     const handleAuthExpired = () => {
       if (isAuthenticated) {
@@ -125,6 +118,31 @@ export default function App() {
 
   const isAppRoute = location.pathname.startsWith('/app');
 
+  useEffect(() => {
+    // 🛠️ Remove permanentemente a 'Marca D'água' do Vercel e outros widgets de feedback
+    const removeWatermarks = () => {
+      const selectors = [
+        'vercel-live-feedback',
+        '#__vercel-toolbar',
+        '.vercel-toolbar',
+        '#vercel-live-feedback-container'
+      ];
+      selectors.forEach(selector => {
+        const elements = document.querySelectorAll(selector);
+        elements.forEach(el => {
+          el.style.display = 'none';
+          el.remove();
+        });
+      });
+    };
+
+    const observer = new MutationObserver(removeWatermarks);
+    observer.observe(document.body, { childList: true, subtree: true });
+    removeWatermarks();
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <Suspense fallback={<LoadingFallback />}>
       <ErrorBoundary fallbackMessage="Ocorreu um erro ao carregar a aplicação.">
@@ -134,26 +152,32 @@ export default function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/hub/:slug" element={<Institutional />} />
-          <Route path="/app" element={<ProtectedRoute><Outlet /></ProtectedRoute>}>
+
+          <Route path="/app" element={
+            <ProtectedRoute>
+              <ScreenGuardProvider>
+                <Layout />
+              </ScreenGuardProvider>
+            </ProtectedRoute>
+          }>
             <Route index element={<Dashboard />} />
-            <Route element={<Layout />}>
-              <Route path="transactions" element={<Transactions />} />
-              <Route path="accounts" element={<BankAccounts />} />
-              <Route path="cards" element={<CreditCards />} />
-              <Route path="bills" element={<Bills />} />
-              <Route path="investments" element={<Investments />} />
-              <Route path="goals" element={<Goals />} />
-              <Route path="budget" element={<Budget />} />
-              <Route path="networth" element={<NetWorth />} />
-              <Route path="wealth" element={<Simulators />} />
-              <Route path="reports" element={<Reports />} />
-              <Route path="health" element={<FinancialHealth />} />
-              <Route path="advisor" element={<AIAssistant />} />
-              <Route path="api" element={<DeveloperAPI />} />
-              <Route path="upgrade" element={<Upgrade />} />
-              <Route path="settings" element={<Settings />} />
-            </Route>
+            <Route path="transactions" element={<Transactions />} />
+            <Route path="accounts" element={<BankAccounts />} />
+            <Route path="cards" element={<CreditCards />} />
+            <Route path="bills" element={<Bills />} />
+            <Route path="investments" element={<Investments />} />
+            <Route path="goals" element={<Goals />} />
+            <Route path="budget" element={<Budget />} />
+            <Route path="networth" element={<NetWorth />} />
+            <Route path="wealth" element={<Simulators />} />
+            <Route path="reports" element={<Reports />} />
+            <Route path="health" element={<FinancialHealth />} />
+            <Route path="advisor" element={<AIAssistant />} />
+            <Route path="api" element={<DeveloperAPI />} />
+            <Route path="upgrade" element={<Upgrade />} />
+            <Route path="settings" element={<Settings />} />
           </Route>
+
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
 

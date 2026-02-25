@@ -5,9 +5,10 @@ import App from './App';
 import { AuthProvider } from './contexts/AuthContext';
 import { LanguageProvider } from './contexts/LanguageContext';
 import { ThemeProvider } from './contexts/ThemeContext';
+import { VisibilityProvider } from './contexts/VisibilityProvider';
 import { initAnalytics } from './hooks/useAnalytics';
 import './index.css';
-import './light-theme.css'; // Mantendo para compatibilidade com páginas antigas
+// import './light-theme.css'; // Removido para unificar layout premium escuro
 import './lib/sentry';
 
 // Google Client ID — suporte para múltiplas nomenclaturas para garantir funcionamento na Vercel
@@ -48,9 +49,11 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <GoogleOAuthProvider clientId={googleClientId}>
       <ThemeProvider>
         <LanguageProvider>
-          <AuthProvider>
-            <App />
-          </AuthProvider>
+          <VisibilityProvider>
+            <AuthProvider>
+              <App />
+            </AuthProvider>
+          </VisibilityProvider>
         </LanguageProvider>
       </ThemeProvider>
     </GoogleOAuthProvider>

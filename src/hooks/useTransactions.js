@@ -1,7 +1,6 @@
-import { useState, useEffect, useCallback } from 'react';
+﻿import { useState, useEffect, useCallback } from 'react';
 import { db, isSupabaseConfigured } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
-import initialData from '../data/data.json';
 import { secureStorage } from '../lib/secureStorage';
 import { add, sumTransactions } from '../lib/financialMath';
 
@@ -28,32 +27,29 @@ export function useTransactions() {
 
         try {
             if (isSupabaseConfigured && user?.id && user.id !== 'demo') {
-                // Modo online: Supabase
+                // Modo online: Supabase — sempre limpo por usuário
                 const { data, error: dbError } = await db.transactions.getAll(user.id);
                 if (dbError) throw dbError;
-
-                if (data && data.length > 0) {
-                    setTransactions(data);
-                } else {
-                    // Primeiro login: Não carregar mais dados fictícios, deixar a plataforma limpa.
-                    setTransactions([]);
-                }
+                // Retorna o que está no banco (pode ser vazio = lista limpa)
+                setTransactions(data && data.length > 0 ? data : []);
             } else {
                 // Modo offline: localStorage
                 const local = getLocalTransactions();
                 if (local && local.length > 0) {
+                    // Usa somente o que o usuário já salvou localmente
                     setTransactions(local);
                 } else {
-                    setTransactions(initialData.transactions);
-                    saveLocalTransactions(initialData.transactions);
+                    // Primeira vez: começa zerado — sem dados fictícios
+                    setTransactions([]);
+                    saveLocalTransactions([]);
                 }
             }
         } catch (err) {
             console.error('Error loading transactions:', err);
             setError(err.message);
-            // Fallback para localStorage
+            // Fallback: tenta localStorage, senão vazio
             const local = getLocalTransactions();
-            setTransactions(local || initialData.transactions);
+            setTransactions(local && local.length > 0 ? local : []);
         } finally {
             setLoading(false);
         }
@@ -64,149 +60,139 @@ export function useTransactions() {
     }, [loadTransactions]);
 
     // ========== CREATE ==========
-    const addTransaction = useCallback(
-        async (transaction) => {
-            const newTransaction = {
-                id: crypto.randomUUID(),
-                date: transaction.date,
-                description: transaction.description,
-                amount: parseFloat(transaction.amount), // Mantendo float para compatibilidade, toCents valida o valor
-                category: transaction.category,
-                type: transaction.type || (transaction.amount >= 0 ? 'income' : 'expense'),
-                status: transaction.status || 'categorized',
-                notes: transaction.notes || '',
-                created_at: new Date().toISOString(),
-                updated_at: new Date().toISOString(),
-            };
+    const addTransaction = useCallback(async (transaction) => {
+        const newTransaction = {
+            id: crypto.randomUUID(),
+            date: transaction.date,
+            description: transaction.description,
+            amount: parseFloat(transaction.amount),
+            category: transaction.category,
+            type: transaction.type || (transaction.amount >= 0 ? 'income' : 'expense'),
+            status: transaction.status || 'categorized',
+            notes: transaction.notes || '',
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+        };
 
-            try {
-                if (isSupabaseConfigured && user?.id && user.id !== 'demo') {
-                    const { data, error: dbError } = await db.transactions.create({
-                        ...newTransaction,
-                        user_id: user.id,
-                    });
-                    if (dbError) throw dbError;
-                    setTransactions((prev) => [data, ...prev]);
-                    return data;
-                } else {
-                    setTransactions((prev) => {
-                        const updated = [newTransaction, ...prev];
-                        saveLocalTransactions(updated);
-                        return updated;
-                    });
-                    return newTransaction;
-                }
-            } catch (err) {
-                console.error('Error creating transaction:', err);
-                setError(err.message);
-                return null;
-            }
-        },
-        [user]
-    );
-
-    // ========== BULK CREATE (Import) ==========
-    const addBulkTransactions = useCallback(
-        async (transactionsArray) => {
-            const prepared = transactionsArray.map((t) => ({
-                id: crypto.randomUUID(),
-                date: t.date,
-                description: t.description,
-                amount: parseFloat(t.amount),
-                category: t.category,
-                type: t.type || (parseFloat(t.amount) >= 0 ? 'income' : 'expense'),
-                status: t.status || 'categorized',
-                notes: t.notes || '',
-                created_at: new Date().toISOString(),
-                updated_at: new Date().toISOString(),
-            }));
-
-            try {
-                if (isSupabaseConfigured && user?.id && user.id !== 'demo') {
-                    const withUser = prepared.map((t) => ({ ...t, user_id: user.id }));
-                    const { data, error: dbError } = await db.transactions.bulkCreate(withUser);
-                    if (dbError) throw dbError;
-                    setTransactions((prev) => [...(data || prepared), ...prev]);
-                    return data || prepared;
-                } else {
-                    setTransactions((prev) => {
-                        const updated = [...prepared, ...prev];
-                        saveLocalTransactions(updated);
-                        return updated;
-                    });
-                    return prepared;
-                }
-            } catch (err) {
-                console.error('Error bulk creating:', err);
-                setError(err.message);
-                return null;
-            }
-        },
-        [user]
-    );
-
-    // ========== UPDATE ==========
-    const updateTransaction = useCallback(
-        async (id, updates) => {
-            try {
-                if (isSupabaseConfigured && user?.id && user.id !== 'demo') {
-                    const { data, error: dbError } = await db.transactions.update(id, updates);
-                    if (dbError) throw dbError;
-                    setTransactions((prev) =>
-                        prev.map((t) => (t.id === id ? data : t))
-                    );
-                    return data;
-                } else {
-                    setTransactions((prev) => {
-                        const updated = prev.map((t) =>
-                            t.id === id ? { ...t, ...updates, updated_at: new Date().toISOString() } : t
-                        );
-                        saveLocalTransactions(updated);
-                        return updated;
-                    });
-                    return { id, ...updates };
-                }
-            } catch (err) {
-                console.error('Error updating transaction:', err);
-                setError(err.message);
-                return null;
-            }
-        },
-        [user]
-    );
-
-    // ========== DELETE ==========
-    const deleteTransaction = useCallback(
-        async (id) => {
-            try {
-                if (isSupabaseConfigured && user?.id && user.id !== 'demo') {
-                    const { error: dbError } = await db.transactions.delete(id);
-                    if (dbError) throw dbError;
-                }
+        try {
+            if (isSupabaseConfigured && user?.id && user.id !== 'demo') {
+                const { data, error: dbError } = await db.transactions.create({
+                    ...newTransaction,
+                    user_id: user.id,
+                });
+                if (dbError) throw dbError;
+                setTransactions((prev) => [data, ...prev]);
+                return data;
+            } else {
                 setTransactions((prev) => {
-                    const updated = prev.filter((t) => t.id !== id);
-                    if (!isSupabaseConfigured || user?.id === 'demo') {
-                        saveLocalTransactions(updated);
-                    }
+                    const updated = [newTransaction, ...prev];
+                    saveLocalTransactions(updated);
                     return updated;
                 });
-                return true;
-            } catch (err) {
-                console.error('Error deleting transaction:', err);
-                setError(err.message);
-                return false;
+                return newTransaction;
             }
-        },
-        [user]
-    );
+        } catch (err) {
+            console.error('Error creating transaction:', err);
+            setError(err.message);
+            return null;
+        }
+    }, [user]);
+
+    // ========== BULK CREATE ==========
+    const addBulkTransactions = useCallback(async (transactionsArray) => {
+        const prepared = transactionsArray.map((t) => ({
+            id: crypto.randomUUID(),
+            date: t.date,
+            description: t.description,
+            amount: parseFloat(t.amount),
+            category: t.category,
+            type: t.type || (parseFloat(t.amount) >= 0 ? 'income' : 'expense'),
+            status: t.status || 'categorized',
+            notes: t.notes || '',
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+        }));
+
+        try {
+            if (isSupabaseConfigured && user?.id && user.id !== 'demo') {
+                const withUser = prepared.map((t) => ({ ...t, user_id: user.id }));
+                const { data, error: dbError } = await db.transactions.bulkCreate(withUser);
+                if (dbError) throw dbError;
+                setTransactions((prev) => [...(data || prepared), ...prev]);
+                return data || prepared;
+            } else {
+                setTransactions((prev) => {
+                    const updated = [...prepared, ...prev];
+                    saveLocalTransactions(updated);
+                    return updated;
+                });
+                return prepared;
+            }
+        } catch (err) {
+            console.error('Error bulk creating:', err);
+            setError(err.message);
+            return null;
+        }
+    }, [user]);
+
+    // ========== UPDATE ==========
+    const updateTransaction = useCallback(async (id, updates) => {
+        try {
+            if (isSupabaseConfigured && user?.id && user.id !== 'demo') {
+                const { data, error: dbError } = await db.transactions.update(id, updates);
+                if (dbError) throw dbError;
+                setTransactions((prev) => prev.map((t) => (t.id === id ? data : t)));
+                return data;
+            } else {
+                setTransactions((prev) => {
+                    const updated = prev.map((t) =>
+                        t.id === id ? { ...t, ...updates, updated_at: new Date().toISOString() } : t
+                    );
+                    saveLocalTransactions(updated);
+                    return updated;
+                });
+                return { id, ...updates };
+            }
+        } catch (err) {
+            console.error('Error updating transaction:', err);
+            setError(err.message);
+            return null;
+        }
+    }, [user]);
+
+    // ========== DELETE ==========
+    const deleteTransaction = useCallback(async (id) => {
+        try {
+            if (isSupabaseConfigured && user?.id && user.id !== 'demo') {
+                const { error: dbError } = await db.transactions.delete(id);
+                if (dbError) throw dbError;
+            }
+            setTransactions((prev) => {
+                const updated = prev.filter((t) => t.id !== id);
+                if (!isSupabaseConfigured || user?.id === 'demo') {
+                    saveLocalTransactions(updated);
+                }
+                return updated;
+            });
+            return true;
+        } catch (err) {
+            console.error('Error deleting transaction:', err);
+            setError(err.message);
+            return false;
+        }
+    }, [user]);
+
+    // ========== CLEAR ALL (para limpar dados fictícios salvos) ==========
+    const clearAllTransactions = useCallback(() => {
+        setTransactions([]);
+        saveLocalTransactions([]);
+    }, []);
 
     // ========== COMPUTED ==========
     const summary = {
         income: sumTransactions(transactions.filter(t => t.type === 'income')),
         expense: sumTransactions(transactions.filter(t => t.type === 'expense')),
-        get balance() {
-            return add(this.income, -this.expense);
-        },
+        get balance() { return add(this.income, -this.expense); },
         count: transactions.length,
         categorySummary: transactions.reduce((acc, t) => {
             const key = t.category;
@@ -217,8 +203,7 @@ export function useTransactions() {
         }, {}),
     };
 
-    // Aliases for compatibility
-    summary.totalIncome = summary.income;
+    summary.totalIncome   = summary.income;
     summary.totalExpenses = summary.expense;
 
     return {
@@ -230,6 +215,7 @@ export function useTransactions() {
         addBulkTransactions,
         updateTransaction,
         deleteTransaction,
+        clearAllTransactions,
         reload: loadTransactions,
     };
 }

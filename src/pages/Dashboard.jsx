@@ -1,58 +1,51 @@
-import { useState } from "react";
-import Sidebar from "../components/ModernSidebar";
-import Header from "../components/Header";
 import BalanceCard from "../components/BalanceCard";
 import SpendingChart from "../components/SpendingChart";
 import TransactionList from "../components/TransactionList";
 import QuickStats from "../components/QuickStats";
 import GoalsCard from "../components/GoalsCard";
 import CreditCard from "../components/CreditCard";
+import AIPromptCard from "../components/AIPromptCard";
 
 export default function Dashboard() {
-    const [sidebarOpen, setSidebarOpen] = useState(false);
-
     return (
-        <div className="flex h-screen bg-[#0f172a] text-white overflow-hidden">
-            <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} className="bg-[#0a0f1e] border-r border-white/5" />
+        <div className="space-y-6">
+            {/* Bento Grid Layout */}
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-6 auto-rows-auto pb-10">
 
-            <div className="flex-1 flex flex-col overflow-hidden">
-                <Header onMenuClick={() => setSidebarOpen(true)} />
+                {/* Balance Card — ocupa 2 colunas */}
+                <div className="xl:col-span-2">
+                    <BalanceCard />
+                </div>
 
-                <main className="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8">
-                    {/* Bento Grid Layout */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-6 auto-rows-auto">
+                {/* Credit Card Visual */}
+                <div className="xl:col-span-2">
+                    <CreditCard />
+                </div>
 
-                        {/* Balance Card — ocupa 2 colunas */}
-                        <div className="xl:col-span-2">
-                            <BalanceCard />
-                        </div>
+                {/* AI Prompt Card — 2 colunas */}
+                <div className="xl:col-span-2 xl:row-span-2">
+                    <AIPromptCard />
+                </div>
 
-                        {/* Credit Card Visual */}
-                        <div className="xl:col-span-2">
-                            <CreditCard />
-                        </div>
+                {/* Spending Chart — 2 colunas */}
+                <div className="xl:col-span-2">
+                    <SpendingChart />
+                </div>
 
-                        {/* Quick Stats — 4 cards */}
-                        <div className="xl:col-span-4">
-                            <QuickStats />
-                        </div>
+                {/* Goals — 1 coluna */}
+                <div className="xl:col-span-1">
+                    <GoalsCard />
+                </div>
 
-                        {/* Spending Chart — 3 colunas */}
-                        <div className="xl:col-span-3">
-                            <SpendingChart />
-                        </div>
+                {/* Quick Stats — 4 cards */}
+                <div className="xl:col-span-4">
+                    <QuickStats />
+                </div>
 
-                        {/* Goals — 1 coluna */}
-                        <div className="xl:col-span-1">
-                            <GoalsCard />
-                        </div>
-
-                        {/* Transactions — full width */}
-                        <div className="xl:col-span-4">
-                            <TransactionList />
-                        </div>
-                    </div>
-                </main>
+                {/* Transactions — full width */}
+                <div className="xl:col-span-4">
+                    <TransactionList />
+                </div>
             </div>
         </div>
     );

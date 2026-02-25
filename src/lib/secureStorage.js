@@ -28,8 +28,11 @@ export const secureStorage = {
                 version: '1'
             }
 
+            // Ofuscação básica para evitar leitura acidental em texto plano
+            const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(payload))))
+
             if (STORAGE_AVAILABLE) {
-                localStorage.setItem(`${STORAGE_PREFIX}${key}`, JSON.stringify(payload))
+                localStorage.setItem(`${STORAGE_PREFIX}${key}`, encoded)
             } else {
                 memoryFallback.set(key, payload)
             }
@@ -53,7 +56,17 @@ export const secureStorage = {
 
             if (!raw) return defaultValue
 
-            const payload = typeof raw === 'string' ? JSON.parse(raw) : raw
+            let payload
+            if (typeof raw === 'string' && STORAGE_AVAILABLE) {
+                try {
+                    payload = JSON.parse(decodeURIComponent(escape(atob(raw))))
+                } catch {
+                    // Fallback para dados antigos sem encoding
+                    payload = JSON.parse(raw)
+                }
+            } else {
+                payload = raw
+            }
 
             if (!payload?.data || !payload?.savedAt) {
                 console.warn(`[secureStorage] Dado corrompido para chave: ${key}`)

@@ -1,4 +1,4 @@
-import React from 'react';
+
 
 const MetaFinLogo = ({ className = "h-10" }) => (
     <svg viewBox="0 0 200 50" className={className} xmlns="http://www.w3.org/2000/svg">

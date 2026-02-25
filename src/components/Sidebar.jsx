@@ -8,7 +8,6 @@ import {
     Wallet,
     PieChart,
     Bot,
-    Crown,
     Settings,
     LogOut,
     ChevronLeft,
@@ -25,6 +24,7 @@ import {
     Landmark
 } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
+import MetaFinLogo from './MetaFinLogo';
 
 export default function Sidebar({ collapsed, setCollapsed, mobileOpen, setMobileOpen }) {
     const { user, signOut } = useAuth();
@@ -44,12 +44,12 @@ export default function Sidebar({ collapsed, setCollapsed, mobileOpen, setMobile
         { to: '/app/cards', label: 'Cartões', icon: CreditCard },
         { to: '/app/bills', label: 'Contas a Pagar', icon: CalendarDays },
         { to: '/app/investments', label: t('investments'), icon: PieChart },
-        { to: '/app/budget', label: 'Orcamento', icon: PiggyBank },
+        { to: '/app/budget', label: 'Orçamento', icon: PiggyBank },
         { to: '/app/goals', label: 'Metas', icon: Target },
         { to: '/app/wealth', label: 'Laboratório Wealth', icon: Sparkles },
-        { to: '/app/networth', label: 'Patrimonio', icon: Landmark },
-        { to: '/app/reports', label: 'Relatorios', icon: FileText },
-        { to: '/app/health', label: 'Saude', icon: Heart },
+        { to: '/app/networth', label: 'Patrimônio', icon: Landmark },
+        { to: '/app/reports', label: 'Relatórios', icon: FileText },
+        { to: '/app/health', label: 'Saúde', icon: Heart },
         { to: '/app/api', label: 'Webhooks', icon: Code2 },
         { to: '/app/advisor', label: t('ai_assistant'), icon: Bot },
     ];
@@ -58,31 +58,25 @@ export default function Sidebar({ collapsed, setCollapsed, mobileOpen, setMobile
     const userName = user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'User';
 
     const sidebarContent = (
-        <div className="flex flex-col h-full">
-            {/* Logo */}
-            <div className={`flex items-center h-16 px-4 border-b border-gray-200 dark:border-white/5 ${collapsed ? 'justify-center' : 'gap-3'}`}>
-                <Link to="/app" className="flex items-center gap-3 group" onClick={() => setMobileOpen(false)}>
-                    <div className="relative w-10 h-10 flex-shrink-0 flex items-center justify-center bg-brand-500 rounded-2xl shadow-lg shadow-brand-500/20 group-hover:shadow-brand-500/40 transition-all duration-500 hover:rotate-6">
-                        <Wallet className="w-5 h-5 text-surface-950" strokeWidth={3} />
-                    </div>
-                    {!collapsed && (
-                        <span className="text-xl font-black meta-gradient-text tracking-tighter">
-                            MetaFin
-                        </span>
-                    )}
+        <div className="flex flex-col h-full bg-slate-50 dark:bg-[#0a0f1e] text-slate-900 dark:text-white">
+            {/* Logo Section */}
+            <div className={`flex items-center h-20 px-6 border-b border-black/5 dark:border-white/5 ${collapsed ? 'justify-center' : 'justify-between'}`}>
+                <Link to="/app" className="flex items-center gap-3">
+                    <MetaFinLogo className="h-8 w-auto flex-shrink-0" />
                 </Link>
 
-                {/* Mobile close */}
-                <button
-                    onClick={() => setMobileOpen(false)}
-                    className="md:hidden ml-auto p-1.5 rounded-lg text-gray-500 hover:bg-gray-100 dark:hover:bg-white/5"
-                >
-                    <X className="w-5 h-5" />
-                </button>
+                {!collapsed && (
+                    <button
+                        onClick={() => setMobileOpen(false)}
+                        className="md:hidden p-1.5 rounded-lg text-white/40 hover:text-white transition-colors"
+                    >
+                        <X className="w-5 h-5" />
+                    </button>
+                )}
             </div>
 
             {/* Navigation */}
-            <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
+            <nav className="flex-1 px-3 py-6 space-y-1 overflow-y-auto custom-scrollbar">
                 {navItems.map((item) => (
                     <NavLink
                         key={item.to}
@@ -91,116 +85,118 @@ export default function Sidebar({ collapsed, setCollapsed, mobileOpen, setMobile
                         onClick={() => setMobileOpen(false)}
                         title={collapsed ? item.label : undefined}
                         className={({ isActive }) =>
-                            `flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-bold transition-all duration-300 group ${collapsed ? 'justify-center' : ''
+                            `flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 group ${collapsed ? 'justify-center' : ''
                             } ${isActive
-                                ? 'bg-brand-500/20 text-white shadow-[0_0_20px_-5px_rgba(14,165,233,0.3)] border border-brand-500/30'
-                                : 'text-gray-500 dark:text-gray-400 hover:text-brand-500 dark:hover:text-white hover:bg-white/5 border border-transparent'
+                                ? 'bg-violet-500/10 dark:bg-gradient-to-r dark:from-violet-500/20 dark:to-indigo-500/10 text-violet-600 dark:text-violet-400 border border-violet-500/20 shadow-lg shadow-violet-500/5'
+                                : 'text-slate-500 dark:text-white/40 hover:text-slate-900 dark:hover:text-white/80 hover:bg-black/5 dark:hover:bg-white/5 border border-transparent'
                             }`
                         }
                     >
                         {({ isActive }) => (
                             <>
-                                <item.icon className={`w-5 h-5 flex-shrink-0 transition-transform duration-300 group-hover:scale-110 ${isActive ? 'text-brand-400' : ''}`} />
+                                <item.icon className={`w-[18px] h-[18px] flex-shrink-0 transition-colors ${isActive ? 'text-violet-400' : 'text-white/30 group-hover:text-white/60'}`} />
                                 {!collapsed && <span>{item.label}</span>}
+                                {!collapsed && isActive && (
+                                    <span className="ml-auto w-1.5 h-1.5 rounded-full bg-violet-400"></span>
+                                )}
                             </>
                         )}
                     </NavLink>
                 ))}
 
-                {/* Upgrade / Pro badge */}
-                <div className={`mt-4 ${collapsed ? 'px-1' : 'px-1'}`}>
-                    {!isPro ? (
-                        <Link
-                            to="/app/upgrade"
-                            onClick={() => setMobileOpen(false)}
-                            className={`flex items-center gap-2 rounded-xl bg-gradient-to-r from-brand-600 to-brand-500 hover:from-brand-500 hover:to-brand-400 text-white text-xs font-bold shadow-lg shadow-brand-500/20 hover:shadow-brand-500/30 transition-all ${collapsed ? 'p-2.5 justify-center' : 'px-3 py-2.5'
-                                }`}
-                            title={collapsed ? 'Upgrade Pro' : undefined}
-                        >
-                            <Sparkles className="w-4 h-4 flex-shrink-0" />
-                            {!collapsed && <span>DESBLOQUEAR PRO</span>}
-                        </Link>
-                    ) : (
-                        <div className={`flex items-center gap-2 rounded-xl bg-gray-100 dark:bg-surface-800 border border-brand-500/30 text-brand-600 dark:text-brand-400 text-xs font-bold ${collapsed ? 'p-2.5 justify-center' : 'px-3 py-2.5'
-                            }`}>
-                            <Crown className="w-4 h-4 flex-shrink-0 fill-current" />
-                            {!collapsed && <span>PRO ATIVO</span>}
-                        </div>
-                    )}
-                </div>
-            </nav>
-
-            {/* Bottom section */}
-            <div className="border-t border-gray-200 dark:border-white/5 p-3 space-y-1">
-                {/* Theme Toggle */}
-                <div className={`flex items-center ${collapsed ? 'justify-center' : 'px-3 py-1'}`}>
-                    <ThemeToggle />
-                </div>
-
-                {/* Settings */}
+                {/* Settings Items (Image 1 style) */}
                 <NavLink
                     to="/app/settings"
                     onClick={() => setMobileOpen(false)}
                     title={collapsed ? t('settings') : undefined}
                     className={({ isActive }) =>
-                        `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${collapsed ? 'justify-center' : ''
+                        `flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 group ${collapsed ? 'justify-center' : ''
                         } ${isActive
-                            ? 'bg-brand-500/10 text-brand-600 dark:text-brand-400 border border-brand-500/20'
-                            : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/5 border border-transparent'
+                            ? 'bg-violet-500/10 dark:bg-gradient-to-r dark:from-violet-500/20 dark:to-indigo-500/10 text-violet-600 dark:text-violet-400 border border-violet-500/20 shadow-lg shadow-violet-500/5'
+                            : 'text-slate-500 dark:text-white/40 hover:text-slate-900 dark:hover:text-white/80 hover:bg-black/5 dark:hover:bg-white/5 border border-transparent'
                         }`
                     }
                 >
-                    <Settings className="w-5 h-5 flex-shrink-0" />
-                    {!collapsed && <span>{t('settings')}</span>}
+                    {({ isActive }) => (
+                        <>
+                            <Settings className={`w-[18px] h-[18px] flex-shrink-0 transition-colors ${isActive ? 'text-violet-400' : 'text-white/30 group-hover:text-white/60'}`} />
+                            {!collapsed && <span>{t('settings')}</span>}
+                            {!collapsed && isActive && (
+                                <span className="ml-auto w-1.5 h-1.5 rounded-full bg-violet-400"></span>
+                            )}
+                        </>
+                    )}
                 </NavLink>
 
-                {/* User info + Logout */}
-                <div className={`flex items-center gap-3 px-3 py-2.5 rounded-xl ${collapsed ? 'justify-center' : ''}`}>
-                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-gray-200 to-gray-300 dark:from-surface-700 dark:to-surface-800 border border-white/20 dark:border-white/10 flex items-center justify-center text-xs font-bold text-gray-700 dark:text-white flex-shrink-0">
+                {/* Pro Badge */}
+                {!isPro && !collapsed && (
+                    <div className="mt-4 px-2">
+                        <Link
+                            to="/app/upgrade"
+                            onClick={() => setMobileOpen(false)}
+                            className="flex items-center gap-2 px-4 py-3 rounded-xl bg-violet-500 text-white text-xs font-bold hover:bg-violet-400 transition-all shadow-lg shadow-violet-500/20"
+                        >
+                            <Sparkles className="w-4 h-4" />
+                            <span>DESBLOQUEAR PRO</span>
+                        </Link>
+                    </div>
+                )}
+            </nav>
+
+            {/* Bottom Section - User Profile */}
+            <div className="px-3 pb-6 border-t border-black/5 dark:border-white/5 pt-4">
+                <div className={`flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-black/5 dark:hover:bg-white/5 transition-all group relative cursor-pointer ${collapsed ? 'justify-center' : ''}`}>
+                    <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-violet-500 to-fuchsia-600 flex items-center justify-center text-sm font-bold shadow-lg shadow-violet-500/20 flex-shrink-0">
                         {userInitial}
                     </div>
                     {!collapsed && (
                         <div className="flex-1 min-w-0">
-                            <p className="text-xs font-medium text-gray-900 dark:text-white truncate">{userName}</p>
-                            <p className="text-[10px] text-gray-500 truncate">{user?.email}</p>
+                            <p className="text-sm font-medium text-slate-900 dark:text-white/90 truncate">{userName}</p>
+                            <p className="text-xs text-slate-500 dark:text-white/30 truncate">{user?.email}</p>
                         </div>
+                    )}
+                    {!collapsed && (
+                        <button
+                            onClick={handleSignOut}
+                            className="text-white/20 hover:text-red-400 transition-colors"
+                            title={t('logout')}
+                        >
+                            <LogOut size={16} />
+                        </button>
                     )}
                 </div>
 
+                {/* Theme Toggle Button - Integrated nicely */}
+                {!collapsed && (
+                    <div className="mt-2 flex justify-center">
+                        <ThemeToggle />
+                    </div>
+                )}
+
+                {/* Collapse Control (Desktop) */}
                 <button
-                    onClick={handleSignOut}
-                    title={collapsed ? t('logout') : undefined}
-                    className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors ${collapsed ? 'justify-center' : ''
-                        }`}
+                    onClick={() => setCollapsed(!collapsed)}
+                    className="hidden md:flex items-center justify-center w-full mt-2 py-2 text-white/20 hover:text-white/60 transition-colors"
                 >
-                    <LogOut className="w-5 h-5 flex-shrink-0" />
-                    {!collapsed && <span>{t('logout')}</span>}
+                    {collapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
                 </button>
             </div>
-
-            {/* Collapse toggle (desktop only) */}
-            <button
-                onClick={() => setCollapsed(!collapsed)}
-                className="hidden md:flex items-center justify-center h-10 border-t border-gray-200 dark:border-white/5 text-gray-400 hover:text-gray-600 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/5 transition-colors"
-            >
-                {collapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
-            </button>
         </div>
     );
 
     return (
         <>
-            {/* Desktop sidebar */}
+            {/* Desktop aside */}
             <aside
-                className={`hidden md:flex flex-col fixed top-0 left-0 h-screen meta-glass border-r-0 z-40 transition-all duration-500 rounded-none border-y-0 ${collapsed ? 'w-20' : 'w-64'
+                className={`hidden md:flex flex-col fixed top-0 left-0 h-screen z-40 transition-all duration-300 border-r border-black/5 dark:border-white/5 ${collapsed ? 'w-20' : 'w-64'
                     }`}
             >
                 {sidebarContent}
             </aside>
 
-            {/* Mobile sidebar */}
+            {/* Mobile aside */}
             <aside
-                className={`md:hidden fixed top-0 left-0 h-screen w-72 bg-surface-950/95 backdrop-blur-2xl border-r border-white/5 z-40 transition-transform duration-500 ${mobileOpen ? 'translate-x-0' : '-translate-x-full'
+                className={`md:hidden fixed top-0 left-0 h-screen w-72 z-50 transition-transform duration-300 ${mobileOpen ? 'translate-x-0' : '-translate-x-full'
                     }`}
             >
                 {sidebarContent}

@@ -21,6 +21,7 @@ export default defineConfig({
   build: {
     target: 'es2020',
     minify: 'terser',
+    chunkSizeWarningLimit: 600,
     terserOptions: {
       compress: {
         drop_console: true,

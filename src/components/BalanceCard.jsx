@@ -1,64 +1,140 @@
-import { TrendingUp, Eye, EyeOff } from "lucide-react";
-import { useState } from "react";
+import { TrendingUp, Eye, EyeOff, Minus } from "lucide-react";
+import { useMemo } from "react";
+import { useTransactions } from "../hooks/useTransactions";
+import { useVisibility } from "../hooks/useVisibility";
+import { AreaChart, Area, ResponsiveContainer } from "recharts";
+
+function fmt(v) {
+    return new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(v ?? 0);
+}
+
+// Mock data for background visualization
+const bgTrend = [
+    { v: 10 }, { v: 15 }, { v: 12 }, { v: 20 }, { v: 18 }, { v: 25 }, { v: 30 }
+];
 
 export default function BalanceCard() {
-    const [visible, setVisible] = useState(true);
+    const { isVisible, toggleVisibility } = useVisibility();
+    const { transactions } = useTransactions();
+
+    const { saldo, receitas, despesas, investido, pct } = useMemo(() => {
+        const now = new Date();
+
+        const thisMonth = transactions.filter(t => {
+            const d = new Date(t.date);
+            return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+        });
+        const prevMonth = transactions.filter(t => {
+            const d = new Date(t.date);
+            const prev = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+            return d.getMonth() === prev.getMonth() && d.getFullYear() === prev.getFullYear();
+        });
+
+        const receitas = thisMonth.filter(t => t.type === "income").reduce((s, t) => s + t.amount, 0);
+        const despesas = thisMonth.filter(t => t.type === "expense").reduce((s, t) => s + t.amount, 0);
+        const investido = transactions.filter(t =>
+            t.category?.toLowerCase().includes("invest")
+        ).reduce((s, t) => s + (t.type === "income" ? t.amount : 0), 0);
+
+        const totalIncome = transactions.filter(t => t.type === "income").reduce((s, t) => s + t.amount, 0);
+        const totalExpense = transactions.filter(t => t.type === "expense").reduce((s, t) => s + t.amount, 0);
+        const saldo = totalIncome - totalExpense;
+
+        const prevReceitas = prevMonth.filter(t => t.type === "income").reduce((s, t) => s + t.amount, 0);
+        const pct = prevReceitas > 0 ? ((receitas - prevReceitas) / prevReceitas) * 100 : null;
+
+        return { saldo, receitas, despesas, investido, pct };
+    }, [transactions]);
+
+    const hasData = transactions.length > 0;
 
     return (
-        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-violet-600 via-indigo-600 to-purple-700 p-6 h-full min-h-[180px]">
-            {/* Glow orbs */}
+        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-violet-600 via-indigo-600 to-purple-700 p-6 h-full min-h-[180px] group">
+            {/* Background Sparkline */}
+            <div className="absolute inset-0 opacity-20 pointer-events-none group-hover:opacity-40 transition-opacity">
+                <ResponsiveContainer width="100%" height="100%">
+                    <AreaChart data={bgTrend}>
+                        <defs>
+                            <linearGradient id="balanceGrad" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="5%" stopColor="#fff" stopOpacity={0.3} />
+                                <stop offset="95%" stopColor="#fff" stopOpacity={0} />
+                            </linearGradient>
+                        </defs>
+                        <Area
+                            type="monotone"
+                            dataKey="v"
+                            stroke="#fff"
+                            strokeWidth={3}
+                            fill="url(#balanceGrad)"
+                            dot={false}
+                        />
+                    </AreaChart>
+                </ResponsiveContainer>
+            </div>
+
             <div className="absolute -top-8 -right-8 w-40 h-40 bg-white/10 rounded-full blur-3xl" />
             <div className="absolute -bottom-10 -left-5 w-32 h-32 bg-indigo-400/20 rounded-full blur-2xl" />
-
-            {/* Grid pattern */}
-            <div
-                className="absolute inset-0 opacity-10"
-                style={{
-                    backgroundImage: `radial-gradient(circle at 1px 1px, white 1px, transparent 0)`,
-                    backgroundSize: "28px 28px",
-                }}
+            <div className="absolute inset-0 opacity-10"
+                style={{ backgroundImage: `radial-gradient(circle at 1px 1px, white 1px, transparent 0)`, backgroundSize: "28px 28px" }}
             />
 
             <div className="relative z-10 flex flex-col h-full justify-between">
                 <div className="flex items-center justify-between">
                     <div>
-                        <p className="text-white/60 text-xs font-medium tracking-widest uppercase">Saldo Total</p>
+                        <p className="text-white/60 text-xs font-bold tracking-widest uppercase">Saldo Total</p>
                         <div className="flex items-center gap-3 mt-2">
-                            <h2 className="text-3xl font-bold text-white">
-                                {visible ? "R$ 24.850,00" : "R$ ••••••"}
+                            <h2 className="text-3xl font-extrabold text-white tracking-tight">
+                                {!hasData
+                                    ? <span className="text-white/30 select-none">R$ —</span>
+                                    : isVisible ? fmt(saldo) : "R$ ••••••"
+                                }
                             </h2>
-                            <button
-                                onClick={() => setVisible(!visible)}
-                                className="text-white/40 hover:text-white/80 transition-colors"
-                            >
-                                {visible ? <EyeOff size={16} /> : <Eye size={16} />}
-                            </button>
+                            {hasData && (
+                                <button
+                                    onClick={() => toggleVisibility()}
+                                    className="text-white/40 hover:text-white transition-all transform hover:scale-110"
+                                >
+                                    {isVisible ? <EyeOff size={18} /> : <Eye size={18} />}
+                                </button>
+                            )}
                         </div>
                     </div>
 
-                    <div className="flex items-center gap-1.5 bg-white/20 backdrop-blur-sm px-3 py-1.5 rounded-full text-xs font-medium text-white border border-white/20">
-                        <TrendingUp size={13} />
-                        +8,4%
+                    <div className="flex items-center gap-1.5 bg-white/20 backdrop-blur-md px-3 py-1.5 rounded-full text-xs font-bold text-white border border-white/20 shadow-lg">
+                        {pct === null ? (
+                            <><Minus size={13} />&nbsp;—</>
+                        ) : pct >= 0 ? (
+                            <><TrendingUp size={13} />&nbsp;+{pct.toFixed(1)}%</>
+                        ) : (
+                            <><TrendingUp size={13} className="rotate-180" />&nbsp;{pct.toFixed(1)}%</>
+                        )}
                     </div>
                 </div>
 
                 <div className="flex items-center gap-6 mt-6">
                     <div>
-                        <p className="text-white/50 text-xs">Receitas</p>
-                        <p className="text-white font-semibold text-sm mt-0.5">R$ 8.200</p>
+                        <p className="text-white/50 text-[10px] uppercase font-bold tracking-wider">Receitas</p>
+                        <p className="text-white font-bold text-sm mt-0.5">
+                            {hasData ? (isVisible ? fmt(receitas) : "••••") : <span className="text-white/30">—</span>}
+                        </p>
                     </div>
                     <div className="w-px h-8 bg-white/20" />
                     <div>
-                        <p className="text-white/50 text-xs">Despesas</p>
-                        <p className="text-white font-semibold text-sm mt-0.5">R$ 3.350</p>
+                        <p className="text-white/50 text-[10px] uppercase font-bold tracking-wider">Despesas</p>
+                        <p className="text-white font-bold text-sm mt-0.5">
+                            {hasData ? (isVisible ? fmt(despesas) : "••••") : <span className="text-white/30">—</span>}
+                        </p>
                     </div>
                     <div className="w-px h-8 bg-white/20" />
                     <div>
-                        <p className="text-white/50 text-xs">Investido</p>
-                        <p className="text-white font-semibold text-sm mt-0.5">R$ 13.300</p>
+                        <p className="text-white/50 text-[10px] uppercase font-bold tracking-wider">Investido</p>
+                        <p className="text-white font-bold text-sm mt-0.5">
+                            {hasData ? (isVisible ? fmt(investido) : "••••") : <span className="text-white/30">—</span>}
+                        </p>
                     </div>
                 </div>
             </div>
         </div>
     );
 }
+

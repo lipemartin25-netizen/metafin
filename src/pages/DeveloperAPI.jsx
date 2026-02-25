@@ -29,7 +29,7 @@ export default function DeveloperAPI() {
         setTimeout(() => setCopied(false), 2000);
     };
 
-    const webhookUrl = "https://metafin.vercel.app/api/webhooks/transactions";
+    const webhookUrl = "https://metafin-app.vercel.app/api/webhooks/transactions";
 
     const curlExample = `curl -X POST ${webhookUrl} \\
   -H "Authorization: Bearer ${apiKey || 'SUA_API_KEY_AQUI'}" \\

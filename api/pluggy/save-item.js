@@ -2,7 +2,7 @@ import { createClient } from '@supabase/supabase-js';
 import { PluggyClient } from 'pluggy-sdk';
 
 const ALLOWED_ORIGINS = [
-    'https://metafin.vercel.app',
+    'https://metafin-app.vercel.app',
     'https://metafin-app.vercel.app',
     'http://localhost:5173',
     'http://localhost:3000',

@@ -168,12 +168,12 @@ export default function App() {
             <Route path="investments" element={<Investments />} />
             <Route path="goals" element={<Goals />} />
             <Route path="budget" element={<Budget />} />
-            <Route path="networth" element={<NetWorth />} />
-            <Route path="wealth" element={<Simulators />} />
+            <Route path="patrimony" element={<NetWorth />} />
+            <Route path="lab" element={<Simulators />} />
             <Route path="reports" element={<Reports />} />
             <Route path="health" element={<FinancialHealth />} />
             <Route path="advisor" element={<AIAssistant />} />
-            <Route path="api" element={<DeveloperAPI />} />
+            <Route path="webhooks" element={<DeveloperAPI />} />
             <Route path="upgrade" element={<Upgrade />} />
             <Route path="settings" element={<Settings />} />
           </Route>

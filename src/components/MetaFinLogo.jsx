@@ -22,17 +22,30 @@ const MetaFinLogo = ({ className = "h-10" }) => (
             <line x1="46" y1="8" x2="52" y2="5" stroke="hsl(155 100% 45%)" strokeWidth="0.8" opacity="0.4" />
             <circle cx="52" cy="5" r="1" fill="hsl(155 100% 45%)" opacity="0.4" />
         </g>
-        {/* Text "MetaFin" */}
+        {/* Text "Meta Finance Hub" */}
         <text
             x="62"
-            y="34"
-            fontFamily="Orbitron, sans-serif"
-            fontWeight="700"
-            fontSize="26"
-            letterSpacing="1"
+            y="26"
+            fontFamily="'Plus Jakarta Sans', sans-serif"
+            fontWeight="800"
+            fontSize="28"
+            letterSpacing="-0.02em"
+            fill="hsl(155 100% 45%)"
         >
-            <tspan fill="hsl(155 100% 45%)">Meta</tspan>
-            <tspan fill="hsl(160 100% 95%)">Fin</tspan>
+            Meta
+        </text>
+        <text
+            x="62"
+            y="42"
+            fontFamily="'Inter', sans-serif"
+            fontWeight="700"
+            fontSize="11"
+            letterSpacing="3"
+            fill="hsl(160 100% 95%)"
+            opacity="0.6"
+            style={{ textTransform: 'uppercase' }}
+        >
+            Finance Hub
         </text>
     </svg>
 );

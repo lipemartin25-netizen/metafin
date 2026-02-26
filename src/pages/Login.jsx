@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate, useLocation, Link } from 'react-router-dom'
 import { aiAPI } from '../lib/apiClient'
 import { useAuth } from '../contexts/AuthContext'
-import { GoogleLogin } from '@react-oauth/google'
+import { supabase } from '../lib/supabase'
 import MetaFinLogo from '../components/MetaFinLogo'
 import { ArrowRight, Lock } from 'lucide-react'
 import { useForceDark } from '../hooks/useForceDark'
@@ -11,7 +11,7 @@ export default function Login() {
     useForceDark();
     const navigate = useNavigate()
     const location = useLocation()
-    const { loginWithToken, signInWithGoogle } = useAuth()
+    const { loginWithToken } = useAuth()
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState('')
 
@@ -66,20 +66,7 @@ export default function Login() {
         }
     }
 
-    async function handleGoogleSuccess(response) {
-        setError('')
-        setIsLoading(true)
-        try {
-            await signInWithGoogle(response.credential)
-            const destination = location.state?.from || '/app'
-            navigate(destination, { replace: true })
-        } catch (err) {
-            setError('Não foi possível autenticar com o Google.')
-            console.error(err)
-        } finally {
-            setIsLoading(false)
-        }
-    }
+
 
     return (
         <div className="min-h-screen bg-[#0f172a] flex items-center justify-center p-6 relative overflow-hidden text-white font-sans selection:bg-emerald-500/30 antialiased">
@@ -111,10 +98,22 @@ export default function Login() {
                     <div className="mb-10 relative z-10">
                         <div className="flex justify-center flex-col items-center">
                             <button
-                                onClick={() => {
-                                    // Trigger the hidden real Google button
-                                    const googleButton = document.querySelector('[data-testid="real-google-button"] div div');
-                                    if (googleButton) googleButton.click();
+                                onClick={async () => {
+                                    setError('');
+                                    setIsLoading(true);
+                                    try {
+                                        const { error } = await supabase.auth.signInWithOAuth({
+                                            provider: 'google',
+                                            options: {
+                                                redirectTo: `${window.location.origin}/app`
+                                            }
+                                        });
+                                        if (error) throw error;
+                                    } catch (err) {
+                                        setError('Falha ao iniciar login com Google.');
+                                        console.error(err);
+                                        setIsLoading(true); // Manter carregando até o redirecionamento
+                                    }
                                 }}
                                 disabled={isLoading}
                                 className="w-full py-4 bg-white hover:bg-slate-100 text-slate-900 font-extrabold rounded-2xl transition-all active:scale-[0.98] shadow-xl shadow-white/5 flex items-center justify-center gap-3 group mb-2"
@@ -139,15 +138,6 @@ export default function Login() {
                                 </svg>
                                 <span>Continuar com Google</span>
                             </button>
-
-                            {/* Hidden real Google Login for functionality */}
-                            <div className="hidden" data-testid="real-google-button">
-                                <GoogleLogin
-                                    onSuccess={handleGoogleSuccess}
-                                    onError={() => setError('Erro na conexão com o Google')}
-                                    useOneTap
-                                />
-                            </div>
 
                             <div className="flex items-center gap-4 mt-8 w-full">
                                 <span className="h-[1px] flex-1 bg-white/5"></span>

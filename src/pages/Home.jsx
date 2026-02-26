@@ -50,7 +50,7 @@ export default function Home() {
         },
         {
             name: "Premium",
-            price: "R$ 19,90",
+            price: "R$ 14,90",
             period: "/mês",
             desc: "Produtividade total com automação bancária em tempo real e inteligência preditiva Nexus IA.",
             features: [
@@ -66,14 +66,13 @@ export default function Home() {
         },
         {
             name: "Elite",
-            price: "R$ 49,90",
+            price: "R$ 29,90",
             period: "/mês",
             desc: "A solução definitiva para investidores e gestão de patrimônio de alta complexidade.",
             features: [
                 "Tudo do Plano Premium",
                 "Wealth Lab: Simuladores de Ativos",
                 "Acesso a API para Desenvolvedores",
-                "Mentoria Financeira Trimestral",
                 "Funcionalidades Beta Exclusivas"
             ],
             buttonText: "Seja Elite",

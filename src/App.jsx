@@ -2,11 +2,11 @@ import { useEffect, useState, useRef, useCallback, lazy, Suspense } from 'react'
 import { Routes, Route, useLocation, Navigate, useNavigate } from 'react-router-dom';
 import { trackPageView } from './hooks/useAnalytics';
 import { useAuth } from './contexts/AuthContext';
-import Layout from './components/Layout';
 import { ProtectedRoute } from './components/ProtectedRoute';
-import ScreenGuardProvider from './components/ScreenGuardProvider';
-import NpsSurvey from './components/NpsSurvey';
-import OnboardingTour from './components/OnboardingTour';
+const Layout = lazy(() => import('./components/Layout'));
+const ScreenGuardProvider = lazy(() => import('./components/ScreenGuardProvider'));
+const NpsSurvey = lazy(() => import('./components/NpsSurvey'));
+const OnboardingTour = lazy(() => import('./components/OnboardingTour'));
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { NetworkBanner } from './components/NetworkBanner';
 

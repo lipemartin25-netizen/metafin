@@ -32,7 +32,7 @@ function fmt(value) {
 export default function BankAccounts() {
     const { addBulkTransactions } = useTransactions();
     const { user: _user } = useAuth();
-    const { accounts, addAccount, deleteAccount, updateAccount: _updateAccount, loading, error: hookError } = useBankAccounts();
+    const { accounts, addAccount, deleteAccount, updateAccount: _updateAccount, syncAccount, loading, error: hookError } = useBankAccounts();
     const { openWidget, connecting: _pluggyLoading, error: pluggyError } = usePluggy();
     const [showConnectModal, setShowConnectModal] = useState(false);
     const [selectedBank, setSelectedBank] = useState(null);
@@ -125,11 +125,21 @@ export default function BankAccounts() {
         }
     };
 
-    const handleSync = async (bankId) => {
-        setSyncing(bankId);
-        await new Promise(r => setTimeout(r, 1500));
-        analytics.featureUsed('bank_sync_refresh');
-        setSyncing(null);
+    const handleSync = async (bank) => {
+        setSyncing(bank.id);
+
+        try {
+            if (bank.isPluggy && bank.connectionId) {
+                await syncAccount(bank.connectionId);
+            } else {
+                await new Promise(r => setTimeout(r, 1000));
+            }
+            analytics.featureUsed('bank_sync_refresh');
+        } catch (err) {
+            console.error('Failed to sync:', err);
+        } finally {
+            setSyncing(null);
+        }
     };
 
     const handleDisconnect = async (bank) => {
@@ -231,7 +241,7 @@ export default function BankAccounts() {
                                 </div>
                                 <div className="flex items-center gap-1">
                                     <button
-                                        onClick={() => handleSync(bank.id)}
+                                        onClick={() => handleSync(bank)}
                                         className={`p-2 rounded-lg text-gray-400 hover:text-white hover:bg-white/10 transition-all ${syncing === bank.id ? 'animate-spin text-emerald-400' : ''}`}
                                         title="Sincronizar"
                                     >

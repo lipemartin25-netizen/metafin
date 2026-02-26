@@ -115,11 +115,46 @@ export function useBankAccounts() {
         }
     };
 
+    const syncAccount = async (connectionId) => {
+        if (!isSupabaseConfigured || !user?.id) return false;
+
+        try {
+            // Primeiro buscar o provider_item_id desta conexão
+            const { data: conn } = await supabase
+                .from('of_connections')
+                .select('provider_item_id')
+                .eq('id', connectionId)
+                .single();
+
+            if (!conn) throw new Error('Conexão não encontrada');
+
+            const { data: session } = await supabase.auth.getSession();
+            const response = await fetch('/api/pluggy/sync-item', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${session?.session?.access_token}`
+                },
+                body: JSON.stringify({ itemId: conn.provider_item_id })
+            });
+
+            if (!response.ok) throw new Error('Falha na sincronização remota');
+
+            await loadAccounts();
+            return true;
+        } catch (err) {
+            console.error('Sync error:', err);
+            setError(err.message);
+            return false;
+        }
+    };
+
     // Combine accounts for UI
     const allAccounts = [
         ...manualAccounts,
         ...pluggyAccounts.map(acc => ({
             id: acc.id,
+            connectionId: acc.connection_id,
             name: acc.display_name,
             bank_name: acc.bank_name,
             balance: acc.balance,
@@ -135,6 +170,7 @@ export function useBankAccounts() {
         error,
         addAccount,
         deleteAccount,
+        syncAccount,
         reload: loadAccounts
     };
 }

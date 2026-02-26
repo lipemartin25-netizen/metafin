@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { Eye, EyeOff, Loader2, Sparkles, ArrowRight, ShieldCheck } from 'lucide-react';
+import { Eye, EyeOff, Loader2, Sparkles, ArrowRight, Lock } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import MetaFinLogo from '../components/MetaFinLogo';
+import { useForceDark } from '../hooks/useForceDark';
 
 export default function SignUp() {
+    useForceDark();
     const { signUp } = useAuth();
     const navigate = useNavigate();
 
@@ -62,13 +64,18 @@ export default function SignUp() {
 
     if (success) {
         return (
-            <div className="min-h-screen bg-[#0f172a] flex items-center justify-center p-6 text-white font-sans">
-                <div className="w-full max-w-md text-center animate-fade-in p-12 bg-slate-900/60 border border-white/5 rounded-[3rem] backdrop-blur-3xl shadow-2xl">
+            <div className="min-h-screen bg-[#0f172a] flex items-center justify-center p-6 text-white font-sans selection:bg-emerald-500/30 antialiased">
+                <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+                    <div className="absolute top-[-10%] right-[-5%] w-[50%] h-[50%] bg-emerald-500/[0.04] blur-[160px] rounded-full" />
+                    <div className="absolute inset-0 opacity-[0.03] bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]" />
+                </div>
+
+                <div className="w-full max-w-md text-center animate-fade-in p-12 bg-slate-900/60 border border-white/5 rounded-[3rem] backdrop-blur-3xl shadow-2xl z-10">
                     <div className="w-20 h-20 bg-emerald-500/10 rounded-full flex items-center justify-center mx-auto mb-10 shadow-inner">
                         <Sparkles className="w-10 h-10 text-emerald-500" />
                     </div>
                     <h2 className="text-3xl font-bold mb-4 tracking-tight">Bem-vindo, {name.split(' ')[0]}!</h2>
-                    <p className="text-slate-400 mb-10 font-medium">Configurando seu ambiente de alta performance...</p>
+                    <p className="text-slate-400 mb-10 font-medium text-balance">Configurando seu ambiente de alta performance...</p>
                     <Loader2 className="w-8 h-8 animate-spin text-emerald-500 mx-auto" />
                 </div>
             </div>
@@ -76,31 +83,33 @@ export default function SignUp() {
     }
 
     return (
-        <div className="min-h-screen bg-[#0f172a] flex items-center justify-center p-6 relative overflow-hidden text-white font-sans selection:bg-emerald-500/30">
-            {/* Extremely subtle premium atmosphere */}
-            <div className="absolute inset-0 pointer-events-none opacity-20">
-                <div className="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] bg-emerald-500/10 blur-[140px] rounded-full" />
+        <div className="min-h-screen bg-[#0f172a] flex items-center justify-center p-6 relative overflow-hidden text-white font-sans selection:bg-emerald-500/30 antialiased">
+            {/* Background elements matched with Landing Page */}
+            <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+                <div className="absolute top-[-10%] right-[-5%] w-[50%] h-[50%] bg-emerald-500/[0.04] blur-[160px] rounded-full" />
+                <div className="absolute bottom-[-10%] left-[-5%] w-[50%] h-[50%] bg-blue-500/[0.03] blur-[160px] rounded-full" />
+                <div className="absolute inset-0 opacity-[0.03] bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]" />
             </div>
 
             <div className="w-full max-w-md z-10 animate-fade-in py-10">
-                <div className="text-center mb-12">
+                <div className="text-center mb-10">
                     <div className="flex justify-center mb-8 hover:scale-105 transition-transform duration-300">
                         <MetaFinLogo className="h-10 w-auto" />
                     </div>
-                    <h1 className="text-2xl font-bold mb-3 tracking-tight">
-                        {step === 1 ? 'Como deseja ser chamado?' : 'Configuração de Credenciais'}
+                    <h1 className="text-2xl font-bold mb-3 tracking-tight uppercase">
+                        {step === 1 ? 'Cadastre-se' : 'Segurança'}
                     </h1>
                     <p className="text-slate-400 text-sm font-medium px-4">
-                        {step === 1 ? 'Primeiro passo para o controle financeiro de elite.' : 'Proteja seu acesso corporativo com alta criptografia.'}
+                        {step === 1 ? 'Ponto de partida ideal para a elite.' : 'Criptografia institucional Nexus ativa.'}
                     </p>
                 </div>
 
                 <div className="bg-slate-900/60 border border-white/5 p-10 rounded-[3rem] shadow-[0_30px_70px_-20px_rgba(0,0,0,0.6)] backdrop-blur-3xl relative overflow-hidden">
                     {/* Interior glow for depth */}
-                    <div className="absolute -top-24 -right-24 w-48 h-48 bg-emerald-500/10 rounded-full blur-[80px] pointer-events-none" />
+                    <div className="absolute -top-24 -right-24 w-48 h-48 bg-emerald-500/[0.08] rounded-full blur-[80px] pointer-events-none" />
 
                     {error && (
-                        <div className="mb-8 p-4 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs font-bold text-center animate-shake">
+                        <div className="mb-8 p-4 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs font-bold text-center animate-shake relative z-10">
                             {error}
                         </div>
                     )}
@@ -113,10 +122,10 @@ export default function SignUp() {
                                 animate={{ opacity: 1, x: 0 }}
                                 exit={{ opacity: 0, x: 10 }}
                                 onSubmit={handleNextStep}
-                                className="space-y-8"
+                                className="space-y-8 relative z-10"
                             >
                                 <div className="space-y-3">
-                                    <label className="text-[10px] font-black text-slate-500 ml-1 uppercase tracking-[0.15em]">Nome Completo ou Razão</label>
+                                    <label className="text-[10px] font-black text-slate-500 ml-1 uppercase tracking-widest">Nome Completo ou Razão</label>
                                     <input
                                         type="text"
                                         value={name}
@@ -127,7 +136,7 @@ export default function SignUp() {
                                         className="w-full px-6 py-4 rounded-2xl bg-slate-800/40 border border-white/5 text-white placeholder-slate-600 focus:outline-none focus:border-emerald-500/50 focus:bg-slate-800/60 transition-all font-medium shadow-inner"
                                     />
                                 </div>
-                                <button type="submit" className="w-full py-4 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black rounded-2xl transition-all active:scale-[0.98] shadow-2xl shadow-emerald-500/10 flex items-center justify-center gap-2 group">
+                                <button type="submit" className="w-full py-4 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black rounded-2xl transition-all active:scale-[0.98] shadow-2xl shadow-emerald-500/20 flex items-center justify-center gap-2 group">
                                     Avançar <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                                 </button>
                             </motion.form>
@@ -138,11 +147,11 @@ export default function SignUp() {
                                 animate={{ opacity: 1, x: 0 }}
                                 exit={{ opacity: 0, x: 10 }}
                                 onSubmit={handleFinalSubmit}
-                                className="space-y-8"
+                                className="space-y-8 relative z-10"
                             >
                                 <div className="space-y-5">
                                     <div className="space-y-3">
-                                        <label className="text-[10px] font-black text-slate-500 ml-1 uppercase tracking-[0.15em]">E-mail Corporativo</label>
+                                        <label className="text-[10px] font-black text-slate-500 ml-1 uppercase tracking-widest">E-mail Corporativo</label>
                                         <input
                                             type="email"
                                             value={email}
@@ -153,7 +162,7 @@ export default function SignUp() {
                                         />
                                     </div>
                                     <div className="space-y-3">
-                                        <label className="text-[10px] font-black text-slate-500 ml-1 uppercase tracking-[0.15em]">Chave de Acesso</label>
+                                        <label className="text-[10px] font-black text-slate-500 ml-1 uppercase tracking-widest">Chave de Acesso</label>
                                         <div className="relative">
                                             <input
                                                 type={showPassword ? 'text' : 'password'}
@@ -182,7 +191,7 @@ export default function SignUp() {
                                     >
                                         Voltar
                                     </button>
-                                    <button type="submit" disabled={loading} className="flex-1 py-4 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black rounded-2xl transition-all active:scale-[0.98] shadow-2xl shadow-emerald-500/10 flex items-center justify-center">
+                                    <button type="submit" disabled={loading} className="flex-1 py-4 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black rounded-2xl transition-all active:scale-[0.98] shadow-2xl shadow-emerald-500/20 flex items-center justify-center">
                                         {loading ? <Loader2 className="w-6 h-6 animate-spin mx-auto text-slate-950" /> : 'Confirmar e Criar'}
                                     </button>
                                 </div>
@@ -190,9 +199,9 @@ export default function SignUp() {
                         )}
                     </AnimatePresence>
 
-                    <div className="mt-12 pt-8 border-t border-white/5 text-center">
+                    <div className="mt-12 pt-8 border-t border-white/5 text-center relative z-10">
                         <div className="flex items-center justify-center gap-2 text-slate-500 text-[10px] font-black tracking-[0.2em] uppercase">
-                            <ShieldCheck className="w-4 h-4 text-emerald-500/80" />
+                            <Lock className="w-4 h-4 text-emerald-500/80" />
                             <span>Segurança de Dados NEXUS</span>
                         </div>
                     </div>

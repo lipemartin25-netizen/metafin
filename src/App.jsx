@@ -28,6 +28,7 @@ const Reports = lazy(() => import('./pages/Reports'));
 const Simulators = lazy(() => import('./pages/Simulators'));
 const Upgrade = lazy(() => import('./pages/Upgrade'));
 const Settings = lazy(() => import('./pages/Settings'));
+const Webhooks = lazy(() => import('./pages/Webhooks'));
 
 // Lazy load do chat (componente pesado)
 const AiChat = lazy(() => import('./components/AiChat'));
@@ -193,6 +194,14 @@ export default function App() {
             element={
               <Suspense fallback={<PageLoader message="Carregando configurações..." />}>
                 <Settings />
+              </Suspense>
+            }
+          />
+          <Route
+            path="webhooks"
+            element={
+              <Suspense fallback={<PageLoader message="Carregando webhooks..." />}>
+                <Webhooks />
               </Suspense>
             }
           />

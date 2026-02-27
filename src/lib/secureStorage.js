@@ -132,7 +132,18 @@ export const secureStorage = {
             if (!key?.startsWith(STORAGE_PREFIX)) continue
 
             try {
-                const payload = JSON.parse(localStorage.getItem(key))
+                const raw = localStorage.getItem(key)
+                let payload
+                try {
+                    const decoded = decodeURIComponent(escape(atob(raw)))
+                    if (decoded.startsWith(STORAGE_SALT)) {
+                        payload = JSON.parse(decoded.replace(STORAGE_SALT, ''))
+                    } else {
+                        payload = JSON.parse(decoded)
+                    }
+                } catch (_decodeErr) {
+                    payload = JSON.parse(raw)
+                }
                 if (now - payload.savedAt > maxAgeMs) {
                     localStorage.removeItem(key)
                 }

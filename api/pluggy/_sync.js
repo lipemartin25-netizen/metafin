@@ -84,6 +84,10 @@ export function parsePixDetails(description) {
  * Função de sincronização centralizada
  */
 export async function syncItemData(supabase, itemId) {
+    if (!process.env.PLUGGY_CLIENT_ID || !process.env.PLUGGY_CLIENT_SECRET) {
+        throw new Error('[Sync] PLUGGY_CLIENT_ID ou PLUGGY_CLIENT_SECRET não configurados.');
+    }
+
     const pluggy = new PluggyClient({
         clientId: process.env.PLUGGY_CLIENT_ID.trim(),
         clientSecret: process.env.PLUGGY_CLIENT_SECRET.trim(),

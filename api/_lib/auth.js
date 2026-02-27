@@ -25,21 +25,15 @@ export async function validateSession(req) {
         return validateSupabaseJWT(token)
     }
 
-    // Modo APP_SECRET (fallback ou para tokens internos assinados com HMAC)
-    const secret = process.env.APP_SECRET || (process.env.NODE_ENV !== 'production' ? 'dev_secret_fallback_123' : null)
+    // Modo APP_SECRET (para tokens internos assinados com HMAC)
+    const secret = process.env.APP_SECRET
     if (secret) {
         return validateHmacToken(token, secret)
     }
 
-    // Em produção, se nada estiver configurado, bloqueia por segurança
-    if (process.env.NODE_ENV === 'production') {
-        console.error('[auth] CRÍTICO: Nenhum sistema de autenticação configurado!')
-        return { valid: false, reason: 'Serviço de autenticação não configurado' }
-    }
-
-    // Em desenvolvimento, permite bypass com aviso se nenhuma chave for detectada
-    console.warn('[auth] DEV: Autenticação desabilitada. Configure APP_SECRET ou Supabase.')
-    return { valid: true, userId: 'dev-user' }
+    // Nenhum sistema de autenticação configurado — bloqueia sempre
+    console.error('[auth] CRÍTICO: Nenhum sistema de autenticação configurado! Configure SUPABASE_URL + SUPABASE_SERVICE_KEY ou APP_SECRET.')
+    return { valid: false, reason: 'Serviço de autenticação não configurado' }
 }
 
 async function validateSupabaseJWT(token) {
@@ -106,8 +100,8 @@ async function validateHmacToken(token, secret) {
 }
 
 export async function generateToken(userId) {
-    const secret = process.env.APP_SECRET || 'dev_secret_fallback_123'
-    if (!secret && process.env.NODE_ENV === 'production') throw new Error('APP_SECRET não configurado')
+    const secret = process.env.APP_SECRET
+    if (!secret) throw new Error('APP_SECRET não configurado. Defina a variável de ambiente APP_SECRET.')
 
     const encoder = new TextEncoder()
     const key = await crypto.subtle.importKey(

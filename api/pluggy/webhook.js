@@ -37,8 +37,10 @@ export default async function handler(req, res) {
         return res.status(500).json({ error: 'Server configuration error' });
     }
 
-    const receivedSecret = req.headers['x-webhook-secret'] || req.query?.secret;
-    if (receivedSecret !== webhookSecret) {
+    const receivedSecret = req.headers['x-webhook-secret'] || req.query?.secret || '';
+    const secretsMatch = receivedSecret.length === webhookSecret.length &&
+        crypto.timingSafeEqual(Buffer.from(receivedSecret), Buffer.from(webhookSecret));
+    if (!secretsMatch) {
         console.warn('Webhook rejected: invalid secret');
         return res.status(403).json({ error: 'Forbidden' });
     }

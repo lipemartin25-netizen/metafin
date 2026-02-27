@@ -101,23 +101,27 @@ export const db = {
             return { data, error };
         },
 
-        update: async (id, updates) => {
+        update: async (id, updates, userId) => {
             if (!supabase) return { data: null, error: { message: 'Supabase não configurado' } };
-            const { data, error } = await supabase
+            const query = supabase
                 .from('transactions')
                 .update({ ...updates, updated_at: new Date().toISOString() })
-                .eq('id', id)
+                .eq('id', id);
+            if (userId) query.eq('user_id', userId);
+            const { data, error } = await query
                 .select()
                 .single();
             return { data, error };
         },
 
-        delete: async (id) => {
+        delete: async (id, userId) => {
             if (!supabase) return { error: { message: 'Supabase não configurado' } };
-            const { error } = await supabase
+            const query = supabase
                 .from('transactions')
                 .delete()
                 .eq('id', id);
+            if (userId) query.eq('user_id', userId);
+            const { error } = await query;
             return { error };
         },
 

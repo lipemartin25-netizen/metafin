@@ -37,7 +37,7 @@ export function sanitizeMessages(messages) {
             role: msg.role,
             content: msg.content
                 .slice(0, MAX_MESSAGE_LENGTH)
-                .replace(/[^\x20-\x7E]/g, '')
+                .replace(/[\p{Cc}]/gu, '')
                 .trim()
         }
     })
@@ -49,7 +49,11 @@ export function sanitizeModel(model) {
         'gpt-4o-mini',
         'gpt-4-turbo',
         'claude-3-5-sonnet-20241022',
-        'claude-3-haiku-20240307'
+        'claude-3-haiku-20240307',
+        'gemini-1.5-flash',
+        'gemini-1.5-pro',
+        'gemini-2.0-flash',
+        'gemini-2.0-flash-lite'
     ]
 
     if (!model || !ALLOWED_MODELS.includes(model)) {

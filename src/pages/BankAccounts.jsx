@@ -33,7 +33,7 @@ export default function BankAccounts() {
     const { addBulkTransactions } = useTransactions();
     const { user: _user } = useAuth();
     const { accounts, accountTransactions, addAccount, deleteAccount, syncAccount, loading, error: hookError } = useBankAccounts();
-    const { openWidget, connecting: _pluggyLoading, error: pluggyError } = usePluggy();
+    const { openWidget, error: pluggyError } = usePluggy();
     const [showConnectModal, setShowConnectModal] = useState(false);
     const [selectedBank, setSelectedBank] = useState(null);
     const [connectingState, setConnectingState] = useState('idle');

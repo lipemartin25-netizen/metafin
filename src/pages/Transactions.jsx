@@ -2,7 +2,7 @@
 import { usePageAnnounce } from '../components/A11yAnnouncer';
 import { useTransactions } from '../hooks/useTransactions';
 import StatusChip from '../components/StatusChip';
-import { Search, Filter, Upload, Plus, X, FileSpreadsheet, CheckCircle, AlertCircle, Loader2, Trash2, Download, BarChart2, List } from 'lucide-react';
+import { Search, Filter, Upload, Plus, X, FileSpreadsheet, CheckCircle, AlertCircle, Loader2, Trash2, Download, BarChart2, List, Landmark, FileText, File } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import Papa from 'papaparse';
 import { analytics } from '../hooks/useAnalytics';
@@ -10,7 +10,16 @@ import { parseFile, ACCEPTED_EXTENSIONS, SUPPORTED_FORMATS } from '../lib/filePa
 import categoriesData from '../data/data.json';
 
 const categoryConfig = categoriesData.categories;
+const categoryGroups = categoriesData.categoryGroups || [];
 const allCategories = Object.keys(categoryConfig);
+
+const FORMAT_BUTTONS = [
+    { ext: '.csv', label: 'CSV', icon: FileSpreadsheet, color: '#10B981' },
+    { ext: '.ofx', label: 'OFX', icon: Landmark, color: '#3B82F6' },
+    { ext: '.xls', label: 'XLS', icon: FileText, color: '#22C55E' },
+    { ext: '.xlsx', label: 'XLSX', icon: FileText, color: '#16A34A' },
+    { ext: '.pdf', label: 'PDF', icon: File, color: '#EF4444' },
+];
 
 function fmt(value) {
     return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
@@ -35,6 +44,8 @@ export default function Transactions() {
         date: new Date().toISOString().split('T')[0],
         description: '', amount: '', category: 'outros', type: 'expense', notes: ''
     });
+    const [isDragging, setIsDragging] = useState(false);
+    const [catSearch, setCatSearch] = useState('');
 
     const changeMonth = (offset) => {
         const [year, month] = selectedMonth.split('-').map(Number);
@@ -322,26 +333,80 @@ export default function Transactions() {
                 </div>
             </div>
 
-            {/* Import */}
+            {/* Import — Drag & Drop + Format Buttons */}
             <div className="glass-card">
-                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-4">
                     <div className="flex-1">
                         <h3 className="text-sm font-semibold text-white flex items-center gap-2">
                             <FileSpreadsheet className="w-4 h-4 text-emerald-400" />
-                            MetaFin Import Multi-Formato
+                            Importar Transações
                         </h3>
-                        <p className="text-xs text-slate-400 mt-1">CSV, Excel, JSON, TXT, XML, HTML, PDF, Word, imagens e mais</p>
+                        <p className="text-xs text-slate-400 mt-1">CSV, OFX, Excel, PDF e mais formatos</p>
                     </div>
-                    <div className="flex items-center gap-2">
-                        <button onClick={downloadSampleCsv} className="px-3 py-2 rounded-lg border border-white/10 text-slate-400 hover:bg-white/5 hover:text-white transition-all text-xs">
-                            📄 Modelo CSV
-                        </button>
-                        <label className="gradient-btn text-sm cursor-pointer">
-                            {importing ? <><Loader2 className="w-4 h-4 animate-spin" />Importando...</> : <><Upload className="w-4 h-4" />Importar Arquivo</>}
-                            <input ref={fileInputRef} type="file" accept={ACCEPTED_EXTENSIONS} onChange={handleFileImport} disabled={importing} className="hidden" />
-                        </label>
+                    <button onClick={downloadSampleCsv} className="px-3 py-2 rounded-lg border border-white/10 text-slate-400 hover:bg-white/5 hover:text-white transition-all text-xs">
+                        📄 Modelo CSV
+                    </button>
+                </div>
+
+                {/* Drag & Drop Zone */}
+                <div
+                    className={`relative border-2 border-dashed rounded-2xl p-6 text-center transition-all cursor-pointer ${isDragging
+                        ? 'border-emerald-400 bg-emerald-500/5'
+                        : 'border-white/10 hover:border-white/20'
+                        }`}
+                    onDragEnter={(e) => { e.preventDefault(); setIsDragging(true); }}
+                    onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+                    onDragLeave={() => setIsDragging(false)}
+                    onDrop={(e) => {
+                        e.preventDefault();
+                        setIsDragging(false);
+                        if (e.dataTransfer.files.length > 0) {
+                            handleFileImport({ target: { files: e.dataTransfer.files } });
+                        }
+                    }}
+                    onClick={() => fileInputRef.current?.click()}
+                >
+                    {importing ? (
+                        <div className="flex flex-col items-center gap-2">
+                            <Loader2 className="w-8 h-8 text-emerald-400 animate-spin" />
+                            <p className="text-sm text-emerald-400 font-medium">Importando...</p>
+                        </div>
+                    ) : (
+                        <div className="flex flex-col items-center gap-2">
+                            <Upload className={`w-8 h-8 ${isDragging ? 'text-emerald-400' : 'text-slate-500'} transition-colors`} />
+                            <p className="text-sm text-slate-300 hidden sm:block">
+                                {isDragging ? 'Solte o arquivo aqui' : 'Arraste um arquivo aqui ou clique para selecionar'}
+                            </p>
+                            <p className="text-sm text-slate-300 sm:hidden">Toque para selecionar arquivo</p>
+                            <p className="text-[10px] text-slate-500">Formatos aceitos: CSV, OFX, XLS, XLSX, PDF</p>
+                        </div>
+                    )}
+                    <input ref={fileInputRef} type="file" accept={ACCEPTED_EXTENSIONS} onChange={handleFileImport} disabled={importing} className="hidden" />
+                </div>
+
+                {/* Format Buttons */}
+                <div className="mt-4">
+                    <p className="text-[10px] text-slate-500 uppercase tracking-widest font-bold mb-2">Ou importe diretamente</p>
+                    <div className="flex flex-wrap gap-2">
+                        {FORMAT_BUTTONS.map((fmt) => (
+                            <button
+                                key={fmt.ext}
+                                onClick={() => {
+                                    const inp = document.createElement('input');
+                                    inp.type = 'file';
+                                    inp.accept = fmt.ext;
+                                    inp.onchange = (e) => handleFileImport(e);
+                                    inp.click();
+                                }}
+                                className="flex flex-col items-center justify-center w-[72px] h-[64px] rounded-xl bg-white/[0.03] border border-white/10 hover:border-emerald-400/50 hover:bg-emerald-500/5 transition-all hover:-translate-y-0.5 gap-1"
+                            >
+                                <fmt.icon className="w-5 h-5" style={{ color: fmt.color }} />
+                                <span className="text-[10px] font-bold tracking-wider text-slate-300">{fmt.label}</span>
+                            </button>
+                        ))}
                     </div>
                 </div>
+
                 {importResult && (
                     <div className={`mt-4 p-3 rounded-xl flex items-start gap-2 text-sm ${importResult.success ? 'bg-emerald-500/10 border border-emerald-500/20 text-emerald-400' : 'bg-red-500/10 border border-red-500/20 text-red-400'}`}>
                         {importResult.success ? <CheckCircle className="w-4 h-4 shrink-0 mt-0.5" /> : <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />}
@@ -493,10 +558,46 @@ export default function Transactions() {
                                 </div>
                             </div>
                             <div>
-                                <label className="block text-sm text-slate-400 mb-1">Categoria</label>
-                                <select value={newTx.category} onChange={(e) => setNewTx((p) => ({ ...p, category: e.target.value }))} className="input-field appearance-none cursor-pointer">
-                                    {allCategories.map((c) => <option key={c} value={c} className="bg-[#0d1424]">{categoryConfig[c]?.icon} {categoryConfig[c]?.label || c}</option>)}
-                                </select>
+                                <label className="block text-sm text-slate-400 mb-2">Categoria</label>
+                                <input
+                                    type="text"
+                                    value={catSearch}
+                                    onChange={(e) => setCatSearch(e.target.value)}
+                                    placeholder="🔍 Buscar categoria..."
+                                    className="input-field mb-3 text-xs"
+                                />
+                                <div className="max-h-[220px] overflow-y-auto pr-1 space-y-3">
+                                    {categoryGroups.map((group) => {
+                                        const cats = allCategories.filter(
+                                            (c) => categoryConfig[c]?.group === group.id &&
+                                                (catSearch === '' || categoryConfig[c]?.label?.toLowerCase().includes(catSearch.toLowerCase()))
+                                        );
+                                        if (cats.length === 0) return null;
+                                        return (
+                                            <div key={group.id}>
+                                                <p className="text-[10px] text-slate-500 uppercase font-bold tracking-widest mb-1.5">{group.label}</p>
+                                                <div className="grid grid-cols-4 sm:grid-cols-6 gap-1.5">
+                                                    {cats.map((c) => (
+                                                        <button
+                                                            key={c}
+                                                            type="button"
+                                                            onClick={() => { setNewTx((p) => ({ ...p, category: c })); setCatSearch(''); }}
+                                                            className={`flex flex-col items-center justify-center p-2 rounded-xl border transition-all gap-0.5 ${newTx.category === c
+                                                                ? 'border-emerald-400 bg-emerald-500/10 shadow-[0_0_8px_rgba(16,185,129,0.2)]'
+                                                                : 'border-white/5 bg-white/[0.02] hover:border-white/15 hover:bg-white/[0.05]'
+                                                                }`}
+                                                        >
+                                                            <span className="text-lg leading-none">{categoryConfig[c]?.icon}</span>
+                                                            <span className="text-[8px] font-semibold text-slate-400 uppercase tracking-wide truncate w-full text-center">
+                                                                {categoryConfig[c]?.label?.split(' ')[0] || c}
+                                                            </span>
+                                                        </button>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
                             </div>
                             <div>
                                 <label className="block text-sm text-slate-400 mb-1">Notas (opcional)</label>

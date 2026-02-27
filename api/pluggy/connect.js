@@ -2,7 +2,6 @@ import { createClient } from '@supabase/supabase-js';
 
 const ALLOWED_ORIGINS = [
     'https://metafin-app.vercel.app',
-    'https://metafin-app.vercel.app',
     'http://localhost:5173',
     'http://localhost:3000',
 ];
@@ -43,8 +42,8 @@ export default async function handler(req, res) {
     }
 
     console.log('[Pluggy API] Diagnostics:');
-    console.log(`- CLIENT_ID: "${PLUGGY_CLIENT_ID}" (len: ${PLUGGY_CLIENT_ID.length})`);
-    console.log(`- CLIENT_SECRET: "${PLUGGY_CLIENT_SECRET.substring(0, 4)}...${PLUGGY_CLIENT_SECRET.slice(-4)}" (len: ${PLUGGY_CLIENT_SECRET.length})`);
+    console.log(`- CLIENT_ID: [PRESENT] (len: ${PLUGGY_CLIENT_ID.length})`);
+    console.log(`- CLIENT_SECRET: [PRESENT] (len: ${PLUGGY_CLIENT_SECRET.length})`);
 
     try {
         // Autenticar usuário via Supabase

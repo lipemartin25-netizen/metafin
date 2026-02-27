@@ -3,7 +3,6 @@ import { syncItemData } from './_sync.js';
 
 const ALLOWED_ORIGINS = [
     'https://metafin-app.vercel.app',
-    'https://metafin-app.vercel.app',
     'http://localhost:5173',
     'http://localhost:3000',
 ];

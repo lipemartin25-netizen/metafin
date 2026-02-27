@@ -5,7 +5,7 @@ import { validateSession } from './_lib/auth.js'
 
 const CORS_HEADERS = {
     'Content-Type': 'application/json',
-    'Access-Control-Allow-Origin': process.env.ALLOWED_ORIGIN || '*',
+    'Access-Control-Allow-Origin': process.env.ALLOWED_ORIGIN || 'https://metafin-app.vercel.app',
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Request-ID',
     'Cache-Control': 'no-store',

@@ -4,7 +4,7 @@ import { validateSession } from './_lib/auth.js'
 
 const CORS_HEADERS = {
     'Content-Type': 'application/json',
-    'Access-Control-Allow-Origin': process.env.ALLOWED_ORIGIN || '*',
+    'Access-Control-Allow-Origin': process.env.ALLOWED_ORIGIN || 'https://metafin-app.vercel.app',
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Request-ID',
     'Cache-Control': 'no-store',
@@ -100,11 +100,24 @@ function sanitizeFinancialData(data) {
         return { valid: false, error: 'Volume de dados excede o limite de análise rápida' }
     }
 
-    // Filtragem extra de segurança (caso o frontend tenha enviado algo a mais)
-    const blacklist = ['password', 'token', 'apiKey', 'secret', 'auth', 'email', 'phone', 'cpf', 'cnpj']
-    const filtered = { ...data }
+    // Filtragem RECURSIVA de PII em qualquer nível de profundidade
+    const blacklist = new Set(['password', 'token', 'apikey', 'api_key', 'secret', 'auth',
+        'email', 'phone', 'cpf', 'cnpj', 'rg', 'address', 'endereco', 'telefone',
+        'access_token', 'refresh_token', 'session', 'cookie', 'authorization'])
 
-    blacklist.forEach(key => delete filtered[key])
+    function deepSanitize(obj, depth = 0) {
+        if (depth > 10) return '[MAX_DEPTH]'
+        if (obj === null || obj === undefined) return obj
+        if (typeof obj !== 'object') return obj
+        if (Array.isArray(obj)) return obj.map(item => deepSanitize(item, depth + 1))
 
-    return { valid: true, data: filtered }
+        const clean = {}
+        for (const [key, value] of Object.entries(obj)) {
+            if (blacklist.has(key.toLowerCase())) continue
+            clean[key] = deepSanitize(value, depth + 1)
+        }
+        return clean
+    }
+
+    return { valid: true, data: deepSanitize(data) }
 }

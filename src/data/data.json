@@ -3,48 +3,153 @@
     "categories": {
         "alimentacao": {
             "label": "Alimentação",
-            "color": "#f97316",
-            "icon": "🍴"
+            "color": "#F59E0B",
+            "icon": "🍽️",
+            "group": "essenciais"
         },
         "transporte": {
             "label": "Transporte",
-            "color": "#3b82f6",
-            "icon": "🚗"
+            "color": "#6366F1",
+            "icon": "🚗",
+            "group": "essenciais"
         },
         "moradia": {
             "label": "Moradia",
-            "color": "#8b5cf6",
-            "icon": "🏠"
+            "color": "#3B82F6",
+            "icon": "🏠",
+            "group": "essenciais"
         },
         "saude": {
             "label": "Saúde",
-            "color": "#ef4444",
-            "icon": "🏥"
+            "color": "#EF4444",
+            "icon": "❤️",
+            "group": "essenciais"
         },
         "educacao": {
             "label": "Educação",
-            "color": "#06b6d4",
-            "icon": "📚"
+            "color": "#8B5CF6",
+            "icon": "🎓",
+            "group": "essenciais"
+        },
+        "contas": {
+            "label": "Contas & Utilidades",
+            "color": "#F97316",
+            "icon": "💡",
+            "group": "essenciais"
+        },
+        "lazer": {
+            "label": "Lazer",
+            "color": "#10B981",
+            "icon": "🎮",
+            "group": "estilo_vida"
         },
         "entretenimento": {
             "label": "Entretenimento",
-            "color": "#ec4899",
-            "icon": "🎬"
+            "color": "#EC4899",
+            "icon": "🎬",
+            "group": "estilo_vida"
+        },
+        "restaurantes": {
+            "label": "Restaurantes",
+            "color": "#D97706",
+            "icon": "☕",
+            "group": "estilo_vida"
+        },
+        "compras": {
+            "label": "Compras",
+            "color": "#14B8A6",
+            "icon": "🛍️",
+            "group": "estilo_vida"
+        },
+        "viagens": {
+            "label": "Viagens",
+            "color": "#0EA5E9",
+            "icon": "✈️",
+            "group": "estilo_vida"
+        },
+        "beleza": {
+            "label": "Beleza & Cuidados",
+            "color": "#F472B6",
+            "icon": "💇",
+            "group": "estilo_vida"
+        },
+        "pets": {
+            "label": "Pets",
+            "color": "#A78BFA",
+            "icon": "🐾",
+            "group": "estilo_vida"
         },
         "renda": {
             "label": "Renda",
-            "color": "#10b981",
-            "icon": "💰"
+            "color": "#10B981",
+            "icon": "💰",
+            "group": "financeiro"
         },
         "investimentos": {
             "label": "Investimentos",
-            "color": "#f59e0b",
-            "icon": "📈"
+            "color": "#22C55E",
+            "icon": "📈",
+            "group": "financeiro"
+        },
+        "seguros": {
+            "label": "Seguros",
+            "color": "#64748B",
+            "icon": "🛡️",
+            "group": "financeiro"
+        },
+        "impostos": {
+            "label": "Impostos",
+            "color": "#EF4444",
+            "icon": "🧾",
+            "group": "financeiro"
+        },
+        "dividas": {
+            "label": "Dívidas & Empréstimos",
+            "color": "#DC2626",
+            "icon": "🏦",
+            "group": "financeiro"
+        },
+        "doacoes": {
+            "label": "Doações",
+            "color": "#F59E0B",
+            "icon": "🤝",
+            "group": "outros"
+        },
+        "presentes": {
+            "label": "Presentes",
+            "color": "#E11D48",
+            "icon": "🎁",
+            "group": "outros"
+        },
+        "assinaturas": {
+            "label": "Assinaturas",
+            "color": "#7C3AED",
+            "icon": "💳",
+            "group": "outros"
         },
         "outros": {
             "label": "Outros",
-            "color": "#6b7280",
-            "icon": "📦"
+            "color": "#6B7280",
+            "icon": "📦",
+            "group": "outros"
         }
-    }
+    },
+    "categoryGroups": [
+        {
+            "id": "essenciais",
+            "label": "🏠 Essenciais"
+        },
+        {
+            "id": "estilo_vida",
+            "label": "🎭 Estilo de Vida"
+        },
+        {
+            "id": "financeiro",
+            "label": "📈 Financeiro"
+        },
+        {
+            "id": "outros",
+            "label": "📦 Outros"
+        }
+    ]
 }

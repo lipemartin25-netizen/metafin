@@ -24,17 +24,24 @@ function fmt(v) {
 }
 
 function getScoreColor(score) {
-    if (score >= 80) return '#10b981';
-    if (score >= 60) return '#3b82f6';
-    if (score >= 40) return '#f59e0b';
-    return '#ef4444';
+    if (score >= 81) return '#10b981'; // 💚 Excelente
+    if (score >= 61) return '#22c55e'; // 🟢 Bom
+    if (score >= 31) return '#f59e0b'; // 🟡 Atenção
+    return '#ef4444'; // 🔴 Crítico
 }
 
 function getScoreLabel(score) {
-    if (score >= 80) return 'Excelente';
-    if (score >= 60) return 'Boa';
-    if (score >= 40) return 'Regular';
-    return 'Precisa Melhorar';
+    if (score >= 81) return 'Excelente';
+    if (score >= 61) return 'Bom';
+    if (score >= 31) return 'Atenção';
+    return 'Crítico';
+}
+
+function getScoreIcon(score) {
+    if (score >= 81) return '💚';
+    if (score >= 61) return '🟢';
+    if (score >= 31) return '🟡';
+    return '🔴';
 }
 
 export default function FinancialHealth() {
@@ -161,51 +168,99 @@ export default function FinancialHealth() {
                 </div>
             </div>
 
-            {/* Main Score Premium Display — Compacto */}
-            <div className="glass-card relative overflow-hidden group border-none bg-gradient-to-br from-[#1e293b] to-[#0f172a] shadow-2xl">
-                <div className="absolute -right-32 -top-32 w-96 h-96 rounded-full blur-[100px] opacity-20 bg-pink-500 animate-pulse-slow" />
-                <div className="absolute -left-32 -bottom-32 w-96 h-96 rounded-full blur-[100px] opacity-10 bg-blue-500 animate-pulse-slow" />
+            {/* Main Score Premium Display — Redesenhado */}
+            <div className="glass-card relative overflow-hidden border-none bg-gradient-to-br from-[#1e293b] to-[#0f172a] shadow-2xl p-6">
+                {/* Background Decorativo */}
+                <div className="absolute -right-32 -top-32 w-96 h-96 rounded-full blur-[100px] opacity-10 bg-pink-500" />
+                <div className="absolute -left-32 -bottom-32 w-96 h-96 rounded-full blur-[100px] opacity-10 bg-blue-500" />
 
-                <div className="relative z-10 flex flex-col md:flex-row items-center gap-3 p-3 md:px-5 md:py-3">
-                    <div className="relative w-20 h-20 md:w-28 md:h-28 flex-shrink-0 group-hover:scale-105 transition-transform duration-500">
-                        <div className="absolute inset-0 rounded-full bg-gradient-to-br from-white/10 to-transparent blur-md" />
-                        <svg className="w-20 h-20 md:w-28 md:h-28 transform -rotate-90" viewBox="0 0 160 160">
-                            <circle cx="80" cy="80" r="72" fill="none" strokeWidth="14" className="stroke-white/5" />
-                            <circle cx="80" cy="80" r="72" fill="none" strokeWidth="14" strokeLinecap="round" stroke={scoreColor} strokeDasharray={2 * Math.PI * 72} strokeDashoffset={(2 * Math.PI * 72) - (analysis.score / 100) * (2 * Math.PI * 72)} className="transition-all duration-[2000ms] ease-out" />
-                        </svg>
-                        <div className="absolute inset-0 flex flex-col items-center justify-center">
-                            <div className="text-2xl md:text-3xl font-black text-white drop-shadow-[0_0_20px_rgba(255,255,255,0.3)]">{analysis.score}</div>
-                            <div className="text-[8px] md:text-[9px] font-black uppercase tracking-[0.15em] mt-0.5 py-0.5 px-1.5 rounded-full bg-white/10 backdrop-blur-md" style={{ color: scoreColor }}>{getScoreLabel(analysis.score)}</div>
+                <div className="relative z-10 flex flex-col md:flex-row items-center gap-8">
+                    {/* Score (Left Column) */}
+                    <div className="flex flex-col items-center justify-center md:w-2/5 border-b md:border-b-0 md:border-r border-white/5 pb-6 md:pb-0 md:pr-8">
+                        <div className="relative w-36 h-36 flex-shrink-0">
+                            <svg className="w-full h-full transform -rotate-90" viewBox="0 0 160 160">
+                                <circle cx="80" cy="80" r="70" fill="none" strokeWidth="12" className="stroke-white/5" />
+                                <circle
+                                    cx="80"
+                                    cy="80"
+                                    r="70"
+                                    fill="none"
+                                    strokeWidth="12"
+                                    strokeLinecap="round"
+                                    stroke={scoreColor}
+                                    strokeDasharray={2 * Math.PI * 70}
+                                    strokeDashoffset={(2 * Math.PI * 70) - (analysis.score / 100) * (2 * Math.PI * 70)}
+                                    className="transition-all duration-[2000ms] ease-out shadow-[0_0_20px_rgba(255,255,255,0.1)]"
+                                />
+                            </svg>
+                            <div className="absolute inset-0 flex flex-col items-center justify-center">
+                                <span className="text-4xl font-black text-white drop-shadow-lg">{analysis.score}</span>
+                                <span className="text-[10px] text-gray-500 font-bold uppercase tracking-widest mt-1">Score /100</span>
+                            </div>
+                        </div>
+                        <div className="mt-4 flex items-center gap-2 px-3 py-1 bg-white/5 border border-white/10 rounded-full">
+                            <span className="text-sm">{getScoreIcon(analysis.score)}</span>
+                            <span className="text-sm font-bold text-white uppercase tracking-wider">{getScoreLabel(analysis.score)}</span>
                         </div>
                     </div>
 
-                    <div className="flex-1 w-full flex flex-col justify-center space-y-2">
-                        <div className="hidden md:block">
-                            <h2 className="text-base font-black text-white mb-0.5">Diagnóstico MetaFin</h2>
-                            <p className="text-gray-400 text-[11px] font-medium">Seu ecossistema financeiro está <span className="text-white">{getScoreLabel(analysis.score).toLowerCase()}</span> no momento.</p>
-                        </div>
+                    {/* Metrics (Right Column) */}
+                    <div className="w-full md:w-3/5 space-y-4">
+                        {[
+                            { label: 'Receitas', val: analysis.income, color: 'emerald-400', icon: TrendingUp, max: analysis.income > analysis.expenses ? analysis.income : analysis.expenses * 1.2 },
+                            { label: 'Despesas', val: analysis.expenses, color: 'rose-400', icon: TrendingDown, max: analysis.income > analysis.expenses ? analysis.income : analysis.expenses * 1.2 },
+                            { label: 'Poupança', val: `${analysis.savingsRate.toFixed(1)}%`, color: analysis.savingsRate >= 20 ? 'emerald-400' : 'amber-400', icon: CheckCircle, pct: analysis.savingsRate },
+                            { label: 'Saldo', val: analysis.balance, color: analysis.balance >= 0 ? 'cyan-400' : 'rose-400', icon: Shield, max: analysis.income }
+                        ].map((item, idx) => {
+                            const valNum = typeof item.val === 'number' ? item.val : parseFloat(item.val);
+                            const displayVal = typeof item.val === 'string' ? item.val : fmt(item.val);
+                            const pct = item.pct !== undefined ? Math.max(0, Math.min(item.pct, 100)) : (item.max ? (Math.max(0, valNum) / item.max) * 100 : 0);
 
-                        <div className="grid grid-cols-2 lg:grid-cols-4 gap-1.5">
-                            {[
-                                { label: 'Receita', val: fmt(analysis.income), color: 'text-emerald-400', icon: TrendingUp },
-                                { label: 'Despesas', val: fmt(analysis.expenses), color: 'text-rose-400', icon: TrendingDown },
-                                { label: 'Poupança', val: `${analysis.savingsRate.toFixed(1)}%`, color: analysis.savingsRate >= 20 ? 'text-emerald-400' : 'text-amber-400', icon: CheckCircle },
-                                { label: 'Saldo', val: fmt(analysis.balance), color: analysis.balance >= 0 ? 'text-cyan-400' : 'text-rose-400', icon: Shield }
-                            ].map((item, idx) => (
-                                <div key={idx} className="bg-white/[0.03] border border-white/5 p-2 rounded-xl hover:bg-white/[0.07] transition-all group/item">
-                                    <p className="text-[8px] text-gray-500 uppercase font-black tracking-widest mb-0.5 flex items-center gap-1">
-                                        <item.icon className="w-2.5 h-2.5" /> {item.label}
-                                    </p>
-                                    <p className={`text-xs md:text-sm font-black ${item.color}`}>{item.val}</p>
+                            return (
+                                <div key={idx} className="group/item">
+                                    <div className="flex items-center justify-between mb-1.5">
+                                        <div className="flex items-center gap-2 text-gray-400 text-xs font-semibold">
+                                            <item.icon className={`w-3.5 h-3.5 text-${item.color}`} />
+                                            {item.label}
+                                        </div>
+                                        <span className={`text-sm font-black text-${item.color}`}>{displayVal}</span>
+                                    </div>
+                                    <div className="h-1.5 bg-white/5 rounded-full overflow-hidden">
+                                        <div
+                                            className={`h-full bg-${item.color} rounded-full transition-all duration-1000 ease-out`}
+                                            style={{ width: `${pct}%` }}
+                                        />
+                                    </div>
                                 </div>
-                            ))}
-                        </div>
+                            );
+                        })}
+
+                        {/* Top Categories Inline Bar */}
+                        {analysis.topCategories.length > 0 && (
+                            <div className="pt-4 mt-4 border-t border-white/5">
+                                <p className="text-[10px] text-gray-500 uppercase font-black tracking-widest mb-3 flex items-center justify-between">
+                                    Maiores Gastos
+                                    <span className="text-[9px] lowercase font-normal italic">top 4 categorias</span>
+                                </p>
+                                <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+                                    {analysis.topCategories.slice(0, 4).map((cat, i) => (
+                                        <div key={i} className="flex-shrink-0 bg-white/5 border border-white/5 px-2.5 py-1.5 rounded-lg flex items-center gap-2">
+                                            <div className="w-1.5 h-1.5 rounded-full bg-indigo-500" />
+                                            <div className="flex flex-col">
+                                                <span className="text-[10px] text-gray-400 font-bold capitalize">{cat.cat}</span>
+                                                <span className="text-[11px] text-white font-black">{fmt(cat.total)}</span>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
 
-            {/* Divisão: Dicas e Metas */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* Divisão: Dicas e Metas - Ajustado Spacing (16px gap) */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-4">
                 {/* Tips & Recommendations */}
                 <div className="space-y-4">
                     <h3 className="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">

@@ -19,10 +19,46 @@ export function AuthProvider({ children }) {
         const initAuth = async () => {
             // Priority 1: Supabase Session
             if (isSupabaseConfigured) {
-                const { data: { session } } = await supabase.auth.getSession();
-                if (isMounted.current && session) {
-                    setUser(session.user);
-                    setLoading(false);
+                try {
+                    const { data: { session } } = await supabase.auth.getSession();
+                    if (session) {
+                        // Check if access token is still valid (not expired)
+                        const tokenPayload = JSON.parse(atob(session.access_token.split('.')[1]));
+                        const isExpired = tokenPayload.exp * 1000 < Date.now();
+
+                        if (isExpired) {
+                            console.log('[Auth] JWT expirado, tentando refresh...');
+                            const { data: refreshData, error: refreshError } = await supabase.auth.refreshSession();
+                            if (refreshError || !refreshData.session) {
+                                console.warn('[Auth] Refresh falhou — sessão expirada, redirecionando para login.');
+                                await supabase.auth.signOut();
+                                if (isMounted.current) {
+                                    setUser(null);
+                                    setLoading(false);
+                                }
+                                return;
+                            }
+                            if (isMounted.current) {
+                                setUser(refreshData.session.user);
+                                setLoading(false);
+                            }
+                            return;
+                        }
+
+                        if (isMounted.current) {
+                            setUser(session.user);
+                            setLoading(false);
+                        }
+                        return;
+                    }
+                } catch (err) {
+                    console.error('[Auth] Erro ao verificar sessão:', err);
+                    // Session corrupted or invalid, clean up
+                    await supabase.auth.signOut().catch(() => { });
+                    if (isMounted.current) {
+                        setUser(null);
+                        setLoading(false);
+                    }
                     return;
                 }
             }
@@ -60,9 +96,8 @@ export function AuthProvider({ children }) {
                         setUser(session?.user ?? null);
                         if (session?.user) setIsDemo(false);
 
-                        // Garante que o loading seja encerrado apenas quando tivermos uma resposta real
-                        // ou no primeiro evento de INITIAL_SESSION / SIGNED_IN
-                        if (event === 'INITIAL_SESSION' || event === 'SIGNED_IN' || event === 'SIGNED_OUT') {
+                        // Handle all terminal auth events + token refresh
+                        if (event === 'INITIAL_SESSION' || event === 'SIGNED_IN' || event === 'SIGNED_OUT' || event === 'TOKEN_REFRESHED') {
                             setLoading(false);
                         }
                     }

@@ -101,18 +101,33 @@ export async function callAI(modelKey, messages) {
     const startTime = Date.now();
 
     try {
-        const { data, error } = await supabase.functions.invoke('ai-chat', {
-            body: {
+        // Get current session token for auth
+        const { data: { session } } = await supabase.auth.getSession();
+        const token = session?.access_token;
+
+        if (!token) {
+            throw new Error('Sessão expirada. Faça login novamente.');
+        }
+
+        const response = await fetch('/api/ai-chat', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify({
                 messages,
                 model: model.id,
                 provider: model.provider,
-            },
+            }),
         });
 
-        if (error) {
-            console.error('AI Service Error:', error);
-            throw new Error(error.message || 'Erro ao chamar IA');
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            throw new Error(errorData.error || `Erro ${response.status}: falha na comunicação com a IA`);
         }
+
+        const data = await response.json();
 
         return {
             content: data.content,

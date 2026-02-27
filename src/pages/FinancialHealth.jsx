@@ -166,37 +166,37 @@ export default function FinancialHealth() {
                 <div className="absolute -right-32 -top-32 w-96 h-96 rounded-full blur-[100px] opacity-20 bg-pink-500 animate-pulse-slow" />
                 <div className="absolute -left-32 -bottom-32 w-96 h-96 rounded-full blur-[100px] opacity-10 bg-blue-500 animate-pulse-slow" />
 
-                <div className="relative z-10 flex flex-col md:flex-row items-center gap-5 p-5 md:px-6 md:py-5">
-                    <div className="relative w-24 h-24 md:w-32 md:h-32 flex-shrink-0 group-hover:scale-105 transition-transform duration-500">
+                <div className="relative z-10 flex flex-col md:flex-row items-center gap-3 p-3 md:px-5 md:py-3">
+                    <div className="relative w-20 h-20 md:w-28 md:h-28 flex-shrink-0 group-hover:scale-105 transition-transform duration-500">
                         <div className="absolute inset-0 rounded-full bg-gradient-to-br from-white/10 to-transparent blur-md" />
-                        <svg className="w-24 h-24 md:w-32 md:h-32 transform -rotate-90" viewBox="0 0 160 160">
-                            <circle cx="80" cy="80" r="72" fill="none" strokeWidth="12" className="stroke-white/5" />
-                            <circle cx="80" cy="80" r="72" fill="none" strokeWidth="12" strokeLinecap="round" stroke={scoreColor} strokeDasharray={2 * Math.PI * 72} strokeDashoffset={(2 * Math.PI * 72) - (analysis.score / 100) * (2 * Math.PI * 72)} className="transition-all duration-[2000ms] ease-out" />
+                        <svg className="w-20 h-20 md:w-28 md:h-28 transform -rotate-90" viewBox="0 0 160 160">
+                            <circle cx="80" cy="80" r="72" fill="none" strokeWidth="14" className="stroke-white/5" />
+                            <circle cx="80" cy="80" r="72" fill="none" strokeWidth="14" strokeLinecap="round" stroke={scoreColor} strokeDasharray={2 * Math.PI * 72} strokeDashoffset={(2 * Math.PI * 72) - (analysis.score / 100) * (2 * Math.PI * 72)} className="transition-all duration-[2000ms] ease-out" />
                         </svg>
                         <div className="absolute inset-0 flex flex-col items-center justify-center">
-                            <div className="text-3xl md:text-4xl font-black text-white drop-shadow-[0_0_20px_rgba(255,255,255,0.3)]">{analysis.score}</div>
-                            <div className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] mt-1 py-0.5 px-2 rounded-full bg-white/10 backdrop-blur-md" style={{ color: scoreColor }}>{getScoreLabel(analysis.score)}</div>
+                            <div className="text-2xl md:text-3xl font-black text-white drop-shadow-[0_0_20px_rgba(255,255,255,0.3)]">{analysis.score}</div>
+                            <div className="text-[8px] md:text-[9px] font-black uppercase tracking-[0.15em] mt-0.5 py-0.5 px-1.5 rounded-full bg-white/10 backdrop-blur-md" style={{ color: scoreColor }}>{getScoreLabel(analysis.score)}</div>
                         </div>
                     </div>
 
-                    <div className="flex-1 w-full flex flex-col justify-center space-y-3">
+                    <div className="flex-1 w-full flex flex-col justify-center space-y-2">
                         <div className="hidden md:block">
-                            <h2 className="text-lg font-black text-white mb-0.5">Diagnóstico MetaFin</h2>
-                            <p className="text-gray-400 text-xs font-medium">Seu ecossistema financeiro está <span className="text-white">{getScoreLabel(analysis.score).toLowerCase()}</span> no momento.</p>
+                            <h2 className="text-base font-black text-white mb-0.5">Diagnóstico MetaFin</h2>
+                            <p className="text-gray-400 text-[11px] font-medium">Seu ecossistema financeiro está <span className="text-white">{getScoreLabel(analysis.score).toLowerCase()}</span> no momento.</p>
                         </div>
 
-                        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
+                        <div className="grid grid-cols-2 lg:grid-cols-4 gap-1.5">
                             {[
                                 { label: 'Receita', val: fmt(analysis.income), color: 'text-emerald-400', icon: TrendingUp },
                                 { label: 'Despesas', val: fmt(analysis.expenses), color: 'text-rose-400', icon: TrendingDown },
                                 { label: 'Poupança', val: `${analysis.savingsRate.toFixed(1)}%`, color: analysis.savingsRate >= 20 ? 'text-emerald-400' : 'text-amber-400', icon: CheckCircle },
                                 { label: 'Saldo', val: fmt(analysis.balance), color: analysis.balance >= 0 ? 'text-cyan-400' : 'text-rose-400', icon: Shield }
                             ].map((item, idx) => (
-                                <div key={idx} className="bg-white/[0.03] border border-white/5 p-3 rounded-2xl hover:bg-white/[0.07] transition-all group/item">
-                                    <p className="text-[9px] text-gray-500 uppercase font-black tracking-widest mb-1 flex items-center gap-1">
-                                        <item.icon className="w-3 h-3" /> {item.label}
+                                <div key={idx} className="bg-white/[0.03] border border-white/5 p-2 rounded-xl hover:bg-white/[0.07] transition-all group/item">
+                                    <p className="text-[8px] text-gray-500 uppercase font-black tracking-widest mb-0.5 flex items-center gap-1">
+                                        <item.icon className="w-2.5 h-2.5" /> {item.label}
                                     </p>
-                                    <p className={`text-sm md:text-base font-black ${item.color} group-hover/item:scale-105 transition-transform`}>{item.val}</p>
+                                    <p className={`text-xs md:text-sm font-black ${item.color}`}>{item.val}</p>
                                 </div>
                             ))}
                         </div>

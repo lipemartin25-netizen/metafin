@@ -259,18 +259,18 @@ export default function Transactions() {
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-2xl font-bold text-white dark:text-white">Transações</h1>
+                    <h1 className="text-2xl font-bold text-white">Transações</h1>
                     <p className="text-slate-400 text-sm mt-0.5">{filteredTransactions.length} transações em <span className="capitalize">{monthLabel}</span></p>
                 </div>
-                <div className="flex items-center gap-2 flex-wrap">
+                <div className="flex items-center gap-3 flex-wrap sm:flex-nowrap">
                     {/* Month navigator */}
-                    <div className="flex bg-white/5 p-1 rounded-xl items-center">
+                    <div className="flex bg-white/5 p-1 rounded-xl items-center border border-white/5">
                         <button onClick={() => changeMonth(-1)} className="p-2 text-slate-400 hover:text-white transition-all rounded-lg hover:bg-white/5">←</button>
                         <span className="px-3 text-sm font-bold text-white min-w-[140px] text-center capitalize">{monthLabel}</span>
                         <button onClick={() => changeMonth(1)} className="p-2 text-slate-400 hover:text-white transition-all rounded-lg hover:bg-white/5">→</button>
                     </div>
                     {/* View mode */}
-                    <div className="flex bg-white/5 p-1 rounded-xl">
+                    <div className="flex bg-white/5 p-1 rounded-xl border border-white/5">
                         <button onClick={() => setViewMode('list')} className={`p-2 rounded-lg transition-all ${viewMode === 'list' ? 'bg-emerald-500/20 text-emerald-400' : 'text-slate-500 hover:text-slate-300'}`} title="Lista"><List className="w-4 h-4" /></button>
                         <button onClick={() => setViewMode('analysis')} className={`p-2 rounded-lg transition-all ${viewMode === 'analysis' ? 'bg-emerald-500/20 text-emerald-400' : 'text-slate-500 hover:text-slate-300'}`} title="Análise"><BarChart2 className="w-4 h-4" /></button>
                     </div>
@@ -278,9 +278,9 @@ export default function Transactions() {
                     <div className="relative">
                         <button
                             onClick={() => setShowExportModal(!showExportModal)}
-                            className="px-4 py-2 rounded-xl border border-white/10 text-slate-300 hover:bg-white/5 hover:text-white transition-all text-sm flex items-center gap-2"
+                            className="h-[42px] px-4 py-2 rounded-xl border border-white/10 text-slate-300 hover:bg-white/5 hover:text-white transition-all text-sm flex items-center gap-2 whitespace-nowrap bg-white/5"
                         >
-                            <Download className="w-4 h-4" />
+                            <Download className="w-4 h-4 flex-shrink-0" />
                             <span className="hidden sm:inline">Exportar</span>
                         </button>
                         {showExportModal && (
@@ -307,9 +307,9 @@ export default function Transactions() {
                     {/* Add */}
                     <button
                         onClick={() => { setEditId(null); setNewTx({ date: new Date().toISOString().split('T')[0], description: '', amount: '', category: 'outros', type: 'expense', notes: '' }); setShowAddModal(true); }}
-                        className="gradient-btn text-sm"
+                        className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-medium px-4 py-2.5 h-[42px] rounded-xl transition-all duration-200 whitespace-nowrap shadow-lg shadow-emerald-600/20 active:scale-95"
                     >
-                        <Plus className="w-4 h-4" />
+                        <Plus className="w-4 h-4 flex-shrink-0" />
                         <span className="hidden sm:inline">Adicionar</span>
                     </button>
                 </div>

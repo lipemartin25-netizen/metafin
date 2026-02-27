@@ -20,28 +20,39 @@ export async function validateSession(req) {
         return { valid: false, reason: 'Token malformado' }
     }
 
+    // Normalização de variáveis de ambiente (Suporte para Padrão Vercel + Padrão Local)
+    const supabaseUrl = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL
+    const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SERVICE_KEY
+
     // Modo Supabase (prioritário se configurado para validar JWTs do cliente)
-    if (process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_KEY) {
-        return validateSupabaseJWT(token)
+    if (supabaseUrl && supabaseServiceKey) {
+        console.log('[auth] DEBUG: Usando Supabase para validar sessão.')
+        return validateSupabaseJWT(token, supabaseUrl, supabaseServiceKey)
     }
 
     // Modo APP_SECRET (para tokens internos assinados com HMAC)
     const secret = process.env.APP_SECRET
     if (secret) {
+        console.log('[auth] DEBUG: Usando APP_SECRET para validar sessão.')
         return validateHmacToken(token, secret)
     }
 
     // Nenhum sistema de autenticação configurado — bloqueia sempre
-    console.error('[auth] CRÍTICO: Nenhum sistema de autenticação configurado! Configure SUPABASE_URL + SUPABASE_SERVICE_KEY ou APP_SECRET.')
+    console.error('[auth] CRÍTICO: Nenhum sistema de autenticação configurado! Configure SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY ou APP_SECRET.')
+    console.log('[auth] DEBUG Vars presentes:', {
+        HAS_SUPABASE_URL: !!supabaseUrl,
+        HAS_SUPABASE_KEY: !!supabaseServiceKey,
+        HAS_APP_SECRET: !!secret
+    })
     return { valid: false, reason: 'Serviço de autenticação não configurado' }
 }
 
-async function validateSupabaseJWT(token) {
+async function validateSupabaseJWT(token, supabaseUrl, supabaseServiceKey) {
     try {
         const { createClient } = await import('@supabase/supabase-js')
         const supabase = createClient(
-            process.env.SUPABASE_URL,
-            process.env.SUPABASE_SERVICE_KEY,
+            supabaseUrl,
+            supabaseServiceKey,
             { auth: { persistSession: false } }
         )
 

@@ -1,4 +1,5 @@
 ﻿import { useState, useMemo, useRef } from 'react';
+import { usePageAnnounce } from '../components/A11yAnnouncer';
 import { useTransactions } from '../hooks/useTransactions';
 import StatusChip from '../components/StatusChip';
 import { Search, Filter, Upload, Plus, X, FileSpreadsheet, CheckCircle, AlertCircle, Loader2, Trash2, Download, BarChart2, List } from 'lucide-react';
@@ -17,6 +18,7 @@ function fmt(value) {
 
 export default function Transactions() {
     const { transactions, loading, addTransaction, addBulkTransactions, updateTransaction, deleteTransaction } = useTransactions();
+    usePageAnnounce('Transações');
     const [searchQuery, setSearchQuery] = useState('');
     const [filterCategory, setFilterCategory] = useState('all');
     const [filterType, setFilterType] = useState('all');
@@ -105,7 +107,7 @@ export default function Transactions() {
         try {
             const parsed = await parseFile(file);
             if (parsed.length === 0) {
-                setImportResult({ success: false, message: 'Nenhuma transação válida encontrada. Verifique se o arquivo contém colunas: data, descricao, valor' });
+                setImportResult({ success: false, message: 'Nenhuma transação válida encontrada. Verifique se o arquivo contém colunas: data, descrição, valor' });
                 setImporting(false); return;
             }
             await addBulkTransactions(parsed);

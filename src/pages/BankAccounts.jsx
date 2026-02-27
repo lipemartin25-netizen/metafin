@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useTransactions } from '../hooks/useTransactions';
 import { useAuth } from '../contexts/AuthContext';
 import { analytics } from '../hooks/useAnalytics';
-import { Trash2, CheckCircle, ShieldCheck, Banknote, RefreshCw, X, Plug, FileText } from 'lucide-react';
+import { Trash2, CheckCircle, ShieldCheck, Banknote, RefreshCw, X, Plug, FileText, ArrowUpRight, ArrowDownRight } from 'lucide-react';
 import banksData from '../data/banks.json';
 import { parseFile, ACCEPTED_EXTENSIONS } from '../lib/fileParser';
 import { useBankAccounts } from '../hooks/useBankAccounts';
@@ -32,7 +32,7 @@ function fmt(value) {
 export default function BankAccounts() {
     const { addBulkTransactions } = useTransactions();
     const { user: _user } = useAuth();
-    const { accounts, addAccount, deleteAccount, updateAccount: _updateAccount, syncAccount, loading, error: hookError } = useBankAccounts();
+    const { accounts, accountTransactions, addAccount, deleteAccount, syncAccount, loading, error: hookError } = useBankAccounts();
     const { openWidget, connecting: _pluggyLoading, error: pluggyError } = usePluggy();
     const [showConnectModal, setShowConnectModal] = useState(false);
     const [selectedBank, setSelectedBank] = useState(null);
@@ -227,36 +227,88 @@ export default function BankAccounts() {
                     </div>
                 ) : (
                     <div className="grid sm:grid-cols-2 gap-4">
-                        {accounts.map(bank => (
-                            <div key={bank.id} className="glass-card flex items-center justify-between group">
-                                <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-lg" style={{ backgroundColor: bank.color || '#10b981', color: bank.textColor || '#fff' }}>
-                                        {bank.logo || bank.bank_name?.charAt(0) || 'B'}
+                        {accounts.map(bank => {
+                            const txData = accountTransactions[bank.id];
+                            return (
+                                <div key={bank.id} className="glass-card group">
+                                    <div className="flex items-center justify-between">
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-lg" style={{ backgroundColor: bank.color || '#10b981', color: bank.textColor || '#fff' }}>
+                                                {bank.logo || bank.bank_name?.charAt(0) || 'B'}
+                                            </div>
+                                            <div>
+                                                <h4 className="font-semibold text-white">{bank.display_name || bank.name}</h4>
+                                                <p className="text-xs text-gray-400">{bank.bank_name} • Ag {bank.agency || '0001'} • Cta {bank.account_number}</p>
+                                                <p className="text-sm font-medium text-emerald-400 mt-0.5">{fmt(bank.balance || 0)}</p>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center gap-1">
+                                            <button
+                                                onClick={() => handleSync(bank)}
+                                                className={`p-2 rounded-lg text-gray-400 hover:text-white hover:bg-white/10 transition-all ${syncing === bank.id ? 'animate-spin text-emerald-400' : ''}`}
+                                                title="Sincronizar"
+                                            >
+                                                <RefreshCw className="w-4 h-4" />
+                                            </button>
+                                            <button
+                                                onClick={() => handleDisconnect(bank)}
+                                                className="p-2 rounded-lg text-red-500/50 hover:text-red-400 hover:bg-red-500/10 transition-all"
+                                                title="Remover Conta"
+                                            >
+                                                <Trash2 className="w-4 h-4" />
+                                            </button>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <h4 className="font-semibold text-white">{bank.display_name || bank.name}</h4>
-                                        <p className="text-xs text-gray-400">{bank.bank_name} • Ag {bank.agency || '0001'} • Cta {bank.account_number}</p>
-                                        <p className="text-sm font-medium text-emerald-400 mt-0.5">{fmt(bank.balance || 0)}</p>
-                                    </div>
+
+                                    {/* Resumo de Atividade do Mês */}
+                                    {txData && txData.count > 0 && (
+                                        <div className="mt-4 pt-3 border-t border-white/5 space-y-3">
+                                            <div className="grid grid-cols-3 gap-2">
+                                                <div className="bg-emerald-500/10 rounded-xl p-2.5 text-center">
+                                                    <p className="text-[9px] text-emerald-400/70 uppercase font-bold tracking-wider">Entradas</p>
+                                                    <p className="text-sm font-bold text-emerald-400 flex items-center justify-center gap-1">
+                                                        <ArrowDownRight className="w-3 h-3" />
+                                                        {fmt(txData.income)}
+                                                    </p>
+                                                </div>
+                                                <div className="bg-red-500/10 rounded-xl p-2.5 text-center">
+                                                    <p className="text-[9px] text-red-400/70 uppercase font-bold tracking-wider">Saídas</p>
+                                                    <p className="text-sm font-bold text-red-400 flex items-center justify-center gap-1">
+                                                        <ArrowUpRight className="w-3 h-3" />
+                                                        {fmt(txData.expense)}
+                                                    </p>
+                                                </div>
+                                                <div className="bg-white/5 rounded-xl p-2.5 text-center">
+                                                    <p className="text-[9px] text-gray-400/70 uppercase font-bold tracking-wider">Moviment.</p>
+                                                    <p className="text-sm font-bold text-white">{txData.count}</p>
+                                                </div>
+                                            </div>
+
+                                            {/* Últimas Transações */}
+                                            {txData.recent.length > 0 && (
+                                                <div className="space-y-1">
+                                                    <p className="text-[9px] text-gray-500 uppercase font-bold tracking-wider mb-1">Últimas movimentações</p>
+                                                    {txData.recent.slice(0, 3).map((tx, i) => (
+                                                        <div key={tx.id || i} className="flex items-center justify-between py-1.5 px-2 rounded-lg hover:bg-white/5 transition-colors">
+                                                            <span className="text-xs text-gray-300 truncate max-w-[60%]">{tx.description}</span>
+                                                            <span className={`text-xs font-bold ${tx.type === 'income' ? 'text-emerald-400' : 'text-red-400'}`}>
+                                                                {tx.type === 'income' ? '+' : '-'}{fmt(Math.abs(tx.amount))}
+                                                            </span>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
+
+                                    {txData && txData.count === 0 && (
+                                        <div className="mt-3 pt-3 border-t border-white/5">
+                                            <p className="text-[10px] text-gray-500 text-center italic">Nenhuma movimentação neste mês</p>
+                                        </div>
+                                    )}
                                 </div>
-                                <div className="flex items-center gap-1">
-                                    <button
-                                        onClick={() => handleSync(bank)}
-                                        className={`p-2 rounded-lg text-gray-400 hover:text-white hover:bg-white/10 transition-all ${syncing === bank.id ? 'animate-spin text-emerald-400' : ''}`}
-                                        title="Sincronizar"
-                                    >
-                                        <RefreshCw className="w-4 h-4" />
-                                    </button>
-                                    <button
-                                        onClick={() => handleDisconnect(bank)}
-                                        className="p-2 rounded-lg text-red-500/50 hover:text-red-400 hover:bg-red-500/10 transition-all"
-                                        title="Remover Conta"
-                                    >
-                                        <Trash2 className="w-4 h-4" />
-                                    </button>
-                                </div>
-                            </div>
-                        ))}
+                            );
+                        })}
                     </div>
                 )}
             </div>

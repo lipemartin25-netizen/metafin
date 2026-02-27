@@ -19,17 +19,22 @@ if (!STORAGE_AVAILABLE) {
     console.warn('[secureStorage] localStorage indisponível. Usando memória (dados não persistem).')
 }
 
+const STORAGE_SALT = 'metafin_v3_salt_';
+
 export const secureStorage = {
     set(key, value) {
         try {
             const payload = {
                 data: value,
                 savedAt: Date.now(),
-                version: '1'
+                version: '2',
+                clientId: window.navigator.userAgent.slice(0, 50) // Fingerprinting básico para amarrar o dado ao browser
             }
 
-            // Ofuscação básica para evitar leitura acidental em texto plano
-            const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(payload))))
+            // Ofuscação melhorada: JSON -> UTF8 -> Salt -> Base64
+            const jsonText = JSON.stringify(payload);
+            const saltedText = STORAGE_SALT + jsonText;
+            const encoded = btoa(unescape(encodeURIComponent(saltedText)));
 
             if (STORAGE_AVAILABLE) {
                 localStorage.setItem(`${STORAGE_PREFIX}${key}`, encoded)
@@ -59,9 +64,14 @@ export const secureStorage = {
             let payload
             if (typeof raw === 'string' && STORAGE_AVAILABLE) {
                 try {
-                    payload = JSON.parse(decodeURIComponent(escape(atob(raw))))
+                    const decoded = decodeURIComponent(escape(atob(raw)));
+                    if (decoded.startsWith(STORAGE_SALT)) {
+                        payload = JSON.parse(decoded.replace(STORAGE_SALT, ''));
+                    } else {
+                        // Fallback para dados antigos sem salt
+                        payload = JSON.parse(decoded);
+                    }
                 } catch {
-                    // Fallback para dados antigos sem encoding
                     payload = JSON.parse(raw)
                 }
             } else {
@@ -69,21 +79,22 @@ export const secureStorage = {
             }
 
             if (!payload?.data || !payload?.savedAt) {
-                console.warn(`[secureStorage] Dado corrompido para chave: ${key}`)
-                this.remove(key)
                 return defaultValue
             }
 
+            // Validação de Fingerprint (opcional, aumenta segurança mas pode falhar se browser atualizar)
+            // if (payload.clientId && payload.clientId !== window.navigator.userAgent.slice(0, 50)) {
+            //     return defaultValue;
+            // }
+
             const ninetyDaysMs = 90 * 24 * 60 * 60 * 1000
             if (Date.now() - payload.savedAt > ninetyDaysMs) {
-                console.info(`[secureStorage] Dado expirado: ${key}`)
                 this.remove(key)
                 return defaultValue
             }
 
             return payload.data
         } catch (_e) {
-            this.remove(key)
             return defaultValue
         }
     },

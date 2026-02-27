@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
+import { secureStorage } from '../lib/secureStorage';
 
 const STORAGE_KEY = 'sf_connected_banks';
 
@@ -8,6 +9,7 @@ export function useBankAccounts() {
     const { user } = useAuth();
     const [manualAccounts, setManualAccounts] = useState([]);
     const [pluggyAccounts, setPluggyAccounts] = useState([]);
+    const [accountTransactions, setAccountTransactions] = useState({});
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
@@ -47,9 +49,86 @@ export function useBankAccounts() {
         }
     }, [user]);
 
+    // Carrega transações recentes de cada conta
+    const loadAccountTransactions = useCallback(async (accounts) => {
+        if (!accounts || accounts.length === 0) {
+            setAccountTransactions({});
+            return;
+        }
+
+        const now = new Date();
+        const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0];
+        const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString().split('T')[0];
+
+        try {
+            if (isSupabaseConfigured && user?.id && user.id !== 'demo') {
+                // Buscar todas as transações do mês do usuário
+                const { data: txns, error: txErr } = await supabase
+                    .from('transactions')
+                    .select('*')
+                    .eq('user_id', user.id)
+                    .gte('date', startOfMonth)
+                    .lte('date', endOfMonth)
+                    .order('date', { ascending: false })
+                    .limit(100);
+
+                if (txErr) {
+                    console.warn('Erro ao carregar transações das contas:', txErr);
+                    return;
+                }
+
+                // Agrupar por conta (via notes que contém nome da conta)
+                const grouped = {};
+                for (const acc of accounts) {
+                    const accName = (acc.display_name || acc.name || '').toLowerCase();
+                    const accTxns = (txns || []).filter(t => {
+                        const notes = (t.notes || '').toLowerCase();
+                        return notes.includes(accName) || notes.includes(acc.bank_id || acc.id);
+                    });
+                    grouped[acc.id] = {
+                        recent: accTxns.slice(0, 5),
+                        income: accTxns.filter(t => t.type === 'income').reduce((s, t) => s + Math.abs(t.amount), 0),
+                        expense: accTxns.filter(t => t.type === 'expense').reduce((s, t) => s + Math.abs(t.amount), 0),
+                        count: accTxns.length
+                    };
+                }
+                setAccountTransactions(grouped);
+            } else {
+                // Fallback: localStorage
+                const localTxns = secureStorage.get('transactions') || [];
+                const monthTxns = localTxns.filter(t => t.date >= startOfMonth && t.date <= endOfMonth);
+                const grouped = {};
+                for (const acc of accounts) {
+                    const accName = (acc.display_name || acc.name || '').toLowerCase();
+                    const accTxns = monthTxns.filter(t => {
+                        const notes = (t.notes || '').toLowerCase();
+                        return notes.includes(accName);
+                    });
+                    grouped[acc.id] = {
+                        recent: accTxns.slice(0, 5),
+                        income: accTxns.filter(t => t.type === 'income').reduce((s, t) => s + Math.abs(t.amount), 0),
+                        expense: accTxns.filter(t => t.type === 'expense').reduce((s, t) => s + Math.abs(t.amount), 0),
+                        count: accTxns.length
+                    };
+                }
+                setAccountTransactions(grouped);
+            }
+        } catch (err) {
+            console.warn('Erro ao carregar transações por conta:', err);
+        }
+    }, [user]);
+
     useEffect(() => {
         loadAccounts();
     }, [loadAccounts]);
+
+    // Carregar transações quando as contas forem carregadas
+    useEffect(() => {
+        const allAccs = [...manualAccounts, ...pluggyAccounts];
+        if (allAccs.length > 0) {
+            loadAccountTransactions(allAccs);
+        }
+    }, [manualAccounts, pluggyAccounts, loadAccountTransactions]);
 
     const addAccount = async (accountData) => {
         try {
@@ -166,6 +245,7 @@ export function useBankAccounts() {
 
     return {
         accounts: allAccounts,
+        accountTransactions,
         loading,
         error,
         addAccount,

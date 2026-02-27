@@ -1,36 +1,30 @@
 {
   "name": "metafin",
   "private": true,
-  "version": "1.0.1",
+  "version": "1.0.2",
   "type": "module",
   "engines": {
     "node": "20.x",
     "npm": "10.x"
   },
-  "overrides": {
-    "semver": "^7.5.4",
-    "tough-cookie": "^4.1.3",
-    "word-wrap": "^1.2.4",
-    "braces": "^3.0.3",
-    "micromatch": "^4.0.8",
-    "fast-xml-parser": "^4.4.1",
-    "follow-redirects": "^1.15.6",
-    "ws": "^8.17.1",
-    "undici": "^6.19.8",
-    "path-to-regexp": "^0.1.10"
-  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "test": "vitest run",
+    "test": "vitest run src/",
+    "test:unit": "vitest run src/",
+    "test:e2e": "playwright test",
     "test:watch": "vitest",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest run --coverage",
     "lint": "eslint src --ext .js,.jsx",
+    "lint:fix": "eslint src --ext .js,.jsx --fix",
     "audit": "npm audit --audit-level high",
+    "audit:fix": "npm audit fix",
     "cap:sync": "npm run build && npx cap sync",
-    "cap:open": "npx cap open android"
+    "cap:open": "npx cap open android",
+    "cap:open:ios": "npx cap open ios",
+    "analyze": "npx vite-bundle-visualizer"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.32.1",
@@ -44,6 +38,7 @@
     "@capacitor/share": "^8.0.1",
     "@capacitor/splash-screen": "^8.0.1",
     "@capacitor/status-bar": "^8.0.1",
+    "@google/generative-ai": "^0.24.1",
     "@react-oauth/google": "^0.13.4",
     "@sentry/react": "^10.39.0",
     "@supabase/supabase-js": "^2.49.1",
@@ -53,7 +48,6 @@
     "html2canvas": "^1.4.1",
     "jspdf": "^4.2.0",
     "lucide-react": "^0.468.0",
-    "node-fetch": "^3.3.2",
     "openai": "^4.71.1",
     "papaparse": "^5.4.1",
     "pluggy-sdk": "^0.83.0",
@@ -83,9 +77,16 @@
     "happy-dom": "^20.7.0",
     "postcss": "^8.4.49",
     "tailwindcss": "^3.4.15",
-    "typescript": "^5.9.3",
+    "terser": "^5.31.0",
     "vite": "^6.0.1",
+    "vite-bundle-visualizer": "^1.2.1",
+    "vite-plugin-compression": "^0.5.1",
     "vite-plugin-pwa": "^1.2.0",
     "vitest": "^4.0.18"
+  },
+  "overrides": {
+    "semver": "^7.5.4",
+    "braces": "^3.0.3",
+    "micromatch": "^4.0.8"
   }
 }

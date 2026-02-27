@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useTransactions } from '../hooks/useTransactions';
 import { useAuth } from '../contexts/AuthContext';
@@ -93,9 +93,12 @@ export default function AIAssistant() {
 
     const displayName = user?.user_metadata?.full_name?.split(' ')[0] || 'você';
 
-    const totalIncome = transactions.filter(t => t.type === 'income').reduce((s, t) => s + Math.abs(t.amount), 0);
-    const totalExpenses = transactions.filter(t => t.type === 'expense').reduce((s, t) => s + Math.abs(t.amount), 0);
-    const savingsRate = totalIncome > 0 ? ((totalIncome - totalExpenses) / totalIncome * 100) : 0;
+    const { totalIncome, savingsRate } = useMemo(() => {
+        const income = transactions.filter(t => t.type === 'income').reduce((s, t) => s + Math.abs(t.amount), 0);
+        const expenses = transactions.filter(t => t.type === 'expense').reduce((s, t) => s + Math.abs(t.amount), 0);
+        const rate = income > 0 ? ((income - expenses) / income * 100) : 0;
+        return { totalIncome: income, savingsRate: rate };
+    }, [transactions]);
 
     useEffect(() => { analytics.featureUsed('ai_assistant'); }, []);
 

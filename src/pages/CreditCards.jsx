@@ -80,7 +80,7 @@ export default function CreditCards() {
                     </div>
                     <div>
                         <h1 className="text-2xl font-black text-gray-900 dark:text-white tracking-tight">Meus Cartões</h1>
-                        <p className="text-gray-500 dark:text-gray-400 text-sm mt-0.5 font-medium">Baas & Emissão Virtual</p>
+                        <p className="text-gray-500 dark:text-gray-400 text-sm mt-0.5 font-medium">Gerencie limites, faturas e cashback</p>
                     </div>
                 </div>
                 <button onClick={() => setShowAdd(true)} className="gradient-btn px-6 py-3 rounded-2xl text-sm font-bold flex items-center justify-center gap-2 hover:scale-105 transition-transform shadow-lg shadow-brand-500/20">
@@ -112,9 +112,8 @@ export default function CreditCards() {
                         </div>
                     )}
                 </div>
-                <div className="glass-card bg-gradient-to-br from-brand-600/10 to-accent/10 border-brand-500/20 relative overflow-hidden group">
-                    <div className="absolute right-[-20%] top-[-20%] w-32 h-32 bg-brand-500/20 rounded-full blur-3xl group-hover:bg-brand-500/40 transition-colors" />
-                    <p className="text-xs text-brand-600 dark:text-brand-400 mb-2 uppercase font-bold tracking-wider flex items-center gap-1.5">
+                <div className="glass-card hover:border-gray-300 dark:hover:border-white/20 transition-colors">
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-2 uppercase font-bold tracking-wider flex items-center gap-1.5">
                         <Zap className="w-3.5 h-3.5" /> Est. Cashback
                     </p>
                     <p className="text-2xl font-black text-brand-600 dark:text-brand-400">{fmt(totals.cashbackEstimativa)}</p>

@@ -7,55 +7,74 @@ import { LanguageProvider } from './contexts/LanguageContext';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { VisibilityProvider } from './contexts/VisibilityProvider';
 import { initAnalytics } from './hooks/useAnalytics';
-import './index.css';
-// import './light-theme.css'; // Removido para unificar layout premium escuro
-import './lib/sentry';
+import { initFeatureFlags } from './lib/featureFlags';
+import ErrorBoundary from './components/ErrorBoundary';
+import { ToastProvider } from './components/Toast';
+import { A11yProvider } from './components/A11yAnnouncer';
+import SkipLinks from './components/SkipLinks';
 
-// Google Client ID — suporte para múltiplas nomenclaturas para garantir funcionamento na Vercel
+// Importação segura do estilo global
+import './index.css';
+
+// Configurações do ambiente
 const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || import.meta.env.VITE_GOOGLE_CLIENTID || '';
 
-// Inicializar Analytics
-initAnalytics();
-
-// MetaFin Bootstrap: Inicializa verificações críticas
-async function bootstrap() {
-  // 1. Política de retenção LGPD (executa de forma assíncrona para não travar o boot)
+// Inicialização de serviços core
+async function initCore() {
   try {
+    // 1. Analytics
+    initAnalytics();
+
+    // 2. Feature Flags
+    await initFeatureFlags();
+
+    // 3. LGPD & Bootstrap Logic
     const { enforceRetentionPolicy } = await import('./lib/lgpd.js');
-    setTimeout(() => enforceRetentionPolicy(365), 5000); // 365 dias
-  } catch (err) {
-    console.warn('[MetaFin] Falha ao carregar política LGPD:', err.message);
-  }
+    setTimeout(() => enforceRetentionPolicy(365), 5000);
 
-  // 2. Listener global para sessões expiradas
-  window.addEventListener('metafin:session-expired', () => {
-    sessionStorage.clear();
-    // O redirecionamento é feito pelo componente App (useEffect)
-  });
+    // 4. Service Worker (PWA)
+    if ('serviceWorker' in navigator && import.meta.env.PROD) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw-custom.js')
+          .catch(err => console.error('SW registration failed:', err));
+      });
+    }
 
-  // 3. Limpeza de vestígios de debug em produção
-  if (import.meta.env.PROD) {
-    const sensitive = ['debug_mode', 'dev_token', '__debug__'];
-    sensitive.forEach(k => {
-      try { localStorage.removeItem(k); } catch (_err) { /* ignore */ }
+    // 5. Listener global para sessões expiradas
+    window.addEventListener('metafin:session-expired', () => {
+      sessionStorage.clear();
+      window.location.href = '/login?expired=true';
     });
+
+  } catch (err) {
+    console.error('[MetaFin] Boot Error:', err);
   }
 }
 
-bootstrap().catch(console.error);
+// Executar inicialização
+initCore();
 
-ReactDOM.createRoot(document.getElementById('root')).render(
-  <BrowserRouter>
-    <GoogleOAuthProvider clientId={googleClientId}>
-      <ThemeProvider>
-        <LanguageProvider>
-          <VisibilityProvider>
-            <AuthProvider>
-              <App />
-            </AuthProvider>
-          </VisibilityProvider>
-        </LanguageProvider>
-      </ThemeProvider>
-    </GoogleOAuthProvider>
-  </BrowserRouter>
+const root = ReactDOM.createRoot(document.getElementById('root'));
+
+root.render(
+  <ErrorBoundary>
+    <BrowserRouter>
+      <GoogleOAuthProvider clientId={googleClientId}>
+        <ThemeProvider>
+          <LanguageProvider>
+            <VisibilityProvider>
+              <AuthProvider>
+                <A11yProvider>
+                  <ToastProvider>
+                    <SkipLinks />
+                    <App />
+                  </ToastProvider>
+                </A11yProvider>
+              </AuthProvider>
+            </VisibilityProvider>
+          </LanguageProvider>
+        </ThemeProvider>
+      </GoogleOAuthProvider>
+    </BrowserRouter>
+  </ErrorBoundary>
 );

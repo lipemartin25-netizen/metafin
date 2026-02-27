@@ -45,7 +45,7 @@ export default async function handler(req, res) {
         if (!isValid) {
             return res.status(401).json({ error: 'Sessão inválida ou expirada no provedor' })
         }
-    } else if (!process.env.APP_SECRET) {
+    } else if (!process.env.APP_SECRET && process.env.NODE_ENV !== 'development') {
         return res.status(503).json({ error: 'Sistema de autenticação não configurado no servidor' })
     }
 

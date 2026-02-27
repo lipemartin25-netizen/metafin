@@ -59,7 +59,12 @@ export default async function handler(req, res) {
 
     // 4. Seleção de Provedor e Chave
     const isAnthropic = model.startsWith('claude')
-    const apiKey = isAnthropic ? process.env.ANTHROPIC_API_KEY : process.env.OPENAI_API_KEY
+    const isGemini = model.includes('gemini')
+
+    let apiKey
+    if (isAnthropic) apiKey = process.env.ANTHROPIC_API_KEY
+    else if (isGemini) apiKey = process.env.GEMINI_API_KEY
+    else apiKey = process.env.OPENAI_API_KEY
 
     if (!apiKey) {
         console.error(`[ai-chat] Chave ausente para modelo: ${model}`)
@@ -68,7 +73,7 @@ export default async function handler(req, res) {
 
     // 5. Execução do Chat
     try {
-        const response = await callAIProvider(model, messages, isAnthropic, apiKey)
+        const response = await callAIProvider(model, messages, { isAnthropic, isGemini }, apiKey)
         return res.status(200).json(response)
     } catch (error) {
         console.error('[ai-chat] Erro no provedor:', error.message)
@@ -78,12 +83,11 @@ export default async function handler(req, res) {
     }
 }
 
-async function callAIProvider(model, messages, isAnthropic, apiKey) {
-    if (isAnthropic) {
+async function callAIProvider(model, messages, flags, apiKey) {
+    // A. ANTHROPIC
+    if (flags.isAnthropic) {
         const { default: Anthropic } = await import('@anthropic-ai/sdk')
         const client = new Anthropic({ apiKey })
-
-        // Anthropic separa system prompt
         const systemMessage = messages.find(m => m.role === 'system')?.content || ''
         const chatMessages = messages.filter(m => m.role !== 'system')
 
@@ -102,6 +106,36 @@ async function callAIProvider(model, messages, isAnthropic, apiKey) {
         }
     }
 
+    // B. GEMINI (GOOGLE)
+    if (flags.isGemini) {
+        const { GoogleGenerativeAI } = await import('@google/generative-ai')
+        const genAI = new GoogleGenerativeAI(apiKey)
+        const geminiModel = genAI.getGenerativeModel({ model })
+
+        // Converter formato (role 'assistant' -> 'model')
+        const systemMessage = messages.find(m => m.role === 'system')?.content || ''
+        const contents = messages
+            .filter(m => m.role !== 'system')
+            .map(m => ({
+                role: m.role === 'assistant' ? 'model' : 'user',
+                parts: [{ text: m.content }]
+            }))
+
+        // Se houver system prompt, ele vai na config inicial se suportado, 
+        // ou como primeira mensagem se não (Flash 1.5 suporta via systemInstruction)
+        const result = await geminiModel.generateContent({
+            contents,
+            systemInstruction: systemMessage
+        })
+
+        return {
+            content: result.response.text(),
+            modelName: model,
+            provider: 'google'
+        }
+    }
+
+    // C. OPENAI (DEFAULT)
     const { default: OpenAI } = await import('openai')
     const client = new OpenAI({ apiKey })
 

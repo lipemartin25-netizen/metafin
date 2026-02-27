@@ -1,6 +1,8 @@
 // src/components/FIRESimulator.jsx
 
 import { useState, useMemo } from 'react';
+import { useToast } from '../components/Toast';
+import { useA11y } from '../components/A11yAnnouncer';
 import { calculateFIRE } from '../lib/fireCalculator';
 import {
     AreaChart, Area, XAxis, YAxis, CartesianGrid,
@@ -17,6 +19,9 @@ const formatCurrency = (v) =>
     }).format(v);
 
 export default function FIRESimulator({ financialData }) {
+    const toast = useToast();
+    const { announce } = useA11y();
+
     const [params, setParams] = useState({
         monthlyIncome: financialData?.income || 8000,
         monthlyExpenses: Math.abs(financialData?.expenses) || 5200,
@@ -28,19 +33,25 @@ export default function FIRESimulator({ financialData }) {
 
     const result = useMemo(() => {
         try {
-            return calculateFIRE({
+            const res = calculateFIRE({
                 ...params,
                 annualReturn: params.annualReturn / 100,
                 inflationRate: params.inflationRate / 100,
                 withdrawalRate: params.withdrawalRate / 100
             });
+            if (res.error) throw new Error(res.message);
+            return res;
         } catch (e) {
             return { error: true, message: e.message };
         }
     }, [params]);
 
     const handleChange = (field, value) => {
-        setParams(prev => ({ ...prev, [field]: Number(value) || 0 }));
+        const numValue = Number(value) || 0;
+        setParams(prev => ({ ...prev, [field]: numValue }));
+
+        // Feedback de Acessibilidade
+        announce(`Parâmetro ${field} alterado para ${value}`);
     };
 
     if (result.error) {

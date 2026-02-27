@@ -1,52 +1,50 @@
 ﻿{
-    "transactions":  [
-
-                     ],
-    "categories":  {
-                       "alimentacao":  {
-                                           "label":  "AlimentaÃ§Ã£o",
-                                           "color":  "#f97316",
-                                           "icon":  "ðŸ½ï¸"
-                                       },
-                       "transporte":  {
-                                          "label":  "Transporte",
-                                          "color":  "#3b82f6",
-                                          "icon":  "ðŸš—"
-                                      },
-                       "moradia":  {
-                                       "label":  "Moradia",
-                                       "color":  "#8b5cf6",
-                                       "icon":  "ðŸ "
-                                   },
-                       "saude":  {
-                                     "label":  "SaÃºde",
-                                     "color":  "#ef4444",
-                                     "icon":  "ðŸ¥"
-                                 },
-                       "educacao":  {
-                                        "label":  "EducaÃ§Ã£o",
-                                        "color":  "#06b6d4",
-                                        "icon":  "ðŸ“š"
-                                    },
-                       "entretenimento":  {
-                                              "label":  "Entretenimento",
-                                              "color":  "#ec4899",
-                                              "icon":  "ðŸŽ¬"
-                                          },
-                       "renda":  {
-                                     "label":  "Renda",
-                                     "color":  "#10b981",
-                                     "icon":  "ðŸ’°"
-                                 },
-                       "investimentos":  {
-                                             "label":  "Investimentos",
-                                             "color":  "#f59e0b",
-                                             "icon":  "ðŸ“ˆ"
-                                         },
-                       "outros":  {
-                                      "label":  "Outros",
-                                      "color":  "#6b7280",
-                                      "icon":  "ðŸ“¦"
-                                  }
-                   }
+    "transactions": [],
+    "categories": {
+        "alimentacao": {
+            "label": "Alimentação",
+            "color": "#f97316",
+            "icon": "🍴"
+        },
+        "transporte": {
+            "label": "Transporte",
+            "color": "#3b82f6",
+            "icon": "🚗"
+        },
+        "moradia": {
+            "label": "Moradia",
+            "color": "#8b5cf6",
+            "icon": "🏠"
+        },
+        "saude": {
+            "label": "Saúde",
+            "color": "#ef4444",
+            "icon": "🏥"
+        },
+        "educacao": {
+            "label": "Educação",
+            "color": "#06b6d4",
+            "icon": "📚"
+        },
+        "entretenimento": {
+            "label": "Entretenimento",
+            "color": "#ec4899",
+            "icon": "🎬"
+        },
+        "renda": {
+            "label": "Renda",
+            "color": "#10b981",
+            "icon": "💰"
+        },
+        "investimentos": {
+            "label": "Investimentos",
+            "color": "#f59e0b",
+            "icon": "📈"
+        },
+        "outros": {
+            "label": "Outros",
+            "color": "#6b7280",
+            "icon": "📦"
+        }
+    }
 }

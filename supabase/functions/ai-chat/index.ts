@@ -1,304 +1,269 @@
-/**
- * MetaFin - AI Chat Edge Function (Supabase)
- * Proxy seguro para chamadas de IA.
- * As API keys ficam APENAS no servidor (Supabase Secrets).
- *
- * Secrets necessarios (configurar via supabase secrets set):
- *   OPENAI_API_KEY
- *   GEMINI_API_KEY
- *   ANTHROPIC_API_KEY   (opcional)
- *   DEEPSEEK_API_KEY    (opcional)
- *   GROK_API_KEY        (opcional)
- *   QWEN_API_KEY        (opcional)
- */
-
-import { createClient } from "@supabase/supabase-js";
-
-const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 
 const corsHeaders = {
     "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Headers":
-        "authorization, x-client-info, apikey, content-type",
+    "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
     "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
 
-function respond(body: object, status: number) {
-    return new Response(JSON.stringify(body), {
-        status,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
+// Rate limiting simples em memória (para produção, use Redis/KV)
+const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
+const RATE_LIMIT = 20; // requisições
+const RATE_WINDOW = 60 * 1000; // 1 minuto
+
+function checkRateLimit(userId: string): boolean {
+    const now = Date.now();
+    const userLimit = rateLimitMap.get(userId);
+
+    if (!userLimit || now > userLimit.resetTime) {
+        rateLimitMap.set(userId, { count: 1, resetTime: now + RATE_WINDOW });
+        return true;
+    }
+
+    if (userLimit.count >= RATE_LIMIT) {
+        return false;
+    }
+
+    userLimit.count++;
+    return true;
 }
 
-// ========== PROVIDER CONFIG ==========
-interface ModelConfig {
-    provider: string;
-    model: string;
-}
+// Providers de IA
+async function callOpenAI(messages: any[], model: string) {
+    const apiKey = Deno.env.get("OPENAI_API_KEY");
+    if (!apiKey) throw new Error("OpenAI API key não configurada");
 
-const MODELS: Record<string, ModelConfig> = {
-    "gpt-5-nano": { provider: "openai", model: "gpt-4o-mini" },
-    "gpt-5": { provider: "openai", model: "gpt-4o-mini" },
-    "gemini-flash": { provider: "google", model: "gemini-1.5-flash" },
-    "claude-sonnet": { provider: "anthropic", model: "claude-3-5-sonnet-20240620" },
-    deepseek: { provider: "deepseek", model: "deepseek-chat" },
-    "grok-fast": { provider: "xai", model: "grok-beta" },
-    qwen: { provider: "alibaba", model: "qwen-turbo" },
-};
-
-const ENDPOINTS: Record<string, string> = {
-    openai: "https://api.openai.com/v1/chat/completions",
-    google: "https://generativelanguage.googleapis.com/v1beta/models",
-    anthropic: "https://api.anthropic.com/v1/messages",
-    deepseek: "https://api.deepseek.com/chat/completions",
-    xai: "https://api.x.ai/v1/chat/completions",
-    alibaba: "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions",
-};
-
-function getApiKey(provider: string): string {
-    const map: Record<string, string> = {
-        openai: "OPENAI_API_KEY",
-        google: "GEMINI_API_KEY",
-        anthropic: "ANTHROPIC_API_KEY",
-        deepseek: "DEEPSEEK_API_KEY",
-        xai: "GROK_API_KEY",
-        alibaba: "QWEN_API_KEY",
-    };
-    return Deno.env.get(map[provider] || "") || "";
-}
-
-// ========== PROVIDER CALLERS ==========
-
-async function callOpenAICompatible(
-    endpoint: string,
-    apiKey: string,
-    model: string,
-    messages: Array<{ role: string; content: string }>,
-    temperature: number,
-    maxTokens: number,
-) {
-    const res = await fetch(endpoint, {
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
         method: "POST",
         headers: {
+            "Authorization": `Bearer ${apiKey}`,
             "Content-Type": "application/json",
-            Authorization: `Bearer ${apiKey}`,
         },
         body: JSON.stringify({
-            model,
+            model: model || "gpt-4o-mini",
             messages,
-            temperature,
-            max_tokens: maxTokens,
-            stream: false,
+            max_tokens: 2000,
+            temperature: 0.7,
         }),
     });
 
-    if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        throw new Error(err.error?.message || `API Error: ${res.status}`);
+    if (!response.ok) {
+        const error = await response.text();
+        throw new Error(`OpenAI error: ${error}`);
     }
 
-    const data = await res.json();
+    const data = await response.json();
     return {
-        content: data.choices?.[0]?.message?.content || "",
-        usage: data.usage || {},
-        model: data.model || model,
+        content: data.choices[0].message.content,
+        model: data.model,
+        usage: data.usage,
     };
 }
 
-async function callGemini(
-    apiKey: string,
-    model: string,
-    messages: Array<{ role: string; content: string }>,
-    temperature: number,
-    maxTokens: number,
-) {
-    const modelId = model.startsWith("gemini") ? model : "gemini-1.5-flash";
-    const url = `${ENDPOINTS.google}/${modelId}:generateContent?key=${apiKey}`;
+async function callAnthropic(messages: any[], model: string) {
+    const apiKey = Deno.env.get("ANTHROPIC_API_KEY");
+    if (!apiKey) throw new Error("Anthropic API key não configurada");
 
+    // Converter formato OpenAI para Anthropic
+    const systemMessage = messages.find((m: any) => m.role === "system")?.content || "";
+    const chatMessages = messages
+        .filter((m: any) => m.role !== "system")
+        .map((m: any) => ({ role: m.role, content: m.content }));
+
+    const response = await fetch("https://api.anthropic.com/v1/messages", {
+        method: "POST",
+        headers: {
+            "x-api-key": apiKey,
+            "Content-Type": "application/json",
+            "anthropic-version": "2023-06-01",
+        },
+        body: JSON.stringify({
+            model: model || "claude-3-haiku-20240307",
+            max_tokens: 2000,
+            system: systemMessage,
+            messages: chatMessages,
+        }),
+    });
+
+    if (!response.ok) {
+        const error = await response.text();
+        throw new Error(`Anthropic error: ${error}`);
+    }
+
+    const data = await response.json();
+    return {
+        content: data.content[0].text,
+        model: data.model,
+        usage: data.usage,
+    };
+}
+
+async function callGemini(messages: any[], model: string) {
+    const apiKey = Deno.env.get("GOOGLE_AI_API_KEY");
+    if (!apiKey) throw new Error("Google AI API key não configurada");
+
+    // Converter formato para Gemini
     const contents = messages
-        .filter((m) => m.role !== "system")
-        .map((m) => ({
+        .filter((m: any) => m.role !== "system")
+        .map((m: any) => ({
             role: m.role === "assistant" ? "model" : "user",
             parts: [{ text: m.content }],
         }));
 
-    const systemInstruction = messages.find((m) => m.role === "system");
+    const systemInstruction = messages.find((m: any) => m.role === "system")?.content;
 
-    const res = await fetch(url, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            contents,
-            systemInstruction: systemInstruction
-                ? { parts: [{ text: systemInstruction.content }] }
-                : undefined,
-            generationConfig: { temperature, maxOutputTokens: maxTokens },
-        }),
-    });
+    const modelName = model || "gemini-1.5-flash";
+    const response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`,
+        {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                contents,
+                systemInstruction: systemInstruction ? { parts: [{ text: systemInstruction }] } : undefined,
+                generationConfig: {
+                    maxOutputTokens: 2000,
+                    temperature: 0.7,
+                },
+            }),
+        }
+    );
 
-    if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        throw new Error(err.error?.message || `Gemini Error: ${res.status}`);
+    if (!response.ok) {
+        const error = await response.text();
+        throw new Error(`Gemini error: ${error}`);
     }
 
-    const data = await res.json();
+    const data = await response.json();
     return {
-        content: data.candidates?.[0]?.content?.parts?.[0]?.text || "",
-        usage: data.usageMetadata || {},
-        model,
+        content: data.candidates[0].content.parts[0].text,
+        model: modelName,
+        usage: data.usageMetadata,
     };
 }
 
-async function callAnthropic(
-    apiKey: string,
-    model: string,
-    messages: Array<{ role: string; content: string }>,
-    temperature: number,
-    maxTokens: number,
-) {
-    const systemMsg = messages.find((m) => m.role === "system");
-    const chatMessages = messages.filter((m) => m.role !== "system");
-
-    const res = await fetch(ENDPOINTS.anthropic, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "x-api-key": apiKey,
-            "anthropic-version": "2023-06-01",
-        },
-        body: JSON.stringify({
-            model,
-            max_tokens: maxTokens,
-            system: systemMsg?.content || "",
-            messages: chatMessages.map((m) => ({
-                role: m.role,
-                content: m.content,
-            })),
-        }),
-    });
-
-    if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        throw new Error(err.error?.message || `Claude Error: ${res.status}`);
-    }
-
-    const data = await res.json();
-    return {
-        content: data.content?.[0]?.text || "",
-        usage: data.usage || {},
-        model,
-    };
-}
-
-// ========== MAIN HANDLER ==========
-Deno.serve(async (req) => {
+serve(async (req) => {
+    // Handle CORS preflight
     if (req.method === "OPTIONS") {
-        return new Response(null, { status: 204, headers: corsHeaders });
-    }
-
-    if (req.method !== "POST") {
-        return respond({ error: "Method not allowed" }, 405);
+        return new Response(null, { headers: corsHeaders });
     }
 
     try {
-        // 1. Autenticar usuario
+        // Verificar autenticação
         const authHeader = req.headers.get("Authorization");
-        if (!authHeader) return respond({ error: "Authorization required" }, 401);
-
-        const supabase = createClient(supabaseUrl, supabaseServiceKey);
-        const token = authHeader.replace("Bearer ", "");
-        const {
-            data: { user },
-            error: authError,
-        } = await supabase.auth.getUser(token);
-
-        if (authError || !user) {
-            return respond({ error: "Unauthorized" }, 401);
-        }
-
-        // 2. Parse body
-        const { modelId, messages, options } = await req.json();
-
-        if (!modelId || !messages || !Array.isArray(messages)) {
-            return respond({ error: "modelId and messages are required" }, 400);
-        }
-
-        // Limite de mensagens para evitar abuso
-        if (messages.length > 50) {
-            return respond({ error: "Maximum 50 messages per call" }, 400);
-        }
-
-        // 3. Resolver modelo
-        const modelConfig = MODELS[modelId];
-        if (!modelConfig) {
-            return respond({ error: `Model "${modelId}" not found` }, 400);
-        }
-
-        const apiKey = getApiKey(modelConfig.provider);
-        if (!apiKey) {
-            return respond(
-                {
-                    error: `API key not configured for ${modelConfig.provider}. Set via: supabase secrets set ${modelConfig.provider.toUpperCase()}_API_KEY=...`,
-                },
-                500,
+        if (!authHeader) {
+            return new Response(
+                JSON.stringify({ error: "Não autorizado" }),
+                { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
             );
         }
 
-        const temperature = options?.temperature ?? 0.7;
-        const maxTokens = Math.min(options?.maxTokens ?? 2048, 4096);
+        // Criar cliente Supabase para verificar o usuário
+        const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+        const supabaseKey = Deno.env.get("SUPABASE_ANON_KEY")!;
+        const supabase = createClient(supabaseUrl, supabaseKey, {
+            global: { headers: { Authorization: authHeader } },
+        });
 
-        // 4. Chamar provider
+        const { data: { user }, error: authError } = await supabase.auth.getUser();
+        if (authError || !user) {
+            return new Response(
+                JSON.stringify({ error: "Usuário não autenticado" }),
+                { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+            );
+        }
+
+        // Rate limiting
+        if (!checkRateLimit(user.id)) {
+            return new Response(
+                JSON.stringify({ error: "Limite de requisições excedido. Aguarde 1 minuto." }),
+                { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+            );
+        }
+
+        // Verificar se usuário é Pro (opcional)
+        const { data: profile } = await supabase
+            .from("profiles")
+            .select("plan")
+            .eq("id", user.id)
+            .single();
+
+        const isPro = profile?.plan === "pro" || profile?.plan === "enterprise";
+
+        // Parse request body
+        const { messages, model, provider } = await req.json();
+
+        if (!messages || !Array.isArray(messages)) {
+            return new Response(
+                JSON.stringify({ error: "Mensagens inválidas" }),
+                { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+            );
+        }
+
+        // Modelos permitidos por plano
+        const freeModels = ["gemini-flash", "gemini-1.5-flash"];
+
+        const requestedModel = model || "gemini-1.5-flash";
+
+        if (!isPro && !freeModels.some(m => requestedModel.includes(m))) {
+            return new Response(
+                JSON.stringify({ error: "Modelo não disponível no plano gratuito" }),
+                { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+            );
+        }
+
+        // Chamar provider correto
         const startTime = Date.now();
         let result;
 
-        switch (modelConfig.provider) {
+        const providerName = provider || detectProvider(requestedModel);
+
+        switch (providerName) {
             case "openai":
-                result = await callOpenAICompatible(
-                    ENDPOINTS.openai, apiKey, modelConfig.model, messages, temperature, maxTokens,
-                );
-                break;
-            case "google":
-                result = await callGemini(apiKey, modelConfig.model, messages, temperature, maxTokens);
+                result = await callOpenAI(messages, requestedModel);
                 break;
             case "anthropic":
-                result = await callAnthropic(apiKey, modelConfig.model, messages, temperature, maxTokens);
+                result = await callAnthropic(messages, requestedModel);
                 break;
-            case "deepseek":
-                result = await callOpenAICompatible(
-                    ENDPOINTS.deepseek, apiKey, modelConfig.model, messages, temperature, maxTokens,
-                );
-                break;
-            case "xai":
-                result = await callOpenAICompatible(
-                    ENDPOINTS.xai, apiKey, modelConfig.model, messages, temperature, maxTokens,
-                );
-                break;
-            case "alibaba":
-                result = await callOpenAICompatible(
-                    ENDPOINTS.alibaba, apiKey, modelConfig.model, messages, temperature, maxTokens,
-                );
-                break;
+            case "google":
             default:
-                return respond({ error: `Provider "${modelConfig.provider}" not supported` }, 400);
+                result = await callGemini(messages, requestedModel);
+                break;
         }
 
-        console.log(`[AI] ${modelId} -> ${user.email} | ${Date.now() - startTime}ms`);
+        const latency = Date.now() - startTime;
 
-        return respond(
-            {
-                ...result,
-                modelId,
-                provider: modelConfig.provider,
-                latency: Date.now() - startTime,
-            },
-            200,
+        // Log de uso (para analytics) - Opcional, cria tabela if not exists no supabase
+        // await supabase.from("ai_usage_logs").insert({
+        //     user_id: user.id,
+        //     model: result.model,
+        //     provider: providerName,
+        //     latency_ms: latency,
+        //     tokens_used: result.usage?.total_tokens || null,
+        // }).catch(() => {}); 
+
+        return new Response(
+            JSON.stringify({
+                content: result.content,
+                model: result.model,
+                provider: providerName,
+                latency,
+            }),
+            { headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
-    } catch (err) {
-        console.error("[AI Chat] Error:", err);
-        return respond(
-            { error: err instanceof Error ? err.message : "Internal error" },
-            500,
+
+    } catch (error) {
+        console.error("AI Chat Error:", error);
+        return new Response(
+            JSON.stringify({ error: error.message || "Erro interno" }),
+            { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
     }
 });
+
+function detectProvider(model: string): string {
+    if (model.includes("gpt")) return "openai";
+    if (model.includes("claude")) return "anthropic";
+    return "google";
+}

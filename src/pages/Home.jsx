@@ -8,9 +8,11 @@ import {
     Activity,
     Layers,
     Lock,
-    BarChart3
+    BarChart3,
+    Menu,
+    X
 } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import MetaFinLogo from '../components/MetaFinLogo';
 import { useForceDark } from '../hooks/useForceDark';
@@ -19,6 +21,7 @@ export default function Home() {
     useForceDark();
 
     const [scrolled, setScrolled] = useState(false);
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -106,7 +109,7 @@ export default function Home() {
                         ))}
                     </div>
 
-                    <div className="flex items-center gap-6">
+                    <div className="hidden lg:flex items-center gap-6">
                         <Link to="/login" className="text-[14px] font-bold text-slate-300 hover:text-white transition-colors">
                             Entrar
                         </Link>
@@ -114,6 +117,58 @@ export default function Home() {
                             Acesso Gratuito
                         </Link>
                     </div>
+
+                    {/* Mobile Toggle */}
+                    <button
+                        onClick={() => setIsMenuOpen(!isMenuOpen)}
+                        className="lg:hidden p-2 text-slate-300 hover:text-white transition-colors relative z-50 rounded-xl hover:bg-white/5 active:bg-white/10"
+                        id="mobile-menu-toggle"
+                        aria-label="Abrir menu de navegação"
+                    >
+                        {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
+                    </button>
+
+                    {/* Mobile Menu Overlay */}
+                    <AnimatePresence>
+                        {isMenuOpen && (
+                            <motion.div
+                                initial={{ opacity: 0, x: '100%' }}
+                                animate={{ opacity: 1, x: 0 }}
+                                exit={{ opacity: 0, x: '100%' }}
+                                transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+                                className="fixed inset-0 z-40 bg-slate-950 flex flex-col p-10 lg:hidden"
+                            >
+                                <div className="mt-16 space-y-8 flex flex-col">
+                                    {['Tecnologia', 'Funcionalidades', 'Segurança', 'Planos'].map((item) => (
+                                        <a
+                                            key={item}
+                                            href={`#${item.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")}`}
+                                            onClick={() => setIsMenuOpen(false)}
+                                            className="text-2xl font-bold text-white tracking-tight"
+                                        >
+                                            {item}
+                                        </a>
+                                    ))}
+                                    <div className="pt-10 border-t border-white/5 space-y-6 flex flex-col">
+                                        <Link
+                                            to="/login"
+                                            onClick={() => setIsMenuOpen(false)}
+                                            className="text-xl font-bold text-slate-300"
+                                        >
+                                            Entrar
+                                        </Link>
+                                        <Link
+                                            to="/signup"
+                                            onClick={() => setIsMenuOpen(false)}
+                                            className="w-full py-4 bg-emerald-500 text-slate-950 text-center font-black rounded-2xl"
+                                        >
+                                            Acesso Gratuito
+                                        </Link>
+                                    </div>
+                                </div>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
                 </nav>
             </header>
 

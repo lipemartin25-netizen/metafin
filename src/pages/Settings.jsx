@@ -1,4 +1,5 @@
 ﻿import { useState } from 'react';
+import { usePersistentState } from '../hooks/usePersistentState';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
 import {
@@ -11,12 +12,12 @@ export default function Settings() {
     const { theme, setTheme } = useTheme();
 
     const [activeTab, setActiveTab] = useState('preferences');
-    const [currency, setCurrency] = useState(() => localStorage.getItem('sf_currency') || 'BRL');
-    const [emailAlerts, setEmailAlerts] = useState(() => {
-        const stored = localStorage.getItem('sf_notifications');
-        if (stored) { try { return JSON.parse(stored); } catch { /* ignore */ } }
-        return { news: true, premium: true, financial: true };
-    });
+    const [currency, setCurrency] = usePersistentState('currency', 'BRL', { secure: false });
+    const [emailAlerts, setEmailAlerts] = usePersistentState('notifications', {
+        news: true,
+        premium: true,
+        financial: true
+    }, { secure: false });
     const [message, setMessage] = useState('');
     const [messageType, setMessageType] = useState('success');
 
@@ -41,7 +42,6 @@ export default function Settings() {
     const handleCurrencyChange = (e) => {
         const val = e.target.value;
         setCurrency(val);
-        localStorage.setItem('sf_currency', val);
         showMsg('Preferências salvas!');
     };
 
@@ -49,19 +49,18 @@ export default function Settings() {
         try {
             if (user?.email && requestPasswordReset) {
                 await requestPasswordReset(user.email);
-                showMsg('Email de redefinição enviado!');
+                showMsg('E-mail de redefinição enviado!');
             } else {
-                showMsg('Email de redefinição enviado! (demo)');
+                showMsg('E-mail de redefinição enviado! (demo)');
             }
         } catch {
-            showMsg('Erro ao enviar email. Tente novamente.', 'error');
+            showMsg('Erro ao enviar e-mail. Tente novamente.', 'error');
         }
     };
 
     const handleNotificationToggle = (key) => {
         const newState = { ...emailAlerts, [key]: !emailAlerts[key] };
         setEmailAlerts(newState);
-        localStorage.setItem('sf_notifications', JSON.stringify(newState));
         showMsg('Preferências salvas!');
     };
 
@@ -181,7 +180,7 @@ export default function Settings() {
                                             <Mail className="w-5 h-5 text-blue-400" />
                                         </div>
                                         <div>
-                                            <p className="font-medium text-white">Endereço de Email</p>
+                                            <p className="font-medium text-white">Endereço de E-mail</p>
                                             <p className="text-sm text-slate-400">{user?.email || 'não informado'}</p>
                                         </div>
                                     </div>
@@ -258,7 +257,7 @@ export default function Settings() {
                             </h2>
                             <div className="space-y-4">
                                 {[
-                                    { key: 'news', title: 'Novidades e Atualizações', desc: 'Receba emails sobre novas funcionalidades e melhorias do MetaFin.' },
+                                    { key: 'news', title: 'Novidades e Atualizações', desc: 'Receba e-mails sobre novas funcionalidades e melhorias do MetaFin.' },
                                     { key: 'premium', title: 'Ofertas Premium', desc: 'Promoções exclusivas e benefícios do plano Pro.' },
                                     { key: 'financial', title: 'Alertas Financeiros', desc: 'Notificações sobre metas, limites de orçamento e insights da IA.' },
                                 ].map((item) => (

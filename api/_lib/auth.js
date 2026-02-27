@@ -26,8 +26,9 @@ export async function validateSession(req) {
     }
 
     // Modo APP_SECRET (fallback ou para tokens internos assinados com HMAC)
-    if (process.env.APP_SECRET) {
-        return validateHmacToken(token, process.env.APP_SECRET)
+    const secret = process.env.APP_SECRET || (process.env.NODE_ENV !== 'production' ? 'dev_secret_fallback_123' : null)
+    if (secret) {
+        return validateHmacToken(token, secret)
     }
 
     // Em produção, se nada estiver configurado, bloqueia por segurança
@@ -105,8 +106,8 @@ async function validateHmacToken(token, secret) {
 }
 
 export async function generateToken(userId) {
-    const secret = process.env.APP_SECRET
-    if (!secret) throw new Error('APP_SECRET não configurado')
+    const secret = process.env.APP_SECRET || 'dev_secret_fallback_123'
+    if (!secret && process.env.NODE_ENV === 'production') throw new Error('APP_SECRET não configurado')
 
     const encoder = new TextEncoder()
     const key = await crypto.subtle.importKey(

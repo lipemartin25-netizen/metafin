@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
+import { usePersistentState } from '../hooks/usePersistentState';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 
 const AuthContext = createContext(null);
@@ -8,6 +9,9 @@ export function AuthProvider({ children }) {
     const [loading, setLoading] = useState(true);
     const [isDemo, setIsDemo] = useState(false);
     const isMounted = useRef(true);
+
+    // Gestão segura do token persistente
+    const [authToken, setAuthToken] = usePersistentState('auth_token', null);
 
     useEffect(() => {
         isMounted.current = true;
@@ -23,12 +27,10 @@ export function AuthProvider({ children }) {
                 }
             }
 
-            // Priority 2: Custom HMAC Token (mf_auth_token)
-            const backupToken = localStorage.getItem('mf_auth_token');
-            if (backupToken && isMounted.current) {
+            // Priority 2: Custom HMAC Token (mf_auth_token via usePersistentState)
+            if (authToken && isMounted.current) {
                 try {
-                    // Decodifica parte do payload (userId.timestamp.sig)
-                    const payload = backupToken.split('.')[0];
+                    const payload = authToken.split('.')[0];
                     if (payload) {
                         setUser({
                             id: payload,
@@ -37,11 +39,15 @@ export function AuthProvider({ children }) {
                         });
                     }
                 } catch (_e) {
-                    localStorage.removeItem('mf_auth_token');
+                    setAuthToken(null);
                 }
             }
 
-            if (isMounted.current) setLoading(false);
+            // Apenas encerra o loading aqui se o Supabase não estiver configurado 
+            // (pois se estiver, o onAuthStateChange cuidará disso via evento)
+            if (!isSupabaseConfigured && isMounted.current) {
+                setLoading(false);
+            }
         };
 
         initAuth();
@@ -49,10 +55,16 @@ export function AuthProvider({ children }) {
         let subscription = null;
         if (isSupabaseConfigured) {
             const { data } = supabase.auth.onAuthStateChange(
-                (_event, session) => {
+                (event, session) => {
                     if (isMounted.current) {
                         setUser(session?.user ?? null);
                         if (session?.user) setIsDemo(false);
+
+                        // Garante que o loading seja encerrado apenas quando tivermos uma resposta real
+                        // ou no primeiro evento de INITIAL_SESSION / SIGNED_IN
+                        if (event === 'INITIAL_SESSION' || event === 'SIGNED_IN' || event === 'SIGNED_OUT') {
+                            setLoading(false);
+                        }
                     }
                 }
             );
@@ -63,7 +75,7 @@ export function AuthProvider({ children }) {
             isMounted.current = false;
             if (subscription) subscription.unsubscribe();
         };
-    }, []);
+    }, [authToken, setAuthToken]);
 
     const signIn = useCallback(async (email, password) => {
         if (!isSupabaseConfigured) throw new Error('Conexão recusada: Supabase offline.');
@@ -122,7 +134,6 @@ export function AuthProvider({ children }) {
         return { data, error: null };
     }, []);
 
-    // Redefinir senha via email
     const requestPasswordReset = useCallback(async (email) => {
         if (!isSupabaseConfigured) {
             return { data: null, error: { message: 'Supabase não configurado' } };
@@ -134,7 +145,6 @@ export function AuthProvider({ children }) {
         return { data, error: null };
     }, []);
 
-    // Atualizar email do usuário
     const updateEmail = useCallback(async (newEmail) => {
         if (!isSupabaseConfigured) {
             return { data: null, error: { message: 'Supabase não configurado' } };
@@ -145,8 +155,15 @@ export function AuthProvider({ children }) {
     }, []);
 
     const signOut = useCallback(async () => {
-        // Limpa token customizado se existir
-        localStorage.removeItem('mf_auth_token');
+        setAuthToken(null);
+        localStorage.removeItem('sf_auth_token');
+        sessionStorage.clear();
+
+        document.cookie.split(";").forEach((c) => {
+            document.cookie = c
+                .replace(/^ +/, "")
+                .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+        });
 
         if (isDemo || !isSupabaseConfigured) {
             setUser(null);
@@ -155,10 +172,10 @@ export function AuthProvider({ children }) {
         }
         await supabase.auth.signOut();
         setUser(null);
-    }, [isDemo]);
+    }, [isDemo, setAuthToken]);
 
     const loginWithToken = useCallback((token) => {
-        localStorage.setItem('mf_auth_token', token);
+        setAuthToken(token);
         const payload = token.split('.')[0];
         if (payload) {
             setUser({
@@ -169,7 +186,7 @@ export function AuthProvider({ children }) {
             return true;
         }
         return false;
-    }, []);
+    }, [setAuthToken]);
 
     const value = {
         user,
@@ -190,7 +207,6 @@ export function AuthProvider({ children }) {
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
-// eslint-disable-next-line react-refresh/only-export-components
 export function useAuth() {
     const context = useContext(AuthContext);
     if (!context) throw new Error('useAuth deve ser usado dentro de <AuthProvider>');

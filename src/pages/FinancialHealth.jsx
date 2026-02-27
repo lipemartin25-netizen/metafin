@@ -1,9 +1,11 @@
-import { useMemo, useState, useEffect } from 'react';
+import { useMemo, useEffect } from 'react';
 import { useTransactions } from '../hooks/useTransactions';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
 import { Heart, TrendingUp, TrendingDown, AlertTriangle, CheckCircle, Shield, Lightbulb, ArrowRight, Leaf, Zap } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { usePersistentState } from '../hooks/usePersistentState';
+import { calculateScore, calculateEcoImpact } from '../lib/scoreCalculator';
 
 /* Eco-Finance Mappings: KG de CO2 emitidos por R$ gasto (estimativa abstrata para gamificação) */
 const CO2_MULT = {
@@ -40,9 +42,7 @@ export default function FinancialHealth() {
     const { transactions, summary } = useTransactions();
 
     // Configuração flexível de orçamento por categoria (Híbrida: Supabase + LocalStorage)
-    const [budgetGoals, setBudgetGoals] = useState(() => {
-        try { return JSON.parse(localStorage.getItem('sf_category_budgets') || '{}'); } catch { return {}; }
-    });
+    const [budgetGoals, setBudgetGoals] = usePersistentState('category_budgets', {}, { secure: false });
 
     useEffect(() => {
         if (!user) return;
@@ -61,19 +61,17 @@ export default function FinancialHealth() {
                     const bMap = {};
                     data.forEach(b => bMap[b.category] = parseFloat(b.planned_amount));
                     setBudgetGoals(bMap);
-                    localStorage.setItem('sf_category_budgets', JSON.stringify(bMap));
                 }
             } catch (e) { console.error('Error fetching budgets:', e); }
         }
         fetchBudgets();
-    }, [user]);
+    }, [user, setBudgetGoals]);
 
     const updateBudget = async (cat, amount) => {
         const newBudgets = { ...budgetGoals, [cat]: amount };
         if (amount <= 0 || isNaN(amount)) delete newBudgets[cat];
 
         setBudgetGoals(newBudgets);
-        localStorage.setItem('sf_category_budgets', JSON.stringify(newBudgets));
 
         if (!user) return;
         try {
@@ -119,69 +117,36 @@ export default function FinancialHealth() {
             .sort((a, b) => b.total - a.total)
             .slice(0, 5);
 
-        // Score calculation
-        let score = 50;
-
-        // Savings rate (0-30 points)
-        if (savingsRate >= 30) score += 30;
-        else if (savingsRate >= 20) score += 25;
-        else if (savingsRate >= 10) score += 15;
-        else if (savingsRate >= 0) score += 5;
-        else score -= 10;
-
-        // Balance positive (0-20 points)
-        if (balance > income * 3) score += 20;
-        else if (balance > income) score += 15;
-        else if (balance > 0) score += 10;
-        else score -= 10;
-
-        // Diversification — not concentrated in 1 category (0-10 points)
-        if (topCategories.length > 0 && topCategories[0].pct < 40) score += 10;
-        else if (topCategories.length > 0 && topCategories[0].pct < 60) score += 5;
-
-        // Number of transactions — active user (0-10 points)
-        if (transactions.length > 30) score += 10;
-        else if (transactions.length > 10) score += 5;
-
-        score = Math.max(0, Math.min(100, Math.round(score)));
+        const score = calculateScore(summary, transactions, topCategories);
+        const totalCO2 = calculateEcoImpact(transactions, CO2_MULT);
 
         // Generate tips
         const tips = [];
-        if (savingsRate < 20) tips.push({ text: `Sua taxa de poupanca esta em ${savingsRate.toFixed(0)}%. O ideal e acima de 20%.`, type: 'warning' });
-        else tips.push({ text: `Parabens! Voce esta poupando ${savingsRate.toFixed(0)}% da sua renda.`, type: 'success' });
+        if (savingsRate < 20) tips.push({ text: `Sua taxa de poupança está em ${savingsRate.toFixed(0)}%. O ideal é acima de 20%.`, type: 'warning' });
+        else tips.push({ text: `Parabéns! Você está poupando ${savingsRate.toFixed(0)}% da sua renda.`, type: 'success' });
 
         if (topCategories.length > 0 && topCategories[0].pct > 40) {
-            tips.push({ text: `${topCategories[0].pct.toFixed(0)}% dos seus gastos esta concentrado em "${topCategories[0].cat}". Tente diversificar.`, type: 'warning' });
+            tips.push({ text: `${topCategories[0].pct.toFixed(0)}% dos seus gastos estão concentrados em "${topCategories[0].cat}". Tente diversificar.`, type: 'warning' });
         }
 
-        if (balance < 0) tips.push({ text: 'Seu saldo esta negativo. Priorize reduzir gastos e quitar dividas.', type: 'danger' });
-        if (balance > income * 3) tips.push({ text: 'Voce tem uma boa reserva! Considere investir o excedente.', type: 'success' });
+        if (balance < 0) tips.push({ text: 'Seu saldo está negativo. Priorize reduzir gastos e quitar dívidas.', type: 'danger' });
+        if (balance > income * 3) tips.push({ text: 'Você tem uma boa reserva! Considere investir o excedente.', type: 'success' });
 
         // Goals check
         const goals = JSON.parse(localStorage.getItem('sf_goals') || '[]');
         if (goals.length === 0) tips.push({ text: 'Crie metas financeiras para manter o foco nos seus objetivos.', type: 'info', link: '/app/goals' });
         else {
             const completedGoals = goals.filter(g => g.current >= g.target).length;
-            if (completedGoals > 0) tips.push({ text: `Voce ja completou ${completedGoals} meta(s)! Continue assim.`, type: 'success' });
+            if (completedGoals > 0) tips.push({ text: `Você já completou ${completedGoals} meta(s)! Continue assim.`, type: 'success' });
         }
 
-        // Eco-Finance Calculation
-        let totalCO2 = 0;
-        transactions.filter(t => t.type === 'expense').forEach(t => {
-            const cat = t.category || 'outros';
-            const mult = CO2_MULT[cat] || CO2_MULT.default;
-            totalCO2 += Math.abs(t.amount) * mult;
-        });
-
-        const ecoScore = expenses > 0 ? (totalCO2 / expenses) : 0; // Avg CO2 per real
+        const ecoScore = expenses > 0 ? (totalCO2 / expenses) : 0;
         if (ecoScore > 0.4) tips.push({ text: 'Sua pegada de carbono está alta (muitos gastos em transporte/carro). Considere modais alternativos!', type: 'warning' });
         else if (totalCO2 > 0) tips.push({ text: 'Boa! Seus hábitos de consumo estão mantendo uma pegada ecológica baixa neste mês.', type: 'success' });
 
         return { score, savingsRate, balance, income, expenses, topCategories, tips, totalCO2 };
     }, [transactions, summary]);
 
-    const circumference = 2 * Math.PI * 70;
-    const offset = circumference - (analysis.score / 100) * circumference;
     const scoreColor = getScoreColor(analysis.score);
 
     return (
@@ -197,37 +162,43 @@ export default function FinancialHealth() {
             </div>
 
             {/* Main Score Premium Display */}
-            <div className="glass-card flex flex-col sm:flex-row items-center gap-10 p-10 relative overflow-hidden group">
-                <div className="absolute -right-20 -top-20 w-64 h-64 rounded-full blur-3xl opacity-10 bg-pink-500 transition-opacity group-hover:opacity-20" />
+            <div className="glass-card relative overflow-hidden group border-none bg-gradient-to-br from-[#1e293b] to-[#0f172a] shadow-2xl">
+                <div className="absolute -right-32 -top-32 w-96 h-96 rounded-full blur-[100px] opacity-20 bg-pink-500 animate-pulse-slow" />
+                <div className="absolute -left-32 -bottom-32 w-96 h-96 rounded-full blur-[100px] opacity-10 bg-blue-500 animate-pulse-slow" />
 
-                <div className="relative w-48 h-48 flex-shrink-0">
-                    <svg className="w-48 h-48 transform -rotate-90 drop-shadow-xl" viewBox="0 0 160 160">
-                        <circle cx="80" cy="80" r="70" fill="none" strokeWidth="10" className="stroke-gray-100 dark:stroke-white/5" />
-                        <circle cx="80" cy="80" r="70" fill="none" strokeWidth="10" strokeLinecap="round" stroke={scoreColor} strokeDasharray={circumference} strokeDashoffset={offset} className="transition-all duration-[1500ms] ease-out drop-shadow-md" />
-                    </svg>
-                    <div className="absolute inset-0 flex flex-col items-center justify-center">
-                        <span className="text-5xl font-black text-gray-900 dark:text-white drop-shadow-sm">{analysis.score}</span>
-                        <span className="text-[10px] font-bold uppercase tracking-[0.2em] mt-1" style={{ color: scoreColor }}>{getScoreLabel(analysis.score)}</span>
+                <div className="relative z-10 flex flex-col md:flex-row items-center gap-6 p-6 md:pl-4 md:pr-12 md:py-10">
+                    <div className="relative w-56 h-56 flex-shrink-0 group-hover:scale-105 transition-transform duration-500">
+                        <div className="absolute inset-0 rounded-full bg-gradient-to-br from-white/10 to-transparent blur-md" />
+                        <svg className="w-56 h-56 transform -rotate-90" viewBox="0 0 160 160">
+                            <circle cx="80" cy="80" r="72" fill="none" strokeWidth="12" className="stroke-white/5" />
+                            <circle cx="80" cy="80" r="72" fill="none" strokeWidth="12" strokeLinecap="round" stroke={scoreColor} strokeDasharray={2 * Math.PI * 72} strokeDashoffset={(2 * Math.PI * 72) - (analysis.score / 100) * (2 * Math.PI * 72)} className="transition-all duration-[2000ms] ease-out" />
+                        </svg>
+                        <div className="absolute inset-0 flex flex-col items-center justify-center">
+                            <div className="text-6xl font-black text-white drop-shadow-[0_0_20px_rgba(255,255,255,0.3)]">{analysis.score}</div>
+                            <div className="text-[11px] font-black uppercase tracking-[0.3em] mt-2 py-1 px-3 rounded-full bg-white/10 backdrop-blur-md" style={{ color: scoreColor }}>{getScoreLabel(analysis.score)}</div>
+                        </div>
                     </div>
-                </div>
 
-                <div className="flex-1 w-full space-y-6 z-10">
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                        <div className="bg-white/50 dark:bg-black/20 p-4 rounded-2xl border border-gray-100 dark:border-white/5 hover:border-emerald-500/30 transition-all">
-                            <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-widest font-bold mb-1">Receita</p>
-                            <p className="text-xl font-bold text-emerald-500 flex items-center gap-1"><TrendingUp className="w-4 h-4" /> {fmt(analysis.income)}</p>
+                    <div className="flex-1 w-full flex flex-col justify-center space-y-8">
+                        <div>
+                            <h2 className="text-2xl font-black text-white mb-1">Diagnóstico MetaFin</h2>
+                            <p className="text-gray-400 text-sm font-medium">Seu ecossistema financeiro está <span className="text-white">{getScoreLabel(analysis.score).toLowerCase()}</span> no momento.</p>
                         </div>
-                        <div className="bg-white/50 dark:bg-black/20 p-4 rounded-2xl border border-gray-100 dark:border-white/5 hover:border-red-500/30 transition-all">
-                            <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-widest font-bold mb-1">Despesas</p>
-                            <p className="text-xl font-bold text-red-500 flex items-center gap-1"><TrendingDown className="w-4 h-4" /> {fmt(analysis.expenses)}</p>
-                        </div>
-                        <div className="bg-white/50 dark:bg-black/20 p-4 rounded-2xl border border-gray-100 dark:border-white/5 hover:border-blue-500/30 transition-all">
-                            <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-widest font-bold mb-1">Taxa Poupança</p>
-                            <p className={`text-xl font-bold ${analysis.savingsRate >= 20 ? 'text-emerald-500' : 'text-yellow-500'}`}>{analysis.savingsRate.toFixed(1)}%</p>
-                        </div>
-                        <div className="bg-white/50 dark:bg-black/20 p-4 rounded-2xl border border-gray-100 dark:border-white/5 hover:border-indigo-500/30 transition-all">
-                            <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-widest font-bold mb-1">Saldo Líquido</p>
-                            <p className={`text-xl font-bold ${analysis.balance >= 0 ? 'text-blue-500' : 'text-red-500'}`}>{fmt(analysis.balance)}</p>
+
+                        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                            {[
+                                { label: 'Receita', val: fmt(analysis.income), color: 'text-emerald-400', icon: TrendingUp },
+                                { label: 'Despesas', val: fmt(analysis.expenses), color: 'text-rose-400', icon: TrendingDown },
+                                { label: 'Taxa Poupança', val: `${analysis.savingsRate.toFixed(1)}%`, color: analysis.savingsRate >= 20 ? 'text-emerald-400' : 'text-amber-400', icon: CheckCircle },
+                                { label: 'Saldo Líquido', val: fmt(analysis.balance), color: analysis.balance >= 0 ? 'text-cyan-400' : 'text-rose-400', icon: Shield }
+                            ].map((item, idx) => (
+                                <div key={idx} className="bg-white/[0.03] border border-white/5 p-4 rounded-3xl hover:bg-white/[0.07] transition-all group/item">
+                                    <p className="text-[10px] text-gray-500 uppercase font-black tracking-widest mb-2 flex items-center gap-1.5">
+                                        <item.icon className="w-3 h-3" /> {item.label}
+                                    </p>
+                                    <p className={`text-lg font-black ${item.color} group-hover/item:scale-105 transition-transform`}>{item.val}</p>
+                                </div>
+                            ))}
                         </div>
                     </div>
                 </div>

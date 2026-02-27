@@ -192,45 +192,42 @@ export default function Simulators({ financialData }) {
             </div>
 
             {/* Grid de Simuladores */}
-            <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="relative z-10 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 {SIMULATORS.map(sim => (
                     <button
                         key={sim.id}
                         onClick={() => setActiveSimulator(sim.id)}
-                        className={`group relative overflow-hidden rounded-[2rem] glass-card border-none
+                        className={`group relative overflow-hidden rounded-[1.5rem] glass-card border-none
               ${sim.bgLight} ${sim.bgDark}
-              p-6 text-left transition-all duration-500 ease-out transform-gpu
-              hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.15)] dark:hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.4)]
-              hover:-translate-y-2 hover:rotate-1`}
+              p-4 text-left transition-all duration-500 ease-out transform-gpu
+              hover:shadow-[0_15px_30px_-10px_rgba(0,0,0,0.15)] dark:hover:shadow-[0_15px_30px_-10px_rgba(0,0,0,0.4)]
+              hover:-translate-y-1`}
                     >
                         {/* 3D Glossy Light Reflection */}
-                        <div className="absolute inset-0 bg-gradient-to-b from-white/40 to-transparent dark:from-white/5 dark:to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+                        <div className="absolute inset-0 bg-gradient-to-b from-white/30 to-transparent dark:from-white/5 dark:to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
-                        {/* Blurred Color Glow on Hover */}
-                        <div className={`absolute -right-10 -bottom-10 w-40 h-40 bg-gradient-to-br ${sim.color} rounded-full filter blur-[50px] opacity-10 group-hover:opacity-40 transition-opacity duration-500 ease-out`} />
-
-                        <div className={`inline-flex p-4 rounded-2xl bg-gradient-to-br 
-              ${sim.color} shadow-xl mb-5 relative z-10 transition-transform duration-500 group-hover:scale-110 group-hover:-rotate-6`}>
-                            <sim.icon className="h-8 w-8 text-white drop-shadow-md" />
+                        <div className={`inline-flex p-2.5 rounded-xl bg-gradient-to-br 
+              ${sim.color} shadow-lg mb-3 relative z-10 transition-transform duration-500 group-hover:scale-110`}>
+                            <sim.icon className="h-4 w-4 text-white drop-shadow-md" />
                         </div>
 
-                        <h3 className="text-2xl font-black text-gray-900 dark:text-white mb-2 relative z-10 transition-transform duration-300 group-hover:translate-x-1 tracking-tight">
+                        <h3 className="text-base font-black text-gray-900 dark:text-white mb-1 relative z-10 transition-transform duration-300 group-hover:translate-x-0.5 tracking-tight leading-tight">
                             {sim.name}
                         </h3>
-                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-8 relative z-10 font-medium transition-transform duration-300 delay-75 group-hover:translate-x-1">
+                        <p className="text-[10px] text-gray-500 dark:text-gray-400 mb-4 relative z-10 font-bold uppercase tracking-wider transition-transform duration-300 delay-75 group-hover:translate-x-0.5">
                             {sim.subtitle}
                         </p>
 
                         <div className={`flex items-center justify-between mt-auto w-full relative z-10`}>
-                            <div className={`flex items-center gap-2 text-xs font-black
-                                ${sim.textColor} transition-all uppercase tracking-[0.2em] group-hover:gap-4`}>
-                                Iniciar Simulador
-                                <ChevronRight className="h-4 w-4" />
+                            <div className={`flex items-center gap-2 text-[9px] font-black
+                                ${sim.textColor} transition-all uppercase tracking-[0.2em] group-hover:gap-3`}>
+                                Iniciar
+                                <ChevronRight className="h-3 w-3" />
                             </div>
                         </div>
 
                         {/* Spinning ring decorative */}
-                        <div className={`absolute -right-12 -bottom-12 w-48 h-48 rounded-full border-2 border-dashed opacity-[0.05] dark:opacity-10 ${sim.textColor} animate-[spin_20s_linear_infinite]`} />
+                        <div className={`absolute -right-8 -bottom-8 w-32 h-32 rounded-full border-2 border-dashed opacity-[0.05] dark:opacity-10 ${sim.textColor} animate-[spin_30s_linear_infinite]`} />
                     </button>
                 ))}
             </div>

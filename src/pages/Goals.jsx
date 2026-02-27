@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Target, Plus, Trash2, X, Sparkles, Loader2, RefreshCw } from 'lucide-react';
+import { Target, Plus, Trash2, X, Loader2, RefreshCw } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import GoalThermometer from '../components/GoalThermometer';
@@ -175,22 +175,21 @@ export default function Goals() {
             </div>
 
             {/* Summary Block */}
-            <div className="grid sm:grid-cols-3 gap-4">
-                <div className="glass-card relative overflow-hidden group">
-                    <div className="absolute -right-8 -top-8 w-24 h-24 bg-brand-500/10 rounded-full blur-xl group-hover:bg-brand-500/20 transition-all"></div>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 font-bold uppercase tracking-wider mb-1 flex items-center gap-1.5"><Sparkles className="w-3 h-3 text-brand-500" /> Total em Metas</p>
-                    <p className="text-3xl font-black text-brand-600 dark:text-brand-400 drop-shadow-sm">{fmt(totalSaved)}</p>
+            <div className="flex flex-wrap gap-4 items-stretch">
+                <div className="glass-card flex-1 min-w-[140px] relative overflow-hidden p-5 flex flex-col justify-center">
+                    <p className="text-[10px] text-gray-500 dark:text-gray-400 font-black uppercase tracking-[0.15em] mb-1">Total em Metas</p>
+                    <p className="text-2xl md:text-3xl font-black text-brand-600 dark:text-brand-400 drop-shadow-sm">{fmt(totalSaved)}</p>
                 </div>
-                <div className="glass-card relative">
-                    <p className="text-xs text-gray-500 dark:text-gray-400 font-bold uppercase tracking-wider mb-1">Atingimento Alvo</p>
-                    <p className="text-3xl font-black text-gray-900 dark:text-white drop-shadow-sm">{fmt(totalTarget)}</p>
+                <div className="glass-card flex-1 min-w-[140px] relative p-5 flex flex-col justify-center">
+                    <p className="text-[10px] text-gray-500 dark:text-gray-400 font-black uppercase tracking-[0.15em] mb-1">Atingimento Alvo</p>
+                    <p className="text-2xl md:text-3xl font-black text-gray-900 dark:text-white drop-shadow-sm">{fmt(totalTarget)}</p>
                 </div>
-                <div className="glass-card relative">
-                    <p className="flex justify-between text-xs text-gray-500 dark:text-gray-400 font-bold uppercase tracking-wider mb-2">
+                <div className="glass-card flex-1 min-w-[140px] relative p-5 flex flex-col justify-center">
+                    <p className="flex justify-between text-[10px] text-gray-500 dark:text-gray-400 font-black uppercase tracking-[0.15em] mb-2">
                         <span>Eficiência</span>
                         <span className="text-blue-500">{totalTarget > 0 ? Math.round((totalSaved / totalTarget) * 100) : 0}%</span>
                     </p>
-                    <div className="mt-3 h-3 bg-gray-100 dark:bg-black/20 rounded-full overflow-hidden shadow-inner border border-gray-200 dark:border-white/5">
+                    <div className="mt-1 h-2.5 bg-gray-100 dark:bg-black/20 rounded-full overflow-hidden shadow-inner border border-gray-200 dark:border-white/5">
                         <div className="h-full bg-gradient-to-r from-blue-500 to-emerald-500 rounded-full transition-all duration-1000 shadow-[inset_0_2px_4px_rgba(255,255,255,0.3)]" style={{ width: `${totalTarget > 0 ? Math.min((totalSaved / totalTarget) * 100, 100) : 0}%` }} />
                     </div>
                 </div>

@@ -1,146 +1,204 @@
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import {
-    Send, X, Bot,
-    ChevronDown, Sparkles, Lock, RotateCcw, Wallet, Maximize2, Minimize2
+    Send, X, Loader2, Bot,
+    ChevronDown, Sparkles, Lock, RotateCcw, Copy, Check,
 } from 'lucide-react';
-import { AI_MODELS, AI_ACTIONS } from '../lib/aiProviders';
+import { AI_MODELS, AI_ACTIONS, callAI, buildFinancialContext } from '../lib/aiService';
 import { usePlan } from '../hooks/usePlan';
 import { useTransactions } from '../hooks/useTransactions';
-import { analytics } from '../hooks/useAnalytics';
-import { useAIChat } from '../hooks/useAIChat';
-import { secureStorage } from '../lib/secureStorage';
-import { formatBRL } from '../lib/financialMath';
-import { anonymizeForAI } from '../lib/lgpd';
-import { runAgent } from '../lib/financialAgent';
+import { useAnalyticsEvent } from '../hooks/useAnalyticsEvent';
+import { useClipboard } from '../hooks/useClipboard';
+import { useRateLimit } from '../hooks/useRateLimit';
+import DOMPurify from 'dompurify';
+
+// Configuração do DOMPurify
+const PURIFY_CONFIG = {
+    ALLOWED_TAGS: ['b', 'i', 'em', 'strong', 'br', 'p', 'ul', 'ol', 'li', 'code', 'pre'],
+    ALLOWED_ATTR: [],
+};
 
 export default function AiChat() {
     const { isPro, limits } = usePlan();
     const { transactions, summary } = useTransactions();
-    const { messages, isLoading, error: aiError, sendMessage, clearChat } = useAIChat();
+    const { trackFeature } = useAnalyticsEvent();
+    const { copy, isCopied } = useClipboard(2000);
+    const { checkLimit, recordAction } = useRateLimit(1000);
 
     const [isOpen, setIsOpen] = useState(false);
+    const [messages, setMessages] = useState([]);
     const [input, setInput] = useState('');
-    const [selectedModel, setSelectedModel] = useState('gpt-4o-mini');
+    const [loading, setLoading] = useState(false);
+    const [selectedModel, setSelectedModel] = useState('gemini-flash');
     const [showModelPicker, setShowModelPicker] = useState(false);
-    const [isExpanded, setIsExpanded] = useState(false);
-    const [copiedId, setCopiedId] = useState(null);
+    const [error, setError] = useState('');
+
     const messagesEndRef = useRef(null);
     const inputRef = useRef(null);
 
-    const availableModels = limits?.aiModels || ['gpt-4o-mini', 'gemini-flash'];
+    const availableModels = limits?.aiModels || ['gemini-flash'];
+    const currentModel = AI_MODELS[selectedModel];
+
+    // Contexto financeiro memoizado
+    const financialContext = useMemo(() => {
+        if (!transactions.length) return null;
+
+        const adaptedSummary = {
+            income: summary.income || 0,
+            expense: summary.expense || 0,
+            balance: summary.balance || 0,
+            count: transactions.length,
+        };
+
+        return buildFinancialContext(transactions, adaptedSummary);
+    }, [transactions, summary]);
 
     // Auto scroll
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }, [messages, isLoading]);
+    }, [messages]);
 
     // Focus input when chat opens
     useEffect(() => {
         if (isOpen) inputRef.current?.focus();
     }, [isOpen]);
 
+    // Handler de envio com rate limiting
     const handleSend = useCallback(async (customPrompt) => {
         const text = customPrompt || input.trim();
-        if (!text || isLoading) return;
+        if (!text || loading) return;
 
-        analytics.featureUsed(`ai_chat_send`);
+        // Se não for pro e tentar enviar algo, mostramos o overlay ou travamos
+        if (!isPro && messages.length >= 1) return;
 
-        // NOVO: Primeiro tentamos o Agente Real (Local)
-        // Se a confiança for alta (> 0.7), usamos a resposta local instantânea
-        const agentResult = runAgent(text, transactions);
-
-        if (agentResult.tool && agentResult.confidence > 0.7) {
-            // Adiciona mensagem do usuário
-            sendMessage(text, selectedModel, true); // true indica "apenas local/manual skip"
-            // Simulamos um delay de processamento "humano" do agente
-            setTimeout(() => {
-                // Aqui injetamos a resposta do agente diretamente no hook através de um hack ou atualizando o estado se o hook suportar
-                // Como useAIChat gerencia as mensagens, vamos ajustar para ele aceitar respostas manuais ou criar uma mensagem de sistema
-                // Por simplicidade aqui, vamos apenas deixar o fluxo seguir se o hook for muito rígido, 
-                // mas idealmente useAIChat deveria permitir injetar resultados de ferramentas locais.
-            }, 500);
-
-            // Mas espera, o useAIChat.js que eu vi não permite injetar mensagens facilmente sem bater na API.
-            // Então vamos apenas enviar o contexto turbinado para a IA, ou se for algo simples, a IA responderá com base no resumo.
+        // Verificar rate limit
+        const limitCheck = checkLimit();
+        if (!limitCheck.allowed) {
+            setError(limitCheck.message);
+            return;
         }
 
-        // Build context from secure storage or hooks
-        const budgets = secureStorage.get('budgets', []);
-        const goals = secureStorage.get('goals', []);
+        recordAction();
+        setError('');
+        const userMessage = { id: Date.now(), role: 'user', content: text };
+        setMessages((prev) => [...prev, userMessage]);
+        setInput('');
+        setLoading(true);
 
-        const context = anonymizeForAI(`
-            Contexto: O usuário possui ${transactions.length} transações.
-            Saldo Atual: ${formatBRL(summary.balance || 0)}
-            Receitas: ${formatBRL(summary.income || 0)}
-            Despesas: ${formatBRL(summary.expense || 0)}
-            
-            Insight do Agente Local: ${agentResult.text}
-            
-            Metas: ${goals.length} ativas.
-            Orçamentos: ${budgets.length} definidos.
-        `);
+        trackFeature(`ai_chat_${selectedModel}`);
 
-        await sendMessage(`${context}\n\nPergunta do usuário: ${anonymizeForAI(text)}`, selectedModel);
-        if (!customPrompt) setInput('');
-    }, [input, isLoading, selectedModel, transactions, summary, sendMessage]);
+        try {
+            const chatMessages = [
+                { role: 'system', content: `Você é o MetaFin AI.\n\n${financialContext || 'Sem dados financeiros disponíveis.'}` },
+                ...messages.map((m) => ({ role: m.role, content: m.content })),
+                { role: 'user', content: text },
+            ];
 
-    const handleCopy = (text, id) => {
-        navigator.clipboard.writeText(text);
-        setCopiedId(id);
-        setTimeout(() => setCopiedId(null), 2000);
-    };
+            const response = await callAI(selectedModel, chatMessages);
 
-    const handleClear = () => {
-        clearChat();
-    };
+            const aiMessage = {
+                id: Date.now() + 1,
+                role: 'assistant',
+                content: response.content,
+                model: response.modelName,
+                provider: response.provider,
+                latency: response.latency,
+            };
 
-    const currentModel = AI_MODELS[selectedModel];
+            setMessages((prev) => [...prev, aiMessage]);
+        } catch (err) {
+            console.error('AI Error:', err);
+            setError(err.message);
+            setMessages((prev) => [
+                ...prev,
+                {
+                    id: Date.now() + 1,
+                    role: 'assistant',
+                    content: `❌ Erro: ${err.message}\n\nO serviço de IA está temporariamente indisponível ou você atingiu o limite do plano.`,
+                    isError: true,
+                },
+            ]);
+        } finally {
+            setLoading(false);
+        }
+    }, [input, loading, isPro, checkLimit, recordAction, selectedModel, financialContext, messages, trackFeature]);
+
+    const handleCopy = useCallback((text, id) => {
+        copy(text, id);
+    }, [copy]);
+
+    const handleClear = useCallback(() => {
+        setMessages([]);
+        setError('');
+    }, []);
+
+    const handleSubmit = useCallback((e) => {
+        e.preventDefault();
+        handleSend();
+    }, [handleSend]);
+
+    // Sanitizar conteúdo da mensagem
+    const sanitizeContent = useCallback((content) => {
+        return DOMPurify.sanitize(content, PURIFY_CONFIG);
+    }, []);
 
     // ========== PAYWALL OVERLAY ==========
     if (!isPro) {
         return (
             <>
+                {/* FAB Button (Locked) */}
                 <button
                     onClick={() => setIsOpen(true)}
-                    className="fixed bottom-6 right-6 z-40 w-14 h-14 rounded-2xl bg-gray-900 border border-white/10 shadow-xl flex items-center justify-center hover:scale-105 transition-all group"
+                    className="fixed bottom-6 right-6 z-40 w-14 h-14 rounded-full bg-gradient-to-r from-gray-700 to-gray-800 shadow-lg flex items-center justify-center hover:scale-110 transition-transform border border-white/10"
+                    aria-label="Abrir chat IA (bloqueado)"
                 >
-                    <div className="absolute inset-0 bg-emerald-500/10 blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
-                    <Wallet className="w-6 h-6 text-emerald-400 relative z-10" />
-                    <Lock className="w-3 h-3 text-white absolute top-3 right-3 z-20" />
+                    <Lock className="w-6 h-6 text-gray-400" />
                 </button>
 
                 {isOpen && (
-                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
-                        <div className="glass-card w-full max-w-md text-center animate-slide-up relative overflow-hidden bg-surface-900 border-emerald-500/30">
+                    <div
+                        className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in"
+                        onClick={() => setIsOpen(false)}
+                    >
+                        <div
+                            className="glass-card w-full max-w-md text-center animate-slide-up relative overflow-hidden bg-gray-900 border-emerald-500/30"
+                            onClick={(e) => e.stopPropagation()}
+                        >
                             <button
                                 onClick={() => setIsOpen(false)}
                                 className="absolute top-4 right-4 text-gray-500 hover:text-white"
+                                aria-label="Fechar"
                             >
                                 <X className="w-5 h-5" />
                             </button>
 
-                            <div className="w-20 h-20 bg-emerald-500/10 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                                <Sparkles className="w-10 h-10 text-emerald-400" />
+                            <div className="w-20 h-20 bg-emerald-500/10 rounded-full flex items-center justify-center mx-auto mb-6 ring-4 ring-emerald-500/5">
+                                <Sparkles className="w-10 h-10 text-emerald-400 animate-pulse" />
                             </div>
 
                             <h2 className="text-2xl font-bold text-white mb-2">
-                                Inteligência Artificial <span className="text-emerald-400">Pro</span>
+                                Inteligência Financeira <span className="text-emerald-400">Pro</span>
                             </h2>
 
-                            <p className="text-gray-400 text-sm mb-8 leading-relaxed">
-                                Acesse modelos de ponta para análises financeiras em tempo real.
-                                GPT-4, Claude 3 e muito mais.
+                            <p className="text-gray-400 text-sm mb-8 leading-relaxed px-4">
+                                Acesse <strong className="text-white">7 modelos de IA</strong> para análises profundas do seu dinheiro.
                             </p>
 
-                            <div className="flex flex-col gap-3 px-4">
+                            <div className="grid grid-cols-2 gap-2 mb-8 text-left text-xs text-gray-300 px-4">
+                                <div className="flex items-center gap-2"><Check className="w-4 h-4 text-emerald-400" /> GPT-4o & Gemini Pro</div>
+                                <div className="flex items-center gap-2"><Check className="w-4 h-4 text-emerald-400" /> Categorização Auto</div>
+                                <div className="flex items-center gap-2"><Check className="w-4 h-4 text-emerald-400" /> DeepSeek & Claude 3.5</div>
+                                <div className="flex items-center gap-2"><Check className="w-4 h-4 text-emerald-400" /> Planejamento de Gastos</div>
+                            </div>
+
+                            <div className="flex flex-col gap-3 px-4 pb-6">
                                 <button className="gradient-btn w-full py-3 text-sm font-bold shadow-lg shadow-emerald-500/20">
-                                    💎 Assinar Pro — R$ 29/mês
+                                    💎 Assinar Pro — R$ 29,90/mês
                                 </button>
                                 <button
                                     onClick={() => setIsOpen(false)}
                                     className="text-xs text-gray-500 hover:text-white transition-colors"
                                 >
-                                    Voltar
+                                    Continuar no plano Gratuito
                                 </button>
                             </div>
                         </div>
@@ -153,161 +211,256 @@ export default function AiChat() {
     // ========== FULL CHAT (PRO) ==========
     return (
         <>
+            {/* FAB Button */}
             {!isOpen && (
                 <button
                     onClick={() => setIsOpen(true)}
-                    className="fixed bottom-6 right-6 z-40 w-14 h-14 rounded-2xl bg-gray-950 border border-emerald-500/30 shadow-2xl flex items-center justify-center hover:scale-105 transition-all group overflow-hidden"
+                    className="fixed bottom-6 right-6 z-40 w-14 h-14 rounded-full bg-gradient-to-r from-emerald-500 to-cyan-500 shadow-lg shadow-emerald-500/25 flex items-center justify-center hover:scale-110 transition-transform group"
+                    aria-label="Abrir chat IA"
                 >
-                    <div className="absolute inset-0 bg-emerald-500/20 blur-xl group-hover:bg-emerald-500/30 transition-all" />
-                    <Wallet className="w-6 h-6 text-emerald-400 relative z-10" />
+                    <Sparkles className="w-6 h-6 text-white group-hover:rotate-12 transition-transform" />
                 </button>
             )}
 
+            {/* Chat Panel */}
             {isOpen && (
-                <div className={`fixed bottom-0 right-0 sm:bottom-6 sm:right-6 z-50 w-full flex flex-col bg-surface-950 border border-white/10 shadow-2xl transition-all duration-300 overflow-hidden ${isExpanded ? 'sm:w-[600px] h-[100dvh]' : 'sm:w-[400px] h-[100dvh] sm:h-[600px] sm:rounded-2xl'}`}>
+                <div className="fixed bottom-0 right-0 sm:bottom-6 sm:right-6 z-50 w-full sm:w-[400px] md:w-[440px] h-[100dvh] sm:h-[650px] flex flex-col bg-[#0a0a0a] sm:rounded-2xl border border-white/10 shadow-2xl animate-slide-up overflow-hidden ring-1 ring-white/5">
 
-                    {/* Modern Header estilo SmartFinance */}
-                    <div className="bg-surface-900 border-b border-white/5 p-4 flex items-center justify-between shadow-sm">
-                        <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-xl bg-sky-500 flex items-center justify-center shadow-lg shadow-sky-500/20">
-                                <Wallet className="w-6 h-6 text-white" />
+                    {/* Header */}
+                    <div className="flex items-center justify-between px-4 py-3 border-b border-white/5 bg-gray-900/95 backdrop-blur-xl">
+                        <div className="flex items-center gap-2">
+                            <div className="bg-emerald-500/10 p-1.5 rounded-lg">
+                                <Bot className="w-4 h-4 text-emerald-400" />
                             </div>
                             <div>
-                                <h3 className="font-bold text-white text-base leading-tight">MetaFin AI</h3>
-                                <div className="flex items-center gap-1.5 mt-0.5">
-                                    <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                                    <span className="text-[10px] text-gray-500 font-medium uppercase tracking-wider">Neural Assistant Online</span>
-                                </div>
+                                <span className="font-semibold text-white text-sm block">MetaFin AI</span>
+                                <span className="text-[10px] text-emerald-400 font-medium tracking-wide bg-emerald-500/10 px-1.5 py-0.5 rounded uppercase">PRO ATIVO</span>
                             </div>
                         </div>
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-1">
                             <button
-                                onClick={() => setIsExpanded(!isExpanded)}
-                                className="p-2 text-gray-500 hover:text-white hover:bg-white/5 rounded-lg transition-all hidden sm:block"
+                                onClick={handleClear}
+                                className="p-1.5 rounded-lg text-gray-500 hover:text-white hover:bg-white/10 transition-all"
+                                title="Limpar conversa"
+                                aria-label="Limpar conversa"
                             >
-                                {isExpanded ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
+                                <RotateCcw className="w-4 h-4" />
                             </button>
                             <button
                                 onClick={() => setIsOpen(false)}
-                                className="p-2 text-gray-500 hover:text-white hover:bg-white/5 rounded-lg transition-all"
+                                className="p-1.5 rounded-lg text-gray-500 hover:text-white hover:bg-white/10 transition-all"
+                                aria-label="Fechar chat"
                             >
-                                <X className="w-5 h-5" />
+                                <X className="w-4 h-4" />
                             </button>
                         </div>
                     </div>
 
-                    {/* Model Selector Strip */}
-                    <div className="px-4 py-2 bg-surface-900/50 border-b border-white/5 flex items-center justify-between">
+                    {/* Model Picker */}
+                    <div className="px-4 py-2 border-b border-white/5 bg-black/20">
                         <button
                             onClick={() => setShowModelPicker(!showModelPicker)}
-                            className="text-[10px] font-bold text-sky-400 flex items-center gap-1 hover:text-sky-300"
+                            className="flex items-center gap-2 text-xs text-gray-300 hover:text-white transition-colors w-full bg-white/5 hover:bg-white/10 p-2 rounded-lg border border-white/5"
+                            aria-expanded={showModelPicker}
                         >
-                            {currentModel?.icon} {currentModel?.name} <ChevronDown className="w-3 h-3" />
-                        </button>
-                        <button onClick={handleClear} className="text-[10px] font-bold text-gray-500 hover:text-red-400 transition-colors uppercase tracking-widest">
-                            <RotateCcw className="w-3 h-3 inline mr-1" /> Limpar
+                            <span className="text-base">{currentModel?.icon}</span>
+                            <span className="font-medium text-[11px] truncate">{currentModel?.name || 'Selecionar Modelo'}</span>
+                            <span className="text-gray-500 ml-auto text-[9px] uppercase tracking-wider font-bold">{currentModel?.provider}</span>
+                            <ChevronDown className={`w-3 h-3 transition-transform ${showModelPicker ? 'rotate-180' : ''}`} />
                         </button>
 
                         {showModelPicker && (
-                            <div className="absolute top-[72px] left-4 right-4 z-40 bg-surface-900 border border-white/10 rounded-xl shadow-2xl p-2 animate-slide-up">
-                                {availableModels.map((modelId) => (
-                                    <button
-                                        key={modelId}
-                                        onClick={() => {
-                                            setSelectedModel(modelId);
-                                            setShowModelPicker(false);
-                                        }}
-                                        className={`flex items-center gap-3 w-full p-3 rounded-lg text-xs transition-all ${selectedModel === modelId ? 'bg-sky-500/10 text-sky-400' : 'text-gray-400 hover:bg-white/5'}`}
-                                    >
-                                        <span className="text-lg">{AI_MODELS[modelId]?.icon}</span>
-                                        <div className="text-left font-bold">{AI_MODELS[modelId]?.name}</div>
-                                    </button>
-                                ))}
+                            <div className="mt-2 space-y-1 pb-2 animate-fade-in max-h-48 overflow-y-auto no-scrollbar">
+                                {Object.keys(AI_MODELS).map((modelId) => {
+                                    const m = AI_MODELS[modelId];
+                                    const isAvailable = availableModels.includes(modelId) || m.costTier === 'free';
+                                    const isActive = selectedModel === modelId;
+
+                                    return (
+                                        <button
+                                            key={modelId}
+                                            onClick={() => {
+                                                if (isAvailable) {
+                                                    setSelectedModel(modelId);
+                                                    setShowModelPicker(false);
+                                                }
+                                            }}
+                                            disabled={!isAvailable}
+                                            className={`flex items-center gap-3 w-full px-3 py-2 rounded-xl text-xs transition-all ${isActive
+                                                ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                                                : isAvailable
+                                                    ? 'text-gray-400 hover:bg-white/5 hover:text-white border border-transparent'
+                                                    : 'opacity-40 cursor-not-allowed text-gray-600'
+                                                }`}
+                                        >
+                                            <span className="text-base">{m.icon}</span>
+                                            <div className="flex-1 text-left">
+                                                <div className="font-medium flex items-center gap-2">
+                                                    {m.name}
+                                                    <span className={`text-[9px] px-1 rounded ${m.costTier === 'free' ? 'bg-emerald-500/10 text-emerald-500' : 'bg-white/5 text-gray-500'}`}>
+                                                        {m.costTier.toUpperCase()}
+                                                    </span>
+                                                </div>
+                                                <div className="text-[10px] text-gray-600 truncate max-w-[200px]">{m.description}</div>
+                                            </div>
+                                            {isActive && <Check className="w-3 h-3 text-emerald-500" />}
+                                            {!isAvailable && <Lock className="w-3 h-3 text-gray-700" />}
+                                        </button>
+                                    );
+                                })}
                             </div>
                         )}
                     </div>
 
-                    {/* Messages Area */}
-                    <div className="flex-1 overflow-y-auto p-4 space-y-6 custom-scrollbar bg-surface-950">
+                    {/* Messages */}
+                    <div id="main-content" className="flex-1 overflow-y-auto px-4 py-4 space-y-6 no-scrollbar bg-gradient-to-b from-[#0a0a0a] to-[#050505]">
+                        {/* Empty State */}
                         {messages.length === 0 && (
-                            <div className="h-full flex flex-col items-center justify-center text-center px-6 transition-all animate-fade-in">
-                                <div className="w-16 h-16 bg-sky-500/10 rounded-2xl flex items-center justify-center mb-4 border border-sky-500/20 shadow-lg shadow-sky-500/10">
-                                    <Bot className="w-8 h-8 text-sky-400" />
+                            <div className="text-center py-10 px-4">
+                                <div className="w-16 h-16 bg-gradient-to-br from-emerald-500/20 to-cyan-500/20 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-emerald-500/10 border border-emerald-500/10">
+                                    <Sparkles className="w-8 h-8 text-emerald-400" />
                                 </div>
-                                <h3 className="text-white font-bold text-lg mb-2">Olá, eu sou o MetaFin AI</h3>
-                                <p className="text-gray-500 text-sm mb-8">Como posso ajudar com suas finanças hoje?</p>
-                                <div className="grid grid-cols-1 gap-2 w-full">
-                                    {Object.entries(AI_ACTIONS).map(([key, action]) => (
+                                <h3 className="text-white font-semibold mb-2">Olá! Vamos analisar suas finanças?</h3>
+                                <p className="text-gray-500 text-[11px] mb-8 max-w-[260px] mx-auto leading-relaxed">
+                                    Posso categorizar gastos, sugerir onde economizar ou criar um plano de orçamento personalizado.
+                                </p>
+                                <div className="grid grid-cols-1 gap-2.5">
+                                    {Object.entries(AI_ACTIONS).slice(0, 4).map(([key, action]) => (
                                         <button
                                             key={key}
-                                            onClick={() => handleSend(action.label)}
-                                            className="p-3 bg-white/5 border border-white/5 rounded-xl text-xs text-gray-300 hover:bg-sky-500/10 hover:border-sky-500/50 transition-all text-left font-medium group"
+                                            onClick={() => handleSend(action.prompt)}
+                                            className="p-3 rounded-xl bg-white/[0.03] border border-white/5 text-xs text-gray-300 hover:bg-white/[0.08] hover:text-white hover:border-emerald-500/30 transition-all text-left flex items-center gap-3 group"
                                         >
-                                            <span className="group-hover:translate-x-1 inline-block transition-transform">{action.label}</span>
+                                            <span className="text-lg opacity-70 group-hover:opacity-100 transition-opacity">{action.label.split(' ')[0]}</span>
+                                            <span className="font-medium">{action.label.split(' ').slice(1).join(' ')}</span>
                                         </button>
                                     ))}
                                 </div>
                             </div>
                         )}
 
-                        {messages.map((msg, idx) => (
-                            <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'} animate-slide-up`}>
-                                <div className={`max-w-[85%] ${msg.role === 'user' ? 'bg-sky-600 text-white rounded-2xl rounded-tr-none px-4 py-3 shadow-lg shadow-sky-900/20' : 'bg-surface-800 text-gray-200 rounded-2xl rounded-tl-none px-4 py-3 border border-white/5'}`}>
-                                    <div className="text-sm leading-relaxed whitespace-pre-wrap">{msg.content}</div>
-                                    <div className="mt-2 flex items-center justify-between opacity-50 text-[9px] font-bold uppercase tracking-wider">
-                                        <span>{msg.role === 'user' ? 'Você' : 'MetaFin AI'}</span>
-                                        {msg.role === 'assistant' && (
-                                            <button onClick={() => handleCopy(msg.content, idx)} className="hover:text-white transition-colors">
-                                                {copiedId === idx ? 'Copiado!' : 'Copiar'}
-                                            </button>
+                        {/* Message Bubbles */}
+                        {messages.map((msg) => (
+                            <div
+                                key={msg.id}
+                                className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'} animate-fade-in group`}
+                            >
+                                <div className={`flex flex-col max-w-[85%] ${msg.role === 'user' ? 'items-end' : 'items-start'}`}>
+                                    {/* Name Label */}
+                                    <span className="text-[10px] text-gray-500 mb-1 px-1">
+                                        {msg.role === 'user' ? 'Você' : msg.model || 'MetaFin AI'}
+                                    </span>
+
+                                    <div
+                                        className={`rounded-2xl px-4 py-3 text-sm leading-relaxed shadow-sm ${msg.role === 'user'
+                                            ? 'bg-emerald-600 text-white rounded-tr-sm'
+                                            : msg.isError
+                                                ? 'bg-red-500/10 text-red-300 border border-red-500/20 rounded-tl-sm'
+                                                : 'bg-white/5 text-gray-200 border border-white/5 rounded-tl-sm'
+                                            }`}
+                                    >
+                                        {/* Content - sanitizado se for da IA */}
+                                        <div
+                                            className="whitespace-pre-wrap break-words font-light"
+                                            dangerouslySetInnerHTML={
+                                                msg.role === 'assistant'
+                                                    ? { __html: sanitizeContent(msg.content) }
+                                                    : undefined
+                                            }
+                                        >
+                                            {msg.role === 'user' ? msg.content : undefined}
+                                        </div>
+                                    </div>
+
+                                    {/* Metadata / Actions */}
+                                    <div className="flex items-center gap-2 mt-1 px-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        {msg.role === 'assistant' && !msg.isError && (
+                                            <>
+                                                <span className="text-[10px] text-gray-600">
+                                                    {((msg.latency || 0) / 1000).toFixed(1)}s
+                                                </span>
+                                                <div className="w-1 h-1 rounded-full bg-gray-700"></div>
+                                                <button
+                                                    onClick={() => handleCopy(msg.content, msg.id)}
+                                                    className="text-[10px] text-emerald-400 hover:text-emerald-300 flex items-center gap-1 transition-colors font-medium"
+                                                >
+                                                    {isCopied(msg.id) ? (
+                                                        <><Check className="w-3 h-3" /> Copiado</>
+                                                    ) : (
+                                                        <><Copy className="w-3 h-3" /> Copiar</>
+                                                    )}
+                                                </button>
+                                            </>
                                         )}
                                     </div>
                                 </div>
                             </div>
                         ))}
 
-                        {aiError && (
-                            <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-red-400 text-xs animate-shake">
-                                🚨 {aiError}
-                            </div>
-                        )}
-
-                        {isLoading && (
+                        {/* Loading */}
+                        {loading && (
                             <div className="flex justify-start animate-pulse">
-                                <div className="bg-surface-800 rounded-2xl rounded-tl-none px-6 py-4 border border-white/5 border-sky-500/30">
-                                    <div className="flex gap-1">
-                                        <div className="w-1.5 h-1.5 bg-sky-400 rounded-full animate-bounce [animation-delay:-0.3s]" />
-                                        <div className="w-1.5 h-1.5 bg-sky-400 rounded-full animate-bounce [animation-delay:-0.15s]" />
-                                        <div className="w-1.5 h-1.5 bg-sky-400 rounded-full animate-bounce" />
-                                    </div>
+                                <div className="bg-white/5 border border-white/5 rounded-2xl rounded-tl-sm px-4 py-3 flex items-center gap-3">
+                                    <div className="w-2 h-2 bg-emerald-400 rounded-full animate-bounce"></div>
+                                    <div className="w-2 h-2 bg-emerald-400 rounded-full animate-bounce" style={{ animationDelay: '75ms' }}></div>
+                                    <div className="w-2 h-2 bg-emerald-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                                    <span className="text-[11px] text-gray-400 ml-1 font-medium">
+                                        {currentModel?.name} analisando...
+                                    </span>
                                 </div>
                             </div>
                         )}
+
                         <div ref={messagesEndRef} />
                     </div>
 
-                    {/* Input Area */}
-                    <div className="p-4 bg-surface-900 border-t border-white/5">
+                    {/* Quick Actions (if chat active) */}
+                    {messages.length > 0 && !loading && (
+                        <div className="px-4 py-2 bg-gray-900 border-t border-white/5 flex gap-2 overflow-x-auto no-scrollbar">
+                            {Object.entries(AI_ACTIONS).map(([key, action]) => (
+                                <button
+                                    key={key}
+                                    onClick={() => handleSend(action.prompt)}
+                                    className="shrink-0 px-3 py-1.5 rounded-full bg-white/5 border border-white/5 text-[10px] text-gray-400 hover:text-white hover:bg-white/10 hover:border-emerald-500/30 transition-all whitespace-nowrap"
+                                >
+                                    {action.label}
+                                </button>
+                            ))}
+                        </div>
+                    )}
+
+                    {/* Input */}
+                    <div className="p-4 border-t border-white/5 bg-gray-900">
+                        {error && (
+                            <div className="text-[11px] text-red-400 mb-2 bg-red-500/10 border border-red-500/20 p-2 rounded-lg flex items-center gap-2">
+                                <X className="w-3 h-3" /> {error}
+                            </div>
+                        )}
                         <form
-                            onSubmit={(e) => { e.preventDefault(); handleSend(); }}
-                            className="relative flex items-center"
+                            onSubmit={handleSubmit}
+                            className="flex items-center gap-2 bg-black/40 p-1.5 rounded-2xl border border-white/10 focus-within:border-emerald-500/50 transition-colors shadow-inner"
                         >
                             <input
                                 ref={inputRef}
                                 type="text"
                                 value={input}
                                 onChange={(e) => setInput(e.target.value)}
-                                placeholder="Pergunte qualquer coisa sobre seu dinheiro..."
-                                className="w-full bg-surface-800 border border-white/10 rounded-2xl pl-4 pr-14 py-3.5 text-sm text-white focus:outline-none focus:border-sky-500 transition-all placeholder:text-gray-600 shadow-inner"
+                                placeholder="Pergunte sobre seu dinheiro..."
+                                disabled={loading}
+                                className="flex-1 px-3 py-2 bg-transparent text-white placeholder-gray-600 text-sm focus:outline-none disabled:opacity-50"
                             />
                             <button
                                 type="submit"
-                                disabled={isLoading || !input.trim()}
-                                className="absolute right-2 p-2 bg-sky-500 text-white rounded-xl hover:bg-sky-400 disabled:opacity-30 disabled:grayscale transition-all shadow-lg active:scale-95"
+                                disabled={loading || !input.trim()}
+                                className="p-2.5 rounded-xl bg-emerald-500 text-white hover:bg-emerald-600 transition-all disabled:opacity-30 disabled:cursor-not-allowed shadow-lg shadow-emerald-500/20"
+                                aria-label="Enviar mensagem"
                             >
-                                <Send className="w-4 h-4" />
+                                {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
                             </button>
                         </form>
+                        <div className="text-[9px] text-gray-600 text-center mt-2 flex justify-center items-center gap-1 uppercase tracking-tighter">
+                            <Lock className="w-2.5 h-2.5" /> Ambiente criptografado & seguro
+                        </div>
                     </div>
                 </div>
             )}

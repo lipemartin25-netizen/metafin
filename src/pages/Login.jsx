@@ -11,7 +11,7 @@ export default function Login() {
     useForceDark();
     const navigate = useNavigate()
     const location = useLocation()
-    const { loginWithToken } = useAuth()
+    const { user, loginWithToken } = useAuth()
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState('')
 
@@ -33,12 +33,11 @@ export default function Login() {
     }, []);
 
     useEffect(() => {
-        const token = localStorage.getItem('mf_auth_token')
-        if (token) {
+        if (user) {
             const destination = location.state?.from || '/app'
             navigate(destination, { replace: true })
         }
-    }, [navigate, location])
+    }, [user, navigate, location])
 
     async function handleLogin(e) {
         e.preventDefault()
@@ -112,7 +111,7 @@ export default function Login() {
                                     } catch (err) {
                                         setError('Falha ao iniciar login com Google.');
                                         console.error(err);
-                                        setIsLoading(true); // Manter carregando até o redirecionamento
+                                        setIsLoading(false);
                                     }
                                 }}
                                 disabled={isLoading}

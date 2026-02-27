@@ -20,11 +20,26 @@ export function useBankAccounts() {
         try {
             if (isSupabaseConfigured && user?.id && user.id !== 'demo') {
                 // Carregar todas as contas da tabela unificada
-                const { data: accounts, error: err } = await supabase
+                let { data: accounts, error: err } = await supabase
                     .from('bank_accounts')
                     .select('*')
                     .eq('user_id', user.id)
                     .order('created_at', { ascending: false });
+
+                // Auto-retry on JWT expired
+                if (err && err.message?.toLowerCase().includes('jwt expired')) {
+                    console.log('[BankAccounts] JWT expirado, fazendo refresh...');
+                    const { error: refreshErr } = await supabase.auth.refreshSession();
+                    if (!refreshErr) {
+                        const retry = await supabase
+                            .from('bank_accounts')
+                            .select('*')
+                            .eq('user_id', user.id)
+                            .order('created_at', { ascending: false });
+                        accounts = retry.data;
+                        err = retry.error;
+                    }
+                }
 
                 if (err) throw err;
 

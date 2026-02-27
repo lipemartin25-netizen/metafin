@@ -3,46 +3,96 @@ import { PluggyClient } from 'pluggy-sdk';
 
 /**
  * Mapeamento avançado de categorias baseado em palavras-chave e padrões brasileiros
+ * Cobre todas as 22 categorias do data.json
  */
 export function mapCategory(description, pluggyCategory) {
     const text = (description + ' ' + (pluggyCategory || '')).toLowerCase();
 
     // 1. Alimentação
-    if (text.match(/aliment|restaurant|supermercad|food|comid|refeiç|mercad|padaria|ifood|rappi|uber.*eats|mcdonald|bk|burger|outback|pizzari|acai|cafeteria|confeitaria|hortifruti/))
+    if (text.match(/aliment|restaurant|supermercad|food|comid|refeiç|mercad|padaria|ifood|rappi|uber.*eats|mcdonald|bk|burger|outback|pizzari|acai|cafeteria|confeitaria|hortifruti|açougue|sushi|lanchonete/))
         return 'alimentacao';
 
     // 2. Transporte
-    if (text.match(/transport|auto|posto|uber|99|tax|combustível|veículo|estacionamento|pedagio|semparar|veloe|ipva|oficina|mecanico|pneu|locadora/))
+    if (text.match(/transport|auto|posto|uber|99|tax|combustível|veículo|estacionamento|pedagio|semparar|veloe|ipva|oficina|mecanico|pneu|locadora|metro|onibus|trem|passagem.*aer/))
         return 'transporte';
 
     // 3. Moradia & Contas Fixas
-    if (text.match(/moradi|casa|conta|serviç|resid|telefone|tv|internet|energia|condomínio|aluguel|iptu|gas|luz|agua|sanepar|sabesp|enel|claro|vivo|tim|oi|reforma|ferragens|telhanorte|leroy/))
+    if (text.match(/moradi|conta.*luz|conta.*agua|serviç|resid|telefone|tv|internet|energia|condomínio|aluguel|iptu|gas|luz|agua|sanepar|sabesp|enel|claro|vivo|tim|oi|reforma|ferragens|telhanorte|leroy|imovel/))
         return 'moradia';
 
     // 4. Saúde
-    if (text.match(/sa[uú]d|farm[aá]ci|medic|hospital|clinica|drogari|exame|odonto|psicologo|terapia|academia|smartfit|crossfit|suplemento/))
+    if (text.match(/sa[uú]d|farm[aá]ci|medic|hospital|clinica|drogari|exame|odonto|psicologo|terapia|academia|smartfit|crossfit|suplemento|dentista|consulta|plano.*sa[uú]d|unimed|amil|hapvida/))
         return 'saude';
 
     // 5. Educação
-    if (text.match(/educ|curso|escola|faculdade|livraria|treinamento|udemy|alura|mensalidade|idiomas|ingles/))
+    if (text.match(/educ|curso|escola|faculdade|livraria|treinamento|udemy|alura|mensalidade|idiomas|ingles|apostila|workshop|palestra|certificaç/))
         return 'educacao';
 
-    // 6. Entretenimento & Lazer
-    if (text.match(/entret|lazer|viagem|cinema|restaurante|bar|assinatura|streaming|jogos|spotify|netflix|disney|hbo|globo.*play|steam|psn|xbox|turismo|hospedagem|decolar|booking/))
-        return 'entretenimento';
+    // 6. Lazer
+    if (text.match(/lazer|viagem|cinema|bar|teatro|show|ingresso|turismo|hospedagem|decolar|booking|airbnb|parque|museu|praia|resort|cruzeiro/))
+        return 'lazer';
 
-    // 7. Renda / Entradas
-    if (text.match(/renda|salario|pagamento.*recebido|depos|remuneração|pix.*recebido|transferencia.*recebida|estorno|reembolso|dividendos|jcp/))
+    // 7. Assinaturas
+    if (text.match(/assinatur|streaming|spotify|netflix|disney|hbo|globo.*play|amazon.*prime|youtube.*premium|apple.*music|deezer|paramount|crunchyroll|xbox.*game.*pass|playstation.*plus|chatgpt|notion|canva/))
+        return 'assinaturas';
+
+    // 8. Vestuário
+    if (text.match(/roupa|calcado|vestuario|moda|zara|renner|riachuelo|cea|shein|nike|adidas|tenis|camisa|calca|sapato|bota|sandalia|bolsa|acessorio/))
+        return 'vestuario';
+
+    // 9. Beleza & Cuidados
+    if (text.match(/beleza|estetica|cabeleireiro|barbeiro|salao|manicure|cosmetico|perfume|skincare|boticario|natura|avon|depilação|maquiagem|hidratante/))
+        return 'beleza';
+
+    // 10. Pets
+    if (text.match(/pet|veterinar|vet|ração|petshop|petlove|cobasi|petz|cachorro|gato|animal|banho.*tosa/))
+        return 'pets';
+
+    // 11. Presentes
+    if (text.match(/present|aniversario|casamento|gift|lembrança|flores|floricultura|cesta.*basica|natal/))
+        return 'presentes';
+
+    // 12. Doações
+    if (text.match(/doaç|caridade|ong|contribuição|oferta|dizimo|voluntar|solidariedade/))
+        return 'doacoes';
+
+    // 13. Impostos
+    if (text.match(/imposto|taxa|tributo|irpf|irpj|inss|fgts|darf|gps|icms|iss|pis|cofins|csll|simples.*nacional|guia.*recolhimento/))
+        return 'impostos';
+
+    // 14. Seguros
+    if (text.match(/seguro|porto.*seguro|azul.*seguros|bradesco.*segur|suhai|tokio|mapfre|liberty|allianz|apolice|sinistro/))
+        return 'seguros';
+
+    // 15. Dívidas & Empréstimos
+    if (text.match(/divida|emprestimo|financiamento|parcela|juros|multa|atraso|renegociaç|consignado|credito.*pessoal|iof|tarifa.*bancaria/))
+        return 'dividas';
+
+    // 16. Filhos & Dependentes
+    if (text.match(/filho|criança|bebe|escola.*infantil|creche|fralda|brinquedo|pediatra|mesada|material.*escolar|uniforme.*escol/))
+        return 'filhos';
+
+    // 17. Serviços
+    if (text.match(/serviç|faxina|diarista|empregada|contador|advogado|jardineiro|eletricista|encanador|pintor|pedreiro|tecnico|manutenção/))
+        return 'servicos';
+
+    // 18. Renda / Entradas
+    if (text.match(/renda|salario|pagamento.*recebido|depos|remuneração|pix.*recebido|transferencia.*recebida|estorno|reembolso|dividendos|jcp|pro.*labore/))
         return 'renda';
 
-    // 8. Investimentos
-    if (text.match(/invest|rendiment|poupanca|aplicação|corretora|tesouro|acoes|fii|crypto|binance|nuinvest|xp.*invest/))
+    // 19. Freelance / Renda Extra
+    if (text.match(/freelanc|freela|bico|renda.*extra|comissão|bonus|premio|gratificação|cashback|indicação/))
+        return 'freelance';
+
+    // 20. Investimentos
+    if (text.match(/invest|rendiment|poupanca|aplicação|corretora|tesouro|acoes|fii|crypto|binance|nuinvest|xp.*invest|cdi|cdb|lci|lca|debenture/))
         return 'investimentos';
 
-    // 9. Compras / Pessoal
-    if (text.match(/loja|shopee|amazon|mercado.*livre|magalu|americanas|vestuario|roupa|calcado|estetica|beleza|cabeleireiro|barbeiro|presente/))
+    // 21. Compras / Pessoal
+    if (text.match(/loja|shopee|amazon|mercado.*livre|magalu|americanas|aliexpress|eletronic|celular|notebook|eletrodomestico|movel|decoração/))
         return 'compras';
 
+    // 22. Outros
     return 'outros';
 }
 

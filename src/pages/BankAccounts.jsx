@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useTransactions } from '../hooks/useTransactions';
 import { useAuth } from '../contexts/AuthContext';
 import { analytics } from '../hooks/useAnalytics';
-import { Trash2, CheckCircle, ShieldCheck, Banknote, RefreshCw, X, Plug, FileText, ArrowUpRight, ArrowDownRight } from 'lucide-react';
+import { Trash2, CheckCircle, ShieldCheck, Banknote, RefreshCw, X, Plug, FileText, ArrowUpRight, ArrowDownRight, AlertTriangle, Loader2 } from 'lucide-react';
 import banksData from '../data/banks.json';
 import { parseFile, ACCEPTED_EXTENSIONS } from '../lib/fileParser';
 import { useBankAccounts } from '../hooks/useBankAccounts';
@@ -38,6 +38,9 @@ export default function BankAccounts() {
     const [selectedBank, setSelectedBank] = useState(null);
     const [connectingState, setConnectingState] = useState('idle');
     const [syncing, setSyncing] = useState(null);
+    const [deleteTarget, setDeleteTarget] = useState(null);
+    const [deleting, setDeleting] = useState(false);
+    const [toast, setToast] = useState(null);
 
     const [customNickname, setCustomNickname] = useState('');
     const [customBalance, setCustomBalance] = useState('');
@@ -46,6 +49,23 @@ export default function BankAccounts() {
     const [dataSource, setDataSource] = useState('empty');
     const [importFile, setImportFile] = useState(null);
     const [importError, setImportError] = useState('');
+
+    const showToast = (message, type = 'success') => {
+        setToast({ message, type });
+        setTimeout(() => setToast(null), 3500);
+    };
+
+    const formatTimeAgo = (dateStr) => {
+        if (!dateStr) return null;
+        const diff = Date.now() - new Date(dateStr).getTime();
+        const mins = Math.floor(diff / 60000);
+        if (mins < 1) return 'agora';
+        if (mins < 60) return `há ${mins}min`;
+        const hours = Math.floor(mins / 60);
+        if (hours < 24) return `há ${hours}h`;
+        const days = Math.floor(hours / 24);
+        return `há ${days}d`;
+    };
 
     const handleConnectClick = (bank) => {
         setSelectedBank(bank);
@@ -142,10 +162,27 @@ export default function BankAccounts() {
         }
     };
 
-    const handleDisconnect = async (bank) => {
-        if (!confirm(`Tem certeza que deseja desconectar a conta ${bank.display_name || bank.name}? Todos os dados importados serão mantidos no histórico, mas a sincronização será interrompida.`)) return;
-        await deleteAccount(bank.id, bank.isPluggy ? 'pluggy' : 'manual');
-        analytics.featureUsed('disconnect_bank');
+    const handleDisconnect = (bank) => {
+        setDeleteTarget(bank);
+    };
+
+    const confirmDelete = async () => {
+        if (!deleteTarget) return;
+        setDeleting(true);
+        try {
+            const success = await deleteAccount(deleteTarget.id, deleteTarget.isPluggy ? 'pluggy' : 'manual');
+            if (success) {
+                showToast(`${deleteTarget.display_name || deleteTarget.name} removido com sucesso!`, 'success');
+                analytics.featureUsed('disconnect_bank');
+            } else {
+                showToast('Erro ao remover conta. Tente novamente.', 'error');
+            }
+        } catch (err) {
+            showToast(`Erro: ${err.message}`, 'error');
+        } finally {
+            setDeleting(false);
+            setDeleteTarget(null);
+        }
     };
 
     const totalBalance = (accounts || []).reduce((sum, b) => sum + (b.balance || 0), 0);
@@ -233,13 +270,34 @@ export default function BankAccounts() {
                                 <div key={bank.id} className="glass-card group">
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center gap-3">
-                                            <div className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-lg" style={{ backgroundColor: bank.color || '#10b981', color: bank.textColor || '#fff' }}>
-                                                {bank.logo || bank.bank_name?.charAt(0) || 'B'}
+                                            <div className="relative">
+                                                <div className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-lg" style={{ backgroundColor: bank.color || '#10b981', color: bank.textColor || '#fff' }}>
+                                                    {bank.logo || bank.bank_name?.charAt(0) || 'B'}
+                                                </div>
+                                                {/* Source badge */}
+                                                <div className={`absolute -bottom-1 -right-1 w-4 h-4 rounded-full flex items-center justify-center text-[8px] border border-gray-800 ${bank.display_name?.toLowerCase().includes('cartão') || bank.account_type === 'CREDIT' ? 'bg-purple-500' : 'bg-emerald-500'}`}>
+                                                    {bank.display_name?.toLowerCase().includes('cartão') || bank.account_type === 'CREDIT' ? '💳' : '🏦'}
+                                                </div>
                                             </div>
                                             <div>
-                                                <h4 className="font-semibold text-white">{bank.display_name || bank.name}</h4>
+                                                <div className="flex items-center gap-2">
+                                                    <h4 className="font-semibold text-white">{bank.display_name || bank.name}</h4>
+                                                    {/* Sync status badge */}
+                                                    {syncing === bank.id ? (
+                                                        <span className="flex items-center gap-1 text-[9px] text-yellow-400 bg-yellow-500/10 px-1.5 py-0.5 rounded-full font-bold">🟡 Sincronizando</span>
+                                                    ) : bank.last_synced_at || bank.updated_at ? (
+                                                        <span className="flex items-center gap-1 text-[9px] text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded-full font-bold">🟢 Ativo</span>
+                                                    ) : (
+                                                        <span className="flex items-center gap-1 text-[9px] text-gray-500 bg-white/5 px-1.5 py-0.5 rounded-full font-bold">⚪ Manual</span>
+                                                    )}
+                                                </div>
                                                 <p className="text-xs text-gray-400">{bank.bank_name} • Ag {bank.agency || '0001'} • Cta {bank.account_number}</p>
-                                                <p className="text-sm font-medium text-emerald-400 mt-0.5">{fmt(bank.balance || 0)}</p>
+                                                <div className="flex items-center gap-2 mt-0.5">
+                                                    <p className="text-sm font-medium text-emerald-400">{fmt(bank.balance || 0)}</p>
+                                                    {(bank.last_synced_at || bank.updated_at) && (
+                                                        <span className="text-[9px] text-gray-500">• Sync {formatTimeAgo(bank.last_synced_at || bank.updated_at)}</span>
+                                                    )}
+                                                </div>
                                             </div>
                                         </div>
                                         <div className="flex items-center gap-1">
@@ -497,6 +555,52 @@ export default function BankAccounts() {
                             )}
                         </div>
                     </div>
+                </div>
+            )}
+
+            {/* Delete Confirmation Modal */}
+            {deleteTarget && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in" onClick={() => !deleting && setDeleteTarget(null)}>
+                    <div className="glass-card w-full max-w-sm p-6 animate-slide-up text-center" onClick={(e) => e.stopPropagation()}>
+                        <div className="w-14 h-14 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-4 ring-4 ring-red-500/5">
+                            <AlertTriangle className="w-7 h-7 text-red-400" />
+                        </div>
+                        <h3 className="text-lg font-bold text-white mb-2">Remover Conta</h3>
+                        <p className="text-sm text-gray-400 mb-1">
+                            Tem certeza que deseja remover <strong className="text-white">{deleteTarget.display_name || deleteTarget.name}</strong>?
+                        </p>
+                        <p className="text-xs text-gray-500 mb-6">
+                            Todas as transações vinculadas serão desassociadas. A sincronização será interrompida.
+                        </p>
+                        <div className="flex gap-3">
+                            <button
+                                onClick={() => setDeleteTarget(null)}
+                                disabled={deleting}
+                                className="flex-1 py-2.5 rounded-xl bg-white/5 border border-white/10 text-sm text-gray-300 hover:bg-white/10 transition-all disabled:opacity-50"
+                            >
+                                Cancelar
+                            </button>
+                            <button
+                                onClick={confirmDelete}
+                                disabled={deleting}
+                                className="flex-1 py-2.5 rounded-xl bg-red-500/20 border border-red-500/30 text-sm text-red-400 hover:bg-red-500/30 transition-all font-bold flex items-center justify-center gap-2 disabled:opacity-50"
+                            >
+                                {deleting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
+                                {deleting ? 'Removendo...' : 'Remover'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Toast Notification */}
+            {toast && (
+                <div className={`fixed bottom-6 left-1/2 -translate-x-1/2 z-[60] px-5 py-3 rounded-xl text-sm font-medium shadow-2xl animate-slide-up flex items-center gap-2 ${toast.type === 'success'
+                    ? 'bg-emerald-500/90 text-white border border-emerald-400/30'
+                    : 'bg-red-500/90 text-white border border-red-400/30'
+                    }`}>
+                    {toast.type === 'success' ? <CheckCircle className="w-4 h-4" /> : <X className="w-4 h-4" />}
+                    {toast.message}
                 </div>
             )}
         </div>

@@ -1,7 +1,7 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Webhook, Plus, Bell, Target, Zap, RefreshCw, Heart, ArrowRight, Copy, CheckCircle } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Webhook, Plus, Bell, Target, Zap, RefreshCw, Heart, Copy, CheckCircle, Trash2, Power, PowerOff } from 'lucide-react';
 import WebhookModal from '../components/WebhookModal';
+import { supabase } from '../lib/supabase'; // Assuming path based on standard structure
 
 const WEBHOOK_EVENTS = [
     { id: 'transaction.created', label: 'Nova transação criada', icon: Zap, color: '#10B981', description: 'Disparado quando uma transação é adicionada (manual ou importação).' },
@@ -11,14 +11,118 @@ const WEBHOOK_EVENTS = [
     { id: 'health.updated', label: 'Score de saúde atualizado', icon: Heart, color: '#EC4899', description: 'Quando o score de saúde financeira é recalculado.' },
 ];
 
+function WebhookCard({ webhook, onToggle, onDelete }) {
+    const eventsDetails = webhook.events.map(eventId => WEBHOOK_EVENTS.find(e => e.id === eventId)).filter(Boolean);
+
+    return (
+        <div className={`glass-card p-5 space-y-4 border ${webhook.active ? 'border-fuchsia-500/30 shadow-[0_0_15px_rgba(217,70,239,0.1)]' : 'border-white/5 opacity-70'}`}>
+            <div className="flex justify-between items-start gap-4">
+                <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-1">
+                        <div className={`w-2.5 h-2.5 rounded-full ${webhook.active ? 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)] animate-pulse' : 'bg-gray-500'}`} />
+                        <h3 className="text-lg font-bold text-white truncate">{webhook.name}</h3>
+                    </div>
+                    <p className="text-xs font-mono text-gray-400 truncate bg-black/20 p-1.5 rounded-md inline-block max-w-full">
+                        {webhook.url}
+                    </p>
+                </div>
+                <div className="flex items-center gap-2">
+                    <button
+                        onClick={() => onToggle(webhook.id, !webhook.active)}
+                        className={`p-2 rounded-xl transition-colors ${webhook.active ? 'text-emerald-400 hover:bg-emerald-500/10' : 'text-gray-400 hover:bg-gray-500/10'}`}
+                        title={webhook.active ? "Desativar Webhook" : "Ativar Webhook"}
+                    >
+                        {webhook.active ? <Power className="w-5 h-5" /> : <PowerOff className="w-5 h-5" />}
+                    </button>
+                    <button
+                        onClick={() => onDelete(webhook.id)}
+                        className="p-2 rounded-xl text-red-400 hover:bg-red-500/10 transition-colors"
+                        title="Excluir Webhook"
+                    >
+                        <Trash2 className="w-5 h-5" />
+                    </button>
+                </div>
+            </div>
+
+            <div className="flex flex-wrap gap-2 pt-2 border-t border-white/5">
+                {eventsDetails.map(evt => (
+                    <span key={evt.id} className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-fuchsia-500/10 text-fuchsia-300 border border-fuchsia-500/20 flex items-center gap-1.5">
+                        <evt.icon className="w-3 h-3" style={{ color: evt.color }} />
+                        {evt.id}
+                    </span>
+                ))}
+            </div>
+        </div>
+    );
+}
+
 export default function Webhooks() {
-    const [webhooks] = useState([]);
+    const [webhooks, setWebhooks] = useState([]);
     const [copied, setCopied] = useState(false);
     const [showModal, setShowModal] = useState(false);
+    const [loading, setLoading] = useState(true);
 
-    const refreshWebhooks = async () => {
-        // Implementação futura de fetch
-        console.log('Atualizando lista de webhooks...');
+    const fetchWebhooks = async () => {
+        setLoading(true);
+        try {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) return;
+
+            const { data, error } = await supabase
+                .from('webhooks')
+                .select('*')
+                .eq('user_id', user.id)
+                .order('created_at', { ascending: false });
+
+            if (error) throw error;
+            setWebhooks(data || []);
+        } catch (error) {
+            console.error('Erro ao buscar webhooks:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchWebhooks();
+    }, []);
+
+    const handleToggle = async (id, newStatus) => {
+        try {
+            // Optimistic update
+            setWebhooks(prev => prev.map(w => w.id === id ? { ...w, active: newStatus } : w));
+
+            const { error } = await supabase
+                .from('webhooks')
+                .update({ active: newStatus })
+                .eq('id', id);
+
+            if (error) {
+                // Revert on error
+                setWebhooks(prev => prev.map(w => w.id === id ? { ...w, active: !newStatus } : w));
+                throw error;
+            }
+        } catch (error) {
+            console.error('Erro ao alternar status do webhook:', error);
+            alert('Erro ao atualizar webhook. Tente novamente.');
+        }
+    };
+
+    const handleDelete = async (id) => {
+        if (!window.confirm('Tem certeza que deseja excluir permanentemente este webhook?')) return;
+
+        try {
+            const { error } = await supabase
+                .from('webhooks')
+                .delete()
+                .eq('id', id);
+
+            if (error) throw error;
+            setWebhooks(prev => prev.filter(w => w.id !== id));
+        } catch (error) {
+            console.error('Erro ao excluir webhook:', error);
+            alert('Erro ao excluir webhook. Tente novamente.');
+        }
     };
 
     const samplePayload = `{
@@ -45,7 +149,7 @@ export default function Webhooks() {
                 <div>
                     <h1 className="text-3xl font-bold text-white flex items-center gap-3 mb-2">
                         <Webhook className="w-8 h-8 text-fuchsia-400" />
-                        Webhooks
+                        Webhooks {webhooks.length > 0 && <span className="text-xl text-gray-500 font-normal">({webhooks.length})</span>}
                     </h1>
                     <p className="text-gray-400 text-sm">Integre o MetaFin com serviços externos via webhooks HTTP.</p>
                 </div>
@@ -58,7 +162,11 @@ export default function Webhooks() {
                 </button>
             </div>
 
-            {webhooks.length === 0 ? (
+            {loading ? (
+                <div className="flex justify-center items-center py-20">
+                    <RefreshCw className="w-8 h-8 text-fuchsia-500 animate-spin" />
+                </div>
+            ) : webhooks.length === 0 ? (
                 <div className="glass-card p-10 text-center space-y-4">
                     <div className="w-16 h-16 rounded-2xl bg-fuchsia-500/10 flex items-center justify-center mx-auto">
                         <Webhook className="w-8 h-8 text-fuchsia-400" />
@@ -68,18 +176,29 @@ export default function Webhooks() {
                         Configure webhooks para receber notificações quando transações forem criadas,
                         metas forem atingidas ou limites forem ultrapassados.
                     </p>
-                    <Link
-                        to="/app/settings"
-                        className="gradient-btn text-sm inline-flex mx-auto"
+                    <button
+                        onClick={() => setShowModal(true)}
+                        className="gradient-btn text-sm inline-flex mx-auto flex items-center gap-2"
                     >
                         Criar Primeiro Webhook
-                        <ArrowRight className="w-4 h-4" />
-                    </Link>
+                        <Plus className="w-4 h-4" />
+                    </button>
                 </div>
-            ) : null}
+            ) : (
+                <div className="grid md:grid-cols-2 gap-4">
+                    {webhooks.map(webhook => (
+                        <WebhookCard
+                            key={webhook.id}
+                            webhook={webhook}
+                            onToggle={handleToggle}
+                            onDelete={handleDelete}
+                        />
+                    ))}
+                </div>
+            )}
 
             {/* Eventos Suportados */}
-            <div className="space-y-4">
+            <div className="space-y-4 pt-4">
                 <h2 className="text-sm font-bold text-gray-500 uppercase tracking-widest">Eventos Suportados</h2>
                 <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
                     {WEBHOOK_EVENTS.map((evt) => (
@@ -118,9 +237,7 @@ export default function Webhooks() {
             <WebhookModal
                 isOpen={showModal}
                 onClose={() => setShowModal(false)}
-                onSuccess={() => {
-                    refreshWebhooks();
-                }}
+                onSuccess={fetchWebhooks}
             />
         </div>
     );

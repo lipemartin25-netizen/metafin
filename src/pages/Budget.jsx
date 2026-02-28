@@ -1,9 +1,11 @@
+// src/pages/Budget.jsx
 import { useState, useEffect, useMemo } from 'react';
 import { useTransactions } from '../hooks/useTransactions';
-import { PiggyBank, Plus, X, AlertTriangle, CheckCircle, Edit3, Trash2 } from 'lucide-react';
+import { useAuth } from '../contexts/AuthContext';
+import { supabase } from '../lib/supabase';
+import { PiggyBank, Plus, X, AlertTriangle, CheckCircle, Edit3, Trash2, Loader2 } from 'lucide-react';
 import categoriesData from '../data/data.json';
 import { CurrencyInput } from '../components/CurrencyInput';
-import { secureStorage } from '../lib/secureStorage';
 
 const categoryConfig = categoriesData.categories;
 
@@ -12,23 +14,60 @@ function fmt(v) {
 }
 
 export default function Budget() {
+    const { user } = useAuth();
     const { transactions } = useTransactions();
     const [budgets, setBudgets] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
     const [showAdd, setShowAdd] = useState(false);
     const [editId, setEditId] = useState(null);
     const [form, setForm] = useState({ category: '', limit: '' });
+    const [saving, setSaving] = useState(false);
 
     useEffect(() => {
-        const data = secureStorage.get('budgets', []);
-        setBudgets(data);
-    }, []);
+        async function fetchBudgets() {
+            try {
+                setLoading(true);
+                setError(null);
 
-    const save = (b) => {
-        setBudgets(b);
-        secureStorage.set('budgets', b);
-    };
+                const { data, error: dbError } = await supabase
+                    .from('budgets')
+                    .select('*')
+                    .eq('user_id', user?.id)
+                    .order('created_at', { ascending: false });
 
-    // Current month spending by category
+                if (dbError) {
+                    console.error('[Budgets] Supabase error:', dbError);
+                    if (dbError.code === '42P01') {
+                        console.warn('[Budgets] Tabela budgets não existe. Mostrando vazio.');
+                        setBudgets([]);
+                    } else {
+                        setError(dbError.message);
+                    }
+                } else {
+                    const mapped = (data || []).map(b => ({
+                        id: b.id,
+                        category: b.category,
+                        limit: b.amount, // Numeric default for db float
+                        savedAt: new Date(b.created_at).getTime()
+                    }));
+                    setBudgets(mapped);
+                }
+            } catch (err) {
+                console.error('[Budgets] Unexpected error:', err);
+                setError('Erro ao carregar orçamentos');
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        if (user?.id) {
+            fetchBudgets();
+        } else {
+            setLoading(false);
+        }
+    }, [user?.id]);
+
     const currentMonth = new Date().toISOString().slice(0, 7);
     const spending = useMemo(() => {
         const result = {};
@@ -39,53 +78,109 @@ export default function Budget() {
         return result;
     }, [transactions, currentMonth]);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const limitValue = typeof form.limit === 'string'
-            ? parseFloat(form.limit.replace(/\./g, '').replace(',', '.'))
-            : form.limit;
+        try {
+            setSaving(true);
+            const limitValue = typeof form.limit === 'string'
+                ? parseFloat(form.limit.replace(/\./g, '').replace(',', '.'))
+                : parseFloat(form.limit) || 0;
 
-        const budget = {
-            id: editId || Date.now().toString(),
-            category: form.category,
-            limit: limitValue || 0,
-            savedAt: Date.now()
-        };
+            if (editId) {
+                const { error: dbError } = await supabase
+                    .from('budgets')
+                    .update({ category: form.category, amount: limitValue })
+                    .eq('id', editId);
 
-        if (editId) {
-            save(budgets.map(b => b.id === editId ? budget : b));
-        } else {
-            if (budgets.some(b => b.category === form.category)) {
-                alert('Já existe um orçamento para esta categoria!');
-                return;
+                if (dbError) throw dbError;
+
+                setBudgets(budgets.map(b => b.id === editId ? { ...b, category: form.category, limit: limitValue } : b));
+            } else {
+                if (budgets.some(b => b.category === form.category)) {
+                    alert('Já existe um orçamento para esta categoria!');
+                    return;
+                }
+
+                const payload = {
+                    user_id: user.id,
+                    category: form.category,
+                    amount: limitValue,
+                    period: 'monthly'
+                };
+
+                const { data, error: dbError } = await supabase
+                    .from('budgets')
+                    .insert(payload)
+                    .select()
+                    .single();
+
+                if (dbError) throw dbError;
+
+                setBudgets([...budgets, { id: data.id, category: data.category, limit: data.amount, savedAt: Date.now() }]);
             }
-            save([...budgets, budget]);
+            setForm({ category: '', limit: '' });
+            setShowAdd(false);
+            setEditId(null);
+        } catch (err) {
+            console.error('Error saving budget', err);
+            alert('Não foi possível salvar o orçamento. Verifique se a tabela foi criada no Supabase e tente novamente.');
+        } finally {
+            setSaving(false);
         }
-        setForm({ category: '', limit: 0 });
-        setShowAdd(false);
-        setEditId(null);
     };
 
     const handleEdit = (budget) => {
-        setForm({ category: budget.category, limit: budget.limit });
+        const strVal = budget.limit.toFixed(2).replace('.', ',');
+        setForm({ category: budget.category, limit: strVal });
         setEditId(budget.id);
         setShowAdd(true);
     };
 
-    const handleDelete = (id) => {
-        save(budgets.filter(b => b.id !== id));
+    const handleDelete = async (id) => {
+        const confirmMsg = confirm("Tem certeza que deseja excluir esse orçamento?");
+        if (!confirmMsg) return;
+
+        try {
+            const { error: dbError } = await supabase
+                .from('budgets')
+                .delete()
+                .eq('id', id);
+            if (dbError) throw dbError;
+            setBudgets(budgets.filter(b => b.id !== id));
+        } catch (err) {
+            console.error('Error deleting budget', err);
+            alert('Erro ao excluir orçamento.');
+        }
     };
 
-    // Available categories (not yet budgeted)
     const availableCategories = Object.keys(categoryConfig).filter(
-        c => !budgets.some(b => b.category === c)
+        c => !budgets.some(b => b.category === c) || (editId && budgets.find(b => b.id === editId)?.category === c)
     );
 
-    // Summary
     const totalBudget = budgets.reduce((s, b) => s + b.limit, 0);
     const totalSpent = budgets.reduce((s, b) => s + (spending[b.category] || 0), 0);
     const overBudget = budgets.filter(b => (spending[b.category] || 0) > b.limit);
+
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center min-h-[60vh]">
+                <Loader2 className="w-8 h-8 text-fuchsia-500 animate-spin" />
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="text-center py-20 animate-fade-in">
+                <AlertTriangle className="w-12 h-12 text-red-500/70 mx-auto mb-4" />
+                <p className="text-red-400 mb-4">{error}</p>
+                <button onClick={() => window.location.reload()} className="gradient-btn px-4 py-2 rounded-lg">
+                    Tentar Novamente
+                </button>
+            </div>
+        );
+    }
 
     return (
         <div className="py-6 space-y-6 animate-fade-in pb-20">
@@ -93,11 +188,11 @@ export default function Budget() {
                 <div>
                     <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
                         <PiggyBank className="w-6 h-6 text-pink-500" />
-                        Orcamento Mensal
+                        Orçamento Mensal
                     </h1>
                     <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">Defina limites por categoria e controle seus gastos.</p>
                 </div>
-                <button onClick={() => { setEditId(null); setForm({ category: availableCategories[0] || '', limit: '' }); setShowAdd(true); }} className="gradient-btn px-4 py-2 text-sm flex items-center gap-2">
+                <button onClick={() => { setEditId(null); setForm({ category: availableCategories[0] || '', limit: '' }); setShowAdd(true); }} className="gradient-btn px-4 py-2 h-[42px] text-sm flex items-center gap-2 rounded-xl transition-all">
                     <Plus className="w-4 h-4" /> Adicionar Limite
                 </button>
             </div>
@@ -107,7 +202,7 @@ export default function Budget() {
                 <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-4 flex items-center gap-3">
                     <AlertTriangle className="w-5 h-5 text-red-400 flex-shrink-0" />
                     <div>
-                        <p className="text-sm font-bold text-red-400">{overBudget.length} categoria(s) acima do orcamento!</p>
+                        <p className="text-sm font-bold text-red-400">{overBudget.length} categoria(s) acima do orçamento!</p>
                         <p className="text-xs text-red-300/70">{overBudget.map(b => categoryConfig[b.category]?.label || b.category).join(', ')}</p>
                     </div>
                 </div>
@@ -116,15 +211,15 @@ export default function Budget() {
             {/* Summary */}
             <div className="grid sm:grid-cols-3 gap-4">
                 <div className="glass-card">
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Orcamento Total</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Orçamento Total</p>
                     <p className="text-2xl font-bold text-gray-900 dark:text-white">{fmt(totalBudget)}</p>
                 </div>
                 <div className="glass-card">
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Gasto Este Mes</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Gasto Este Mês</p>
                     <p className="text-2xl font-bold text-red-500">{fmt(totalSpent)}</p>
                 </div>
                 <div className="glass-card">
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Disponivel</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Disponível</p>
                     <p className={`text-2xl font-bold ${totalBudget - totalSpent >= 0 ? 'text-emerald-500' : 'text-red-500'}`}>{fmt(totalBudget - totalSpent)}</p>
                     {totalBudget > 0 && (
                         <div className="mt-2 h-2 bg-gray-200 dark:bg-white/10 rounded-full overflow-hidden">
@@ -137,11 +232,14 @@ export default function Budget() {
 
             {/* Budget Items */}
             {budgets.length === 0 ? (
-                <div className="glass-card text-center py-12 border-dashed border-2 border-gray-200 dark:border-white/10 bg-transparent">
-                    <PiggyBank className="w-12 h-12 text-pink-500 mx-auto mb-4 opacity-50" />
-                    <h4 className="text-gray-900 dark:text-white font-medium mb-1">Nenhum orcamento definido</h4>
-                    <p className="text-gray-500 text-sm mb-4">Defina limites de gastos por categoria para controlar suas financas.</p>
-                    <button onClick={() => { setForm({ category: availableCategories[0] || '', limit: '' }); setShowAdd(true); }} className="gradient-btn px-6 py-2 text-sm">Criar Orcamento</button>
+                <div className="glass-card text-center py-12 border-dashed border-2 border-gray-200 dark:border-white/10 bg-transparent relative overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-b from-transparent to-pink-500/5 pointer-events-none" />
+                    <PiggyBank className="w-12 h-12 text-pink-500 mx-auto mb-4 opacity-50 relative z-10" />
+                    <h4 className="text-gray-900 dark:text-white font-medium mb-1 relative z-10">Nenhum orçamento definido</h4>
+                    <p className="text-gray-500 text-sm mb-4 relative z-10">Defina limites de gastos por categoria para controlar suas finanças.</p>
+                    <button onClick={() => { setForm({ category: availableCategories[0] || '', limit: '' }); setShowAdd(true); }} className="gradient-btn px-6 py-2.5 text-sm rounded-xl relative z-10 flex items-center gap-2 mx-auto">
+                        <Plus className="w-4 h-4" /> Criar Orçamento
+                    </button>
                 </div>
             ) : (
                 <div className="space-y-3">
@@ -153,7 +251,7 @@ export default function Budget() {
                         const remaining = budget.limit - spent;
 
                         return (
-                            <div key={budget.id} className={`glass-card ${over ? 'border-red-500/30' : ''}`}>
+                            <div key={budget.id} className={`glass-card ${over ? 'border-red-500/30 bg-red-500/5' : ''}`}>
                                 <div className="flex items-center justify-between mb-3">
                                     <div className="flex items-center gap-3">
                                         <div className="w-10 h-10 rounded-xl flex items-center justify-center text-lg" style={{ backgroundColor: `${cat?.color || '#6b7280'}15` }}>
@@ -188,7 +286,7 @@ export default function Budget() {
                                     <div className={`h-full rounded-full transition-all duration-500 ${over ? 'bg-red-500' : pct > 70 ? 'bg-yellow-500' : 'bg-emerald-500'}`}
                                         style={{ width: `${pct}%` }} />
                                 </div>
-                                <div className="flex justify-between mt-1.5 text-[10px] text-gray-500">
+                                <div className="flex justify-between mt-1.5 text-[10px] text-gray-500 flex-wrap">
                                     <span>{Math.round(pct)}% usado</span>
                                     <span>{fmt(budget.limit - spent > 0 ? budget.limit - spent : 0)} restante</span>
                                 </div>
@@ -198,40 +296,55 @@ export default function Budget() {
                 </div>
             )}
 
-            {/* Add/Edit Modal */}
+            {/* Modal de Adicionar/Editar */}
             {showAdd && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
-                    <form onSubmit={handleSubmit} className="glass-card w-full max-w-md p-6 space-y-4 animate-slide-up relative">
-                        <button type="button" onClick={() => { setShowAdd(false); setEditId(null); }} className="absolute top-4 right-4 text-gray-500 hover:text-white"><X className="w-5 h-5" /></button>
-                        <h2 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2"><PiggyBank className="w-5 h-5 text-pink-500" /> {editId ? 'Editar Orcamento' : 'Novo Orcamento'}</h2>
-
-                        <div>
-                            <label className="text-[10px] text-gray-500 uppercase font-bold">Categoria</label>
-                            <select value={form.category} onChange={e => setForm({ ...form, category: e.target.value })} className="w-full bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-2.5 text-gray-900 dark:text-white text-sm outline-none mt-1" disabled={!!editId}>
-                                {(editId ? Object.keys(categoryConfig) : availableCategories).map(c => (
-                                    <option key={c} value={c}>{categoryConfig[c]?.icon} {categoryConfig[c]?.label || c}</option>
-                                ))}
-                            </select>
-                        </div>
-
-                        <div>
-                            <label className="text-[10px] text-gray-500 uppercase font-bold">Limite Mensal</label>
-                            <CurrencyInput
-                                value={form.limit}
-                                onChange={val => setForm({ ...form, limit: val })}
-                                placeholder="0,00"
-                                className="mt-1"
-                            />
-                        </div>
-
-                        {form.category && spending[form.category] > 0 && (
-                            <div className="bg-blue-500/10 border border-blue-500/20 rounded-xl p-3 text-xs text-blue-400">
-                                Gasto atual neste mes em {categoryConfig[form.category]?.label}: <strong>{fmt(spending[form.category])}</strong>
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm">
+                    <div className="bg-[#0d1424] border border-white/15 w-full max-w-sm rounded-[24px] overflow-hidden shadow-[0_30px_80px_rgba(0,0,0,0.9)] animate-slide-up">
+                        <div className="p-6 md:p-8">
+                            <div className="flex items-center justify-between mb-6">
+                                <h3 className="text-xl font-bold text-white tracking-tight">{editId ? 'Editar Orçamento' : 'Novo Orçamento'}</h3>
+                                <button onClick={() => setShowAdd(false)} className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-white/10 transition-all"><X className="w-5 h-5" /></button>
                             </div>
-                        )}
 
-                        <button type="submit" className="gradient-btn w-full py-3 text-sm font-bold">{editId ? 'Salvar' : 'Criar Orcamento'}</button>
-                    </form>
+                            <form onSubmit={handleSubmit} className="space-y-5">
+                                <div>
+                                    <label className="block text-sm font-semibold text-slate-300 mb-2">Categoria</label>
+                                    <select
+                                        value={form.category}
+                                        onChange={(e) => setForm({ ...form, category: e.target.value })}
+                                        required
+                                        className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-4 py-3.5 text-white focus:border-fuchsia-500/50 focus:ring-1 focus:ring-fuchsia-500/50 outline-none transition-all appearance-none"
+                                    >
+                                        <option value="" disabled className="bg-[#0d1424] text-slate-500">Selecione uma categoria...</option>
+                                        {availableCategories.map(c => (
+                                            <option key={c} value={c} className="bg-[#0d1424] text-white">
+                                                {categoryConfig[c]?.icon} {categoryConfig[c]?.label || c}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-semibold text-slate-300 mb-2">Limite (R$)</label>
+                                    <CurrencyInput
+                                        value={form.limit}
+                                        onChange={(e) => setForm({ ...form, limit: e.target.value })}
+                                        required
+                                        placeholder="0,00"
+                                        className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-4 py-3.5 text-white placeholder-slate-500 focus:border-fuchsia-500/50 focus:ring-1 focus:ring-fuchsia-500/50 outline-none transition-all"
+                                    />
+                                </div>
+
+                                <button
+                                    type="submit"
+                                    disabled={saving}
+                                    className="w-full gradient-btn py-4 rounded-xl font-bold text-white mt-4 flex items-center justify-center gap-2 transition-transform active:scale-[0.98]"
+                                >
+                                    {saving ? <Loader2 className="w-5 h-5 animate-spin" /> : (editId ? 'Salvar Alterações' : 'Criar Orçamento')}
+                                </button>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             )}
         </div>

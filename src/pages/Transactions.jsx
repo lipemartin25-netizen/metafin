@@ -307,7 +307,7 @@ export default function Transactions() {
                     {/* Add */}
                     <button
                         onClick={() => { setEditId(null); setNewTx({ date: new Date().toISOString().split('T')[0], description: '', amount: '', category: 'outros', type: 'expense', notes: '' }); setShowAddModal(true); }}
-                        className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-medium px-4 py-2.5 h-[42px] rounded-xl transition-all duration-200 whitespace-nowrap shadow-lg shadow-emerald-600/20 active:scale-95"
+                        className="gradient-btn flex items-center gap-2 font-medium px-4 py-2.5 h-[42px] rounded-xl transition-all duration-200 whitespace-nowrap shadow-lg active:scale-95"
                     >
                         <Plus className="w-4 h-4 flex-shrink-0" />
                         <span className="hidden sm:inline">Adicionar</span>

@@ -1,4 +1,3 @@
-import { tw } from '@/lib/theme';
 import { NavLink, Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../hooks/useSubscription';
@@ -64,7 +63,7 @@ export default function Sidebar() {
         <>
             {/* Sidebar Desktop */}
             <aside
-                className={`hidden md:flex flex-col fixed top-0 left-0 h-screen z-40 transition-all duration-300 ${collapsed ? 'w-20' : 'w-64'}`}
+                className={`hidden md:flex flex-col fixed top-0 left-0 h-screen z-40 transition-all duration-300 border-r border-brand-primary/10 shadow-[4px_0_24px_rgba(0,0,0,0.2)] bg-surface-1/80 backdrop-blur-[20px] ${collapsed ? 'w-20' : 'w-64'}`}
             >
                 {/* Header / Logo */}
                 <div className="flex items-center justify-between px-5 h-16 border-b border-white/5">

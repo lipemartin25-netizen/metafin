@@ -1,4 +1,3 @@
-import { tw } from '@/lib/theme';
 // src/components/InvestmentSimulator.jsx
 
 import { useState, useMemo, useEffect } from 'react';
@@ -117,7 +116,7 @@ export default function InvestmentSimulator({ financialData }) {
             </div>
 
             {/* Inputs */}
-            <div className={`rounded-3xl border border-gray-700/40 dark:border-white/10 \${tw.card} p-6 shadow-lg shadow-black/10`}>
+            <div className={`rounded - 3xl border border - gray - 700 / 40 dark: border - white / 10 \${ tw.card } p - 6 shadow - lg shadow - black / 10`}>
                 <h3 className="font-bold mb-6 flex items-center gap-2 text-white dark:text-white">
                     <DollarSign className="h-5 w-5 text-brand-primary" /> Parâmetros da Simulação
                 </h3>
@@ -168,11 +167,11 @@ export default function InvestmentSimulator({ financialData }) {
                                 <button
                                     key={opt.value}
                                     onClick={() => handleChange('months', opt.value)}
-                                    className={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider
-                    transition-all border ${params.months === opt.value
+                                    className={`px - 4 py - 2 rounded - xl text - xs font - bold uppercase tracking - wider
+transition - all border ${params.months === opt.value
                                             ? 'bg-brand-primary text-white shadow-lg shadow-brand-primary/30 border-brand-primary scale-105'
                                             : 'bg-gray-800/40 dark:bg-gray-800/40/5 text-gray-600 dark:text-gray-300 border-gray-700/40 dark:border-white/10 hover:border-brand-primary/50 hover:text-brand-primary'
-                                        }`}
+                                        } `}
                                 >
                                     {opt.label}
                                 </button>
@@ -219,7 +218,7 @@ export default function InvestmentSimulator({ financialData }) {
 
             {/* Gráfico comparativo (barras) */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div className={`rounded-3xl border border-gray-700/40 dark:border-white/10 \${tw.card} p-6 shadow-lg shadow-black/10`}>
+                <div className={`rounded - 3xl border border - gray - 700 / 40 dark: border - white / 10 \${ tw.card } p - 6 shadow - lg shadow - black / 10`}>
                     <h3 className="font-bold mb-6 flex items-center gap-2 text-white dark:text-white">
                         <TrendingUp className="h-5 w-5 text-brand-primary" /> Lucro Líquido por Investimento
                     </h3>
@@ -229,7 +228,7 @@ export default function InvestmentSimulator({ financialData }) {
                                 <CartesianGrid strokeDasharray="3 3" opacity={0.1} horizontal={false} />
                                 <XAxis
                                     type="number"
-                                    tickFormatter={v => `R$ ${(v / 1000).toFixed(0)}k`}
+                                    tickFormatter={v => `R$ ${(v / 1000).toFixed(0)} k`}
                                     tick={{ fill: '#9ca3af', fontSize: 11, fontWeight: 600 }}
                                     axisLine={false}
                                     tickLine={false}
@@ -266,7 +265,7 @@ export default function InvestmentSimulator({ financialData }) {
                 </div>
 
                 {/* Gráfico de evolução (linhas) */}
-                <div className={`rounded-3xl border border-gray-700/40 dark:border-white/10 \${tw.card} p-6 shadow-lg shadow-black/10`}>
+                <div className={`rounded - 3xl border border - gray - 700 / 40 dark: border - white / 10 \${ tw.card } p - 6 shadow - lg shadow - black / 10`}>
                     <h3 className="font-bold mb-6 flex items-center gap-2 text-white dark:text-white">
                         <Clock className="h-5 w-5 text-blue-500" /> Evolução ao Longo do Tempo
                     </h3>
@@ -276,14 +275,14 @@ export default function InvestmentSimulator({ financialData }) {
                                 <CartesianGrid strokeDasharray="3 3" opacity={0.1} vertical={false} />
                                 <XAxis
                                     dataKey="month"
-                                    tickFormatter={v => `${v}m`}
+                                    tickFormatter={v => `${v} m`}
                                     tick={{ fill: '#9ca3af', fontSize: 11, fontWeight: 600 }}
                                     axisLine={false}
                                     tickLine={false}
                                     dy={10}
                                 />
                                 <YAxis
-                                    tickFormatter={v => `R$ ${(v / 1000).toFixed(0)}k`}
+                                    tickFormatter={v => `R$ ${(v / 1000).toFixed(0)} k`}
                                     tick={{ fill: '#9ca3af', fontSize: 11, fontWeight: 600 }}
                                     axisLine={false}
                                     tickLine={false}
@@ -291,7 +290,7 @@ export default function InvestmentSimulator({ financialData }) {
                                 />
                                 <Tooltip
                                     formatter={(v) => formatCurrency(v)}
-                                    labelFormatter={(v) => `Mês ${v}`}
+                                    labelFormatter={(v) => `Mês ${v} `}
                                     contentStyle={{
                                         backgroundColor: 'rgba(17, 24, 39, 0.95)',
                                         border: '1px solid rgba(255,255,255,0.1)',
@@ -321,12 +320,12 @@ export default function InvestmentSimulator({ financialData }) {
             </div>
 
             {/* Tabela detalhada */}
-            <div className={`rounded-3xl border border-gray-700/40 dark:border-white/10 \${tw.card} p-6 shadow-lg shadow-black/10 overflow-hidden`}>
+            <div className={`rounded - 3xl border border - gray - 700 / 40 dark: border - white / 10 \${ tw.card } p - 6 shadow - lg shadow - black / 10 overflow - hidden`}>
                 <h3 className="font-bold mb-6 flex items-center gap-2 text-white dark:text-white">
                     <AlertTriangle className="h-5 w-5 text-brand-primary" /> Comparativo Detalhado (Risco vs Retorno)
                 </h3>
                 <div className="overflow-x-auto custom-scrollbar pb-2">
-                    <table className="w-full text-sm">
+                    <table className="w-full text-sm table-premium">
                         <thead>
                             <tr className="border-b border-gray-700/40 dark:border-white/10">
                                 <th className="text-left py-3 px-3 uppercase text-[10px] tracking-widest text-gray-500 font-bold">Investimento</th>
@@ -342,8 +341,8 @@ export default function InvestmentSimulator({ financialData }) {
                         <tbody>
                             {results.map((r, i) => (
                                 <tr key={r.type}
-                                    className={`border-b border-gray-100 dark:border-white/5 transition-colors hover:bg-gray-800/30/50 dark:hover:bg-gray-800/40/[0.02]
-                    ${i === 0 ? 'bg-purple-50/50 dark:bg-brand-primary/10' : ''}`}>
+                                    className={`border - b border - gray - 100 dark: border - white / 5 transition - colors hover: bg - gray - 800 / 30 / 50 dark: hover: bg - gray - 800 / 40 / [0.02]
+                    ${i === 0 ? 'bg-purple-50/50 dark:bg-brand-primary/10' : ''} `}>
                                     <td className="py-4 px-3 dark:text-white font-bold flex items-center gap-2 whitespace-nowrap">
                                         <span className="text-xl">{r.icon}</span> {r.name}
                                         {i === 0 && <span className="text-xs px-2 py-0.5 rounded-full bg-purple-100 text-brand-dark dark:bg-brand-primary/30 dark:text-purple-300 ml-2">🏆 #1</span>}
@@ -369,9 +368,9 @@ export default function InvestmentSimulator({ financialData }) {
                                     <td className="text-center py-4 px-3 whitespace-nowrap">
                                         <span className="px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-widest border"
                                             style={{
-                                                backgroundColor: `${r.riskColor}20`,
+                                                backgroundColor: `${r.riskColor} 20`,
                                                 color: r.riskColor,
-                                                borderColor: `${r.riskColor}50`
+                                                borderColor: `${r.riskColor} 50`
                                             }}>
                                             {r.riskLevel}
                                         </span>

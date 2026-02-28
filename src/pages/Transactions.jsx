@@ -1,5 +1,4 @@
-import { tw } from '@/lib/theme';
-﻿import { useState, useMemo, useRef } from 'react';
+import { useState, useMemo, useRef } from 'react';
 import { usePageAnnounce } from '../components/A11yAnnouncer';
 import { useTransactions } from '../hooks/useTransactions';
 import StatusChip from '../components/StatusChip';
@@ -497,7 +496,7 @@ export default function Transactions() {
                         filteredTransactions.map((t) => {
                             const cat = categoryConfig[t.category];
                             return (
-                                <div key={t.id} onClick={() => handleEditClick(t)} className={`\${tw.card} !p-4 flex items-center justify-between border border-white/5 hover:border-violet-500/30 transition-all cursor-pointer group relative overflow-hidden`}>
+                                <div key={t.id} onClick={() => handleEditClick(t)} className={`\${tw.card} !p-4 flex items-center justify-between border border-transparent border-l-4 hover:border-l-brand-primary hover:-translate-y-1 hover:shadow-lg transition-all cursor-pointer group relative overflow-hidden hover:bg-white/5`}>
                                     <div className="flex items-center gap-4">
                                         <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-xl shrink-0" style={{ backgroundColor: `${cat?.color || '#6b7280'}20` }}>
                                             {cat?.icon || '📦'}

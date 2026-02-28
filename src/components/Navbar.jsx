@@ -1,5 +1,3 @@
-import { tw } from '@/lib/theme';
-// Removing unused theme import
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import { Globe } from 'lucide-react';
@@ -18,7 +16,7 @@ export default function Navbar() {
     const [langMenuOpen, setLangMenuOpen] = useState(false);
 
     return (
-        <nav className="sticky top-0 z-30 h-14 flex items-center justify-end px-4 sm:px-6 bg-gray-900/50 dark:bg-[#06060a]/50 backdrop-blur-md">
+        <nav className="sticky top-0 z-30 h-14 flex items-center justify-end px-4 sm:px-6 bg-gray-900/50 dark:bg-[#06060a]/50 backdrop-blur-[20px]">
             <div className="absolute inset-x-0 bottom-0 h-[1px] bg-gradient-to-r from-transparent via-brand-primary/50 to-transparent" />
             <div className="flex items-center gap-3">
                 {isDemo && (

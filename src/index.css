@@ -550,6 +550,79 @@ body::before {
     box-shadow: 0 8px 25px var(--border-strong);
 }
 
+/* Ícones de Banco Premium */
+.bank-icon-container {
+    border-radius: 50%;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3), inset 0 2px 0 rgba(255, 255, 255, 0.2);
+    position: relative;
+    border: 1.5px solid transparent;
+    background-clip: padding-box;
+}
+
+.bank-icon-container::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--brand-glow), transparent);
+    z-index: -1;
+    opacity: 0.6;
+}
+
+/* Tabelas Premium */
+.table-premium {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 6px;
+}
+
+.table-premium th {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-secondary);
+    padding-bottom: 8px;
+}
+
+.table-premium tr {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+}
+
+:root:not(.light) .table-premium tbody tr {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.light .table-premium tbody tr {
+    background: #ffffff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
+}
+
+.table-premium tbody tr:hover {
+    transform: translateY(-2px) scale(1.005);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    z-index: 10;
+}
+
+.table-premium td {
+    padding: 12px 16px;
+}
+
+.table-premium td:first-child {
+    border-top-left-radius: 12px;
+    border-bottom-left-radius: 12px;
+    border-left: 3px solid transparent;
+}
+
+.table-premium td:last-child {
+    border-top-right-radius: 12px;
+    border-bottom-right-radius: 12px;
+}
+
+.table-premium tbody tr:hover td:first-child {
+    border-left-color: var(--brand-glow);
+}
+
 /* Garantir que NADA escape do dark theme */
 *,
 *::before,

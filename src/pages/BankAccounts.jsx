@@ -380,7 +380,7 @@ export default function BankAccounts() {
                             onClick={() => handleConnectClick(bank)}
                             className={`${tw.bankCard} hover:bg-gray-800/40/5 transition-all p-4 flex flex-col items-center gap-3 text-center border hover:border-brand-primary/30 group`}
                         >
-                            <div className="w-12 h-12 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-lg transition-transform group-hover:scale-110" style={{ backgroundColor: bank.color, color: bank.textColor }}>
+                            <div className="w-12 h-12 bank-icon-container flex items-center justify-center text-white font-bold text-xl transition-transform group-hover:scale-110" style={{ backgroundColor: bank.color, color: bank.textColor }}>
                                 {bank.logo}
                             </div>
                             <span className="text-sm font-medium text-gray-300 group-hover:text-white">{bank.name}</span>
@@ -395,7 +395,7 @@ export default function BankAccounts() {
                         <button onClick={() => setShowConnectModal(false)} className="absolute top-4 right-4 text-gray-500 hover:text-white"><X className="w-5 h-5" /></button>
 
                         <div className="bg-gray-800/40/5 p-6 text-center border-b border-white/5">
-                            <div className="w-16 h-16 rounded-2xl mx-auto flex items-center justify-center text-white font-bold text-3xl shadow-lg mb-4" style={{ backgroundColor: selectedBank.color, color: selectedBank.textColor }}>
+                            <div className="w-16 h-16 bank-icon-container mx-auto flex items-center justify-center text-white font-bold text-3xl mb-4" style={{ backgroundColor: selectedBank.color, color: selectedBank.textColor }}>
                                 {selectedBank.logo}
                             </div>
                             <h2 className="text-xl font-bold text-white">Conectar {selectedBank.name}</h2>

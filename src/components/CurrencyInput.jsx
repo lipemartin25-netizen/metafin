@@ -1,3 +1,4 @@
+import { tw } from '@/lib/theme';
 // src/components/CurrencyInput.jsx
 import { useState, useCallback, useEffect } from 'react'
 
@@ -62,7 +63,7 @@ export function CurrencyInput({
                 onChange={handleChange}
                 placeholder={placeholder}
                 disabled={disabled}
-                className={`w-full pl-9 pr-4 py-2 bg-white dark:bg-surface-900 border border-gray-200 dark:border-white/10 rounded-xl text-right font-mono text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all ${disabled ? 'opacity-50 cursor-not-allowed' : ''} ${className}`}
+                className={`w-full pl-9 pr-4 py-2 bg-gray-800/40 dark:bg-surface-900 border border-gray-700/40 dark:border-white/10 rounded-xl text-right font-mono text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all ${disabled ? 'opacity-50 cursor-not-allowed' : ''} ${className}`}
                 {...props}
             />
         </div>

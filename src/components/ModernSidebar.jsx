@@ -1,3 +1,4 @@
+import { tw } from '@/lib/theme';
 import { X, LayoutDashboard, ArrowLeftRight, CreditCard, PieChart, Target, Settings, LogOut } from "lucide-react";
 import { Link } from "react-router-dom";
 import MetaFinLogo from "./MetaFinLogo";
@@ -52,7 +53,7 @@ export default function Sidebar({ open, onClose }) {
                 transition-all duration-200 group
                 ${active
                                     ? "bg-gradient-to-r from-violet-500/20 to-indigo-500/10 text-violet-400 border border-violet-500/20"
-                                    : "text-white/40 hover:text-white/80 hover:bg-white/5"
+                                    : "text-white/40 hover:text-white/80 hover:bg-gray-800/40/5"
                                 }
               `}
                         >
@@ -67,7 +68,7 @@ export default function Sidebar({ open, onClose }) {
 
                 {/* User */}
                 <div className="px-3 pb-6 border-t border-white/5 pt-4">
-                    <div className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 cursor-pointer transition-colors">
+                    <div className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-800/40/5 cursor-pointer transition-colors">
                         <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-orange-400 to-pink-500 flex items-center justify-center text-sm font-bold">
                             F
                         </div>

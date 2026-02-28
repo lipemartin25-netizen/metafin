@@ -1,3 +1,4 @@
+import { tw } from '@/lib/theme';
 import { useState, useEffect, useMemo } from 'react';
 import { detectSubscriptions } from '../lib/detectSubscriptions';
 import { useTransactions } from '../hooks/useTransactions';
@@ -57,7 +58,7 @@ export default function Bills() {
     };
 
     const getStatus = (bill) => {
-        if (bill.paid) return { label: 'Pago', color: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20', icon: CheckCircle };
+        if (bill.paid) return { label: 'Pago', color: 'text-purple-400 bg-purple-500/10 border-purple-500/20', icon: CheckCircle };
         const today = new Date().toISOString().split('T')[0];
         if (bill.dueDate < today) return { label: 'Vencida', color: 'text-red-400 bg-red-500/10 border-red-500/20', icon: AlertTriangle };
         const diff = Math.ceil((new Date(bill.dueDate) - new Date()) / (1000 * 60 * 60 * 24));
@@ -95,7 +96,7 @@ export default function Bills() {
         <div className="py-6 space-y-6 animate-fade-in pb-20">
             <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                    <h1 className="text-2xl font-bold text-white dark:text-white flex items-center gap-2">
                         <CalendarDays className="w-6 h-6 text-blue-500" />
                         Contas e Recorrências
                     </h1>
@@ -121,22 +122,22 @@ export default function Bills() {
 
             {/* Stats */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                <div className="glass-card text-center">
-                    <p className="text-2xl font-bold text-gray-900 dark:text-white">{stats.pending}</p>
+                <div className="${tw.card} text-center">
+                    <p className="text-2xl font-bold text-white dark:text-white">{stats.pending}</p>
                     <p className="text-[10px] text-gray-500 uppercase font-bold">Pendentes</p>
                 </div>
-                <div className="glass-card text-center">
+                <div className="${tw.card} text-center">
                     <p className="text-2xl font-bold text-red-500">{stats.overdue}</p>
                     <p className="text-[10px] text-gray-500 uppercase font-bold">Vencidas</p>
                 </div>
-                <div className="glass-card text-center hover:border-purple-500/30 transition-all cursor-pointer group" onClick={() => setFilter('subscriptions')}>
-                    <p className={`text-2xl font-bold flex items-center justify-center gap-1 transition-colors ${filter === 'subscriptions' ? 'text-purple-500' : 'text-gray-900 dark:text-white group-hover:text-purple-500'}`}>
+                <div className="${tw.card} text-center hover:border-purple-500/30 transition-all cursor-pointer group" onClick={() => setFilter('subscriptions')}>
+                    <p className={`text-2xl font-bold flex items-center justify-center gap-1 transition-colors ${filter === 'subscriptions' ? 'text-purple-500' : 'text-white dark:text-white group-hover:text-purple-500'}`}>
                         <Sparkles className={`w-5 h-5 ${filter === 'subscriptions' ? 'text-purple-500' : 'text-purple-500/50 group-hover:text-purple-500'} transition-colors`} />
                         {stats.subscriptions.length}
                     </p>
                     <p className="text-[10px] text-gray-500 uppercase font-bold mt-0.5">Assinaturas Info</p>
                 </div>
-                <div className="glass-card text-center">
+                <div className="${tw.card} text-center">
                     <p className="text-2xl font-bold text-blue-500">{fmt(stats.totalPending)}</p>
                     <p className="text-[10px] text-gray-500 uppercase font-bold">Total a Pagar</p>
                 </div>
@@ -152,7 +153,7 @@ export default function Bills() {
                     { id: 'subscriptions', label: '🛡️ Kill-Switch (Assinaturas)' },
                 ].map(f => (
                     <button key={f.id} onClick={() => setFilter(f.id)}
-                        className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${filter === f.id ? (f.id === 'subscriptions' ? 'bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-500/30 shadow-[0_0_15px_-3px_rgba(168,85,247,0.2)]' : 'bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/30') : 'bg-gray-50 dark:bg-white/5 text-gray-500 border border-gray-200 dark:border-white/10 hover:border-blue-500/30 dark:hover:bg-white/10'}`}
+                        className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${filter === f.id ? (f.id === 'subscriptions' ? 'bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-500/30 shadow-[0_0_15px_-3px_rgba(168,85,247,0.2)]' : 'bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/30') : 'bg-gray-800/30 dark:bg-gray-800/40/5 text-gray-500 border border-gray-700/40 dark:border-white/10 hover:border-blue-500/30 dark:hover:bg-gray-800/40/10'}`}
                     >{f.label}</button>
                 ))}
             </div>
@@ -160,7 +161,7 @@ export default function Bills() {
             {/* List Views */}
             {filter === 'subscriptions' ? (
                 <div className="space-y-6 animate-fade-in">
-                    <div className="glass-card p-6 border-l-4 border-l-red-500 relative overflow-hidden bg-black/40">
+                    <div className="${tw.card} p-6 border-l-4 border-l-red-500 relative overflow-hidden bg-black/40">
                         <div className="absolute top-0 right-0 p-8 opacity-10">
                             <Bot className="w-48 h-48 text-red-500" />
                         </div>
@@ -175,7 +176,7 @@ export default function Bills() {
 
                     <div className="grid md:grid-cols-2 gap-6">
                         {stats.subscriptions.map((sub, i) => (
-                            <div key={i} className={`glass-card p-6 transition-all group cursor-default relative overflow-hidden backdrop-blur-2xl ${sub.hasIncreasedPrice ? 'border-red-500/50 shadow-[0_0_30px_-5px_rgba(239,68,68,0.3)]' : 'border-gray-800 hover:border-accent/30'}`}>
+                            <div key={i} className={`${tw.card} p-6 transition-all group cursor-default relative overflow-hidden backdrop-blur-2xl ${sub.hasIncreasedPrice ? 'border-red-500/50 shadow-[0_0_30px_-5px_rgba(239,68,68,0.3)]' : 'border-gray-800 hover:border-accent/30'}`}>
                                 <div className={`absolute -right-4 -top-4 w-32 h-32 rounded-full blur-[50px] transition-all opacity-20 ${sub.hasIncreasedPrice ? 'bg-red-500' : 'bg-accent'}`}></div>
 
                                 {sub.hasIncreasedPrice && (
@@ -233,7 +234,7 @@ export default function Bills() {
             ) : (
                 <div className="space-y-2">
                     {filtered.length === 0 ? (
-                        <div className="glass-card text-center py-12 border-dashed border-2 border-gray-200 dark:border-white/10 bg-transparent">
+                        <div className="${tw.card} text-center py-12 border-dashed border-2 border-gray-700/40 dark:border-white/10 bg-transparent">
                             <CalendarDays className="w-12 h-12 text-blue-500 mx-auto mb-4 opacity-50" />
                             <p className="text-gray-500 text-sm">Nenhuma conta encontrada nesta categoria.</p>
                         </div>
@@ -241,14 +242,14 @@ export default function Bills() {
                         const status = getStatus(bill);
                         const StatusIcon = status.icon;
                         return (
-                            <div key={bill.id} className={`glass-card flex items-center gap-4 ${bill.paid ? 'opacity-60' : ''}`}>
+                            <div key={bill.id} className={`${tw.card} flex items-center gap-4 ${bill.paid ? 'opacity-60' : ''}`}>
                                 <button onClick={() => togglePaid(bill.id)}
-                                    className={`w-8 h-8 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all ${bill.paid ? 'bg-emerald-500/20 border-emerald-500 text-emerald-500' : 'border-gray-300 dark:border-white/20 hover:border-blue-500'}`}>
+                                    className={`w-8 h-8 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all ${bill.paid ? 'bg-purple-500/20 border-purple-500 text-purple-500' : 'border-gray-700/50 dark:border-white/20 hover:border-blue-500'}`}>
                                     {bill.paid && <CheckCircle className="w-4 h-4" />}
                                 </button>
                                 <div className="flex-1 min-w-0">
                                     <div className="flex items-center gap-2">
-                                        <p className={`text-sm font-bold ${bill.paid ? 'line-through text-gray-500' : 'text-gray-900 dark:text-white'}`}>{bill.description}</p>
+                                        <p className={`text-sm font-bold ${bill.paid ? 'line-through text-gray-500' : 'text-white dark:text-white'}`}>{bill.description}</p>
                                         {bill.recurrence !== 'none' && (
                                             <span className="text-[9px] px-1.5 py-0.5 rounded font-bold bg-indigo-500/10 border border-indigo-500/20 text-indigo-500 flex items-center gap-1">
                                                 <RefreshCw className="w-2.5 h-2.5" /> {RECURRENCE_OPTIONS.find(r => r.id === bill.recurrence)?.label}
@@ -261,7 +262,7 @@ export default function Bills() {
                                 </div>
                                 <div className="flex items-center gap-3">
                                     <div className="text-right">
-                                        <p className={`text-sm font-bold flex items-center justify-end gap-1 ${bill.type === 'income' ? 'text-emerald-500' : 'text-gray-900 dark:text-white'}`}>
+                                        <p className={`text-sm font-bold flex items-center justify-end gap-1 ${bill.type === 'income' ? 'text-purple-500' : 'text-white dark:text-white'}`}>
                                             {bill.type === 'income' ? <ArrowUpRight className="w-3 h-3" /> : <ArrowDownRight className="w-3 h-3 text-red-500" />}
                                             {fmt(bill.amount)}
                                         </p>
@@ -269,7 +270,7 @@ export default function Bills() {
                                             <StatusIcon className="w-2.5 h-2.5" /> {status.label}
                                         </span>
                                     </div>
-                                    <div className="w-px h-8 bg-gray-200 dark:bg-white/10 mx-1"></div>
+                                    <div className="w-px h-8 bg-gray-800/50 dark:bg-gray-800/40/10 mx-1"></div>
                                     <button onClick={() => handleDelete(bill.id)} className="p-2 rounded-xl text-red-500/50 hover:text-red-500 hover:bg-red-500/10 transition-all">
                                         <Trash2 className="w-4 h-4" />
                                     </button>
@@ -283,23 +284,23 @@ export default function Bills() {
             {/* Add Modal */}
             {showAdd && (
                 <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
-                    <form onSubmit={handleAdd} className="glass-card w-full max-w-md p-6 space-y-4 animate-slide-up relative bg-white dark:bg-surface-900 border border-gray-200 dark:border-white/10">
-                        <button type="button" onClick={() => setShowAdd(false)} className="absolute top-4 right-4 text-gray-500 hover:text-gray-900 dark:hover:text-white transition-colors"><X className="w-5 h-5" /></button>
-                        <h2 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2 mb-6"><CalendarDays className="w-5 h-5 text-blue-500" /> Nova Conta / Receita</h2>
+                    <form onSubmit={handleAdd} className="${tw.card} w-full max-w-md p-6 space-y-4 animate-slide-up relative bg-gray-800/40 dark:bg-surface-900 border border-gray-700/40 dark:border-white/10">
+                        <button type="button" onClick={() => setShowAdd(false)} className="absolute top-4 right-4 text-gray-500 hover:text-white dark:hover:text-white transition-colors"><X className="w-5 h-5" /></button>
+                        <h2 className="text-xl font-bold text-white dark:text-white flex items-center gap-2 mb-6"><CalendarDays className="w-5 h-5 text-blue-500" /> Nova Conta / Receita</h2>
 
                         <div>
                             <label className="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Descrição</label>
-                            <input required value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} className="w-full bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 text-gray-900 dark:text-white text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 mt-1 transition-all" placeholder="Ex: Aluguel, Provedor Internet..." />
+                            <input required value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} className="w-full bg-gray-800/30 dark:bg-black/20 border border-gray-700/40 dark:border-white/10 rounded-xl px-4 py-3 text-white dark:text-white text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 mt-1 transition-all" placeholder="Ex: Aluguel, Provedor Internet..." />
                         </div>
 
                         <div className="grid grid-cols-2 gap-4">
                             <div>
                                 <label className="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Valor (R$)</label>
-                                <input required value={form.amount} onChange={e => setForm({ ...form, amount: e.target.value })} className="w-full bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 text-gray-900 dark:text-white text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 mt-1 transition-all" placeholder="125,90" />
+                                <input required value={form.amount} onChange={e => setForm({ ...form, amount: e.target.value })} className="w-full bg-gray-800/30 dark:bg-black/20 border border-gray-700/40 dark:border-white/10 rounded-xl px-4 py-3 text-white dark:text-white text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 mt-1 transition-all" placeholder="125,90" />
                             </div>
                             <div>
                                 <label className="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Vencimento</label>
-                                <input required type="date" value={form.dueDate} onChange={e => setForm({ ...form, dueDate: e.target.value })} className="w-full bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 text-gray-900 dark:text-white text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 mt-1 transition-all" />
+                                <input required type="date" value={form.dueDate} onChange={e => setForm({ ...form, dueDate: e.target.value })} className="w-full bg-gray-800/30 dark:bg-black/20 border border-gray-700/40 dark:border-white/10 rounded-xl px-4 py-3 text-white dark:text-white text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 mt-1 transition-all" />
                             </div>
                         </div>
 
@@ -308,18 +309,18 @@ export default function Bills() {
                                 <label className="text-[10px] text-gray-500 uppercase font-bold tracking-widest mb-1 block">Tipo de Fluxo</label>
                                 <div className="grid grid-cols-2 gap-2 mt-1">
                                     <button type="button" onClick={() => setForm({ ...form, type: 'expense' })}
-                                        className={`w-full py-2.5 text-xs font-bold rounded-xl border transition-all ${form.type === 'expense' ? 'bg-red-500/10 border-red-500/30 text-red-500 shadow-[0_0_15px_-3px_rgba(239,68,68,0.2)]' : 'bg-gray-50 dark:bg-white/5 border-gray-200 dark:border-white/10 text-gray-500 hover:bg-gray-100 dark:hover:bg-white/10'}`}>
+                                        className={`w-full py-2.5 text-xs font-bold rounded-xl border transition-all ${form.type === 'expense' ? 'bg-red-500/10 border-red-500/30 text-red-500 shadow-[0_0_15px_-3px_rgba(239,68,68,0.2)]' : 'bg-gray-800/30 dark:bg-gray-800/40/5 border-gray-700/40 dark:border-white/10 text-gray-500 hover:bg-gray-800/40 dark:hover:bg-gray-800/40/10'}`}>
                                         SAÍDA
                                     </button>
                                     <button type="button" onClick={() => setForm({ ...form, type: 'income' })}
-                                        className={`w-full py-2.5 text-xs font-bold rounded-xl border transition-all ${form.type === 'income' ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-500 shadow-[0_0_15px_-3px_rgba(16,185,129,0.2)]' : 'bg-gray-50 dark:bg-white/5 border-gray-200 dark:border-white/10 text-gray-500 hover:bg-gray-100 dark:hover:bg-white/10'}`}>
+                                        className={`w-full py-2.5 text-xs font-bold rounded-xl border transition-all ${form.type === 'income' ? 'bg-purple-500/10 border-purple-500/30 text-purple-500 shadow-[0_0_15px_-3px_rgba(16,185,129,0.2)]' : 'bg-gray-800/30 dark:bg-gray-800/40/5 border-gray-700/40 dark:border-white/10 text-gray-500 hover:bg-gray-800/40 dark:hover:bg-gray-800/40/10'}`}>
                                         ENTRADA
                                     </button>
                                 </div>
                             </div>
                             <div>
                                 <label className="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Recorrência Automática</label>
-                                <select value={form.recurrence} onChange={e => setForm({ ...form, recurrence: e.target.value })} className="w-full bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 text-gray-900 dark:text-white text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 mt-1 transition-all">
+                                <select value={form.recurrence} onChange={e => setForm({ ...form, recurrence: e.target.value })} className="w-full bg-gray-800/30 dark:bg-black/20 border border-gray-700/40 dark:border-white/10 rounded-xl px-4 py-3 text-white dark:text-white text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 mt-1 transition-all">
                                     {RECURRENCE_OPTIONS.map(r => <option key={r.id} value={r.id}>{r.label}</option>)}
                                 </select>
                             </div>

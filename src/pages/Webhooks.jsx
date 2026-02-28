@@ -1,3 +1,4 @@
+import { tw } from '@/lib/theme';
 import { useState, useEffect } from 'react';
 import { Webhook, Plus, Bell, Target, Zap, RefreshCw, Heart, Copy, CheckCircle, Trash2, Power, PowerOff } from 'lucide-react';
 import WebhookModal from '../components/WebhookModal';
@@ -15,11 +16,11 @@ function WebhookCard({ webhook, onToggle, onDelete }) {
     const eventsDetails = webhook.events.map(eventId => WEBHOOK_EVENTS.find(e => e.id === eventId)).filter(Boolean);
 
     return (
-        <div className={`glass-card p-5 space-y-4 border ${webhook.active ? 'border-fuchsia-500/30 shadow-[0_0_15px_rgba(217,70,239,0.1)]' : 'border-white/5 opacity-70'}`}>
+        <div className={`${tw.card} p-5 space-y-4 border ${webhook.active ? 'border-fuchsia-500/30 shadow-[0_0_15px_rgba(217,70,239,0.1)]' : 'border-white/5 opacity-70'}`}>
             <div className="flex justify-between items-start gap-4">
                 <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
-                        <div className={`w-2.5 h-2.5 rounded-full ${webhook.active ? 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)] animate-pulse' : 'bg-gray-500'}`} />
+                        <div className={`w-2.5 h-2.5 rounded-full ${webhook.active ? 'bg-purple-500 shadow-[0_0_8px_rgba(16,185,129,0.8)] animate-pulse' : 'bg-gray-500'}`} />
                         <h3 className="text-lg font-bold text-white truncate">{webhook.name}</h3>
                     </div>
                     <p className="text-xs font-mono text-gray-400 truncate bg-black/20 p-1.5 rounded-md inline-block max-w-full">
@@ -29,7 +30,7 @@ function WebhookCard({ webhook, onToggle, onDelete }) {
                 <div className="flex items-center gap-2">
                     <button
                         onClick={() => onToggle(webhook.id, !webhook.active)}
-                        className={`p-2 rounded-xl transition-colors ${webhook.active ? 'text-emerald-400 hover:bg-emerald-500/10' : 'text-gray-400 hover:bg-gray-500/10'}`}
+                        className={`p-2 rounded-xl transition-colors ${webhook.active ? 'text-purple-400 hover:bg-purple-500/10' : 'text-gray-400 hover:bg-gray-500/10'}`}
                         title={webhook.active ? "Desativar Webhook" : "Ativar Webhook"}
                     >
                         {webhook.active ? <Power className="w-5 h-5" /> : <PowerOff className="w-5 h-5" />}
@@ -167,7 +168,7 @@ export default function Webhooks() {
                     <RefreshCw className="w-8 h-8 text-fuchsia-500 animate-spin" />
                 </div>
             ) : webhooks.length === 0 ? (
-                <div className="glass-card p-10 text-center space-y-4">
+                <div className="${tw.card} p-10 text-center space-y-4">
                     <div className="w-16 h-16 rounded-2xl bg-fuchsia-500/10 flex items-center justify-center mx-auto">
                         <Webhook className="w-8 h-8 text-fuchsia-400" />
                     </div>
@@ -202,7 +203,7 @@ export default function Webhooks() {
                 <h2 className="text-sm font-bold text-gray-500 uppercase tracking-widest">Eventos Suportados</h2>
                 <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
                     {WEBHOOK_EVENTS.map((evt) => (
-                        <div key={evt.id} className="glass-card !p-4 flex items-start gap-3 border border-white/5 hover:border-fuchsia-500/20 transition-all group">
+                        <div key={evt.id} className="${tw.card} !p-4 flex items-start gap-3 border border-white/5 hover:border-fuchsia-500/20 transition-all group">
                             <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style={{ backgroundColor: `${evt.color}15` }}>
                                 <evt.icon className="w-5 h-5" style={{ color: evt.color }} />
                             </div>
@@ -217,19 +218,19 @@ export default function Webhooks() {
             </div>
 
             {/* Exemplo de Payload */}
-            <div className="glass-card space-y-3">
+            <div className="${tw.card} space-y-3">
                 <div className="flex items-center justify-between">
                     <h3 className="text-sm font-bold text-gray-400 uppercase tracking-wider">Exemplo de Payload</h3>
-                    <button onClick={handleCopy} className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-white transition-colors px-2 py-1 rounded-lg hover:bg-white/5">
-                        {copied ? <><CheckCircle className="w-3 h-3 text-emerald-400" /> Copiado!</> : <><Copy className="w-3 h-3" /> Copiar</>}
+                    <button onClick={handleCopy} className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-white transition-colors px-2 py-1 rounded-lg hover:bg-gray-800/40/5">
+                        {copied ? <><CheckCircle className="w-3 h-3 text-purple-400" /> Copiado!</> : <><Copy className="w-3 h-3" /> Copiar</>}
                     </button>
                 </div>
-                <pre className="bg-black/30 rounded-xl p-4 text-xs text-emerald-300 font-mono overflow-x-auto border border-white/5">
+                <pre className="bg-black/30 rounded-xl p-4 text-xs text-purple-300 font-mono overflow-x-auto border border-white/5">
                     {samplePayload}
                 </pre>
                 <p className="text-[11px] text-gray-500">
                     O MetaFin envia um POST com este formato para a URL configurada. Inclua o header
-                    <code className="bg-white/5 px-1.5 py-0.5 rounded mx-1">X-Webhook-Secret</code>
+                    <code className="bg-gray-800/40/5 px-1.5 py-0.5 rounded mx-1">X-Webhook-Secret</code>
                     para validar a autenticidade.
                 </p>
             </div>

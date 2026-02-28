@@ -1,3 +1,4 @@
+import { tw } from '@/lib/theme';
 import { useNavigate } from 'react-router-dom';
 import { Bot, Sparkles, ChevronRight, Search } from 'lucide-react';
 import { useState } from 'react';
@@ -20,7 +21,7 @@ export default function AIPromptCard() {
     };
 
     return (
-        <div className="glass-card p-6 border-violet-500/20 bg-gradient-to-br from-violet-500/5 via-transparent to-fuchsia-500/5 group">
+        <div className="${tw.card} p-6 border-violet-500/20 bg-gradient-to-br from-violet-500/5 via-transparent to-fuchsia-500/5 group">
             <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-xl bg-violet-500/10 flex items-center justify-center border border-violet-500/20">
@@ -59,7 +60,7 @@ export default function AIPromptCard() {
                     <button
                         key={i}
                         onClick={() => navigate(`/app/advisor?q=${encodeURIComponent(text)}`)}
-                        className="w-full flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-violet-500/5 hover:border-violet-500/20 transition-all text-left group/item"
+                        className="w-full flex items-center justify-between p-3 rounded-xl bg-gray-800/40/[0.02] border border-white/5 hover:bg-violet-500/5 hover:border-violet-500/20 transition-all text-left group/item"
                     >
                         <span className="text-xs text-slate-400 group-hover/item:text-slate-200 transition-colors font-medium">{text}</span>
                         <ChevronRight className="w-3 h-3 text-slate-700 group-hover/item:text-violet-400" />

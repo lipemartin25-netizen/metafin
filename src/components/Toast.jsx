@@ -1,3 +1,4 @@
+import { tw } from '@/lib/theme';
 import { useState, useEffect, useCallback, createContext, useContext } from 'react';
 import { X, CheckCircle, AlertCircle, Info, AlertTriangle } from 'lucide-react';
 
@@ -8,8 +9,8 @@ const ToastContext = createContext(null);
 const TOAST_TYPES = {
     success: {
         icon: CheckCircle,
-        className: 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400',
-        iconClass: 'text-emerald-400',
+        className: 'bg-purple-500/10 border-purple-500/20 text-purple-400',
+        iconClass: 'text-purple-400',
     },
     error: {
         icon: AlertCircle,
@@ -63,7 +64,7 @@ function ToastItem({ id, type = 'info', title, message, duration = 5000, onClose
 
             <button
                 onClick={() => onClose(id)}
-                className="shrink-0 p-1 rounded-lg hover:bg-white/10 transition-colors"
+                className="shrink-0 p-1 rounded-lg hover:bg-gray-800/40/10 transition-colors"
                 aria-label="Fechar notificação"
             >
                 <X className="w-4 h-4" />

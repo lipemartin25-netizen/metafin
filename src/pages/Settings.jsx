@@ -1,3 +1,4 @@
+import { tw } from '@/lib/theme';
 ﻿import { useState } from 'react';
 import { usePersistentState } from '../hooks/usePersistentState';
 import { useAuth } from '../contexts/AuthContext';
@@ -103,7 +104,7 @@ export default function Settings() {
                             onClick={() => setActiveTab(section.id)}
                             className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 text-left ${activeTab === section.id
                                 ? 'bg-violet-500/10 text-violet-300 border border-violet-500/20'
-                                : 'text-slate-400 hover:bg-white/5 hover:text-slate-200 border border-transparent'}`}
+                                : 'text-slate-400 hover:bg-gray-800/40/5 hover:text-slate-200 border border-transparent'}`}
                         >
                             <section.icon className={`w-5 h-5 ${activeTab === section.id ? 'text-violet-400' : 'text-slate-500'}`} />
                             {section.label}
@@ -112,7 +113,7 @@ export default function Settings() {
                 </div>
 
                 {/* Content */}
-                <div className="glass-card min-h-[500px] p-8">
+                <div className="${tw.card} min-h-[500px] p-8">
 
                     {/* PREFERENCES */}
                     {activeTab === 'preferences' && (
@@ -122,16 +123,16 @@ export default function Settings() {
                             </h2>
                             <div className="space-y-4">
                                 {/* Theme Toggle */}
-                                <div className="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/10">
+                                <div className="flex items-center justify-between p-4 rounded-xl bg-gray-800/40/5 border border-white/10">
                                     <div>
                                         <p className="font-medium text-white">Tema do App</p>
                                         <p className="text-sm text-slate-400 mt-0.5">Escolha entre tema escuro ou claro</p>
                                     </div>
-                                    <div className="flex bg-white/5 rounded-xl p-1 border border-white/10 gap-1">
+                                    <div className="flex bg-gray-800/40/5 rounded-xl p-1 border border-white/10 gap-1">
                                         <button
                                             onClick={() => handleThemeToggle('light')}
                                             className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${theme === 'light'
-                                                ? 'bg-white text-slate-900 shadow-lg'
+                                                ? 'bg-gray-800/40 text-slate-900 shadow-lg'
                                                 : 'text-slate-400 hover:text-slate-200'}`}
                                         >
                                             <Sun className="w-4 h-4" /> Claro
@@ -148,7 +149,7 @@ export default function Settings() {
                                 </div>
 
                                 {/* Currency */}
-                                <div className="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/10">
+                                <div className="flex items-center justify-between p-4 rounded-xl bg-gray-800/40/5 border border-white/10">
                                     <div>
                                         <p className="font-medium text-white">Moeda Principal</p>
                                         <p className="text-sm text-slate-400 mt-0.5">Moeda usada para exibir valores</p>
@@ -156,7 +157,7 @@ export default function Settings() {
                                     <select
                                         value={currency}
                                         onChange={handleCurrencyChange}
-                                        className="bg-white/10 text-white border border-white/10 rounded-xl px-4 py-2 outline-none focus:border-violet-500 cursor-pointer text-sm"
+                                        className="bg-gray-800/40/10 text-white border border-white/10 rounded-xl px-4 py-2 outline-none focus:border-violet-500 cursor-pointer text-sm"
                                     >
                                         <option value="BRL" className="bg-[#0d1424]">BRL (R$)</option>
                                         <option value="USD" className="bg-[#0d1424]">USD ($)</option>
@@ -174,7 +175,7 @@ export default function Settings() {
                                 <Shield className="w-5 h-5 text-violet-400" /> Segurança da Conta
                             </h2>
                             <div className="space-y-4 mb-8">
-                                <div className="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/10">
+                                <div className="flex items-center justify-between p-4 rounded-xl bg-gray-800/40/5 border border-white/10">
                                     <div className="flex items-center gap-4">
                                         <div className="w-10 h-10 rounded-full bg-blue-500/10 flex items-center justify-center">
                                             <Mail className="w-5 h-5 text-blue-400" />
@@ -188,7 +189,7 @@ export default function Settings() {
                                         Alterar
                                     </button>
                                 </div>
-                                <div className="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/10">
+                                <div className="flex items-center justify-between p-4 rounded-xl bg-gray-800/40/5 border border-white/10">
                                     <div className="flex items-center gap-4">
                                         <div className="w-10 h-10 rounded-full bg-orange-500/10 flex items-center justify-center">
                                             <Key className="w-5 h-5 text-orange-400" />
@@ -211,9 +212,9 @@ export default function Settings() {
                                 </h3>
                                 <div className="space-y-3">
                                     {devices.map((device) => (
-                                        <div key={device.id} className="flex items-center justify-between p-4 rounded-xl bg-white/5 hover:bg-white/[0.07] border border-white/10 transition-colors group">
+                                        <div key={device.id} className="flex items-center justify-between p-4 rounded-xl bg-gray-800/40/5 hover:bg-gray-800/40/[0.07] border border-white/10 transition-colors group">
                                             <div className="flex items-center gap-4">
-                                                <div className={`w-10 h-10 rounded-full flex items-center justify-center ${device.current ? 'bg-violet-500/10 text-violet-400' : 'bg-white/5 text-slate-400'}`}>
+                                                <div className={`w-10 h-10 rounded-full flex items-center justify-center ${device.current ? 'bg-violet-500/10 text-violet-400' : 'bg-gray-800/40/5 text-slate-400'}`}>
                                                     <device.icon className="w-5 h-5" />
                                                 </div>
                                                 <div>
@@ -261,14 +262,14 @@ export default function Settings() {
                                     { key: 'premium', title: 'Ofertas Premium', desc: 'Promoções exclusivas e benefícios do plano Pro.' },
                                     { key: 'financial', title: 'Alertas Financeiros', desc: 'Notificações sobre metas, limites de orçamento e insights da IA.' },
                                 ].map((item) => (
-                                    <div key={item.key} className="flex items-start justify-between p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/[0.07] transition-colors">
+                                    <div key={item.key} className="flex items-start justify-between p-4 rounded-xl bg-gray-800/40/5 border border-white/10 hover:bg-gray-800/40/[0.07] transition-colors">
                                         <div className="pr-4">
                                             <p className="font-medium text-white mb-1">{item.title}</p>
                                             <p className="text-sm text-slate-400 leading-relaxed">{item.desc}</p>
                                         </div>
                                         <label className="relative inline-flex items-center cursor-pointer mt-1 shrink-0">
                                             <input type="checkbox" className="sr-only peer" checked={emailAlerts[item.key]} onChange={() => handleNotificationToggle(item.key)} />
-                                            <div className="w-11 h-6 bg-white/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-violet-500" />
+                                            <div className="w-11 h-6 bg-gray-800/40/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-gray-800/40 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-violet-500" />
                                         </label>
                                     </div>
                                 ))}
@@ -289,34 +290,34 @@ export default function Settings() {
                             <h2 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
                                 <HelpCircle className="w-5 h-5 text-violet-400" /> Como Usar o MetaFin
                             </h2>
-                            <div className="glass-card p-5 border-l-4 border-l-violet-500">
+                            <div className="${tw.card} p-5 border-l-4 border-l-violet-500">
                                 <h3 className="text-base font-bold text-white mb-2">Visão Geral</h3>
                                 <p className="text-sm text-slate-400 leading-relaxed">O MetaFin é o seu copiloto inteligente para gerenciar suas finanças. Monitore transações, crie planos de orçamento, acompanhe seu patrimônio líquido e use IA avançada para analisar sua saúde financeira de maneira automática.</p>
                             </div>
-                            <div className="glass-card p-5">
+                            <div className="${tw.card} p-5">
                                 <h3 className="text-base font-bold text-white mb-4 flex items-center gap-2">
-                                    <FileSpreadsheet className="w-5 h-5 text-emerald-400" /> Importando Documentos
+                                    <FileSpreadsheet className="w-5 h-5 text-purple-400" /> Importando Documentos
                                 </h3>
                                 <ol className="text-sm text-slate-400 space-y-2 pl-4 list-decimal">
                                     <li>Vá até a aba <strong className="text-slate-200">Transações</strong> no menu lateral.</li>
                                     <li>Clique em <strong className="text-slate-200">Importar Arquivo</strong> (Smart Import Multi-Formato).</li>
                                     <li>Selecione arquivos CSV, Excel ou outros suportados.</li>
                                     <li>A plataforma identificará automaticamente as colunas e categorizará as despesas.</li>
-                                    <li>Certifique-se que os arquivos possuam colunas: <code className="bg-white/5 px-1 rounded">data</code>, <code className="bg-white/5 px-1 rounded">valor</code>, <code className="bg-white/5 px-1 rounded">descricao</code>.</li>
+                                    <li>Certifique-se que os arquivos possuam colunas: <code className="bg-gray-800/40/5 px-1 rounded">data</code>, <code className="bg-gray-800/40/5 px-1 rounded">valor</code>, <code className="bg-gray-800/40/5 px-1 rounded">descricao</code>.</li>
                                 </ol>
                             </div>
-                            <div className="glass-card p-5 bg-fuchsia-500/5 border border-fuchsia-500/10">
+                            <div className="${tw.card} p-5 bg-fuchsia-500/5 border border-fuchsia-500/10">
                                 <h3 className="text-base font-bold text-white mb-4 flex items-center gap-2">
                                     <Zap className="w-5 h-5 text-fuchsia-400" /> Conectando Webhooks e Automações
                                 </h3>
                                 <p className="text-sm text-slate-400 leading-relaxed mb-3">Integre o MetaFin com <strong className="text-slate-200">Zapier, Make, n8n</strong> para receber transações automaticamente (ex: MercadoPago, Stripe).</p>
                                 <ol className="text-sm text-slate-400 space-y-2 pl-4 list-decimal">
-                                    <li>Vá em <strong className="text-slate-200">Webhooks</strong> no menu (ícone <code className="bg-white/5 px-1 rounded">&lt;/&gt;</code>).</li>
+                                    <li>Vá em <strong className="text-slate-200">Webhooks</strong> no menu (ícone <code className="bg-gray-800/40/5 px-1 rounded">&lt;/&gt;</code>).</li>
                                     <li>Clique em <strong className="text-slate-200">Gerar API Key</strong>.</li>
-                                    <li>Copie a chave e configure na sua plataforma de automação preferida via <code className="bg-white/5 px-1 rounded">POST</code>.</li>
+                                    <li>Copie a chave e configure na sua plataforma de automação preferida via <code className="bg-gray-800/40/5 px-1 rounded">POST</code>.</li>
                                 </ol>
                             </div>
-                            <div className="glass-card p-5">
+                            <div className="${tw.card} p-5">
                                 <h3 className="text-base font-bold text-white mb-3 flex items-center gap-2">
                                     <Globe className="w-5 h-5 text-blue-400" /> Consultor IA
                                 </h3>

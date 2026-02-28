@@ -1,3 +1,4 @@
+import { tw } from '@/lib/theme';
 // src/pages/Budget.jsx
 import { useState, useEffect, useMemo } from 'react';
 import { useTransactions } from '../hooks/useTransactions';
@@ -187,7 +188,7 @@ export default function Budget() {
         <div className="py-6 space-y-6 animate-fade-in pb-20">
             <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                    <h1 className="text-2xl font-bold text-white dark:text-white flex items-center gap-2">
                         <PiggyBank className="w-6 h-6 text-pink-500" />
                         Orçamento Mensal
                     </h1>
@@ -211,20 +212,20 @@ export default function Budget() {
 
             {/* Summary */}
             <div className="grid sm:grid-cols-3 gap-4">
-                <div className="glass-card">
+                <div className="${tw.card}">
                     <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Orçamento Total</p>
-                    <p className="text-2xl font-bold text-gray-900 dark:text-white">{fmt(totalBudget)}</p>
+                    <p className="text-2xl font-bold text-white dark:text-white">{fmt(totalBudget)}</p>
                 </div>
-                <div className="glass-card">
+                <div className="${tw.card}">
                     <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Gasto Este Mês</p>
                     <p className="text-2xl font-bold text-red-500">{fmt(totalSpent)}</p>
                 </div>
-                <div className="glass-card">
+                <div className="${tw.card}">
                     <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Disponível</p>
-                    <p className={`text-2xl font-bold ${totalBudget - totalSpent >= 0 ? 'text-emerald-500' : 'text-red-500'}`}>{fmt(totalBudget - totalSpent)}</p>
+                    <p className={`text-2xl font-bold ${totalBudget - totalSpent >= 0 ? 'text-purple-500' : 'text-red-500'}`}>{fmt(totalBudget - totalSpent)}</p>
                     {totalBudget > 0 && (
-                        <div className="mt-2 h-2 bg-gray-200 dark:bg-white/10 rounded-full overflow-hidden">
-                            <div className={`h-full rounded-full transition-all ${(totalSpent / totalBudget) > 0.9 ? 'bg-red-500' : (totalSpent / totalBudget) > 0.7 ? 'bg-yellow-500' : 'bg-emerald-500'}`}
+                        <div className="mt-2 h-2 bg-gray-800/50 dark:bg-gray-800/40/10 rounded-full overflow-hidden">
+                            <div className={`h-full rounded-full transition-all ${(totalSpent / totalBudget) > 0.9 ? 'bg-red-500' : (totalSpent / totalBudget) > 0.7 ? 'bg-yellow-500' : 'bg-purple-500'}`}
                                 style={{ width: `${Math.min((totalSpent / totalBudget) * 100, 100)}%` }} />
                         </div>
                     )}
@@ -233,10 +234,10 @@ export default function Budget() {
 
             {/* Budget Items */}
             {budgets.length === 0 ? (
-                <div className="glass-card text-center py-12 border-dashed border-2 border-gray-200 dark:border-white/10 bg-transparent relative overflow-hidden">
+                <div className="${tw.card} text-center py-12 border-dashed border-2 border-gray-700/40 dark:border-white/10 bg-transparent relative overflow-hidden">
                     <div className="absolute inset-0 bg-gradient-to-b from-transparent to-pink-500/5 pointer-events-none" />
                     <PiggyBank className="w-12 h-12 text-pink-500 mx-auto mb-4 opacity-50 relative z-10" />
-                    <h4 className="text-gray-900 dark:text-white font-medium mb-1 relative z-10">Nenhum orçamento definido</h4>
+                    <h4 className="text-white dark:text-white font-medium mb-1 relative z-10">Nenhum orçamento definido</h4>
                     <p className="text-gray-500 text-sm mb-4 relative z-10">Defina limites de gastos por categoria para controlar suas finanças.</p>
                     <button onClick={() => { setForm({ category: availableCategories[0] || '', limit: '' }); setShowAdd(true); }} className="gradient-btn px-6 py-2.5 text-sm rounded-xl relative z-10 flex items-center gap-2 mx-auto">
                         <Plus className="w-4 h-4" /> Criar Orçamento
@@ -252,25 +253,25 @@ export default function Budget() {
                         const remaining = budget.limit - spent;
 
                         return (
-                            <div key={budget.id} className={`glass-card ${over ? 'border-red-500/30 bg-red-500/5' : ''}`}>
+                            <div key={budget.id} className={`${tw.card} ${over ? 'border-red-500/30 bg-red-500/5' : ''}`}>
                                 <div className="flex items-center justify-between mb-3">
                                     <div className="flex items-center gap-3">
                                         <div className="w-10 h-10 rounded-xl flex items-center justify-center text-lg" style={{ backgroundColor: `${cat?.color || '#6b7280'}15` }}>
                                             {cat?.icon || '📦'}
                                         </div>
                                         <div>
-                                            <h4 className="font-medium text-gray-900 dark:text-white text-sm">{cat?.label || budget.category}</h4>
+                                            <h4 className="font-medium text-white dark:text-white text-sm">{cat?.label || budget.category}</h4>
                                             <p className="text-[10px] text-gray-500">Limite: {fmt(budget.limit)}</p>
                                         </div>
                                     </div>
                                     <div className="flex items-center gap-2">
                                         <div className="text-right">
-                                            <p className={`text-sm font-bold ${over ? 'text-red-500' : 'text-gray-900 dark:text-white'}`}>{fmt(spent)}</p>
+                                            <p className={`text-sm font-bold ${over ? 'text-red-500' : 'text-white dark:text-white'}`}>{fmt(spent)}</p>
                                             <p className={`text-[10px] ${over ? 'text-red-400' : 'text-gray-500'}`}>
                                                 {over ? (
                                                     <span className="flex items-center gap-0.5"><AlertTriangle className="w-2.5 h-2.5" /> Excedeu {fmt(Math.abs(remaining))}</span>
                                                 ) : (
-                                                    <span className="flex items-center gap-0.5"><CheckCircle className="w-2.5 h-2.5 text-emerald-500" /> Sobra {fmt(remaining)}</span>
+                                                    <span className="flex items-center gap-0.5"><CheckCircle className="w-2.5 h-2.5 text-purple-500" /> Sobra {fmt(remaining)}</span>
                                                 )}
                                             </p>
                                         </div>
@@ -283,8 +284,8 @@ export default function Budget() {
                                     </div>
                                 </div>
 
-                                <div className="h-3 bg-gray-200 dark:bg-white/10 rounded-full overflow-hidden">
-                                    <div className={`h-full rounded-full transition-all duration-500 ${over ? 'bg-red-500' : pct > 70 ? 'bg-yellow-500' : 'bg-emerald-500'}`}
+                                <div className="h-3 bg-gray-800/50 dark:bg-gray-800/40/10 rounded-full overflow-hidden">
+                                    <div className={`h-full rounded-full transition-all duration-500 ${over ? 'bg-red-500' : pct > 70 ? 'bg-yellow-500' : 'bg-purple-500'}`}
                                         style={{ width: `${pct}%` }} />
                                 </div>
                                 <div className="flex justify-between mt-1.5 text-[10px] text-gray-500 flex-wrap">
@@ -304,7 +305,7 @@ export default function Budget() {
                         <div className="p-6 md:p-8">
                             <div className="flex items-center justify-between mb-6">
                                 <h3 className="text-xl font-bold text-white tracking-tight">{editId ? 'Editar Orçamento' : 'Novo Orçamento'}</h3>
-                                <button onClick={() => setShowAdd(false)} className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-white/10 transition-all"><X className="w-5 h-5" /></button>
+                                <button onClick={() => setShowAdd(false)} className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-gray-800/40/10 transition-all"><X className="w-5 h-5" /></button>
                             </div>
 
                             <form onSubmit={handleSubmit} className="space-y-5">
@@ -314,7 +315,7 @@ export default function Budget() {
                                         value={form.category}
                                         onChange={(e) => setForm({ ...form, category: e.target.value })}
                                         required
-                                        className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-4 py-3.5 text-white focus:border-fuchsia-500/50 focus:ring-1 focus:ring-fuchsia-500/50 outline-none transition-all appearance-none"
+                                        className="w-full bg-gray-800/40/[0.03] border border-white/10 rounded-xl px-4 py-3.5 text-white focus:border-fuchsia-500/50 focus:ring-1 focus:ring-fuchsia-500/50 outline-none transition-all appearance-none"
                                     >
                                         <option value="" disabled className="bg-[#0d1424] text-slate-500">Selecione uma categoria...</option>
                                         {availableCategories.map(c => (
@@ -332,7 +333,7 @@ export default function Budget() {
                                         onChange={(e) => setForm({ ...form, limit: e.target.value })}
                                         required
                                         placeholder="0,00"
-                                        className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-4 py-3.5 text-white placeholder-slate-500 focus:border-fuchsia-500/50 focus:ring-1 focus:ring-fuchsia-500/50 outline-none transition-all"
+                                        className="w-full bg-gray-800/40/[0.03] border border-white/10 rounded-xl px-4 py-3.5 text-white placeholder-slate-500 focus:border-fuchsia-500/50 focus:ring-1 focus:ring-fuchsia-500/50 outline-none transition-all"
                                     />
                                 </div>
 

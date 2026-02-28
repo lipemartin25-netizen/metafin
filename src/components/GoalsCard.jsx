@@ -1,10 +1,11 @@
+import { tw } from '@/lib/theme';
 import { useNavigate } from 'react-router-dom';
 import { useVisibility } from '../hooks/useVisibility';
 import { Target, Eye, EyeOff } from 'lucide-react';
 
 const goals = [
     { label: "Viagem Europa", current: 4200, target: 8000, color: "bg-violet-500", shadow: "shadow-violet-500/20" },
-    { label: "Reserva Emergência", current: 12000, target: 15000, color: "bg-emerald-500", shadow: "shadow-emerald-500/20" },
+    { label: "Reserva Emergência", current: 12000, target: 15000, color: "bg-purple-500", shadow: "shadow-purple-500/20" },
     { label: "Notebook Novo", current: 1800, target: 3500, color: "bg-blue-500", shadow: "shadow-blue-500/20" },
 ];
 
@@ -22,7 +23,7 @@ export default function GoalsCard() {
                 <div className="flex items-center gap-3">
                     <button
                         onClick={() => toggleVisibility()}
-                        className="p-1.5 rounded-lg bg-white/5 opacity-0 group-hover:opacity-100 transition-all hover:bg-white/10"
+                        className="p-1.5 rounded-lg bg-gray-800/40/5 opacity-0 group-hover:opacity-100 transition-all hover:bg-gray-800/40/10"
                     >
                         {isVisible ? <EyeOff size={14} className="text-white/40" /> : <Eye size={14} className="text-white/40" />}
                     </button>
@@ -44,7 +45,7 @@ export default function GoalsCard() {
                                 <span className="text-white/70">{label}</span>
                                 <span className="text-white/40">{pct}%</span>
                             </div>
-                            <div className="h-2 bg-white/5 rounded-full overflow-hidden p-[1px] border border-white/5">
+                            <div className="h-2 bg-gray-800/40/5 rounded-full overflow-hidden p-[1px] border border-white/5">
                                 <div
                                     className={`h-full ${color} rounded-full transition-all duration-1000 ${shadow} shadow-lg`}
                                     style={{ width: `${pct}%` }}

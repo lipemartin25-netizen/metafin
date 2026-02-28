@@ -1,3 +1,4 @@
+import { tw } from '@/lib/theme';
 import { useState, useEffect } from 'react';
 import { Activity, Target, Shield, ArrowRight, Sparkles, TrendingUp, TrendingDown, X } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
@@ -11,7 +12,7 @@ const QUESTIONS = [
         subtitle: 'Isso nos ajuda a calcular sua capacidade de poupança.',
         type: 'currency',
         key: 'income',
-        icon: <TrendingUp className="w-8 h-8 text-emerald-500 mb-4" />
+        icon: <TrendingUp className="w-8 h-8 text-purple-500 mb-4" />
     },
     {
         id: 'step2',
@@ -107,7 +108,7 @@ export default function XRayDiagnosis({ onComplete, onClose }) {
         let color = '';
         if (score >= 80) {
             status = 'Excelente';
-            color = 'text-emerald-500';
+            color = 'text-purple-500';
             tip = 'Suas finanças estão formidáveis. Você tem boa capacidade de poupança e reservas sólidas. Seu foco agora deve ser otimização tributária e aceleração do F.I.R.E.';
         } else if (score >= 50) {
             status = 'Atenção';
@@ -160,17 +161,17 @@ export default function XRayDiagnosis({ onComplete, onClose }) {
     // Render logic
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/60 backdrop-blur-md animate-fade-in">
-            <div className="relative w-full max-w-2xl bg-white dark:bg-surface-900 border border-gray-200 dark:border-white/10 rounded-3xl shadow-2xl overflow-hidden flex flex-col">
+            <div className="relative w-full max-w-2xl bg-gray-800/40 dark:bg-surface-900 border border-gray-700/40 dark:border-white/10 rounded-3xl shadow-2xl overflow-hidden flex flex-col">
                 {/* Close Button if applicable */}
                 {onClose && (
-                    <button onClick={() => onClose(null)} className="absolute top-6 right-6 z-20 p-2 bg-gray-100 dark:bg-white/5 rounded-full text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">
+                    <button onClick={() => onClose(null)} className="absolute top-6 right-6 z-20 p-2 bg-gray-800/40 dark:bg-gray-800/40/5 rounded-full text-gray-400 hover:text-white dark:hover:text-white transition-colors">
                         <X className="w-5 h-5" />
                     </button>
                 )}
 
                 {/* Header Progress */}
                 {!result && !loading && (
-                    <div className="absolute top-0 left-0 w-full h-1.5 bg-gray-100 dark:bg-surface-800">
+                    <div className="absolute top-0 left-0 w-full h-1.5 bg-gray-800/40 dark:bg-surface-800">
                         <div
                             className="h-full bg-brand-500 transition-all duration-500 ease-out"
                             style={{ width: `${((step) / QUESTIONS.length) * 100}%` }}
@@ -180,7 +181,7 @@ export default function XRayDiagnosis({ onComplete, onClose }) {
 
                 <div className="flex-1 p-8 md:p-12 overflow-y-auto">
                     {loading ? (
-                        <div className="flex flex-col items-center justify-center h-full py-20 text-center animate-fade-in text-gray-900 dark:text-white">
+                        <div className="flex flex-col items-center justify-center h-full py-20 text-center animate-fade-in text-white dark:text-white">
                             <div className="relative mb-8">
                                 <div className="absolute inset-0 bg-brand-500/20 rounded-full blur-xl animate-pulse" />
                                 <Activity className="w-16 h-16 text-brand-500 animate-[bounce_2s_infinite]" />
@@ -200,7 +201,7 @@ export default function XRayDiagnosis({ onComplete, onClose }) {
                                         <circle cx="96" cy="96" r="88" stroke="currentColor" strokeWidth="12" fill="transparent" strokeDasharray="552.92" strokeDashoffset={552.92 - (552.92 * result.score) / 100} className={`${result.color} transition-all duration-1500 ease-out`} />
                                     </svg>
                                     <div className="flex flex-col items-center justify-center z-10">
-                                        <span className="text-5xl font-black text-gray-900 dark:text-white tracking-tight">{result.score}</span>
+                                        <span className="text-5xl font-black text-white dark:text-white tracking-tight">{result.score}</span>
                                         <span className={`text-[10px] font-black uppercase tracking-widest mt-1 ${result.color} px-2 py-1 bg-${result.color.split('-')[1]}-500/10 rounded-lg`}>
                                             {result.status}
                                         </span>
@@ -208,8 +209,8 @@ export default function XRayDiagnosis({ onComplete, onClose }) {
                                 </div>
                             </div>
 
-                            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Seu Diagnóstico Financeiro</h2>
-                            <div className="p-6 rounded-2xl bg-gray-50 dark:bg-white/[0.03] border border-gray-200 dark:border-white/10 mb-8 max-w-lg mx-auto text-left shadow-inner">
+                            <h2 className="text-2xl font-bold text-white dark:text-white mb-4">Seu Diagnóstico Financeiro</h2>
+                            <div className="p-6 rounded-2xl bg-gray-800/30 dark:bg-gray-800/40/[0.03] border border-gray-700/40 dark:border-white/10 mb-8 max-w-lg mx-auto text-left shadow-inner">
                                 <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-sm font-medium">
                                     {result.tip}
                                 </p>
@@ -222,7 +223,7 @@ export default function XRayDiagnosis({ onComplete, onClose }) {
                     ) : (
                         <div className="flex flex-col h-full py-8 text-center animate-fade-in">
                             <div className="flex justify-center mb-6">{QUESTIONS[step].icon}</div>
-                            <h2 className="text-2xl md:text-3xl font-black text-gray-900 dark:text-white mb-3 tracking-tight">
+                            <h2 className="text-2xl md:text-3xl font-black text-white dark:text-white mb-3 tracking-tight">
                                 {QUESTIONS[step].title}
                             </h2>
                             <p className="text-gray-500 dark:text-gray-400 mb-10 max-w-lg mx-auto text-sm md:text-base">
@@ -236,7 +237,7 @@ export default function XRayDiagnosis({ onComplete, onClose }) {
                                     value={answers[QUESTIONS[step].key] || ''}
                                     onChange={(e) => handleChange(e.target.value)}
                                     placeholder="0,00"
-                                    className="w-full bg-gray-50 dark:bg-black/20 border-2 border-gray-200 dark:border-white/10 rounded-2xl py-5 pl-14 pr-6 text-2xl md:text-3xl font-black text-gray-900 dark:text-white focus:outline-none focus:border-brand-500 focus:ring-4 focus:ring-brand-500/20 transition-all shadow-inner"
+                                    className="w-full bg-gray-800/30 dark:bg-black/20 border-2 border-gray-700/40 dark:border-white/10 rounded-2xl py-5 pl-14 pr-6 text-2xl md:text-3xl font-black text-white dark:text-white focus:outline-none focus:border-brand-500 focus:ring-4 focus:ring-brand-500/20 transition-all shadow-inner"
                                     autoFocus
                                     onKeyDown={(e) => e.key === 'Enter' && handleNext()}
                                 />
@@ -247,9 +248,9 @@ export default function XRayDiagnosis({ onComplete, onClose }) {
 
                 {/* Footer Actions */}
                 {!result && !loading && (
-                    <div className="p-6 border-t border-gray-100 dark:border-white/10 flex justify-between items-center bg-gray-50/50 dark:bg-white/[0.02]">
+                    <div className="p-6 border-t border-gray-100 dark:border-white/10 flex justify-between items-center bg-gray-800/30/50 dark:bg-gray-800/40/[0.02]">
                         {step > 0 ? (
-                            <button onClick={handleBack} className="px-6 py-3 rounded-xl font-semibold text-gray-500 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/10 transition-colors">
+                            <button onClick={handleBack} className="px-6 py-3 rounded-xl font-semibold text-gray-500 hover:text-white dark:hover:text-white hover:bg-gray-800/40 dark:hover:bg-gray-800/40/10 transition-colors">
                                 Voltar
                             </button>
                         ) : (

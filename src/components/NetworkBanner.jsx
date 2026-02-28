@@ -1,3 +1,4 @@
+import { tw } from '@/lib/theme';
 // src/components/NetworkBanner.jsx
 import { useNetworkStatus } from '../hooks/useNetworkStatus'
 import { WifiOff, AlertTriangle, RefreshCw } from 'lucide-react'
@@ -31,7 +32,7 @@ export function NetworkBanner() {
                     </span>
                     <button
                         onClick={checkApiHealth}
-                        className="ml-2 p-1 hover:bg-white/20 rounded-lg transition-colors"
+                        className="ml-2 p-1 hover:bg-gray-800/40/20 rounded-lg transition-colors"
                         title="Tentar reconectar"
                     >
                         <RefreshCw className="w-3 h-3" />

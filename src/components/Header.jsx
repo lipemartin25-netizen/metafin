@@ -1,3 +1,4 @@
+import { tw } from '@/lib/theme';
 import { Menu, Bell, Search } from "lucide-react";
 
 export default function Header({ onMenuClick }) {
@@ -26,14 +27,14 @@ export default function Header({ onMenuClick }) {
 
             <div className="flex items-center gap-3">
                 {/* Search */}
-                <div className="hidden md:flex items-center gap-2 bg-white/5 border border-white/8 rounded-xl px-4 py-2 text-sm text-white/30 w-52 hover:border-white/15 transition-colors cursor-pointer">
+                <div className="hidden md:flex items-center gap-2 bg-gray-800/40/5 border border-white/8 rounded-xl px-4 py-2 text-sm text-white/30 w-52 hover:border-white/15 transition-colors cursor-pointer">
                     <Search size={15} />
                     <span>Buscar...</span>
-                    <span className="ml-auto text-xs bg-white/10 px-1.5 py-0.5 rounded-md">⌘K</span>
+                    <span className="ml-auto text-xs bg-gray-800/40/10 px-1.5 py-0.5 rounded-md">⌘K</span>
                 </div>
 
                 {/* Notification */}
-                <button className="relative w-9 h-9 rounded-xl bg-white/5 border border-white/8 flex items-center justify-center text-white/40 hover:text-white hover:border-white/20 transition-all">
+                <button className="relative w-9 h-9 rounded-xl bg-gray-800/40/5 border border-white/8 flex items-center justify-center text-white/40 hover:text-white hover:border-white/20 transition-all">
                     <Bell size={16} />
                     <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-violet-500 rounded-full ring-2 ring-[#0a0a0f]"></span>
                 </button>

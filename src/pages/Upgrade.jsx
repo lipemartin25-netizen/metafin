@@ -1,3 +1,4 @@
+import { tw } from '@/lib/theme';
 import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
@@ -45,13 +46,13 @@ export default function Upgrade() {
                     <ArrowLeft className="w-4 h-4" /> Voltar ao Dashboard
                 </button>
 
-                <div className="glass-card text-center">
-                    <Crown className="w-16 h-16 text-emerald-400 mx-auto mb-4" />
+                <div className="${tw.card} text-center">
+                    <Crown className="w-16 h-16 text-purple-400 mx-auto mb-4" />
                     <h1 className="text-2xl font-bold text-white mb-2">
                         Você é Pro! 💎
                     </h1>
                     <p className="text-gray-400 mb-2">
-                        Status: <span className="text-emerald-400 font-medium">
+                        Status: <span className="text-purple-400 font-medium">
                             {isTrial ? `Trial (${daysRemaining} dias restantes)` : 'Ativo'}
                         </span>
                     </p>
@@ -86,11 +87,11 @@ export default function Upgrade() {
 
             {/* Checkout Result */}
             {checkoutResult === 'success' && (
-                <div className="mb-6 p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center gap-3">
+                <div className="mb-6 p-4 rounded-xl bg-purple-500/10 border border-purple-500/20 text-purple-400 flex items-center gap-3">
                     <Check className="w-5 h-5 shrink-0" />
                     <div>
                         <p className="font-semibold">Assinatura realizada com sucesso! 🎉</p>
-                        <p className="text-sm text-emerald-400/70">Seu plano Pro está ativo. Aproveite a IA!</p>
+                        <p className="text-sm text-purple-400/70">Seu plano Pro está ativo. Aproveite a IA!</p>
                     </div>
                 </div>
             )}
@@ -105,7 +106,7 @@ export default function Upgrade() {
             {/* Header */}
             <div className="text-center mb-8">
                 <h1 className="text-3xl font-bold text-white mb-2">
-                    Desbloqueie o Poder da <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">IA Financeira</span>
+                    Desbloqueie o Poder da <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-fuchsia-400">IA Financeira</span>
                 </h1>
                 <p className="text-gray-400">
                     7 modelos de IA, import ilimitado, insights personalizados
@@ -114,11 +115,11 @@ export default function Upgrade() {
 
             {/* Billing Toggle */}
             <div className="flex justify-center mb-8">
-                <div className="flex rounded-xl bg-white/5 p-1">
+                <div className="flex rounded-xl bg-gray-800/40/5 p-1">
                     <button
                         onClick={() => setBilling('monthly')}
                         className={`px-5 py-2 rounded-lg text-sm font-medium transition-all ${billing === 'monthly'
-                            ? 'bg-emerald-500/20 text-emerald-400'
+                            ? 'bg-purple-500/20 text-purple-400'
                             : 'text-gray-500 hover:text-gray-300'
                             }`}
                     >
@@ -127,12 +128,12 @@ export default function Upgrade() {
                     <button
                         onClick={() => setBilling('yearly')}
                         className={`px-5 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-1.5 ${billing === 'yearly'
-                            ? 'bg-emerald-500/20 text-emerald-400'
+                            ? 'bg-purple-500/20 text-purple-400'
                             : 'text-gray-500 hover:text-gray-300'
                             }`}
                     >
                         Anual
-                        <span className="px-1.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 text-[10px] font-bold">
+                        <span className="px-1.5 py-0.5 rounded-full bg-purple-500/20 text-purple-400 text-[10px] font-bold">
                             -28%
                         </span>
                     </button>
@@ -140,8 +141,8 @@ export default function Upgrade() {
             </div>
 
             {/* Plan Card */}
-            <div className="max-w-lg mx-auto glass-card border border-emerald-500/20 relative overflow-hidden">
-                <div className="absolute top-0 right-0 px-4 py-1.5 bg-gradient-to-r from-emerald-500 to-cyan-500 text-xs font-bold text-white rounded-bl-xl">
+            <div className="max-w-lg mx-auto ${tw.card} border border-purple-500/20 relative overflow-hidden">
+                <div className="absolute top-0 right-0 px-4 py-1.5 bg-gradient-to-r from-purple-500 to-fuchsia-500 text-xs font-bold text-white rounded-bl-xl">
                     7 DIAS GRÁTIS
                 </div>
 
@@ -154,7 +155,7 @@ export default function Upgrade() {
                         <span className="text-gray-500">{selected.period}</span>
                     </div>
                     {selected.savings && (
-                        <p className="text-emerald-400 text-sm mt-1">{selected.savings}</p>
+                        <p className="text-purple-400 text-sm mt-1">{selected.savings}</p>
                     )}
                 </div>
 
@@ -162,7 +163,7 @@ export default function Upgrade() {
                 <div className="space-y-3 mb-6">
                     {proPlan.features.map((feature) => (
                         <div key={feature} className="flex items-start gap-3">
-                            <Check className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                            <Check className="w-4 h-4 text-purple-400 shrink-0 mt-0.5" />
                             <span className="text-sm text-gray-300">{feature}</span>
                         </div>
                     ))}
@@ -175,7 +176,7 @@ export default function Upgrade() {
                         {Object.values(AI_MODELS).filter(m => m.id !== 'gemini-1.5-flash').map((m) => ( // Show only premium models roughly
                             <div
                                 key={m.id}
-                                className="flex items-center gap-2 p-2 rounded-lg bg-white/[0.03] border border-white/5 text-xs"
+                                className="flex items-center gap-2 p-2 rounded-lg bg-gray-800/40/[0.03] border border-white/5 text-xs"
                             >
                                 <span>{m.icon}</span>
                                 <div>
@@ -196,8 +197,8 @@ export default function Upgrade() {
                 )}
 
                 {/* CTA */}
-                <div className="p-6 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-center">
-                    <Crown className="w-12 h-12 text-emerald-400 mx-auto mb-3" />
+                <div className="p-6 rounded-2xl bg-purple-500/10 border border-purple-500/20 text-center">
+                    <Crown className="w-12 h-12 text-purple-400 mx-auto mb-3" />
                     <h3 className="text-xl font-bold text-white mb-2">Acesso Pro Liberado! 🎉</h3>
                     <p className="text-gray-400 text-sm mb-4">
                         Estamos em uma fase especial e liberamos todas as funcionalidades Premium gratuitamente para todos os usuários.

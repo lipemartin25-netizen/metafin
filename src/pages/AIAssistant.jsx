@@ -1,3 +1,4 @@
+import { tw } from '@/lib/theme';
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useTransactions } from '../hooks/useTransactions';
@@ -22,7 +23,7 @@ function ToolChip({ tool }) {
         searchByKeyword: { icon: Search, label: 'Busca por palavra', color: 'text-blue-400   bg-blue-500/10   border-blue-500/20' },
         searchByCategory: { icon: Tag, label: 'Busca por categoria', color: 'text-purple-400 bg-purple-500/10 border-purple-500/20' },
         topExpenses: { icon: TrendingUp, label: 'Maiores gastos', color: 'text-orange-400 bg-orange-500/10 border-orange-500/20' },
-        summary: { icon: Activity, label: 'Resumo financeiro', color: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20' },
+        summary: { icon: Activity, label: 'Resumo financeiro', color: 'text-purple-400 bg-purple-500/10 border-purple-500/20' },
         compare: { icon: Calendar, label: 'Comparativo', color: 'text-cyan-400   bg-cyan-500/10   border-cyan-500/20' },
         recurring: { icon: RotateCcw, label: 'Recorrentes', color: 'text-yellow-400 bg-yellow-500/10 border-yellow-500/20' },
         pending: { icon: ShoppingBag, label: 'Pendentes', color: 'text-rose-400   bg-rose-500/10   border-rose-500/20' },
@@ -149,7 +150,7 @@ export default function AIAssistant() {
         return (
             <div className="flex items-center justify-center h-[70vh]">
                 <div className="flex flex-col items-center gap-3">
-                    <Loader2 className="w-8 h-8 text-emerald-400 animate-spin" />
+                    <Loader2 className="w-8 h-8 text-purple-400 animate-spin" />
                     <p className="text-gray-500 text-sm">Carregando dados financeiros...</p>
                 </div>
             </div>
@@ -181,7 +182,7 @@ export default function AIAssistant() {
                 {messages.length > 0 && (
                     <button
                         onClick={() => setMessages([])}
-                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-gray-500 hover:text-white hover:bg-white/5 transition-all text-xs border border-white/5"
+                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-gray-500 hover:text-white hover:bg-gray-800/40/5 transition-all text-xs border border-white/5"
                     >
                         <RotateCcw size={12} /> Limpar
                     </button>
@@ -191,17 +192,17 @@ export default function AIAssistant() {
             {/* ── Stats Bar ── */}
             {transactions.length > 0 && (
                 <div className="grid grid-cols-3 gap-3 mb-4 flex-shrink-0">
-                    <div className="glass-card py-3 px-4 text-center">
-                        <TrendingUp className="w-4 h-4 text-emerald-400 mx-auto mb-1" />
+                    <div className="${tw.card} py-3 px-4 text-center">
+                        <TrendingUp className="w-4 h-4 text-purple-400 mx-auto mb-1" />
                         <p className="text-[10px] text-gray-500 uppercase tracking-wider">Receita total</p>
-                        <p className="text-sm font-bold text-emerald-400">{fmt(totalIncome)}</p>
+                        <p className="text-sm font-bold text-purple-400">{fmt(totalIncome)}</p>
                     </div>
-                    <div className="glass-card py-3 px-4 text-center">
+                    <div className="${tw.card} py-3 px-4 text-center">
                         <PiggyBank className="w-4 h-4 text-violet-400 mx-auto mb-1" />
                         <p className="text-[10px] text-gray-500 uppercase tracking-wider">Poupança</p>
                         <p className="text-sm font-bold text-violet-400">{savingsRate.toFixed(0)}%</p>
                     </div>
-                    <div className="glass-card py-3 px-4 text-center">
+                    <div className="${tw.card} py-3 px-4 text-center">
                         <Wallet className="w-4 h-4 text-cyan-400 mx-auto mb-1" />
                         <p className="text-[10px] text-gray-500 uppercase tracking-wider">Transações</p>
                         <p className="text-sm font-bold text-cyan-400">{transactions.length}</p>
@@ -217,10 +218,10 @@ export default function AIAssistant() {
                     <div className="p-6 h-full flex flex-col justify-between">
                         {/* Welcome message */}
                         <div className="flex items-start gap-3 mb-6">
-                            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-violet-500 to-fuchsia-600 flex items-center justify-center flex-shrink-0 shadow-sm">
+                            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-violet-500 to-fuchsia-600 flex items-center justify-center flex-shrink-0 shadow-lg shadow-black/10">
                                 <Bot size={15} className="text-white" />
                             </div>
-                            <div className="glass-card flex-1 py-4 px-5">
+                            <div className="${tw.card} flex-1 py-4 px-5">
                                 <p className="text-gray-200 text-sm leading-relaxed">
                                     Olá, <span className="text-white font-semibold">{displayName}</span>! 👋{' '}
                                     Sou o <strong className="text-violet-400">MetaFin Agent</strong> — consulto suas
@@ -234,7 +235,7 @@ export default function AIAssistant() {
                                             onClick={() => sendMessage(ex)}
                                             className="flex items-center gap-2 text-xs text-gray-500 hover:text-violet-400 transition-colors py-0.5 group w-full text-left"
                                         >
-                                            <ChevronRight size={11} className="text-gray-700 group-hover:text-violet-400 flex-shrink-0" />
+                                            <ChevronRight size={11} className="text-gray-300 group-hover:text-violet-400 flex-shrink-0" />
                                             <span>&quot;{ex}&quot;</span>
                                         </button>
                                     ))}
@@ -250,7 +251,7 @@ export default function AIAssistant() {
                                     <button
                                         key={s.label}
                                         onClick={() => sendMessage(s.prompt)}
-                                        className="flex flex-col items-start gap-1.5 p-3 rounded-xl bg-white/[0.03] border border-white/5 hover:bg-violet-500/5 hover:border-violet-500/20 transition-all text-left group"
+                                        className="flex flex-col items-start gap-1.5 p-3 rounded-xl bg-gray-800/40/[0.03] border border-white/5 hover:bg-violet-500/5 hover:border-violet-500/20 transition-all text-left group"
                                     >
                                         <span className="text-xl">{s.icon}</span>
                                         <span className="text-xs text-gray-400 group-hover:text-white transition-colors font-medium leading-tight">
@@ -272,7 +273,7 @@ export default function AIAssistant() {
                                 className={`flex gap-3 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
                             >
                                 {msg.role === 'assistant' && (
-                                    <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-violet-500 to-fuchsia-600 flex items-center justify-center flex-shrink-0 mt-1 shadow-sm">
+                                    <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-violet-500 to-fuchsia-600 flex items-center justify-center flex-shrink-0 mt-1 shadow-lg shadow-black/10">
                                         <Bot size={13} className="text-white" />
                                     </div>
                                 )}
@@ -282,7 +283,7 @@ export default function AIAssistant() {
 
                                     <div className={`rounded-2xl px-4 py-3 text-sm ${msg.role === 'user'
                                         ? 'bg-violet-600/80 text-white rounded-tr-sm border border-violet-500/30'
-                                        : 'bg-white/5 border border-white/8 text-gray-200 rounded-tl-sm'
+                                        : 'bg-gray-800/40/5 border border-white/8 text-gray-200 rounded-tl-sm'
                                         }`}>
                                         <MsgText text={msg.text} />
                                     </div>
@@ -308,7 +309,7 @@ export default function AIAssistant() {
                                 <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-violet-500 to-fuchsia-600 flex items-center justify-center flex-shrink-0">
                                     <Bot size={13} className="text-white" />
                                 </div>
-                                <div className="bg-white/5 border border-white/8 rounded-2xl rounded-tl-sm px-4 py-3 flex items-center gap-2">
+                                <div className="bg-gray-800/40/5 border border-white/8 rounded-2xl rounded-tl-sm px-4 py-3 flex items-center gap-2">
                                     {[0, 150, 300].map(d => (
                                         <div key={d} className="w-1.5 h-1.5 rounded-full bg-violet-400 animate-bounce" style={{ animationDelay: `${d}ms` }} />
                                     ))}
@@ -340,7 +341,7 @@ export default function AIAssistant() {
 
             {/* ── Input ── */}
             <form onSubmit={(e) => { e.preventDefault(); sendMessage(input); }} className="flex-shrink-0">
-                <div className="flex items-center gap-2 bg-white/[0.03] border border-white/10 rounded-2xl px-4 py-2 focus-within:border-violet-500/40 transition-colors">
+                <div className="flex items-center gap-2 bg-gray-800/40/[0.03] border border-white/10 rounded-2xl px-4 py-2 focus-within:border-violet-500/40 transition-colors">
                     <Search size={15} className="text-gray-600 flex-shrink-0" />
                     <input
                         ref={inputRef}
@@ -359,7 +360,7 @@ export default function AIAssistant() {
                         <Send size={14} />
                     </button>
                 </div>
-                <p className="text-center text-[10px] text-gray-700 mt-2">
+                <p className="text-center text-[10px] text-gray-300 mt-2">
                     Consultas em linguagem natural · Dados em tempo real · 100% local
                 </p>
             </form>

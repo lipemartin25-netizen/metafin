@@ -1,3 +1,4 @@
+import { tw } from '@/lib/theme';
 import { useMemo, useState, useEffect } from 'react';
 import { useTransactions } from '../hooks/useTransactions';
 import { useAuth } from '../contexts/AuthContext';
@@ -144,7 +145,7 @@ export default function NetWorth() {
         <div className="py-6 space-y-6 animate-fade-in pb-20">
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                    <h1 className="text-2xl font-bold text-white dark:text-white flex items-center gap-2">
                         <Landmark className="w-6 h-6 text-indigo-500" />
                         Patrimônio Líquido
                     </h1>
@@ -159,18 +160,18 @@ export default function NetWorth() {
             </div>
 
             {/* Main Net Worth Card */}
-            <div className="glass-card !bg-transparent !border-transparent !p-4 !shadow-none !mt-0 relative overflow-hidden">
+            <div className="${tw.card} !bg-transparent !border-transparent !p-4 !shadow-none !mt-0 relative overflow-hidden">
                 <p className="text-sm font-medium text-gray-500 mb-1 flex items-center gap-2">Patrimônio Líquido Real</p>
-                <h2 className={`text-6xl font-extrabold tracking-tighter ${data.netWorth >= 0 ? 'text-gray-900 dark:text-white' : 'text-red-500'}`}>
+                <h2 className={`text-6xl font-extrabold tracking-tighter ${data.netWorth >= 0 ? 'text-white dark:text-white' : 'text-red-500'}`}>
                     {fmt(data.netWorth)}
                 </h2>
 
                 <div className="mt-8 flex gap-8">
                     <div>
                         <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Total de Ativos</p>
-                        <p className="text-2xl font-bold flex items-center gap-1.5"><TrendingUp className="w-5 h-5 text-emerald-500" /> {fmt(data.assets)}</p>
+                        <p className="text-2xl font-bold flex items-center gap-1.5"><TrendingUp className="w-5 h-5 text-purple-500" /> {fmt(data.assets)}</p>
                     </div>
-                    <div className="w-px bg-gray-200 dark:bg-white/10" />
+                    <div className="w-px bg-gray-800/50 dark:bg-gray-800/40/10" />
                     <div>
                         <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Total de Passivos</p>
                         <p className="text-2xl font-bold flex items-center gap-1.5"><TrendingDown className="w-5 h-5 text-rose-500" /> {fmt(data.liabilities)}</p>
@@ -179,8 +180,8 @@ export default function NetWorth() {
             </div>
 
             {/* Timeline Chart */}
-            <div className="glass-card p-6">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-6">Evolução Histórica</h3>
+            <div className="${tw.card} p-6">
+                <h3 className="text-lg font-semibold text-white dark:text-white mb-6">Evolução Histórica</h3>
                 <div className="h-[250px] w-full">
                     <ResponsiveContainer width="100%" height="100%">
                         <AreaChart data={timeline} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
@@ -206,20 +207,20 @@ export default function NetWorth() {
             {/* Breakdown & Listing */}
             <div className="grid md:grid-cols-2 gap-6">
                 <div className="space-y-4">
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+                    <h3 className="text-lg font-semibold text-white dark:text-white flex items-center gap-2">
                         <PieChart className="w-5 h-5 text-indigo-500" /> Composição Global
                     </h3>
                     <div className="space-y-3">
                         {breakdown.filter(i => i.value > 0).map((item, i) => {
                             const Icon = item.icon;
                             return (
-                                <div key={i} className={`glass-card flex items-center gap-4 ${item.type === 'liability' ? 'hover:border-red-500/30' : 'hover:border-emerald-500/30'} transition-all`}>
+                                <div key={i} className={`${tw.card} flex items-center gap-4 ${item.type === 'liability' ? 'hover:border-red-500/30' : 'hover:border-purple-500/30'} transition-all`}>
                                     <div className="w-12 h-12 rounded-xl flex items-center justify-center p-3" style={{ backgroundColor: `${item.color}15` }}>
                                         <Icon className="w-6 h-6" style={{ color: item.color }} />
                                     </div>
                                     <div className="flex-1">
                                         <p className="text-xs text-gray-500 dark:text-gray-400 font-bold tracking-widest uppercase">{item.label}</p>
-                                        <p className={`text-xl font-bold mt-0.5 ${item.type === 'liability' ? 'text-red-500' : 'text-gray-900 dark:text-white'}`}>
+                                        <p className={`text-xl font-bold mt-0.5 ${item.type === 'liability' ? 'text-red-500' : 'text-white dark:text-white'}`}>
                                             {item.type === 'liability' ? '-' : ''}{fmt(item.value)}
                                         </p>
                                     </div>
@@ -230,13 +231,13 @@ export default function NetWorth() {
                 </div>
 
                 <div className="space-y-4">
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
-                        <HomeIcon className="w-5 h-5 text-emerald-500" /> Patrimônios Manuais
+                    <h3 className="text-lg font-semibold text-white dark:text-white flex items-center gap-2">
+                        <HomeIcon className="w-5 h-5 text-purple-500" /> Patrimônios Manuais
                     </h3>
                     {customAssets.length === 0 ? (
-                        <div className="glass-card flex flex-col items-center justify-center h-[200px] text-center border-dashed">
+                        <div className="${tw.card} flex flex-col items-center justify-center h-[200px] text-center border-dashed">
                             <Landmark className="w-8 h-8 text-gray-400 mb-3" />
-                            <p className="text-sm font-medium text-gray-900 dark:text-white mb-1">Nenhum Patrimônio Adicionado</p>
+                            <p className="text-sm font-medium text-white dark:text-white mb-1">Nenhum Patrimônio Adicionado</p>
                             <p className="text-xs text-gray-500">Adicione imóveis, veículos ou dívidas ativas para rastreio.</p>
                         </div>
                     ) : (
@@ -244,18 +245,18 @@ export default function NetWorth() {
                             {customAssets.map(a => {
                                 const AssetIcon = TYPE_ICONS[a.type] || FileDigit;
                                 return (
-                                    <div key={a.id} className="glass-card flex items-center justify-between p-4 group">
+                                    <div key={a.id} className="${tw.card} flex items-center justify-between p-4 group">
                                         <div className="flex items-center gap-3">
-                                            <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${a.is_liability ? 'bg-red-500/10 text-red-500' : 'bg-emerald-500/10 text-emerald-500'}`}>
+                                            <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${a.is_liability ? 'bg-red-500/10 text-red-500' : 'bg-purple-500/10 text-purple-500'}`}>
                                                 <AssetIcon className="w-5 h-5" />
                                             </div>
                                             <div>
-                                                <p className="text-sm font-semibold text-gray-900 dark:text-white leading-tight">{a.name}</p>
+                                                <p className="text-sm font-semibold text-white dark:text-white leading-tight">{a.name}</p>
                                                 <p className="text-[10px] text-gray-500 uppercase tracking-widest">{TYPE_LABELS[a.type]}</p>
                                             </div>
                                         </div>
                                         <div className="flex items-center gap-4">
-                                            <p className={`text-sm font-bold ${a.is_liability ? 'text-red-500' : 'text-emerald-500'}`}>
+                                            <p className={`text-sm font-bold ${a.is_liability ? 'text-red-500' : 'text-purple-500'}`}>
                                                 {a.is_liability ? '-' : '+'}{fmt(a.current_value)}
                                             </p>
                                             <button
@@ -276,18 +277,18 @@ export default function NetWorth() {
             {/* Modal de Adição */}
             {showModal && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
-                    <div className="glass-card w-full max-w-md animate-slide-up relative bg-white dark:bg-surface-900 border border-gray-200 dark:border-white/10">
-                        <button onClick={() => setShowModal(false)} className="absolute top-4 right-4 text-gray-500 hover:text-gray-900 dark:hover:text-white">
+                    <div className="${tw.card} w-full max-w-md animate-slide-up relative bg-gray-800/40 dark:bg-surface-900 border border-gray-700/40 dark:border-white/10">
+                        <button onClick={() => setShowModal(false)} className="absolute top-4 right-4 text-gray-500 hover:text-white dark:hover:text-white">
                             <X className="w-5 h-5" />
                         </button>
 
-                        <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6">Novo Registro</h2>
+                        <h2 className="text-xl font-bold text-white dark:text-white mb-6">Novo Registro</h2>
 
                         <form onSubmit={handleSaveAsset} className="space-y-4">
                             <div>
                                 <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Nome do Patrimônio / Dívida</label>
                                 <input required type="text" placeholder="Ex: Apartamento Centro"
-                                    className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/10 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none transition-all text-sm text-gray-900 dark:text-white"
+                                    className="w-full px-4 py-3 rounded-xl bg-gray-800/30 dark:bg-black/20 border border-gray-700/40 dark:border-white/10 focus:border-purple-500 focus:ring-1 focus:ring-emerald-500 outline-none transition-all text-sm text-white dark:text-white"
                                     value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} />
                             </div>
 
@@ -295,13 +296,13 @@ export default function NetWorth() {
                                 <div>
                                     <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Valor Atual (R$)</label>
                                     <input required type="number" step="0.01" placeholder="350000"
-                                        className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/10 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none transition-all text-sm text-gray-900 dark:text-white"
+                                        className="w-full px-4 py-3 rounded-xl bg-gray-800/30 dark:bg-black/20 border border-gray-700/40 dark:border-white/10 focus:border-purple-500 focus:ring-1 focus:ring-emerald-500 outline-none transition-all text-sm text-white dark:text-white"
                                         value={form.current_value} onChange={e => setForm({ ...form, current_value: e.target.value })} />
                                 </div>
                                 <div>
                                     <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Categoria</label>
                                     <select
-                                        className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/10 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none transition-all text-sm text-gray-900 dark:text-white"
+                                        className="w-full px-4 py-3 rounded-xl bg-gray-800/30 dark:bg-black/20 border border-gray-700/40 dark:border-white/10 focus:border-purple-500 focus:ring-1 focus:ring-emerald-500 outline-none transition-all text-sm text-white dark:text-white"
                                         value={form.type} onChange={e => setForm({ ...form, type: e.target.value })}>
                                         {Object.entries(TYPE_LABELS).map(([k, v]) => (
                                             <option key={k} value={k}>{v}</option>
@@ -314,17 +315,17 @@ export default function NetWorth() {
                                 <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Tipo de Registro</label>
                                 <div className="grid grid-cols-2 gap-3">
                                     <button type="button" onClick={() => setForm({ ...form, is_liability: false })}
-                                        className={`px-3 py-3 rounded-xl text-sm font-bold border transition-all ${!form.is_liability ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-600 dark:text-emerald-400 shadow-[0_0_15px_-3px_rgba(16,185,129,0.1)]' : 'border-gray-200 dark:border-white/10 text-gray-500 hover:bg-gray-50 dark:hover:bg-white/5'}`}>
+                                        className={`px-3 py-3 rounded-xl text-sm font-bold border transition-all ${!form.is_liability ? 'bg-purple-500/10 border-purple-500/30 text-purple-600 dark:text-purple-400 shadow-[0_0_15px_-3px_rgba(16,185,129,0.1)]' : 'border-gray-700/40 dark:border-white/10 text-gray-500 hover:bg-gray-800/30 dark:hover:bg-gray-800/40/5'}`}>
                                         + É um Ativo
                                     </button>
                                     <button type="button" onClick={() => setForm({ ...form, is_liability: true })}
-                                        className={`px-3 py-3 rounded-xl text-sm font-bold border transition-all ${form.is_liability ? 'bg-red-500/10 border-red-500/30 text-red-600 dark:text-red-400 shadow-[0_0_15px_-3px_rgba(239,68,68,0.1)]' : 'border-gray-200 dark:border-white/10 text-gray-500 hover:bg-gray-50 dark:hover:bg-white/5'}`}>
+                                        className={`px-3 py-3 rounded-xl text-sm font-bold border transition-all ${form.is_liability ? 'bg-red-500/10 border-red-500/30 text-red-600 dark:text-red-400 shadow-[0_0_15px_-3px_rgba(239,68,68,0.1)]' : 'border-gray-700/40 dark:border-white/10 text-gray-500 hover:bg-gray-800/30 dark:hover:bg-gray-800/40/5'}`}>
                                         - Passivo (Dívida)
                                     </button>
                                 </div>
                             </div>
 
-                            <button type="submit" disabled={loading} className="w-full gradient-btn py-3.5 mt-2 rounded-xl font-bold shadow-lg shadow-emerald-500/20 disabled:opacity-50 text-sm hover:shadow-emerald-500/30 transition-shadow">
+                            <button type="submit" disabled={loading} className="w-full gradient-btn py-3.5 mt-2 rounded-xl font-bold shadow-lg shadow-purple-500/20 disabled:opacity-50 text-sm hover:shadow-purple-500/30 transition-shadow">
                                 {loading ? 'Salvando...' : 'Salvar Registro'}
                             </button>
                         </form>

@@ -1,3 +1,4 @@
+import { tw } from '@/lib/theme';
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { getFinancialSummary } from '../lib/analytics';
@@ -74,7 +75,7 @@ export default function Wealth() {
         <div className="max-w-7xl mx-auto space-y-6 pt-16 lg:pt-0">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
-                    <h1 className="text-3xl font-black text-gray-900 dark:text-white flex items-center gap-2">
+                    <h1 className="text-3xl font-black text-white dark:text-white flex items-center gap-2">
                         <Lightbulb className="h-8 w-8 text-yellow-500" />
                         Laboratório Wealth
                     </h1>
@@ -93,8 +94,8 @@ export default function Wealth() {
                         className={`
                             flex items-center gap-2 px-4 py-2.5 rounded-xl whitespace-nowrap transition-all font-medium text-sm
                             ${activeTab === tab.id
-                                ? 'bg-indigo-600 text-white shadow-md shadow-indigo-500/20'
-                                : 'bg-gray-100/80 dark:bg-gray-800/50 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700'}
+                                ? 'bg-indigo-600 text-white shadow-lg shadow-black/10 shadow-indigo-500/20'
+                                : 'bg-gray-800/40/80 dark:bg-gray-800/50 text-gray-600 dark:text-gray-400 hover:bg-gray-800/50 dark:hover:bg-gray-700'}
                         `}
                     >
                         {tab.icon}

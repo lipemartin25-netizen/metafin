@@ -1,3 +1,4 @@
+import { tw } from '@/lib/theme';
 import { useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { Webhook, Zap, Target, Bell, RefreshCw, Heart, X, Copy, CheckCircle, AlertTriangle } from 'lucide-react';
@@ -96,7 +97,7 @@ export default function WebhookModal({ isOpen, onClose, onSuccess }) {
                     </h2>
                     <button
                         onClick={onClose}
-                        className="text-gray-400 hover:text-white transition-colors p-2 hover:bg-white/5 rounded-xl self-end sm:self-auto"
+                        className="text-gray-400 hover:text-white transition-colors p-2 hover:bg-gray-800/40/5 rounded-xl self-end sm:self-auto"
                         title="Fechar (ESC)"
                     >
                         <X className="w-5 h-5" />
@@ -184,13 +185,13 @@ export default function WebhookModal({ isOpen, onClose, onSuccess }) {
                             <button
                                 type="button"
                                 onClick={copySecret}
-                                className="px-4 py-3 bg-white/5 hover:bg-white/10 border border-white/5 rounded-xl text-white text-sm font-semibold transition-colors whitespace-nowrap flex items-center gap-2"
+                                className="px-4 py-3 bg-gray-800/40/5 hover:bg-gray-800/40/10 border border-white/5 rounded-xl text-white text-sm font-semibold transition-colors whitespace-nowrap flex items-center gap-2"
                             >
-                                {copied ? <><CheckCircle className="w-4 h-4 text-emerald-400" /> Copiado</> : <><Copy className="w-4 h-4" /> Copiar</>}
+                                {copied ? <><CheckCircle className="w-4 h-4 text-purple-400" /> Copiado</> : <><Copy className="w-4 h-4" /> Copiar</>}
                             </button>
                         </div>
                         <p className="text-[11px] text-gray-400 leading-relaxed pt-1">
-                            Este secret será usado para assinar os payloads. Valide a assinatura no seu servidor usando o header <code className="bg-white/10 px-1 py-0.5 rounded text-fuchsia-300">X-Webhook-Secret</code>.
+                            Este secret será usado para assinar os payloads. Valide a assinatura no seu servidor usando o header <code className="bg-gray-800/40/10 px-1 py-0.5 rounded text-fuchsia-300">X-Webhook-Secret</code>.
                         </p>
                     </div>
 
@@ -207,7 +208,7 @@ export default function WebhookModal({ isOpen, onClose, onSuccess }) {
                         <button
                             type="button"
                             onClick={onClose}
-                            className="flex-1 px-4 py-3.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-white font-semibold transition-colors"
+                            className="flex-1 px-4 py-3.5 bg-gray-800/40/5 hover:bg-gray-800/40/10 border border-white/10 rounded-xl text-white font-semibold transition-colors"
                         >
                             Cancelar
                         </button>

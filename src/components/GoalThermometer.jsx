@@ -1,3 +1,4 @@
+import { tw } from '@/lib/theme';
 import { useMemo } from 'react';
 import { Calendar, TrendingUp, CheckCircle2 } from 'lucide-react';
 
@@ -19,29 +20,29 @@ export default function GoalThermometer({ goal }) {
         }).format(v);
 
     const getColor = () => {
-        if (pct >= 100) return 'from-green-400 to-emerald-600';
+        if (pct >= 100) return 'from-purple-400 to-emerald-600';
         if (pct >= 60) return 'from-blue-400 to-blue-600';
         if (pct >= 30) return 'from-yellow-400 to-orange-500';
         return 'from-red-400 to-red-600';
     };
 
     return (
-        <div className="relative rounded-2xl border p-5 glass-card shadow-sm hover:shadow-lg transition-all duration-300 group overflow-hidden">
+        <div className="relative rounded-2xl border p-5 ${tw.card} shadow-lg shadow-black/10 hover:shadow-lg transition-all duration-300 group overflow-hidden">
 
             {pct >= 100 && (
                 <div className="absolute -top-2 -right-2">
-                    <CheckCircle2 className="h-10 w-10 text-emerald-500 animate-pulse drop-shadow-md" />
+                    <CheckCircle2 className="h-10 w-10 text-purple-500 animate-pulse drop-shadow-lg shadow-black/10" />
                 </div>
             )}
 
             <div className="flex items-center gap-4 mb-4 relative z-10">
-                <div className="flex-shrink-0 w-12 h-12 flex items-center justify-center rounded-xl bg-gray-50/50 dark:bg-white/5 border border-gray-100 dark:border-white/10 group-hover:scale-110 transition-transform">
-                    <span className="text-2xl drop-shadow-sm">
+                <div className="flex-shrink-0 w-12 h-12 flex items-center justify-center rounded-xl bg-gray-800/30/50 dark:bg-gray-800/40/5 border border-gray-100 dark:border-white/10 group-hover:scale-110 transition-transform">
+                    <span className="text-2xl drop-shadow-lg shadow-black/10">
                         {GOAL_ICONS[goal.category] || goal.icon}
                     </span>
                 </div>
                 <div className="flex-1 min-w-0">
-                    <h3 className="font-bold text-lg text-gray-900 dark:text-white truncate">{goal.name}</h3>
+                    <h3 className="font-bold text-lg text-white dark:text-white truncate">{goal.name}</h3>
                     <p className="text-xs text-gray-500 dark:text-gray-400 font-medium tracking-wide">
                         {goal.monthly_contribution
                             ? `${formatCurrency(goal.monthly_contribution)}/mês`
@@ -51,7 +52,7 @@ export default function GoalThermometer({ goal }) {
             </div>
 
             {/* Termômetro Visual */}
-            <div className="relative h-6 w-full rounded-full bg-gray-200/50 dark:bg-gray-800/80 overflow-hidden mb-3 border border-gray-300/30 dark:border-gray-700/50 shadow-inner">
+            <div className="relative h-6 w-full rounded-full bg-gray-800/50/50 dark:bg-gray-800/80 overflow-hidden mb-3 border border-gray-700/50/30 dark:border-gray-700/50 shadow-inner">
                 <div
                     className={`h-full rounded-full bg-gradient-to-r ${getColor()} 
             transition-all duration-1000 ease-out flex items-center 
@@ -59,7 +60,7 @@ export default function GoalThermometer({ goal }) {
                     style={{ width: `${Math.max(pct, 5)}%` }}
                 >
                     {pct >= 15 && (
-                        <span className="text-[10px] font-black tracking-widest text-white drop-shadow-md">{pct}%</span>
+                        <span className="text-[10px] font-black tracking-widest text-white drop-shadow-lg shadow-black/10">{pct}%</span>
                     )}
                 </div>
                 {pct < 15 && (
@@ -72,13 +73,13 @@ export default function GoalThermometer({ goal }) {
             <div className="flex justify-between items-end mb-4">
                 <div>
                     <span className="text-[10px] text-gray-400 uppercase font-bold tracking-widest block mb-0.5">Acumulado</span>
-                    <span className="font-bold text-gray-700 dark:text-gray-300">
+                    <span className="font-bold text-gray-300 dark:text-gray-300">
                         {formatCurrency(goal.current_amount)}
                     </span>
                 </div>
                 <div className="text-right">
                     <span className="text-[10px] text-gray-400 uppercase font-bold tracking-widest block mb-0.5">Meta</span>
-                    <span className="font-black text-gray-900 dark:text-white drop-shadow-sm">
+                    <span className="font-black text-white dark:text-white drop-shadow-lg shadow-black/10">
                         {formatCurrency(goal.target_amount)}
                     </span>
                 </div>

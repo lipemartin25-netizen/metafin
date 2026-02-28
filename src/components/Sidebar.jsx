@@ -1,3 +1,4 @@
+import { tw } from '@/lib/theme';
 import { NavLink, Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useSubscription } from '../hooks/useSubscription';
@@ -74,12 +75,12 @@ export default function Sidebar() {
                 {/* Header / Logo */}
                 <div className="flex items-center justify-between px-5 h-16 border-b border-white/5">
                     <NavLink to="/app" className="flex items-center gap-3">
-                        <div className="w-9 h-9 bg-gradient-to-br from-emerald-500 to-cyan-500 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-500/20">
+                        <div className="w-9 h-9 bg-gradient-to-br from-purple-500 to-fuchsia-500 rounded-xl flex items-center justify-center shadow-lg shadow-purple-500/20">
                             <TrendingUp className="w-5 h-5 text-white" />
                         </div>
                         {!collapsed && (
                             <div className="flex flex-col">
-                                <span className="text-base font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
+                                <span className="text-base font-bold bg-gradient-to-r from-purple-400 to-fuchsia-400 bg-clip-text text-transparent">
                                     Meta
                                 </span>
                                 <span className="text-[10px] text-gray-500 -mt-0.5 tracking-wider uppercase">
@@ -90,7 +91,7 @@ export default function Sidebar() {
                     </NavLink>
                     <button
                         onClick={() => setCollapsed(!collapsed)}
-                        className="p-1.5 rounded-lg text-gray-500 hover:text-white hover:bg-white/5 transition-all"
+                        className="p-1.5 rounded-lg text-gray-500 hover:text-white hover:bg-gray-800/40/5 transition-all"
                     >
                         <ChevronLeft className={`w-4 h-4 transition-transform ${collapsed ? 'rotate-180' : ''}`} />
                     </button>
@@ -100,14 +101,14 @@ export default function Sidebar() {
                 {!collapsed && (
                     <div className="px-4 pt-4 pb-2">
                         {isPro ? (
-                            <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-gradient-to-r from-emerald-500/10 to-cyan-500/10 border border-emerald-500/20">
-                                <Crown className="w-4 h-4 text-emerald-400" />
-                                <span className="text-xs font-semibold text-emerald-400">Plano Pro Ativo</span>
+                            <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-gradient-to-r from-purple-500/10 to-fuchsia-500/10 border border-purple-500/20">
+                                <Crown className="w-4 h-4 text-purple-400" />
+                                <span className="text-xs font-semibold text-purple-400">Plano Pro Ativo</span>
                             </div>
                         ) : (
                             <Link
                                 to="/app/upgrade"
-                                className="flex items-center gap-2 px-3 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 text-white text-xs font-bold hover:shadow-lg hover:shadow-emerald-500/25 transition-all"
+                                className="flex items-center gap-2 px-3 py-2 rounded-xl bg-gradient-to-r from-purple-500 to-fuchsia-500 text-white text-xs font-bold hover:shadow-lg hover:shadow-purple-500/25 transition-all"
                             >
                                 <Sparkles className="w-3.5 h-3.5" />
                                 Desbloquear Pro
@@ -128,8 +129,8 @@ export default function Sidebar() {
                             aria-current={({ isActive }) => (isActive ? 'page' : undefined)}
                             className={({ isActive }) =>
                                 `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all group ${isActive
-                                    ? 'bg-gradient-to-r from-emerald-500/15 to-cyan-500/10 text-emerald-400 border border-emerald-500/20 shadow-sm shadow-emerald-500/5'
-                                    : 'text-gray-400 hover:text-white hover:bg-white/[0.04] border border-transparent'
+                                    ? 'bg-gradient-to-r from-purple-500/15 to-fuchsia-500/10 text-purple-400 border border-purple-500/20 shadow-lg shadow-black/10 shadow-purple-500/5'
+                                    : 'text-gray-400 hover:text-white hover:bg-gray-800/40/[0.04] border border-transparent'
                                 } ${collapsed ? 'justify-center' : ''}`
                             }
                         >
@@ -210,7 +211,7 @@ function MobileNav({ navItems, handleSignOut }) {
                             end={item.end}
                             className={({ isActive }) =>
                                 `flex flex-col items-center justify-center min-w-[64px] h-[52px] gap-1 rounded-2xl transition-all ${isActive
-                                    ? 'text-emerald-400 bg-emerald-500/10'
+                                    ? 'text-purple-400 bg-purple-500/10'
                                     : 'text-gray-500 hover:text-white'
                                 }`
                             }
@@ -237,14 +238,14 @@ function MobileNav({ navItems, handleSignOut }) {
                     <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={() => setIsMenuOpen(false)} />
                     <div className="relative w-full bg-[#0f172a] rounded-t-[2.5rem] border-t border-white/10 shadow-[0_-20px_50px_rgba(0,0,0,0.5)] flex flex-col max-h-[92vh] animate-slide-up overflow-hidden">
                         {/* Puxador para o menu */}
-                        <div className="w-12 h-1.5 bg-white/20 rounded-full mx-auto mt-4 flex-shrink-0" />
+                        <div className="w-12 h-1.5 bg-gray-800/40/20 rounded-full mx-auto mt-4 flex-shrink-0" />
 
                         <div className="p-6 border-b border-white/5 flex items-center justify-between flex-shrink-0">
                             <div>
                                 <h2 className="text-xl font-bold text-white">Ecossistema</h2>
                                 <p className="text-[10px] text-gray-500 uppercase font-black tracking-widest mt-1">Acesso a todos os módulos</p>
                             </div>
-                            <button onClick={() => setIsMenuOpen(false)} className="p-2.5 bg-white/5 hover:bg-white/10 rounded-2xl text-gray-400 transition-colors">
+                            <button onClick={() => setIsMenuOpen(false)} className="p-2.5 bg-gray-800/40/5 hover:bg-gray-800/40/10 rounded-2xl text-gray-400 transition-colors">
                                 <X className="w-5 h-5" />
                             </button>
                         </div>
@@ -266,12 +267,12 @@ function MobileNav({ navItems, handleSignOut }) {
                                                     onClick={() => setIsMenuOpen(false)}
                                                     className={({ isActive }) =>
                                                         `flex flex-col items-center justify-center p-4 rounded-[2rem] border transition-all duration-300 group ${isActive
-                                                            ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400 shadow-[0_0_20px_-5px_rgba(16,185,129,0.3)]'
-                                                            : 'bg-white/[0.03] border-white/5 text-gray-400 hover:bg-white/[0.08] hover:border-white/10'
+                                                            ? 'bg-purple-500/10 border-purple-500/30 text-purple-400 shadow-[0_0_20px_-5px_rgba(16,185,129,0.3)]'
+                                                            : 'bg-gray-800/40/[0.03] border-white/5 text-gray-400 hover:bg-gray-800/40/[0.08] hover:border-white/10'
                                                         }`
                                                     }
                                                 >
-                                                    <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-2 transition-transform group-hover:scale-110 ${location.pathname === item.to ? 'bg-emerald-500/20' : 'bg-white/5 animate-pulse-slow'
+                                                    <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-2 transition-transform group-hover:scale-110 ${location.pathname === item.to ? 'bg-purple-500/20' : 'bg-gray-800/40/5 animate-pulse-slow'
                                                         }`}>
                                                         <item.icon className="w-6 h-6" />
                                                     </div>

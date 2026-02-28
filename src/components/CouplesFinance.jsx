@@ -1,3 +1,4 @@
+import { tw } from '@/lib/theme';
 import { useState } from 'react';
 import { Users, Sparkles, HeartPulse, CreditCard } from 'lucide-react';
 
@@ -20,7 +21,7 @@ export default function CouplesFinance() {
 
     return (
         <div className="space-y-8 animate-fade-in text-white/90 pb-20">
-            <div className="glass-card p-6 border-l-4 border-l-pink-500 relative overflow-hidden bg-black/40">
+            <div className="${tw.card} p-6 border-l-4 border-l-pink-500 relative overflow-hidden bg-black/40">
                 <div className="absolute top-0 right-0 p-8 opacity-10">
                     <HeartPulse className="w-32 h-32 text-pink-500" />
                 </div>
@@ -33,7 +34,7 @@ export default function CouplesFinance() {
             </div>
 
             <div className="grid md:grid-cols-3 gap-6">
-                <div className="glass-card p-6 bg-black/20 border border-white/5 space-y-4">
+                <div className="${tw.card} p-6 bg-black/20 border border-white/5 space-y-4">
                     <h3 className="font-bold uppercase tracking-widest text-xs text-gray-400">Renda Pessoa 1</h3>
                     <input
                         type="number"
@@ -42,7 +43,7 @@ export default function CouplesFinance() {
                         className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white text-xl font-black outline-none focus:border-pink-500 transition-colors"
                     />
                 </div>
-                <div className="glass-card p-6 bg-black/20 border border-white/5 space-y-4">
+                <div className="${tw.card} p-6 bg-black/20 border border-white/5 space-y-4">
                     <h3 className="font-bold uppercase tracking-widest text-xs text-gray-400">Renda Pessoa 2</h3>
                     <input
                         type="number"
@@ -51,7 +52,7 @@ export default function CouplesFinance() {
                         className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white text-xl font-black outline-none focus:border-pink-500 transition-colors"
                     />
                 </div>
-                <div className="glass-card p-6 bg-black/20 border border-pink-500/30 shadow-[0_0_15px_rgba(236,72,153,0.1)] space-y-4">
+                <div className="${tw.card} p-6 bg-black/20 border border-pink-500/30 shadow-[0_0_15px_rgba(236,72,153,0.1)] space-y-4">
                     <h3 className="font-bold uppercase tracking-widest text-xs text-pink-400 flex items-center gap-2">
                         <CreditCard className="w-4 h-4" /> Despesas do Casal
                     </h3>
@@ -66,17 +67,17 @@ export default function CouplesFinance() {
 
             <div className="grid md:grid-cols-2 gap-8">
                 {/* 50 / 50 */}
-                <div className="glass-card p-8 bg-black/30 border border-gray-800 hover:border-white/20 transition-all flex flex-col justify-between">
+                <div className="${tw.card} p-8 bg-black/30 border border-gray-800 hover:border-white/20 transition-all flex flex-col justify-between">
                     <div>
                         <h3 className="text-lg font-black uppercase tracking-widest text-white mb-2">Divisão 50/50</h3>
                         <p className="text-xs text-gray-400 mb-6">Metade para cada um. Simples, porém pode pesar para quem tem menor renda líquida.</p>
 
                         <div className="space-y-3 mb-8">
-                            <div className="flex justify-between items-center bg-white/5 p-4 rounded-xl">
+                            <div className="flex justify-between items-center bg-gray-800/40/5 p-4 rounded-xl">
                                 <span className="font-medium text-gray-300">Pessoa 1 Paga:</span>
                                 <span className="font-black text-white text-xl">{fmt(share5050)}</span>
                             </div>
-                            <div className="flex justify-between items-center bg-white/5 p-4 rounded-xl">
+                            <div className="flex justify-between items-center bg-gray-800/40/5 p-4 rounded-xl">
                                 <span className="font-medium text-gray-300">Pessoa 2 Paga:</span>
                                 <span className="font-black text-white text-xl">{fmt(share5050)}</span>
                             </div>
@@ -85,7 +86,7 @@ export default function CouplesFinance() {
                 </div>
 
                 {/* Proporcional */}
-                <div className="glass-card p-8 border border-accent/30 shadow-[0_0_30px_-5px_rgba(57,255,20,0.15)] relative overflow-hidden flex flex-col justify-between">
+                <div className="${tw.card} p-8 border border-accent/30 shadow-[0_0_30px_-5px_rgba(57,255,20,0.15)] relative overflow-hidden flex flex-col justify-between">
                     <div className="absolute -right-10 -top-10 w-40 h-40 bg-accent/20 rounded-full blur-[40px] pointer-events-none" />
 
                     <div>

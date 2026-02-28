@@ -1,3 +1,4 @@
+import { tw } from '@/lib/theme';
 // src/components/FIRESimulator.jsx
 
 import { useState, useMemo } from 'react';
@@ -66,9 +67,9 @@ export default function FIRESimulator({ financialData }) {
     return (
         <div className="space-y-6">
             {/* Inputs */}
-            <div className="rounded-2xl border border-gray-200 dark:border-white/10 
-        bg-gray-50/50 dark:bg-black/20 p-6 glass-card">
-                <h3 className="font-bold mb-4 flex items-center gap-2 text-gray-900 dark:text-white">
+            <div className="rounded-2xl border border-gray-700/40 dark:border-white/10 
+        bg-gray-800/30/50 dark:bg-black/20 p-6 ${tw.card}">
+                <h3 className="font-bold mb-4 flex items-center gap-2 text-white dark:text-white">
                     <DollarSign className="h-5 w-5 text-orange-500" /> Seus Dados Financeiros
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -94,9 +95,9 @@ export default function FIRESimulator({ financialData }) {
                                     type="number"
                                     value={params[field.key]}
                                     onChange={(e) => handleChange(field.key, e.target.value)}
-                                    className={`w-full rounded-xl border border-gray-200 dark:border-white/10 
-                    bg-white dark:bg-gray-900/50 text-gray-900 dark:text-white p-2.5 text-sm font-bold outline-none
-                    focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all shadow-sm
+                                    className={`w-full rounded-xl border border-gray-700/40 dark:border-white/10 
+                    bg-gray-800/40 dark:bg-gray-900/50 text-white dark:text-white p-2.5 text-sm font-bold outline-none
+                    focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all shadow-lg shadow-black/10
                     ${field.prefix ? 'pl-9' : ''} ${field.suffix ? 'pr-8' : ''}`}
                                 />
                                 {field.suffix && (
@@ -114,35 +115,35 @@ export default function FIRESimulator({ financialData }) {
         from-orange-500 via-red-500 to-pink-600 p-8 md:p-12 text-white shadow-[0_20px_50px_-15px_rgba(249,115,22,0.4)] group border border-white/10 perspective-1000">
                 {/* Efeitos 3D Internos */}
                 <div className="absolute inset-x-0 -bottom-20 h-64 bg-gradient-to-t from-black/40 to-transparent" />
-                <div className="absolute -right-20 -top-20 w-80 h-80 bg-white/10 rounded-full mix-blend-overlay filter blur-[40px] opacity-60 group-hover:scale-125 transition-transform duration-1000 ease-out" />
+                <div className="absolute -right-20 -top-20 w-80 h-80 bg-gray-800/40/10 rounded-full mix-blend-overlay filter blur-[40px] opacity-60 group-hover:scale-125 transition-transform duration-1000 ease-out" />
                 <div className="absolute top-10 left-10 w-40 h-40 bg-yellow-400/20 rounded-full mix-blend-color-dodge filter blur-[40px] opacity-60 group-hover:-translate-y-10 transition-transform duration-1000 ease-out delay-100" />
                 <Flame className="absolute -right-8 top-0 h-64 w-64 opacity-20 filter blur-2xl group-hover:hidden transition-all duration-1000" />
 
                 <h2 className="text-xl md:text-2xl font-black flex items-center gap-3 mb-8 relative z-10 tracking-tight">
-                    <div className="p-2 bg-white/10 rounded-xl backdrop-blur-sm border border-white/20 shadow-inner">
+                    <div className="p-2 bg-gray-800/40/10 rounded-xl backdrop-blur-sm border border-white/20 shadow-inner">
                         <Flame className="h-6 w-6 text-yellow-300 animate-pulse" />
                     </div>
                     Sua Independência Financeira
                 </h2>
 
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-10 relative z-10">
-                    <div className="bg-white/10 backdrop-blur-md rounded-3xl p-5 border border-white/20 shadow-inner group-hover:-translate-y-1 transition-transform duration-300">
+                    <div className="bg-gray-800/40/10 backdrop-blur-md rounded-3xl p-5 border border-white/20 shadow-inner group-hover:-translate-y-1 transition-transform duration-300">
                         <p className="text-[10px] uppercase font-black tracking-[0.2em] opacity-80 mb-2">Meta FIRE</p>
                         <p className="text-xl md:text-3xl font-black drop-shadow-[0_2px_10px_rgba(0,0,0,0.3)] tracking-tight">
                             {formatCurrency(result.fireNumber)}
                         </p>
                     </div>
-                    <div className="bg-white/10 backdrop-blur-md rounded-3xl p-5 border border-white/20 shadow-inner group-hover:-translate-y-1 transition-transform duration-300 delay-75">
+                    <div className="bg-gray-800/40/10 backdrop-blur-md rounded-3xl p-5 border border-white/20 shadow-inner group-hover:-translate-y-1 transition-transform duration-300 delay-75">
                         <p className="text-[10px] uppercase font-black tracking-[0.2em] opacity-80 mb-2">Progresso</p>
                         <p className="text-xl md:text-3xl font-black drop-shadow-[0_2px_10px_rgba(0,0,0,0.3)] tracking-tight">{result.progress}%</p>
                     </div>
-                    <div className="bg-white/10 backdrop-blur-md rounded-3xl p-5 border border-white/20 shadow-inner group-hover:-translate-y-1 transition-transform duration-300 delay-100">
+                    <div className="bg-gray-800/40/10 backdrop-blur-md rounded-3xl p-5 border border-white/20 shadow-inner group-hover:-translate-y-1 transition-transform duration-300 delay-100">
                         <p className="text-[10px] uppercase font-black tracking-[0.2em] opacity-80 mb-2">Tempo Restante</p>
                         <p className="text-xl md:text-3xl font-black drop-shadow-[0_2px_10px_rgba(0,0,0,0.3)] tracking-tight">
                             {result.totalYears}a <span className="text-lg md:text-xl text-white/80">{result.totalMonthsRemainder}m</span>
                         </p>
                     </div>
-                    <div className="bg-white/10 backdrop-blur-md rounded-3xl p-5 border border-white/20 shadow-inner group-hover:-translate-y-1 transition-transform duration-300 delay-150 relative overflow-hidden">
+                    <div className="bg-gray-800/40/10 backdrop-blur-md rounded-3xl p-5 border border-white/20 shadow-inner group-hover:-translate-y-1 transition-transform duration-300 delay-150 relative overflow-hidden">
                         <div className="absolute inset-0 bg-gradient-to-br from-yellow-400/20 to-transparent mix-blend-overlay" />
                         <p className="text-[10px] uppercase font-black tracking-[0.2em] opacity-80 mb-2 relative z-10">Previsão Realidade</p>
                         <p className="text-lg md:text-2xl font-black drop-shadow-[0_2px_10px_rgba(0,0,0,0.3)] capitalize truncate relative z-10">
@@ -172,17 +173,17 @@ export default function FIRESimulator({ financialData }) {
                 {/* Renda Passiva */}
                 <div className="mt-8 flex items-center gap-4 text-sm font-medium bg-black/20 p-5 rounded-2xl border border-white/20 backdrop-blur-md shadow-[0_10px_30px_rgba(0,0,0,0.2)] relative z-10 transform-gpu hover:scale-[1.01] transition-transform">
                     <div className="p-3 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-xl shadow-lg border border-white/30">
-                        <DollarSign className="h-6 w-6 text-white drop-shadow-md" />
+                        <DollarSign className="h-6 w-6 text-white drop-shadow-lg shadow-black/10" />
                     </div>
                     <span className="leading-relaxed text-indigo-50/90 text-left text-base">
-                        Sua renda passiva perpétua será: <strong className="text-xl mx-1 text-white drop-shadow-md">{formatCurrency(result.summary.passive_income_monthly)}/mês</strong>. Isso cobrirá exatamente {result.summary.years_of_freedom} anos de suas atuais despesas se você nunca mais trabalhar na vida!
+                        Sua renda passiva perpétua será: <strong className="text-xl mx-1 text-white drop-shadow-lg shadow-black/10">{formatCurrency(result.summary.passive_income_monthly)}/mês</strong>. Isso cobrirá exatamente {result.summary.years_of_freedom} anos de suas atuais despesas se você nunca mais trabalhar na vida!
                     </span>
                 </div>
             </div>
 
             {/* Gráfico de Projeção */}
-            <div className="rounded-3xl border border-gray-200 dark:border-white/10 glass-card p-6 shadow-sm">
-                <h3 className="font-bold mb-6 flex items-center gap-2 text-gray-900 dark:text-white">
+            <div className="rounded-3xl border border-gray-700/40 dark:border-white/10 ${tw.card} p-6 shadow-lg shadow-black/10">
+                <h3 className="font-bold mb-6 flex items-center gap-2 text-white dark:text-white">
                     <TrendingUp className="h-5 w-5 text-orange-500" /> Projeção Patrimonial
                 </h3>
                 <ResponsiveContainer width="100%" height={400}>
@@ -263,22 +264,22 @@ export default function FIRESimulator({ financialData }) {
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Cenários */}
-                <div className="rounded-3xl border border-gray-200 dark:border-white/10 glass-card p-6 shadow-sm">
-                    <h3 className="font-bold mb-4 flex items-center gap-2 text-gray-900 dark:text-white">
+                <div className="rounded-3xl border border-gray-700/40 dark:border-white/10 ${tw.card} p-6 shadow-lg shadow-black/10">
+                    <h3 className="font-bold mb-4 flex items-center gap-2 text-white dark:text-white">
                         <Target className="h-5 w-5 text-blue-500" /> Cenários Estressados (a.a.)
                     </h3>
                     <div className="flex flex-col gap-3">
                         {result.scenarios.map(scenario => (
                             <div
                                 key={scenario.name}
-                                className="rounded-2xl border border-gray-200 dark:border-white/10 bg-white/50 dark:bg-white/[0.02] p-4 
-                    hover:shadow-md transition-all flex items-center justify-between group"
+                                className="rounded-2xl border border-gray-700/40 dark:border-white/10 bg-gray-800/40/50 dark:bg-gray-800/40/[0.02] p-4 
+                    hover:shadow-lg shadow-black/10 transition-all flex items-center justify-between group"
                                 style={{ borderLeftColor: scenario.color, borderLeftWidth: '5px' }}
                             >
                                 <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 rounded-full flex items-center justify-center text-xl bg-gray-100 dark:bg-white/5 group-hover:scale-110 transition-transform">{scenario.emoji}</div>
+                                    <div className="w-10 h-10 rounded-full flex items-center justify-center text-xl bg-gray-800/40 dark:bg-gray-800/40/5 group-hover:scale-110 transition-transform">{scenario.emoji}</div>
                                     <div>
-                                        <span className="font-bold text-gray-900 dark:text-white block">{scenario.name} <span className="text-xs font-normal text-gray-400">({Math.round(scenario.rate * 100)}%)</span></span>
+                                        <span className="font-bold text-white dark:text-white block">{scenario.name} <span className="text-xs font-normal text-gray-400">({Math.round(scenario.rate * 100)}%)</span></span>
                                         {scenario.reachable && (
                                             <span className="text-xs font-bold uppercase tracking-widest text-gray-500">
                                                 {scenario.targetDateFormatted}
@@ -300,25 +301,25 @@ export default function FIRESimulator({ financialData }) {
                 </div>
 
                 {/* Milestones */}
-                <div className="rounded-3xl border border-gray-200 dark:border-white/10 glass-card p-6 shadow-sm">
-                    <h3 className="font-bold mb-4 flex items-center gap-2 text-gray-900 dark:text-white">
-                        <Calendar className="h-5 w-5 text-emerald-500" /> Marcos do Caminho
+                <div className="rounded-3xl border border-gray-700/40 dark:border-white/10 ${tw.card} p-6 shadow-lg shadow-black/10">
+                    <h3 className="font-bold mb-4 flex items-center gap-2 text-white dark:text-white">
+                        <Calendar className="h-5 w-5 text-purple-500" /> Marcos do Caminho
                     </h3>
                     <div className="space-y-3">
                         {result.milestones.map(milestone => (
                             <div key={milestone.percentage}
                                 className="flex items-center justify-between p-3 px-4 rounded-2xl 
-                    bg-gray-100/50 dark:bg-white/[0.02] border border-gray-200/50 dark:border-white/5">
+                    bg-gray-800/40/50 dark:bg-gray-800/40/[0.02] border border-gray-700/40/50 dark:border-white/5">
                                 <div className="flex items-center gap-4">
                                     <div className={`w-11 h-11 rounded-full flex items-center 
                     justify-center text-sm font-black shadow-inner ${result.progress >= milestone.percentage
-                                            ? 'bg-gradient-to-br from-emerald-400 to-green-600 text-white shadow-emerald-500/30'
-                                            : 'bg-white dark:bg-gray-800 text-gray-400 border border-gray-200 dark:border-gray-700'
+                                            ? 'bg-gradient-to-br from-purple-400 to-green-600 text-white shadow-purple-500/30'
+                                            : 'bg-gray-800/40 dark:bg-gray-800 text-gray-400 border border-gray-700/40 dark:border-gray-700'
                                         }`}>
                                         {milestone.percentage}%
                                     </div>
                                     <div>
-                                        <p className="font-bold text-gray-900 dark:text-white">
+                                        <p className="font-bold text-white dark:text-white">
                                             {formatCurrency(milestone.targetBalance)}
                                         </p>
                                         <p className="text-[10px] uppercase font-bold tracking-widest text-gray-500">
@@ -326,7 +327,7 @@ export default function FIRESimulator({ financialData }) {
                                         </p>
                                     </div>
                                 </div>
-                                <span className="text-sm font-black text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 px-3 py-1 rounded-lg border border-gray-200 dark:border-gray-700">
+                                <span className="text-sm font-black text-gray-300 dark:text-gray-300 bg-gray-800/40 dark:bg-gray-800 px-3 py-1 rounded-lg border border-gray-700/40 dark:border-gray-700">
                                     {milestone.yearsToReach}a {milestone.monthsRemainder}m
                                 </span>
                             </div>
@@ -336,8 +337,8 @@ export default function FIRESimulator({ financialData }) {
             </div>
 
             {/* Impacto de poupar mais */}
-            <div className="rounded-3xl border border-gray-200 dark:border-white/10 glass-card p-6 shadow-sm">
-                <h3 className="font-bold mb-6 flex items-center gap-2 text-gray-900 dark:text-white">
+            <div className="rounded-3xl border border-gray-700/40 dark:border-white/10 ${tw.card} p-6 shadow-lg shadow-black/10">
+                <h3 className="font-bold mb-6 flex items-center gap-2 text-white dark:text-white">
                     <Zap className="h-5 w-5 text-yellow-500" /> Turbo FIRE: E se Você Poupasse Mais?
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -345,9 +346,9 @@ export default function FIRESimulator({ financialData }) {
                         <div
                             key={impact.extraPercentage}
                             className="relative overflow-hidden flex flex-col p-4 rounded-2xl 
-                bg-gray-50 dark:bg-white/[0.02] border border-gray-200 dark:border-white/5 hover:border-orange-500/50 hover:shadow-lg transition-all group"
+                bg-gray-800/30 dark:bg-gray-800/40/[0.02] border border-gray-700/40 dark:border-white/5 hover:border-orange-500/50 hover:shadow-lg transition-all group"
                         >
-                            <div className="flex items-center justify-between mb-3 border-b border-gray-200 dark:border-white/10 pb-3">
+                            <div className="flex items-center justify-between mb-3 border-b border-gray-700/40 dark:border-white/10 pb-3">
                                 <div className="flex items-center gap-2">
                                     <div className="w-8 h-8 rounded-full bg-orange-100 dark:bg-orange-500/20 text-orange-600 flex items-center justify-center font-black text-sm group-hover:scale-110 transition-transform">
                                         +{impact.extraPercentage}%
@@ -356,19 +357,19 @@ export default function FIRESimulator({ financialData }) {
                                         Renda Extra
                                     </span>
                                 </div>
-                                <span className="font-black text-gray-900 dark:text-white text-lg">
+                                <span className="font-black text-white dark:text-white text-lg">
                                     +{formatCurrency(impact.extraAmount)}
                                 </span>
                             </div>
                             <div className="flex flex-col gap-1">
                                 <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">Novo tempo estimado:</span>
-                                <span className="font-black text-gray-700 dark:text-gray-300 text-xl">
+                                <span className="font-black text-gray-300 dark:text-gray-300 text-xl">
                                     {impact.reachable
                                         ? `${impact.years}a ${impact.monthsRemainder}m`
                                         : 'N/A'}
                                 </span>
                                 {impact.yearsSaved > 0 && (
-                                    <span className="inline-flex items-center gap-1 mt-2 text-xs font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-500/10 px-2 py-1 rounded-md self-start">
+                                    <span className="inline-flex items-center gap-1 mt-2 text-xs font-bold text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-500/10 px-2 py-1 rounded-md self-start">
                                         <Zap className="w-3 h-3" /> {impact.yearsSaved}a {impact.monthsSavedRemainder}m mais rápido!
                                     </span>
                                 )}

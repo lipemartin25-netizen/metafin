@@ -1,3 +1,5 @@
+import { tw } from '@/lib/theme';
+// Removing unused theme import
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import { Globe } from 'lucide-react';
@@ -21,7 +23,7 @@ export default function Navbar() {
         >
             <div className="flex items-center gap-3">
                 {isDemo && (
-                    <span className="px-2 py-1 rounded-lg bg-amber-500/10 text-amber-400 text-xs font-medium">
+                    <span className="px-2 py-1 rounded-lg bg-orange-500/10 text-orange-400 text-xs font-medium">
                         Demo
                     </span>
                 )}
@@ -30,7 +32,7 @@ export default function Navbar() {
                 <div className="relative">
                     <button
                         onClick={() => setLangMenuOpen(!langMenuOpen)}
-                        className="p-2 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 transition-all flex items-center gap-1"
+                        className="p-2 rounded-xl text-gray-400 hover:text-white hover:bg-gray-800/40/5 transition-all flex items-center gap-1"
                         title="Mudar Idioma"
                     >
                         <Globe className="w-4 h-4" />
@@ -40,12 +42,12 @@ export default function Navbar() {
                     {langMenuOpen && (
                         <>
                             <div className="fixed inset-0 z-10" onClick={() => setLangMenuOpen(false)} />
-                            <div className="absolute right-0 mt-2 w-40 glass-card p-1 z-20 shadow-xl border border-white/10">
+                            <div className="absolute right-0 mt-2 w-40 ${tw.card} p-1 z-20 shadow-xl border border-white/10">
                                 {Object.keys(FLAGS).map((code) => (
                                     <button
                                         key={code}
                                         onClick={() => { changeLanguage(code); setLangMenuOpen(false); }}
-                                        className={`w-full text-left px-3 py-2 rounded-lg text-sm flex items-center gap-2 hover:bg-white/10 transition-all ${language === code ? 'text-emerald-400 bg-emerald-500/10' : 'text-gray-300'
+                                        className={`w-full text-left px-3 py-2 rounded-lg text-sm flex items-center gap-2 hover:bg-gray-800/40 transition-all ${language === code ? 'text-purple-400 bg-purple-500/10' : 'text-gray-300'
                                             }`}
                                     >
                                         <span>{FLAGS[code]}</span>

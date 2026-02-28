@@ -1,3 +1,4 @@
+import { tw } from '@/lib/theme';
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Check, X, Sparkles, AlertCircle, Building2 } from 'lucide-react';
@@ -66,7 +67,7 @@ export default function SmartReconciliation() {
     if (pendingQs.length === 0) return null;
 
     return (
-        <div className="glass-card bg-indigo-50/50 dark:bg-indigo-500/5 border border-indigo-200 dark:border-indigo-500/20 shadow-lg shadow-indigo-500/5 mb-6 overflow-hidden relative group p-1">
+        <div className="${tw.card} bg-indigo-50/50 dark:bg-indigo-500/5 border border-indigo-200 dark:border-indigo-500/20 shadow-lg shadow-indigo-500/5 mb-6 overflow-hidden relative group p-1">
             {/* Glow logic */}
             <div className="absolute -top-10 -right-10 w-32 h-32 bg-indigo-500/20 rounded-full blur-3xl animate-pulse-slow" />
 
@@ -76,7 +77,7 @@ export default function SmartReconciliation() {
                         <Sparkles className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
                     </div>
                     <div>
-                        <h3 className="text-base font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                        <h3 className="text-base font-bold text-white dark:text-white flex items-center gap-2">
                             Radar de Conciliação
                             <span className="bg-indigo-600 text-white text-[10px] px-2 py-0.5 rounded-full font-black tracking-widest leading-tight">
                                 {pendingQs.length} PENDÊNCIAS
@@ -100,9 +101,9 @@ export default function SmartReconciliation() {
                                 transition={{ type: "spring", stiffness: 300, damping: 25 }}
                                 className="absolute inset-0 w-full"
                             >
-                                <div className="bg-white dark:bg-surface-800 border border-gray-200 dark:border-white/10 rounded-xl p-3 shadow-md flex items-center justify-between gap-4 w-full group/card hover:border-indigo-300 dark:hover:border-indigo-500/50 transition-colors h-full">
+                                <div className="bg-gray-800/40 dark:bg-surface-800 border border-gray-700/40 dark:border-white/10 rounded-xl p-3 shadow-lg shadow-black/10 flex items-center justify-between gap-4 w-full group/card hover:border-indigo-300 dark:hover:border-indigo-500/50 transition-colors h-full">
                                     <div className="flex items-center gap-4 flex-1 min-w-0">
-                                        <div className="w-10 h-10 rounded-full bg-gray-100 dark:bg-surface-900 overflow-hidden flex items-center justify-center shrink-0 border border-gray-200 dark:border-white/5">
+                                        <div className="w-10 h-10 rounded-full bg-gray-800/40 dark:bg-surface-900 overflow-hidden flex items-center justify-center shrink-0 border border-gray-700/40 dark:border-white/5">
                                             {tx.bank === 'Nubank' ? (
                                                 <div className="w-full h-full bg-[#8A05BE] flex items-center justify-center text-white font-bold text-xs">NU</div>
                                             ) : tx.bank === 'Itaú' ? (
@@ -113,10 +114,10 @@ export default function SmartReconciliation() {
                                         </div>
                                         <div className="truncate flex-1">
                                             <div className="flex items-center gap-2 mb-0.5">
-                                                <p className="text-sm font-bold text-gray-900 dark:text-white truncate" title={tx.description}>
+                                                <p className="text-sm font-bold text-white dark:text-white truncate" title={tx.description}>
                                                     {tx.description}
                                                 </p>
-                                                <span className={`text-xs font-black shrink-0 ${tx.type === 'income' ? 'text-emerald-500' : 'text-gray-600 dark:text-gray-300'}`}>
+                                                <span className={`text-xs font-black shrink-0 ${tx.type === 'income' ? 'text-purple-500' : 'text-gray-600 dark:text-gray-300'}`}>
                                                     {tx.type === 'income' ? '+' : '-'}{new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(Math.abs(tx.amount))}
                                                 </span>
                                             </div>
@@ -137,7 +138,7 @@ export default function SmartReconciliation() {
                                         </button>
                                         <button
                                             onClick={() => handleAction(tx, 'approve')}
-                                            className="w-10 h-10 rounded-full bg-emerald-50 dark:bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500 hover:text-white flex items-center justify-center transition-colors shadow-sm group/btn shrink-0"
+                                            className="w-10 h-10 rounded-full bg-purple-50 dark:bg-purple-500/10 text-purple-500 hover:bg-purple-500 hover:text-white flex items-center justify-center transition-colors shadow-lg shadow-black/10 group/btn shrink-0"
                                             title="Aprovar Match"
                                         >
                                             <Check className="w-5 h-5 group-hover/btn:scale-110 transition-transform" />

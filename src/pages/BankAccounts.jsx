@@ -1,3 +1,4 @@
+import { tw } from '@/lib/theme';
 import { useState } from 'react';
 import { useTransactions } from '../hooks/useTransactions';
 import { useAuth } from '../contexts/AuthContext';
@@ -191,8 +192,8 @@ export default function BankAccounts() {
             <div>
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
-                        <h2 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                            <Banknote className="text-emerald-500 dark:text-emerald-400" /> Instituições Financeiras
+                        <h2 className="text-2xl font-bold text-white dark:text-white flex items-center gap-2">
+                            <Banknote className="text-purple-500 dark:text-purple-400" /> Instituições Financeiras
                         </h2>
                         <p className="text-gray-500 dark:text-gray-400 text-sm">Gerencie suas contas bancárias e conexões Open Finance.</p>
                     </div>
@@ -222,17 +223,17 @@ export default function BankAccounts() {
                 )}
             </div>
 
-            <div className="glass-card bg-gradient-to-br from-gray-900 to-gray-800 border-emerald-500/20">
+            <div className="${tw.card} bg-gradient-to-br from-gray-900 to-gray-800 border-purple-500/20">
                 <div className="flex items-center justify-between">
                     <div>
                         <p className="text-sm text-gray-400">Saldo Integrado Estimado</p>
-                        <h2 className="text-3xl font-bold text-emerald-400 mt-1">{fmt(totalBalance)}</h2>
+                        <h2 className="text-3xl font-bold text-purple-400 mt-1">{fmt(totalBalance)}</h2>
                     </div>
-                    <div className="w-12 h-12 rounded-full bg-emerald-500/10 flex items-center justify-center">
-                        <ShieldCheck className="w-6 h-6 text-emerald-400" />
+                    <div className="w-12 h-12 rounded-full bg-purple-500/10 flex items-center justify-center">
+                        <ShieldCheck className="w-6 h-6 text-purple-400" />
                     </div>
                 </div>
-                <div className="mt-4 flex items-center gap-2 text-xs text-emerald-200/70 bg-emerald-500/5 p-2 rounded-lg border border-emerald-500/10">
+                <div className="mt-4 flex items-center gap-2 text-xs text-purple-200/70 bg-purple-500/5 p-2 rounded-lg border border-purple-500/10">
                     <CheckCircle className="w-3 h-3" />
                     Conexão segura via Open Finance Brasil
                 </div>
@@ -240,24 +241,24 @@ export default function BankAccounts() {
 
             <div>
                 <h3 className="text-lg font-semibold text-white mb-3 flex items-center gap-2">
-                    Minhas Contas <span className="bg-white/10 text-xs px-2 py-0.5 rounded-full text-gray-300">{accounts?.length || 0}</span>
+                    Minhas Contas <span className="bg-gray-800/40/10 text-xs px-2 py-0.5 rounded-full text-gray-300">{accounts?.length || 0}</span>
                 </h3>
 
                 {loading ? (
                     <div className="flex flex-col items-center justify-center py-12 gap-3">
-                        <RefreshCw className="w-8 h-8 text-emerald-400 animate-spin" />
+                        <RefreshCw className="w-8 h-8 text-purple-400 animate-spin" />
                         <p className="text-gray-500 text-sm animate-pulse">Sincronizando suas contas...</p>
                     </div>
                 ) : (accounts?.length || 0) === 0 ? (
-                    <div className="glass-card text-center py-8 border-dashed border-2 border-white/10 bg-transparent">
-                        <div className="w-12 h-12 rounded-full bg-white/5 mx-auto flex items-center justify-center mb-3">
+                    <div className="${tw.card} text-center py-8 border-dashed border-2 border-white/10 bg-transparent">
+                        <div className="w-12 h-12 rounded-full bg-gray-800/40/5 mx-auto flex items-center justify-center mb-3">
                             <Banknote className="w-6 h-6 text-gray-500" />
                         </div>
                         <p className="text-gray-400 text-sm mb-4">Nenhuma conta conectada ainda.</p>
                         <button onClick={() => {
                             const newSection = document.getElementById('new-connection');
                             newSection?.scrollIntoView({ behavior: 'smooth' });
-                        }} className="text-emerald-400 hover:text-emerald-300 text-sm font-medium">
+                        }} className="text-purple-400 hover:text-purple-300 text-sm font-medium">
                             Conectar primeira conta
                         </button>
                     </div>
@@ -266,7 +267,7 @@ export default function BankAccounts() {
                         {accounts.map(bank => {
                             const txData = accountTransactions[bank.id];
                             return (
-                                <div key={bank.id} className="glass-card group">
+                                <div key={bank.id} className="${tw.card} group">
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center gap-3">
                                             <div className="relative">
@@ -274,7 +275,7 @@ export default function BankAccounts() {
                                                     {bank.logo || bank.bank_name?.charAt(0) || 'B'}
                                                 </div>
                                                 {/* Source badge */}
-                                                <div className={`absolute -bottom-1 -right-1 w-4 h-4 rounded-full flex items-center justify-center text-[8px] border border-gray-800 ${bank.display_name?.toLowerCase().includes('cartão') || bank.account_type === 'CREDIT' ? 'bg-purple-500' : 'bg-emerald-500'}`}>
+                                                <div className={`absolute -bottom-1 -right-1 w-4 h-4 rounded-full flex items-center justify-center text-[8px] border border-gray-800 ${bank.display_name?.toLowerCase().includes('cartão') || bank.account_type === 'CREDIT' ? 'bg-purple-500' : 'bg-purple-500'}`}>
                                                     {bank.display_name?.toLowerCase().includes('cartão') || bank.account_type === 'CREDIT' ? '💳' : '🏦'}
                                                 </div>
                                             </div>
@@ -285,14 +286,14 @@ export default function BankAccounts() {
                                                     {syncing === bank.id ? (
                                                         <span className="flex items-center gap-1 text-[9px] text-yellow-400 bg-yellow-500/10 px-1.5 py-0.5 rounded-full font-bold">🟡 Sincronizando</span>
                                                     ) : bank.last_synced_at || bank.updated_at ? (
-                                                        <span className="flex items-center gap-1 text-[9px] text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded-full font-bold">🟢 Ativo</span>
+                                                        <span className="flex items-center gap-1 text-[9px] text-purple-400 bg-purple-500/10 px-1.5 py-0.5 rounded-full font-bold">🟢 Ativo</span>
                                                     ) : (
-                                                        <span className="flex items-center gap-1 text-[9px] text-gray-500 bg-white/5 px-1.5 py-0.5 rounded-full font-bold">⚪ Manual</span>
+                                                        <span className="flex items-center gap-1 text-[9px] text-gray-500 bg-gray-800/40/5 px-1.5 py-0.5 rounded-full font-bold">⚪ Manual</span>
                                                     )}
                                                 </div>
                                                 <p className="text-xs text-gray-400">{bank.bank_name} • Ag {bank.agency || '0001'} • Cta {bank.account_number}</p>
                                                 <div className="flex items-center gap-2 mt-0.5">
-                                                    <p className="text-sm font-medium text-emerald-400">{fmt(bank.balance || 0)}</p>
+                                                    <p className="text-sm font-medium text-purple-400">{fmt(bank.balance || 0)}</p>
                                                     {(bank.last_synced_at || bank.updated_at) && (
                                                         <span className="text-[9px] text-gray-500">• Sync {formatTimeAgo(bank.last_synced_at || bank.updated_at)}</span>
                                                     )}
@@ -302,7 +303,7 @@ export default function BankAccounts() {
                                         <div className="flex items-center gap-1">
                                             <button
                                                 onClick={() => handleSync(bank)}
-                                                className={`p-2 rounded-lg text-gray-400 hover:text-white hover:bg-white/10 transition-all ${syncing === bank.id ? 'animate-spin text-emerald-400' : ''}`}
+                                                className={`p-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800/40/10 transition-all ${syncing === bank.id ? 'animate-spin text-purple-400' : ''}`}
                                                 title="Sincronizar"
                                             >
                                                 <RefreshCw className="w-4 h-4" />
@@ -321,9 +322,9 @@ export default function BankAccounts() {
                                     {txData && txData.count > 0 && (
                                         <div className="mt-4 pt-3 border-t border-white/5 space-y-3">
                                             <div className="grid grid-cols-3 gap-2">
-                                                <div className="bg-emerald-500/10 rounded-xl p-2.5 text-center">
-                                                    <p className="text-[9px] text-emerald-400/70 uppercase font-bold tracking-wider">Entradas</p>
-                                                    <p className="text-sm font-bold text-emerald-400 flex items-center justify-center gap-1">
+                                                <div className="bg-purple-500/10 rounded-xl p-2.5 text-center">
+                                                    <p className="text-[9px] text-purple-400/70 uppercase font-bold tracking-wider">Entradas</p>
+                                                    <p className="text-sm font-bold text-purple-400 flex items-center justify-center gap-1">
                                                         <ArrowDownRight className="w-3 h-3" />
                                                         {fmt(txData.income)}
                                                     </p>
@@ -335,7 +336,7 @@ export default function BankAccounts() {
                                                         {fmt(txData.expense)}
                                                     </p>
                                                 </div>
-                                                <div className="bg-white/5 rounded-xl p-2.5 text-center">
+                                                <div className="bg-gray-800/40/5 rounded-xl p-2.5 text-center">
                                                     <p className="text-[9px] text-gray-400/70 uppercase font-bold tracking-wider">Moviment.</p>
                                                     <p className="text-sm font-bold text-white">{txData.count}</p>
                                                 </div>
@@ -346,9 +347,9 @@ export default function BankAccounts() {
                                                 <div className="space-y-1">
                                                     <p className="text-[9px] text-gray-500 uppercase font-bold tracking-wider mb-1">Últimas movimentações</p>
                                                     {txData.recent.slice(0, 3).map((tx, i) => (
-                                                        <div key={tx.id || i} className="flex items-center justify-between py-1.5 px-2 rounded-lg hover:bg-white/5 transition-colors">
+                                                        <div key={tx.id || i} className="flex items-center justify-between py-1.5 px-2 rounded-lg hover:bg-gray-800/40/5 transition-colors">
                                                             <span className="text-xs text-gray-300 truncate max-w-[60%]">{tx.description}</span>
-                                                            <span className={`text-xs font-bold ${tx.type === 'income' ? 'text-emerald-400' : 'text-red-400'}`}>
+                                                            <span className={`text-xs font-bold ${tx.type === 'income' ? 'text-purple-400' : 'text-red-400'}`}>
                                                                 {tx.type === 'income' ? '+' : '-'}{fmt(Math.abs(tx.amount))}
                                                             </span>
                                                         </div>
@@ -377,7 +378,7 @@ export default function BankAccounts() {
                         <button
                             key={bank.id}
                             onClick={() => handleConnectClick(bank)}
-                            className="glass-card hover:bg-white/5 transition-all p-4 flex flex-col items-center gap-3 text-center border hover:border-emerald-500/30 group"
+                            className="${tw.card} hover:bg-gray-800/40/5 transition-all p-4 flex flex-col items-center gap-3 text-center border hover:border-purple-500/30 group"
                         >
                             <div className="w-12 h-12 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-lg transition-transform group-hover:scale-110" style={{ backgroundColor: bank.color, color: bank.textColor }}>
                                 {bank.logo}
@@ -390,10 +391,10 @@ export default function BankAccounts() {
 
             {showConnectModal && selectedBank && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
-                    <div className="glass-card w-full max-w-md p-0 overflow-hidden animate-slide-up relative">
+                    <div className="${tw.card} w-full max-w-md p-0 overflow-hidden animate-slide-up relative">
                         <button onClick={() => setShowConnectModal(false)} className="absolute top-4 right-4 text-gray-500 hover:text-white"><X className="w-5 h-5" /></button>
 
-                        <div className="bg-white/5 p-6 text-center border-b border-white/5">
+                        <div className="bg-gray-800/40/5 p-6 text-center border-b border-white/5">
                             <div className="w-16 h-16 rounded-2xl mx-auto flex items-center justify-center text-white font-bold text-3xl shadow-lg mb-4" style={{ backgroundColor: selectedBank.color, color: selectedBank.textColor }}>
                                 {selectedBank.logo}
                             </div>
@@ -422,9 +423,9 @@ export default function BankAccounts() {
 
                                     <button
                                         onClick={() => setConnectingState('consenting')}
-                                        className="w-full flex items-center gap-4 p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all group text-left"
+                                        className="w-full flex items-center gap-4 p-4 rounded-xl bg-gray-800/40/5 border border-white/10 hover:bg-gray-800/40/10 hover:border-white/20 transition-all group text-left"
                                     >
-                                        <div className="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+                                        <div className="w-12 h-12 rounded-xl bg-gray-800/40/10 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
                                             <FileText className="w-6 h-6 text-gray-400" />
                                         </div>
                                         <div>
@@ -444,7 +445,7 @@ export default function BankAccounts() {
                                                 type="text"
                                                 value={customNickname}
                                                 onChange={(e) => setCustomNickname(e.target.value)}
-                                                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-white text-sm focus:border-emerald-500/50 outline-none mt-1"
+                                                className="w-full bg-gray-800/40/5 border border-white/10 rounded-xl px-4 py-2 text-white text-sm focus:border-purple-500/50 outline-none mt-1"
                                                 placeholder="Ex: Minha Conta Nubank"
                                             />
                                         </div>
@@ -454,7 +455,7 @@ export default function BankAccounts() {
                                                 type="text"
                                                 value={agency}
                                                 onChange={(e) => setAgency(e.target.value)}
-                                                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-white text-sm focus:border-emerald-500/50 outline-none mt-1"
+                                                className="w-full bg-gray-800/40/5 border border-white/10 rounded-xl px-4 py-2 text-white text-sm focus:border-purple-500/50 outline-none mt-1"
                                                 placeholder="0001"
                                             />
                                         </div>
@@ -464,7 +465,7 @@ export default function BankAccounts() {
                                                 type="text"
                                                 value={accountNum}
                                                 onChange={(e) => setAccountNum(e.target.value)}
-                                                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-white text-sm focus:border-emerald-500/50 outline-none mt-1"
+                                                className="w-full bg-gray-800/40/5 border border-white/10 rounded-xl px-4 py-2 text-white text-sm focus:border-purple-500/50 outline-none mt-1"
                                                 placeholder="12345-6"
                                             />
                                         </div>
@@ -474,7 +475,7 @@ export default function BankAccounts() {
                                                 type="text"
                                                 value={customBalance}
                                                 onChange={(e) => setCustomBalance(e.target.value)}
-                                                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-white text-sm focus:border-emerald-500/50 outline-none mt-1"
+                                                className="w-full bg-gray-800/40/5 border border-white/10 rounded-xl px-4 py-2 text-white text-sm focus:border-purple-500/50 outline-none mt-1"
                                                 placeholder="0,00"
                                             />
                                         </div>
@@ -485,19 +486,19 @@ export default function BankAccounts() {
                                         <div className="grid grid-cols-3 gap-2">
                                             <button
                                                 onClick={() => setDataSource('empty')}
-                                                className={`py-2 text-[10px] font-bold rounded-lg border transition-all ${dataSource === 'empty' ? 'bg-emerald-500/20 border-emerald-500/50 text-emerald-400' : 'bg-white/5 border-white/10 text-gray-500'}`}
+                                                className={`py-2 text-[10px] font-bold rounded-lg border transition-all ${dataSource === 'empty' ? 'bg-purple-500/20 border-purple-500/50 text-purple-400' : 'bg-gray-800/40/5 border-white/10 text-gray-500'}`}
                                             >
                                                 LIMPA
                                             </button>
                                             <button
                                                 onClick={() => setDataSource('demo')}
-                                                className={`py-2 text-[10px] font-bold rounded-lg border transition-all ${dataSource === 'demo' ? 'bg-blue-500/20 border-blue-500/50 text-blue-400' : 'bg-white/5 border-white/10 text-gray-500'}`}
+                                                className={`py-2 text-[10px] font-bold rounded-lg border transition-all ${dataSource === 'demo' ? 'bg-blue-500/20 border-blue-500/50 text-blue-400' : 'bg-gray-800/40/5 border-white/10 text-gray-500'}`}
                                             >
                                                 DEMO
                                             </button>
                                             <button
                                                 onClick={() => setDataSource('file')}
-                                                className={`py-2 text-[10px] font-bold rounded-lg border transition-all ${dataSource === 'file' ? 'bg-purple-500/20 border-purple-500/50 text-purple-400' : 'bg-white/5 border-white/10 text-gray-500'}`}
+                                                className={`py-2 text-[10px] font-bold rounded-lg border transition-all ${dataSource === 'file' ? 'bg-purple-500/20 border-purple-500/50 text-purple-400' : 'bg-gray-800/40/5 border-white/10 text-gray-500'}`}
                                             >
                                                 EXTRATO
                                             </button>
@@ -520,8 +521,8 @@ export default function BankAccounts() {
                                         <p className="text-xs text-red-400 bg-red-500/10 p-2 rounded-lg border border-red-500/20 text-center">{importError}</p>
                                     )}
 
-                                    <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-4">
-                                        <h4 className="text-sm font-semibold text-emerald-400 mb-2 flex items-center gap-2"><ShieldCheck className="w-4 h-4" /> Conexão Segura</h4>
+                                    <div className="bg-purple-500/10 border border-purple-500/20 rounded-xl p-4">
+                                        <h4 className="text-sm font-semibold text-purple-400 mb-2 flex items-center gap-2"><ShieldCheck className="w-4 h-4" /> Conexão Segura</h4>
                                         <p className="text-[10px] text-gray-300">Seus dados serão processados localmente e criptografados. Não armazenamos senhas bancárias.</p>
                                     </div>
 
@@ -537,7 +538,7 @@ export default function BankAccounts() {
 
                             {connectingState === 'syncing' && (
                                 <div className="text-center py-6">
-                                    <RefreshCw className="w-10 h-10 text-emerald-400 animate-spin mx-auto mb-4" />
+                                    <RefreshCw className="w-10 h-10 text-purple-400 animate-spin mx-auto mb-4" />
                                     <p className="text-white font-medium">Sincronizando transações...</p>
                                     <p className="text-sm text-gray-500 mt-2">Isso pode levar alguns segundos.</p>
                                 </div>
@@ -545,8 +546,8 @@ export default function BankAccounts() {
 
                             {connectingState === 'success' && (
                                 <div className="text-center py-6 animate-fade-in">
-                                    <div className="w-16 h-16 bg-emerald-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                                        <CheckCircle className="w-8 h-8 text-emerald-400" />
+                                    <div className="w-16 h-16 bg-purple-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                                        <CheckCircle className="w-8 h-8 text-purple-400" />
                                     </div>
                                     <h3 className="text-xl font-bold text-white mb-2">Conectado com Sucesso!</h3>
                                     <p className="text-sm text-gray-400">Suas transações de {customNickname} foram importadas.</p>
@@ -560,7 +561,7 @@ export default function BankAccounts() {
             {/* Delete Confirmation Modal */}
             {deleteTarget && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in" onClick={() => !deleting && setDeleteTarget(null)}>
-                    <div className="glass-card w-full max-w-sm p-6 animate-slide-up text-center" onClick={(e) => e.stopPropagation()}>
+                    <div className="${tw.card} w-full max-w-sm p-6 animate-slide-up text-center" onClick={(e) => e.stopPropagation()}>
                         <div className="w-14 h-14 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-4 ring-4 ring-red-500/5">
                             <AlertTriangle className="w-7 h-7 text-red-400" />
                         </div>
@@ -575,7 +576,7 @@ export default function BankAccounts() {
                             <button
                                 onClick={() => setDeleteTarget(null)}
                                 disabled={deleting}
-                                className="flex-1 py-2.5 rounded-xl bg-white/5 border border-white/10 text-sm text-gray-300 hover:bg-white/10 transition-all disabled:opacity-50"
+                                className="flex-1 py-2.5 rounded-xl bg-gray-800/40/5 border border-white/10 text-sm text-gray-300 hover:bg-gray-800/40/10 transition-all disabled:opacity-50"
                             >
                                 Cancelar
                             </button>
@@ -595,7 +596,7 @@ export default function BankAccounts() {
             {/* Toast Notification */}
             {toast && (
                 <div className={`fixed bottom-6 left-1/2 -translate-x-1/2 z-[60] px-5 py-3 rounded-xl text-sm font-medium shadow-2xl animate-slide-up flex items-center gap-2 ${toast.type === 'success'
-                    ? 'bg-emerald-500/90 text-white border border-emerald-400/30'
+                    ? 'bg-purple-500/90 text-white border border-purple-400/30'
                     : 'bg-red-500/90 text-white border border-red-400/30'
                     }`}>
                     {toast.type === 'success' ? <CheckCircle className="w-4 h-4" /> : <X className="w-4 h-4" />}

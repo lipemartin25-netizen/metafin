@@ -1,10 +1,11 @@
+import { tw } from '@/lib/theme';
 ﻿import { Outlet } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import Navbar from './Navbar';
 
 export default function Layout() {
     return (
-        <div className="min-h-screen bg-gray-950 flex font-sans selection:bg-emerald-500/30">
+        <div className="min-h-screen bg-gray-950 flex font-sans selection:bg-purple-500/30">
             <Sidebar />
             <div className="flex-1 ml-0 md:ml-64 transition-all">
                 <Navbar />

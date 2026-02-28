@@ -1,3 +1,4 @@
+import { tw } from '@/lib/theme';
 import { useTheme } from '../contexts/ThemeContext';
 import { Sun, Moon } from 'lucide-react';
 
@@ -7,7 +8,7 @@ export default function ThemeToggle({ className = '' }) {
   return (
     <button
       onClick={toggleTheme}
-      className={'px-2 py-2 rounded-xl transition-all duration-300 hover:bg-white/10 active:scale-90 ' + className}
+      className={'px-2 py-2 rounded-xl transition-all duration-300 hover:bg-gray-800/40/10 active:scale-90 ' + className}
       aria-label='Alternar tema'
       title={theme === 'dark' ? 'Tema claro' : 'Tema escuro'}
     >

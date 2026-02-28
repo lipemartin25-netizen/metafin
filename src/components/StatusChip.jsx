@@ -1,10 +1,11 @@
+import { tw } from '@/lib/theme';
 export default function StatusChip({ status }) {
     const config = {
         categorized: {
             label: 'Categorizado',
-            bg: 'bg-emerald-500/10',
-            text: 'text-emerald-400',
-            dot: 'bg-emerald-400',
+            bg: 'bg-purple-500/10',
+            text: 'text-purple-400',
+            dot: 'bg-purple-400',
         },
         pending: {
             label: 'Pendente',

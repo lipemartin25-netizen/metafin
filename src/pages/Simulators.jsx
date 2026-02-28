@@ -1,3 +1,4 @@
+import { tw } from '@/lib/theme';
 // src/pages/Simulators.jsx
 // ================================
 // Hub central dos simuladores financeiros
@@ -46,10 +47,10 @@ const SIMULATORS = [
         name: 'Simulador de Investimentos',
         subtitle: 'Compare rendimentos lado a lado',
         icon: TrendingUp,
-        color: 'from-green-500 to-emerald-600',
-        bgLight: 'bg-green-50',
-        bgDark: 'dark:bg-green-950/20',
-        textColor: 'text-green-600 dark:text-green-400',
+        color: 'from-purple-500 to-emerald-600',
+        bgLight: 'bg-purple-50',
+        bgDark: 'dark:bg-purple-950/20',
+        textColor: 'text-purple-600 dark:text-purple-400',
         component: InvestmentSimulator
     },
     {
@@ -123,8 +124,8 @@ export default function Simulators({ financialData }) {
                     <div className="flex items-center gap-3">
                         <button
                             onClick={() => setActiveSimulator(null)}
-                            className="p-2 rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-500 
-                hover:text-gray-800 dark:text-gray-400 dark:hover:text-white 
+                            className="p-2 rounded-xl bg-gray-800/40 dark:bg-gray-800 text-gray-500 
+                hover:text-gray-100 dark:text-gray-400 dark:hover:text-white 
                 transition-colors"
                             title="Voltar aos Simuladores"
                         >
@@ -167,7 +168,7 @@ export default function Simulators({ financialData }) {
 
                     <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-10">
                         <div className="flex-1">
-                            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/20 text-xs font-bold uppercase tracking-widest text-indigo-300 mb-6 backdrop-blur-md shadow-inner">
+                            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gray-800/40/10 border border-white/20 text-xs font-bold uppercase tracking-widest text-indigo-300 mb-6 backdrop-blur-md shadow-inner">
                                 <Sparkles className="h-4 w-4 text-yellow-300 animate-pulse" /> Nexus Wealth Lab
                             </div>
                             <h1 className="text-4xl md:text-5xl lg:text-6xl font-black mb-6 tracking-tight leading-tight text-transparent bg-clip-text bg-gradient-to-r from-white via-indigo-100 to-purple-200">
@@ -197,7 +198,7 @@ export default function Simulators({ financialData }) {
                     <button
                         key={sim.id}
                         onClick={() => setActiveSimulator(sim.id)}
-                        className={`group relative overflow-hidden rounded-[1.5rem] glass-card border-none
+                        className={`group relative overflow-hidden rounded-[1.5rem] ${tw.card} border-none
               ${sim.bgLight} ${sim.bgDark}
               p-4 text-left transition-all duration-500 ease-out transform-gpu
               hover:shadow-[0_15px_30px_-10px_rgba(0,0,0,0.15)] dark:hover:shadow-[0_15px_30px_-10px_rgba(0,0,0,0.4)]
@@ -208,10 +209,10 @@ export default function Simulators({ financialData }) {
 
                         <div className={`inline-flex p-2.5 rounded-xl bg-gradient-to-br 
               ${sim.color} shadow-lg mb-3 relative z-10 transition-transform duration-500 group-hover:scale-110`}>
-                            <sim.icon className="h-4 w-4 text-white drop-shadow-md" />
+                            <sim.icon className="h-4 w-4 text-white drop-shadow-lg shadow-black/10" />
                         </div>
 
-                        <h3 className="text-base font-black text-gray-900 dark:text-white mb-1 relative z-10 transition-transform duration-300 group-hover:translate-x-0.5 tracking-tight leading-tight">
+                        <h3 className="text-base font-black text-white dark:text-white mb-1 relative z-10 transition-transform duration-300 group-hover:translate-x-0.5 tracking-tight leading-tight">
                             {sim.name}
                         </h3>
                         <p className="text-[10px] text-gray-500 dark:text-gray-400 mb-4 relative z-10 font-bold uppercase tracking-wider transition-transform duration-300 delay-75 group-hover:translate-x-0.5">

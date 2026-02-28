@@ -1,3 +1,4 @@
+import { tw } from '@/lib/theme';
 import { TrendingUp, Eye, EyeOff, Minus } from "lucide-react";
 import { useMemo } from "react";
 import { useTransactions } from "../hooks/useTransactions";
@@ -72,7 +73,7 @@ export default function BalanceCard() {
                 </ResponsiveContainer>
             </div>
 
-            <div className="absolute -top-8 -right-8 w-40 h-40 bg-white/10 rounded-full blur-3xl" />
+            <div className="absolute -top-8 -right-8 w-40 h-40 bg-gray-800/40/10 rounded-full blur-3xl" />
             <div className="absolute -bottom-10 -left-5 w-32 h-32 bg-indigo-400/20 rounded-full blur-2xl" />
             <div className="absolute inset-0 opacity-10"
                 style={{ backgroundImage: `radial-gradient(circle at 1px 1px, white 1px, transparent 0)`, backgroundSize: "28px 28px" }}
@@ -100,7 +101,7 @@ export default function BalanceCard() {
                         </div>
                     </div>
 
-                    <div className="flex items-center gap-1.5 bg-white/20 backdrop-blur-md px-3 py-1.5 rounded-full text-xs font-bold text-white border border-white/20 shadow-lg">
+                    <div className="flex items-center gap-1.5 bg-gray-800/40/20 backdrop-blur-md px-3 py-1.5 rounded-full text-xs font-bold text-white border border-white/20 shadow-lg">
                         {pct === null ? (
                             <><Minus size={13} />&nbsp;—</>
                         ) : pct >= 0 ? (
@@ -118,14 +119,14 @@ export default function BalanceCard() {
                             {hasData ? (isVisible ? fmt(receitas) : "••••") : <span className="text-white/30">—</span>}
                         </p>
                     </div>
-                    <div className="w-px h-8 bg-white/20" />
+                    <div className="w-px h-8 bg-gray-800/40/20" />
                     <div>
                         <p className="text-white/50 text-[10px] uppercase font-bold tracking-wider">Despesas</p>
                         <p className="text-white font-bold text-sm mt-0.5">
                             {hasData ? (isVisible ? fmt(despesas) : "••••") : <span className="text-white/30">—</span>}
                         </p>
                     </div>
-                    <div className="w-px h-8 bg-white/20" />
+                    <div className="w-px h-8 bg-gray-800/40/20" />
                     <div>
                         <p className="text-white/50 text-[10px] uppercase font-bold tracking-wider">Investido</p>
                         <p className="text-white font-bold text-sm mt-0.5">

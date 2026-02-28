@@ -1,3 +1,4 @@
+import { tw } from '@/lib/theme';
 ﻿import { useState, useMemo, useRef } from 'react';
 import { usePageAnnounce } from '../components/A11yAnnouncer';
 import { useTransactions } from '../hooks/useTransactions';
@@ -252,7 +253,7 @@ export default function Transactions() {
         }, { income: 0, expense: 0 });
     }, [filteredTransactions]);
 
-    if (loading) return <div className="flex items-center justify-center h-[60vh]"><Loader2 className="w-8 h-8 text-emerald-400 animate-spin" /></div>;
+    if (loading) return <div className="flex items-center justify-center h-[60vh]"><Loader2 className="w-8 h-8 text-purple-400 animate-spin" /></div>;
 
     return (
         <div className="py-6 space-y-6 animate-fade-in">
@@ -264,21 +265,21 @@ export default function Transactions() {
                 </div>
                 <div className="flex items-center gap-3 flex-wrap sm:flex-nowrap">
                     {/* Month navigator */}
-                    <div className="flex bg-white/5 p-1 rounded-xl items-center border border-white/5">
-                        <button onClick={() => changeMonth(-1)} className="p-2 text-slate-400 hover:text-white transition-all rounded-lg hover:bg-white/5">←</button>
+                    <div className="flex bg-gray-800/40/5 p-1 rounded-xl items-center border border-white/5">
+                        <button onClick={() => changeMonth(-1)} className="p-2 text-slate-400 hover:text-white transition-all rounded-lg hover:bg-gray-800/40/5">←</button>
                         <span className="px-3 text-sm font-bold text-white min-w-[140px] text-center capitalize">{monthLabel}</span>
-                        <button onClick={() => changeMonth(1)} className="p-2 text-slate-400 hover:text-white transition-all rounded-lg hover:bg-white/5">→</button>
+                        <button onClick={() => changeMonth(1)} className="p-2 text-slate-400 hover:text-white transition-all rounded-lg hover:bg-gray-800/40/5">→</button>
                     </div>
                     {/* View mode */}
-                    <div className="flex bg-white/5 p-1 rounded-xl border border-white/5">
-                        <button onClick={() => setViewMode('list')} className={`p-2 rounded-lg transition-all ${viewMode === 'list' ? 'bg-emerald-500/20 text-emerald-400' : 'text-slate-500 hover:text-slate-300'}`} title="Lista"><List className="w-4 h-4" /></button>
-                        <button onClick={() => setViewMode('analysis')} className={`p-2 rounded-lg transition-all ${viewMode === 'analysis' ? 'bg-emerald-500/20 text-emerald-400' : 'text-slate-500 hover:text-slate-300'}`} title="Análise"><BarChart2 className="w-4 h-4" /></button>
+                    <div className="flex bg-gray-800/40/5 p-1 rounded-xl border border-white/5">
+                        <button onClick={() => setViewMode('list')} className={`p-2 rounded-lg transition-all ${viewMode === 'list' ? 'bg-purple-500/20 text-purple-400' : 'text-slate-500 hover:text-slate-300'}`} title="Lista"><List className="w-4 h-4" /></button>
+                        <button onClick={() => setViewMode('analysis')} className={`p-2 rounded-lg transition-all ${viewMode === 'analysis' ? 'bg-purple-500/20 text-purple-400' : 'text-slate-500 hover:text-slate-300'}`} title="Análise"><BarChart2 className="w-4 h-4" /></button>
                     </div>
                     {/* Export */}
                     <div className="relative">
                         <button
                             onClick={() => setShowExportModal(!showExportModal)}
-                            className="h-[42px] px-4 py-2 rounded-xl border border-white/10 text-slate-300 hover:bg-white/5 hover:text-white transition-all text-sm flex items-center gap-2 whitespace-nowrap bg-white/5"
+                            className="h-[42px] px-4 py-2 rounded-xl border border-white/10 text-slate-300 hover:bg-gray-800/40/5 hover:text-white transition-all text-sm flex items-center gap-2 whitespace-nowrap bg-gray-800/40/5"
                         >
                             <Download className="w-4 h-4 flex-shrink-0" />
                             <span className="hidden sm:inline">Exportar</span>
@@ -288,15 +289,15 @@ export default function Transactions() {
                                 <div className="fixed inset-0 z-20" onClick={() => setShowExportModal(false)} />
                                 <div className="absolute right-0 mt-2 w-52 bg-[#0d1424] border border-white/15 rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.7)] z-30 p-2 animate-slide-up">
                                     <p className="text-[10px] text-slate-500 uppercase font-bold tracking-widest px-3 py-2">Escolha o formato</p>
-                                    <button onClick={() => handleExport('csv')} className="w-full text-left px-3 py-2.5 text-sm text-slate-300 hover:bg-white/5 hover:text-white rounded-xl flex items-center justify-between transition-all">
+                                    <button onClick={() => handleExport('csv')} className="w-full text-left px-3 py-2.5 text-sm text-slate-300 hover:bg-gray-800/40/5 hover:text-white rounded-xl flex items-center justify-between transition-all">
                                         <span className="flex items-center gap-2">📊 Excel / CSV</span>
                                         <span className="text-[10px] text-slate-600 font-mono">.csv</span>
                                     </button>
-                                    <button onClick={() => handleExport('json')} className="w-full text-left px-3 py-2.5 text-sm text-slate-300 hover:bg-white/5 hover:text-white rounded-xl flex items-center justify-between transition-all">
+                                    <button onClick={() => handleExport('json')} className="w-full text-left px-3 py-2.5 text-sm text-slate-300 hover:bg-gray-800/40/5 hover:text-white rounded-xl flex items-center justify-between transition-all">
                                         <span className="flex items-center gap-2">🔧 JSON Data</span>
                                         <span className="text-[10px] text-slate-600 font-mono">.json</span>
                                     </button>
-                                    <button onClick={() => handleExport('pdf')} className="w-full text-left px-3 py-2.5 text-sm text-slate-300 hover:bg-white/5 hover:text-white rounded-xl flex items-center justify-between transition-all">
+                                    <button onClick={() => handleExport('pdf')} className="w-full text-left px-3 py-2.5 text-sm text-slate-300 hover:bg-gray-800/40/5 hover:text-white rounded-xl flex items-center justify-between transition-all">
                                         <span className="flex items-center gap-2">📄 Relatório PDF</span>
                                         <span className="text-[10px] text-slate-600 font-mono">.pdf</span>
                                     </button>
@@ -317,33 +318,33 @@ export default function Transactions() {
 
             {/* Summary Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div className="glass-card p-5 border border-white/5 hover:border-emerald-500/30 transition-all">
+                <div className="${tw.card} p-5 border border-white/5 hover:border-purple-500/30 transition-all">
                     <p className="text-xs font-semibold text-slate-400 mb-1 uppercase tracking-wider">Receitas</p>
-                    <h5 className="text-2xl font-bold text-emerald-400">{fmt(monthSummary.income)}</h5>
+                    <h5 className="text-2xl font-bold text-purple-400">{fmt(monthSummary.income)}</h5>
                 </div>
-                <div className="glass-card p-5 border border-white/5 hover:border-rose-500/30 transition-all">
+                <div className="${tw.card} p-5 border border-white/5 hover:border-rose-500/30 transition-all">
                     <p className="text-xs font-semibold text-slate-400 mb-1 uppercase tracking-wider">Despesas</p>
                     <h5 className="text-2xl font-bold text-rose-400">-{fmt(monthSummary.expense)}</h5>
                 </div>
-                <div className="glass-card p-5 border border-white/5 hover:border-indigo-500/30 transition-all">
+                <div className="${tw.card} p-5 border border-white/5 hover:border-indigo-500/30 transition-all">
                     <p className="text-xs font-semibold text-slate-400 mb-1 uppercase tracking-wider">Fluxo de Caixa</p>
-                    <h5 className={`text-2xl font-bold ${monthSummary.income - monthSummary.expense >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
+                    <h5 className={`text-2xl font-bold ${monthSummary.income - monthSummary.expense >= 0 ? 'text-purple-400' : 'text-rose-400'}`}>
                         {fmt(monthSummary.income - monthSummary.expense)}
                     </h5>
                 </div>
             </div>
 
             {/* Import — Drag & Drop + Format Buttons */}
-            <div className="glass-card">
+            <div className="${tw.card}">
                 <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-4">
                     <div className="flex-1">
                         <h3 className="text-sm font-semibold text-white flex items-center gap-2">
-                            <FileSpreadsheet className="w-4 h-4 text-emerald-400" />
+                            <FileSpreadsheet className="w-4 h-4 text-purple-400" />
                             Importar Transações
                         </h3>
                         <p className="text-xs text-slate-400 mt-1">CSV, OFX, Excel, PDF e mais formatos</p>
                     </div>
-                    <button onClick={downloadSampleCsv} className="px-3 py-2 rounded-lg border border-white/10 text-slate-400 hover:bg-white/5 hover:text-white transition-all text-xs">
+                    <button onClick={downloadSampleCsv} className="px-3 py-2 rounded-lg border border-white/10 text-slate-400 hover:bg-gray-800/40/5 hover:text-white transition-all text-xs">
                         📄 Modelo CSV
                     </button>
                 </div>
@@ -351,7 +352,7 @@ export default function Transactions() {
                 {/* Drag & Drop Zone */}
                 <div
                     className={`relative border-2 border-dashed rounded-2xl p-6 text-center transition-all cursor-pointer ${isDragging
-                        ? 'border-emerald-400 bg-emerald-500/5'
+                        ? 'border-purple-400 bg-purple-500/5'
                         : 'border-white/10 hover:border-white/20'
                         }`}
                     onDragEnter={(e) => { e.preventDefault(); setIsDragging(true); }}
@@ -368,12 +369,12 @@ export default function Transactions() {
                 >
                     {importing ? (
                         <div className="flex flex-col items-center gap-2">
-                            <Loader2 className="w-8 h-8 text-emerald-400 animate-spin" />
-                            <p className="text-sm text-emerald-400 font-medium">Importando...</p>
+                            <Loader2 className="w-8 h-8 text-purple-400 animate-spin" />
+                            <p className="text-sm text-purple-400 font-medium">Importando...</p>
                         </div>
                     ) : (
                         <div className="flex flex-col items-center gap-2">
-                            <Upload className={`w-8 h-8 ${isDragging ? 'text-emerald-400' : 'text-slate-500'} transition-colors`} />
+                            <Upload className={`w-8 h-8 ${isDragging ? 'text-purple-400' : 'text-slate-500'} transition-colors`} />
                             <p className="text-sm text-slate-300 hidden sm:block">
                                 {isDragging ? 'Solte o arquivo aqui' : 'Arraste um arquivo aqui ou clique para selecionar'}
                             </p>
@@ -398,7 +399,7 @@ export default function Transactions() {
                                     inp.onchange = (e) => handleFileImport(e);
                                     inp.click();
                                 }}
-                                className="flex flex-col items-center justify-center w-[72px] h-[64px] rounded-xl bg-white/[0.03] border border-white/10 hover:border-emerald-400/50 hover:bg-emerald-500/5 transition-all hover:-translate-y-0.5 gap-1"
+                                className="flex flex-col items-center justify-center w-[72px] h-[64px] rounded-xl bg-gray-800/40/[0.03] border border-white/10 hover:border-purple-400/50 hover:bg-purple-500/5 transition-all hover:-translate-y-0.5 gap-1"
                             >
                                 <fmt.icon className="w-5 h-5" style={{ color: fmt.color }} />
                                 <span className="text-[10px] font-bold tracking-wider text-slate-300">{fmt.label}</span>
@@ -408,7 +409,7 @@ export default function Transactions() {
                 </div>
 
                 {importResult && (
-                    <div className={`mt-4 p-3 rounded-xl flex items-start gap-2 text-sm ${importResult.success ? 'bg-emerald-500/10 border border-emerald-500/20 text-emerald-400' : 'bg-red-500/10 border border-red-500/20 text-red-400'}`}>
+                    <div className={`mt-4 p-3 rounded-xl flex items-start gap-2 text-sm ${importResult.success ? 'bg-purple-500/10 border border-purple-500/20 text-purple-400' : 'bg-red-500/10 border border-red-500/20 text-red-400'}`}>
                         {importResult.success ? <CheckCircle className="w-4 h-4 shrink-0 mt-0.5" /> : <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />}
                         <span>{importResult.message}</span>
                         <button onClick={() => setImportResult(null)} className="ml-auto shrink-0"><X className="w-3 h-3" /></button>
@@ -420,17 +421,17 @@ export default function Transactions() {
             <div className="flex flex-col sm:flex-row gap-3">
                 <div className="relative flex-1">
                     <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
-                    <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Buscar por descrição ou categoria..." className="w-full bg-white/[0.03] border border-white/10 rounded-2xl py-3.5 pl-12 pr-4 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-violet-500/50 transition-all" />
+                    <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Buscar por descrição ou categoria..." className="w-full bg-gray-800/40/[0.03] border border-white/10 rounded-2xl py-3.5 pl-12 pr-4 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-violet-500/50 transition-all" />
                     {searchQuery && <button onClick={() => setSearchQuery('')} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white"><X className="w-4 h-4" /></button>}
                 </div>
                 <div className="relative">
                     <Filter className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
-                    <select value={filterCategory} onChange={(e) => setFilterCategory(e.target.value)} className="bg-white/[0.03] border border-white/10 rounded-2xl py-3.5 pl-12 pr-10 text-sm text-slate-200 focus:outline-none focus:border-violet-500/50 transition-all appearance-none cursor-pointer min-w-[200px]">
+                    <select value={filterCategory} onChange={(e) => setFilterCategory(e.target.value)} className="bg-gray-800/40/[0.03] border border-white/10 rounded-2xl py-3.5 pl-12 pr-10 text-sm text-slate-200 focus:outline-none focus:border-violet-500/50 transition-all appearance-none cursor-pointer min-w-[200px]">
                         <option value="all" className="bg-[#0f172a]">Todas as Categorias</option>
                         {allCategories.map((c) => <option key={c} value={c} className="bg-[#0f172a]">{categoryConfig[c]?.icon} {categoryConfig[c]?.label || c}</option>)}
                     </select>
                 </div>
-                <select value={filterType} onChange={(e) => setFilterType(e.target.value)} className="bg-white/[0.03] border border-white/10 rounded-2xl py-3.5 px-4 text-sm text-slate-200 focus:outline-none focus:border-violet-500/50 transition-all appearance-none cursor-pointer min-w-[150px]">
+                <select value={filterType} onChange={(e) => setFilterType(e.target.value)} className="bg-gray-800/40/[0.03] border border-white/10 rounded-2xl py-3.5 px-4 text-sm text-slate-200 focus:outline-none focus:border-violet-500/50 transition-all appearance-none cursor-pointer min-w-[150px]">
                     <option value="all" className="bg-[#0f172a]">Todos os Tipos</option>
                     <option value="income" className="bg-[#0f172a]">💰 Receitas</option>
                     <option value="expense" className="bg-[#0f172a]">💸 Despesas</option>
@@ -440,7 +441,7 @@ export default function Transactions() {
             {/* Content */}
             {viewMode === 'analysis' ? (
                 <div className="space-y-6 animate-fade-in">
-                    <div className="glass-card p-6">
+                    <div className="${tw.card} p-6">
                         <div className="flex items-center justify-between mb-8">
                             <div>
                                 <h3 className="text-lg font-semibold text-white">Comparativo Mensal</h3>
@@ -470,17 +471,17 @@ export default function Transactions() {
                         </div>
                     </div>
                     <div className="grid sm:grid-cols-2 gap-4">
-                        <div className="glass-card p-5 border-l-4 border-l-emerald-500">
+                        <div className="${tw.card} p-5 border-l-4 border-l-emerald-500">
                             <p className="text-xs text-slate-400 font-medium">Mês Atual (Até agora)</p>
                             <h4 className="text-2xl font-bold text-white mt-1">{fmt(monthlyData[monthlyData.length - 1]?.total || 0)}</h4>
                         </div>
-                        <div className="glass-card p-5 border-l-4 border-l-blue-500">
+                        <div className="${tw.card} p-5 border-l-4 border-l-blue-500">
                             <p className="text-xs text-slate-400 font-medium">Variação vs Mês Anterior</p>
                             {(() => {
                                 const curr = monthlyData[monthlyData.length - 1]?.total || 0;
                                 const prev = monthlyData[monthlyData.length - 2]?.total || 1;
                                 const diff = ((curr - prev) / prev) * 100;
-                                return <h4 className={`text-2xl font-bold mt-1 ${diff <= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>{diff <= 0 ? '↓' : '↑'} {Math.abs(diff).toFixed(1)}%</h4>;
+                                return <h4 className={`text-2xl font-bold mt-1 ${diff <= 0 ? 'text-purple-400' : 'text-rose-400'}`}>{diff <= 0 ? '↓' : '↑'} {Math.abs(diff).toFixed(1)}%</h4>;
                             })()}
                         </div>
                     </div>
@@ -488,7 +489,7 @@ export default function Transactions() {
             ) : (
                 <div className="space-y-3">
                     {filteredTransactions.length === 0 ? (
-                        <div className="p-12 text-center glass-card">
+                        <div className="p-12 text-center ${tw.card}">
                             <Search className="w-12 h-12 text-slate-600 mx-auto mb-4" />
                             <p className="text-slate-400">Nenhuma transação encontrada</p>
                         </div>
@@ -496,7 +497,7 @@ export default function Transactions() {
                         filteredTransactions.map((t) => {
                             const cat = categoryConfig[t.category];
                             return (
-                                <div key={t.id} onClick={() => handleEditClick(t)} className="glass-card !p-4 flex items-center justify-between border border-white/5 hover:border-violet-500/30 transition-all cursor-pointer group relative overflow-hidden">
+                                <div key={t.id} onClick={() => handleEditClick(t)} className="${tw.card} !p-4 flex items-center justify-between border border-white/5 hover:border-violet-500/30 transition-all cursor-pointer group relative overflow-hidden">
                                     <div className="flex items-center gap-4">
                                         <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-xl shrink-0" style={{ backgroundColor: `${cat?.color || '#6b7280'}20` }}>
                                             {cat?.icon || '📦'}
@@ -511,7 +512,7 @@ export default function Transactions() {
                                         </div>
                                     </div>
                                     <div className="flex flex-col items-end gap-1">
-                                        <span className={`text-base font-bold ${t.type === 'income' ? 'text-emerald-400' : 'text-slate-200'}`}>
+                                        <span className={`text-base font-bold ${t.type === 'income' ? 'text-purple-400' : 'text-slate-200'}`}>
                                             {t.type === 'income' ? '+' : '-'}{fmt(Math.abs(t.amount))}
                                         </span>
                                         <div className="scale-75 origin-right"><StatusChip status={t.status} /></div>
@@ -536,12 +537,12 @@ export default function Transactions() {
                     <div className="bg-[#0d1424] border border-white/15 w-full max-w-md rounded-3xl p-8 shadow-[0_25px_60px_rgba(0,0,0,0.85)] animate-slide-up">
                         <div className="flex items-center justify-between mb-6">
                             <h2 className="text-lg font-bold text-white">{editId ? 'Editar Transação' : 'Nova Transação'}</h2>
-                            <button onClick={() => { setShowAddModal(false); setEditId(null); }} className="p-1.5 rounded-lg text-slate-500 hover:text-white hover:bg-white/10 transition-all"><X className="w-5 h-5" /></button>
+                            <button onClick={() => { setShowAddModal(false); setEditId(null); }} className="p-1.5 rounded-lg text-slate-500 hover:text-white hover:bg-gray-800/40/10 transition-all"><X className="w-5 h-5" /></button>
                         </div>
                         <form onSubmit={handleAddTransaction} className="space-y-4">
-                            <div className="flex rounded-xl bg-white/5 p-1">
+                            <div className="flex rounded-xl bg-gray-800/40/5 p-1">
                                 <button type="button" onClick={() => setNewTx((p) => ({ ...p, type: 'expense' }))} className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all ${newTx.type === 'expense' ? 'bg-red-500/20 text-red-400' : 'text-slate-500 hover:text-slate-300'}`}>💸 Despesa</button>
-                                <button type="button" onClick={() => setNewTx((p) => ({ ...p, type: 'income' }))} className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all ${newTx.type === 'income' ? 'bg-emerald-500/20 text-emerald-400' : 'text-slate-500 hover:text-slate-300'}`}>💰 Receita</button>
+                                <button type="button" onClick={() => setNewTx((p) => ({ ...p, type: 'income' }))} className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all ${newTx.type === 'income' ? 'bg-purple-500/20 text-purple-400' : 'text-slate-500 hover:text-slate-300'}`}>💰 Receita</button>
                             </div>
                             <div>
                                 <label className="block text-sm text-slate-400 mb-1">Descrição</label>
@@ -583,8 +584,8 @@ export default function Transactions() {
                                                             type="button"
                                                             onClick={() => { setNewTx((p) => ({ ...p, category: c })); setCatSearch(''); }}
                                                             className={`flex flex-col items-center justify-center p-2 rounded-xl border transition-all gap-0.5 ${newTx.category === c
-                                                                ? 'border-emerald-400 bg-emerald-500/10 shadow-[0_0_8px_rgba(16,185,129,0.2)]'
-                                                                : 'border-white/5 bg-white/[0.02] hover:border-white/15 hover:bg-white/[0.05]'
+                                                                ? 'border-purple-400 bg-purple-500/10 shadow-[0_0_8px_rgba(16,185,129,0.2)]'
+                                                                : 'border-white/5 bg-gray-800/40/[0.02] hover:border-white/15 hover:bg-gray-800/40/[0.05]'
                                                                 }`}
                                                         >
                                                             <span className="text-lg leading-none">{categoryConfig[c]?.icon}</span>

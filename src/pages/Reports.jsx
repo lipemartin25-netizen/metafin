@@ -1,3 +1,4 @@
+import { tw } from '@/lib/theme';
 import { useState, useMemo, useRef } from 'react';
 import { useTransactions } from '../hooks/useTransactions';
 import { FileText, ChevronLeft, ChevronRight, TrendingUp, TrendingDown, ArrowUpRight, ArrowDownRight, Download, Loader2 } from 'lucide-react';
@@ -111,7 +112,7 @@ export default function Reports() {
         <div className="py-6 space-y-6 animate-fade-in pb-20">
             <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                    <h1 className="text-2xl font-bold text-white dark:text-white flex items-center gap-2">
                         <FileText className="w-6 h-6 text-orange-500" />
                         Relatorio Mensal
                     </h1>
@@ -122,15 +123,15 @@ export default function Reports() {
                     <button
                         onClick={handleExportPDF}
                         disabled={isExporting}
-                        className="px-4 py-2 rounded-xl text-sm font-semibold border border-white/10 text-gray-300 hover:bg-white/5 transition flex items-center gap-2"
+                        className="px-4 py-2 rounded-xl text-sm font-semibold border border-white/10 text-gray-300 hover:bg-gray-800/40/5 transition flex items-center gap-2"
                     >
                         {isExporting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
                         <span className="hidden sm:inline">Exportar PDF</span>
                     </button>
-                    <div className="flex items-center gap-2 bg-gray-50 dark:bg-white/5 p-1 rounded-xl">
-                        <button onClick={() => changeMonth(-1)} className="p-2 text-gray-400 hover:text-gray-900 dark:hover:text-white transition-all"><ChevronLeft className="w-4 h-4" /></button>
-                        <span className="px-4 text-sm font-bold text-gray-900 dark:text-white min-w-[160px] text-center capitalize">{monthLabel}</span>
-                        <button onClick={() => changeMonth(1)} className="p-2 text-gray-400 hover:text-gray-900 dark:hover:text-white transition-all"><ChevronRight className="w-4 h-4" /></button>
+                    <div className="flex items-center gap-2 bg-gray-800/30 dark:bg-gray-800/40/5 p-1 rounded-xl">
+                        <button onClick={() => changeMonth(-1)} className="p-2 text-gray-400 hover:text-white dark:hover:text-white transition-all"><ChevronLeft className="w-4 h-4" /></button>
+                        <span className="px-4 text-sm font-bold text-white dark:text-white min-w-[160px] text-center capitalize">{monthLabel}</span>
+                        <button onClick={() => changeMonth(1)} className="p-2 text-gray-400 hover:text-white dark:hover:text-white transition-all"><ChevronRight className="w-4 h-4" /></button>
                     </div>
                 </div>
             </div>
@@ -139,40 +140,40 @@ export default function Reports() {
 
                 {/* Summary Grid */}
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                    <div className="glass-card bg-emerald-500/5 border-emerald-500/10">
+                    <div className="${tw.card} bg-purple-500/5 border-purple-500/10">
                         <p className="text-[10px] text-gray-500 dark:text-gray-400 uppercase font-bold mb-1">Receitas</p>
-                        <p className="text-xl font-bold text-emerald-500">{fmt(report.income, isVisible)}</p>
+                        <p className="text-xl font-bold text-purple-500">{fmt(report.income, isVisible)}</p>
                         {report.incomeChange !== 0 && (
-                            <p className={`text-[10px] mt-1 flex items-center gap-0.5 ${report.incomeChange > 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                            <p className={`text-[10px] mt-1 flex items-center gap-0.5 ${report.incomeChange > 0 ? 'text-purple-400' : 'text-red-400'}`}>
                                 {report.incomeChange > 0 ? <ArrowUpRight className="w-3 h-3" /> : <ArrowDownRight className="w-3 h-3" />}
                                 {Math.abs(report.incomeChange).toFixed(0)}% vs anterior
                             </p>
                         )}
                     </div>
-                    <div className="glass-card bg-red-500/5 border-red-500/10">
+                    <div className="${tw.card} bg-red-500/5 border-red-500/10">
                         <p className="text-[10px] text-gray-500 dark:text-gray-400 uppercase font-bold mb-1">Despesas</p>
                         <p className="text-xl font-bold text-red-500">{fmt(report.expenses, isVisible)}</p>
                         {report.expenseChange !== 0 && (
-                            <p className={`text-[10px] mt-1 flex items-center gap-0.5 ${report.expenseChange < 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                            <p className={`text-[10px] mt-1 flex items-center gap-0.5 ${report.expenseChange < 0 ? 'text-purple-400' : 'text-red-400'}`}>
                                 {report.expenseChange < 0 ? <ArrowDownRight className="w-3 h-3" /> : <ArrowUpRight className="w-3 h-3" />}
                                 {Math.abs(report.expenseChange).toFixed(0)}% vs anterior
                             </p>
                         )}
                     </div>
-                    <div className="glass-card">
+                    <div className="${tw.card}">
                         <p className="text-[10px] text-gray-500 dark:text-gray-400 uppercase font-bold mb-1">Resultado</p>
                         <p className={`text-xl font-bold ${report.balance >= 0 ? 'text-blue-500' : 'text-red-500'}`}>{fmt(report.balance, isVisible)}</p>
                     </div>
-                    <div className="glass-card">
+                    <div className="${tw.card}">
                         <p className="text-[10px] text-gray-500 dark:text-gray-400 uppercase font-bold mb-1">Taxa de Poupanca</p>
-                        <p className={`text-xl font-bold ${report.savingsRate >= 20 ? 'text-emerald-500' : report.savingsRate >= 0 ? 'text-yellow-500' : 'text-red-500'}`}>{report.savingsRate.toFixed(0)}%</p>
+                        <p className={`text-xl font-bold ${report.savingsRate >= 20 ? 'text-purple-500' : report.savingsRate >= 0 ? 'text-yellow-500' : 'text-red-500'}`}>{report.savingsRate.toFixed(0)}%</p>
                     </div>
                 </div>
 
                 {/* Spending by Category */}
                 <div className="grid lg:grid-cols-2 gap-6">
-                    <div className="glass-card p-6">
-                        <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-4">Gastos por Categoria</h3>
+                    <div className="${tw.card} p-6">
+                        <h3 className="text-sm font-semibold text-white dark:text-white mb-4">Gastos por Categoria</h3>
                         {report.pieData.length > 0 ? (
                             <div className="h-[220px]">
                                 <ResponsiveContainer width="100%" height="100%">
@@ -189,8 +190,8 @@ export default function Reports() {
                         )}
                     </div>
 
-                    <div className="glass-card p-6">
-                        <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-4">Detalhamento</h3>
+                    <div className="${tw.card} p-6">
+                        <h3 className="text-sm font-semibold text-white dark:text-white mb-4">Detalhamento</h3>
                         <div className="space-y-3 max-h-[260px] overflow-y-auto custom-scrollbar">
                             {report.categories.map((cat, i) => (
                                 <div key={cat.cat} className="flex items-center gap-3">
@@ -199,10 +200,10 @@ export default function Reports() {
                                     </div>
                                     <div className="flex-1 min-w-0">
                                         <div className="flex justify-between text-sm mb-1">
-                                            <span className="text-gray-700 dark:text-gray-300 truncate">{cat.label}</span>
-                                            <span className="font-bold text-gray-900 dark:text-white ml-2">{fmt(cat.total, isVisible)}</span>
+                                            <span className="text-gray-300 dark:text-gray-300 truncate">{cat.label}</span>
+                                            <span className="font-bold text-white dark:text-white ml-2">{fmt(cat.total, isVisible)}</span>
                                         </div>
-                                        <div className="h-1.5 bg-gray-200 dark:bg-white/10 rounded-full overflow-hidden">
+                                        <div className="h-1.5 bg-gray-800/50 dark:bg-gray-800/40/10 rounded-full overflow-hidden">
                                             <div className="h-full rounded-full transition-all" style={{ width: `${cat.pct}%`, backgroundColor: COLORS[i % COLORS.length] }} />
                                         </div>
                                     </div>
@@ -215,8 +216,8 @@ export default function Reports() {
 
                 {/* Top Transactions */}
                 <div className="grid lg:grid-cols-2 gap-6">
-                    <div className="glass-card p-6">
-                        <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                    <div className="${tw.card} p-6">
+                        <h3 className="text-sm font-semibold text-white dark:text-white mb-4 flex items-center gap-2">
                             <TrendingDown className="w-4 h-4 text-red-500" /> Maiores Despesas
                         </h3>
                         <div className="space-y-2">
@@ -225,7 +226,7 @@ export default function Reports() {
                                     <div className="flex items-center gap-2">
                                         <span className="text-[10px] font-bold text-gray-400 w-4">#{i + 1}</span>
                                         <div>
-                                            <p className="text-sm text-gray-700 dark:text-gray-300">{tx.description}</p>
+                                            <p className="text-sm text-gray-300 dark:text-gray-300">{tx.description}</p>
                                             <p className="text-[10px] text-gray-500">{new Date(tx.date + 'T12:00:00').toLocaleDateString('pt-BR')}</p>
                                         </div>
                                     </div>
@@ -236,9 +237,9 @@ export default function Reports() {
                         </div>
                     </div>
 
-                    <div className="glass-card p-6">
-                        <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                            <TrendingUp className="w-4 h-4 text-emerald-500" /> Maiores Receitas
+                    <div className="${tw.card} p-6">
+                        <h3 className="text-sm font-semibold text-white dark:text-white mb-4 flex items-center gap-2">
+                            <TrendingUp className="w-4 h-4 text-purple-500" /> Maiores Receitas
                         </h3>
                         <div className="space-y-2">
                             {report.topIncomes.map((tx, i) => (
@@ -246,11 +247,11 @@ export default function Reports() {
                                     <div className="flex items-center gap-2">
                                         <span className="text-[10px] font-bold text-gray-400 w-4">#{i + 1}</span>
                                         <div>
-                                            <p className="text-sm text-gray-700 dark:text-gray-300">{tx.description}</p>
+                                            <p className="text-sm text-gray-300 dark:text-gray-300">{tx.description}</p>
                                             <p className="text-[10px] text-gray-500">{new Date(tx.date + 'T12:00:00').toLocaleDateString('pt-BR')}</p>
                                         </div>
                                     </div>
-                                    <span className="text-sm font-bold text-emerald-500">{fmt(Math.abs(tx.amount), isVisible)}</span>
+                                    <span className="text-sm font-bold text-purple-500">{fmt(Math.abs(tx.amount), isVisible)}</span>
                                 </div>
                             ))}
                             {report.topIncomes.length === 0 && <p className="text-sm text-gray-500 text-center py-4">Sem receitas</p>}

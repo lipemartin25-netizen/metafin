@@ -1,3 +1,4 @@
+import { tw } from '@/lib/theme';
 import { useState, useMemo } from 'react';
 import { calculateTaxPlan } from '../lib/taxPlanner';
 import { Shield, ArrowRight, CheckCircle2, AlertCircle } from 'lucide-react';
@@ -33,11 +34,11 @@ export default function TaxPlanner({ financialData }) {
             <div className="relative overflow-hidden flex flex-col items-center justify-center rounded-[2.5rem] bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-800 p-10 md:p-14 text-white shadow-[0_20px_50px_-15px_rgba(59,130,246,0.4)] border border-white/20 text-center group perspective-1000">
                 {/* Efeitos 3D Internos */}
                 <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+PGRlZnM+PG1hdHRlcm4gaWQ9ImciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTTAgNDBoNDBWMEgweiIgZmlsbD0ibm9uZSIvPjxwYXRoIGQ9Ik0wIDEwaDQwTTAgMjBoNDBNMCAzMGg0ME0xMCAwdjQwTTIwIDB2NDBNMzAgMHY0MCIgc3Ryb2tlPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMDUpIiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZykiLz48L3N2Zz4=')] opacity-30" />
-                <div className="absolute -left-20 -top-20 w-80 h-80 bg-white/10 rounded-full mix-blend-overlay filter blur-[40px] opacity-60 group-hover:scale-125 transition-transform duration-1000 ease-out" />
+                <div className="absolute -left-20 -top-20 w-80 h-80 bg-gray-800/40/10 rounded-full mix-blend-overlay filter blur-[40px] opacity-60 group-hover:scale-125 transition-transform duration-1000 ease-out" />
                 <div className="absolute bottom-0 right-0 w-64 h-64 bg-indigo-400/20 rounded-full mix-blend-color-dodge filter blur-[40px] opacity-60 group-hover:-translate-x-10 transition-transform duration-1000 ease-out delay-100" />
                 <Shield className="absolute -right-10 -bottom-10 h-72 w-72 opacity-10 group-hover:scale-110 group-hover:opacity-20 transition-all duration-1000 blur-xl text-blue-300" />
 
-                <div className="relative z-10 p-5 bg-white/10 rounded-[2rem] backdrop-blur-md shadow-inner border border-white/20 mb-6 group-hover:-translate-y-2 group-hover:rotate-3 transition-transform duration-500">
+                <div className="relative z-10 p-5 bg-gray-800/40/10 rounded-[2rem] backdrop-blur-md shadow-inner border border-white/20 mb-6 group-hover:-translate-y-2 group-hover:rotate-3 transition-transform duration-500">
                     <Shield className="w-16 h-16 text-blue-200 drop-shadow-[0_0_15px_rgba(191,219,254,0.5)] animate-bounce-slow" />
                 </div>
 
@@ -45,7 +46,7 @@ export default function TaxPlanner({ financialData }) {
                     Otimizador Tributário IRPF
                 </h2>
                 <p className="text-blue-100 text-base md:text-lg font-medium max-w-2xl relative z-10 leading-relaxed backdrop-blur-sm px-4">
-                    Pare de deixar dinheiro na mesa. Nossa <strong className="text-white drop-shadow-md">Inteligência Estratégica</strong> cruza suas deduções
+                    Pare de deixar dinheiro na mesa. Nossa <strong className="text-white drop-shadow-lg shadow-black/10">Inteligência Estratégica</strong> cruza suas deduções
                     (PGBL, Saúde, Escola) e escaneia a rota matemática exata para você pagar o mínimo legal de imposto de renda.
                 </p>
 
@@ -55,8 +56,8 @@ export default function TaxPlanner({ financialData }) {
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Sidebar Configurações */}
-                <div className="glass-card p-5 space-y-4">
-                    <h3 className="font-bold text-gray-900 dark:text-white flex items-center gap-2 mb-4">
+                <div className="${tw.card} p-5 space-y-4">
+                    <h3 className="font-bold text-white dark:text-white flex items-center gap-2 mb-4">
                         Receitas e Deduções
                     </h3>
 
@@ -65,7 +66,7 @@ export default function TaxPlanner({ financialData }) {
                             <label className="text-[10px] text-gray-500 font-bold uppercase tracking-widest block mb-1">Renda Bruta Mensal (CLT/Pró-Labore)</label>
                             <input
                                 type="number"
-                                className="w-full bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/10 rounded-xl px-3 py-2 text-sm text-gray-900 dark:text-white outline-none focus:border-blue-500"
+                                className="w-full bg-gray-800/30 dark:bg-black/20 border border-gray-700/40 dark:border-white/10 rounded-xl px-3 py-2 text-sm text-white dark:text-white outline-none focus:border-blue-500"
                                 value={params.monthlyGrossIncome}
                                 onChange={(e) => setParams({ ...params, monthlyGrossIncome: Number(e.target.value) })}
                             />
@@ -74,7 +75,7 @@ export default function TaxPlanner({ financialData }) {
                             <label className="text-[10px] text-gray-500 font-bold uppercase tracking-widest block mb-1">Número de Dependentes</label>
                             <input
                                 type="number"
-                                className="w-full bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/10 rounded-xl px-3 py-2 text-sm text-gray-900 dark:text-white outline-none focus:border-blue-500"
+                                className="w-full bg-gray-800/30 dark:bg-black/20 border border-gray-700/40 dark:border-white/10 rounded-xl px-3 py-2 text-sm text-white dark:text-white outline-none focus:border-blue-500"
                                 value={params.dependents}
                                 onChange={(e) => setParams({ ...params, dependents: Number(e.target.value) })}
                             />
@@ -84,7 +85,7 @@ export default function TaxPlanner({ financialData }) {
                                 <label className="text-[10px] text-gray-500 font-bold uppercase tracking-widest block mb-1 text-truncate">Saúde Anual (R$)</label>
                                 <input
                                     type="number"
-                                    className="w-full bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/10 rounded-xl px-3 py-2 text-sm text-gray-900 dark:text-white outline-none focus:border-blue-500"
+                                    className="w-full bg-gray-800/30 dark:bg-black/20 border border-gray-700/40 dark:border-white/10 rounded-xl px-3 py-2 text-sm text-white dark:text-white outline-none focus:border-blue-500"
                                     value={params.healthExpensesAnnual}
                                     onChange={(e) => setParams({ ...params, healthExpensesAnnual: Number(e.target.value) })}
                                 />
@@ -93,14 +94,14 @@ export default function TaxPlanner({ financialData }) {
                                 <label className="text-[10px] text-gray-500 font-bold uppercase tracking-widest block mb-1">Escola Anual (R$)</label>
                                 <input
                                     type="number"
-                                    className="w-full bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/10 rounded-xl px-3 py-2 text-sm text-gray-900 dark:text-white outline-none focus:border-blue-500"
+                                    className="w-full bg-gray-800/30 dark:bg-black/20 border border-gray-700/40 dark:border-white/10 rounded-xl px-3 py-2 text-sm text-white dark:text-white outline-none focus:border-blue-500"
                                     value={params.educationExpensesAnnual}
                                     onChange={(e) => setParams({ ...params, educationExpensesAnnual: Number(e.target.value) })}
                                 />
                             </div>
                         </div>
                         <div className="pt-2">
-                            <label className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300 font-bold mb-2">
+                            <label className="flex items-center gap-2 text-sm text-gray-300 dark:text-gray-300 font-bold mb-2">
                                 <input
                                     type="checkbox"
                                     checked={params.hasPrivatePension}
@@ -113,7 +114,7 @@ export default function TaxPlanner({ financialData }) {
                                 <input
                                     type="number"
                                     placeholder="Aporte mensal R$"
-                                    className="w-full bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/10 rounded-xl px-3 py-2 text-sm text-gray-900 dark:text-white outline-none focus:border-blue-500 mt-1"
+                                    className="w-full bg-gray-800/30 dark:bg-black/20 border border-gray-700/40 dark:border-white/10 rounded-xl px-3 py-2 text-sm text-white dark:text-white outline-none focus:border-blue-500 mt-1"
                                     value={params.privatePensionMonthly}
                                     onChange={(e) => setParams({ ...params, privatePensionMonthly: Number(e.target.value) })}
                                 />
@@ -126,29 +127,29 @@ export default function TaxPlanner({ financialData }) {
                 <div className="lg:col-span-2 space-y-6">
 
                     {/* Comparativo de Modelos */}
-                    <div className="glass-card p-6">
-                        <h3 className="font-bold text-gray-900 dark:text-white flex items-center gap-2 mb-6">
+                    <div className="${tw.card} p-6">
+                        <h3 className="font-bold text-white dark:text-white flex items-center gap-2 mb-6">
                             Comparativo Anual <ArrowRight className="w-4 h-4 text-gray-500" />
                         </h3>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div className={`p-5 rounded-2xl border transition-all ${result.bestModel === 'simplificado' ? 'bg-blue-50 dark:bg-blue-500/10 border-blue-500 shadow-md ring-2 ring-blue-500/50' : 'bg-gray-50 dark:bg-white/[0.02] border-gray-200 dark:border-white/10 opacity-70'}`}>
+                            <div className={`p-5 rounded-2xl border transition-all ${result.bestModel === 'simplificado' ? 'bg-blue-50 dark:bg-blue-500/10 border-blue-500 shadow-lg shadow-black/10 ring-2 ring-blue-500/50' : 'bg-gray-800/30 dark:bg-gray-800/40/[0.02] border-gray-700/40 dark:border-white/10 opacity-70'}`}>
                                 {result.bestModel === 'simplificado' && <CheckCircle2 className="w-6 h-6 text-blue-500 mb-2" />}
-                                <h4 className="font-bold text-gray-900 dark:text-white text-lg">Modelo Simplificado</h4>
+                                <h4 className="font-bold text-white dark:text-white text-lg">Modelo Simplificado</h4>
                                 <p className="text-xs text-gray-500 mt-1 mb-4 h-8">Usa um desconto padrão de 20% limitado ao teto, ignorando recibos.</p>
-                                <div className="pt-4 border-t border-gray-200 dark:border-white/10">
+                                <div className="pt-4 border-t border-gray-700/40 dark:border-white/10">
                                     <p className="text-[10px] uppercase font-bold tracking-widest text-gray-500">Imposto Total Devido</p>
-                                    <p className={`text-2xl font-black ${result.bestModel === 'simplificado' ? 'text-blue-600 dark:text-blue-400' : 'text-gray-900 dark:text-white'}`}>{formatCurrency(result.irSimplificada)}</p>
+                                    <p className={`text-2xl font-black ${result.bestModel === 'simplificado' ? 'text-blue-600 dark:text-blue-400' : 'text-white dark:text-white'}`}>{formatCurrency(result.irSimplificada)}</p>
                                 </div>
                             </div>
 
-                            <div className={`p-5 rounded-2xl border transition-all ${result.bestModel === 'completo' ? 'bg-emerald-50 dark:bg-emerald-500/10 border-emerald-500 shadow-md ring-2 ring-emerald-500/50' : 'bg-gray-50 dark:bg-white/[0.02] border-gray-200 dark:border-white/10 opacity-70'}`}>
-                                {result.bestModel === 'completo' && <CheckCircle2 className="w-6 h-6 text-emerald-500 mb-2" />}
-                                <h4 className="font-bold text-gray-900 dark:text-white text-lg">Modelo Completo</h4>
+                            <div className={`p-5 rounded-2xl border transition-all ${result.bestModel === 'completo' ? 'bg-purple-50 dark:bg-purple-500/10 border-purple-500 shadow-lg shadow-black/10 ring-2 ring-emerald-500/50' : 'bg-gray-800/30 dark:bg-gray-800/40/[0.02] border-gray-700/40 dark:border-white/10 opacity-70'}`}>
+                                {result.bestModel === 'completo' && <CheckCircle2 className="w-6 h-6 text-purple-500 mb-2" />}
+                                <h4 className="font-bold text-white dark:text-white text-lg">Modelo Completo</h4>
                                 <p className="text-xs text-gray-500 mt-1 mb-4 h-8">Leva em conta PGBL, dependentes, saúde e educação. Você tem {formatCurrency(result.totalDeductionsSum)} em deduções.</p>
-                                <div className="pt-4 border-t border-gray-200 dark:border-white/10">
+                                <div className="pt-4 border-t border-gray-700/40 dark:border-white/10">
                                     <p className="text-[10px] uppercase font-bold tracking-widest text-gray-500">Imposto Total Devido</p>
-                                    <p className={`text-2xl font-black ${result.bestModel === 'completo' ? 'text-emerald-600 dark:text-emerald-400' : 'text-gray-900 dark:text-white'}`}>{formatCurrency(result.irCompleta)}</p>
+                                    <p className={`text-2xl font-black ${result.bestModel === 'completo' ? 'text-purple-600 dark:text-purple-400' : 'text-white dark:text-white'}`}>{formatCurrency(result.irCompleta)}</p>
                                 </div>
                             </div>
                         </div>
@@ -161,19 +162,19 @@ export default function TaxPlanner({ financialData }) {
                     </div>
 
                     {/* Dicas de IA */}
-                    <div className="glass-card p-6">
-                        <h3 className="font-bold text-gray-900 dark:text-white flex items-center gap-2 mb-4">
+                    <div className="${tw.card} p-6">
+                        <h3 className="font-bold text-white dark:text-white flex items-center gap-2 mb-4">
                             Recomendações Práticas
                         </h3>
                         <div className="space-y-3">
                             {result.suggestions.map((sug, i) => (
-                                <div key={i} className="flex gap-4 p-4 rounded-xl bg-gray-50/50 dark:bg-white/[0.02] border border-gray-100 dark:border-white/5">
+                                <div key={i} className="flex gap-4 p-4 rounded-xl bg-gray-800/30/50 dark:bg-gray-800/40/[0.02] border border-gray-100 dark:border-white/5">
                                     <AlertCircle className={`w-6 h-6 flex-shrink-0 ${sug.priority === 'alta' ? 'text-red-500' : sug.priority === 'média' ? 'text-yellow-500' : 'text-blue-500'}`} />
                                     <div>
-                                        <h4 className="font-bold text-gray-900 dark:text-white text-sm">{sug.action}</h4>
+                                        <h4 className="font-bold text-white dark:text-white text-sm">{sug.action}</h4>
                                         <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">{sug.description}</p>
                                         {sug.annualSaving > 0 && (
-                                            <p className="text-xs font-bold text-emerald-600 dark:text-emerald-400 mt-2">
+                                            <p className="text-xs font-bold text-purple-600 dark:text-purple-400 mt-2">
                                                 Economia estimada: até {formatCurrency(sug.annualSaving)}
                                             </p>
                                         )}

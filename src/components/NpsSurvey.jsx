@@ -1,3 +1,4 @@
+import { tw } from '@/lib/theme';
 import { useState } from 'react';
 import { X, Send } from 'lucide-react';
 import { analytics } from '../hooks/useAnalytics';
@@ -43,7 +44,7 @@ export default function NpsSurvey({ onClose }) {
 
     return (
         <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in">
-            <div className="glass-card w-full max-w-md animate-slide-up">
+            <div className="${tw.card} w-full max-w-md animate-slide-up">
                 {submitted ? (
                     <div className="text-center py-8">
                         <div className="text-4xl mb-4">🎉</div>
@@ -63,7 +64,7 @@ export default function NpsSurvey({ onClose }) {
                             </h3>
                             <button
                                 onClick={onClose}
-                                className="p-1.5 rounded-lg text-gray-500 hover:text-white hover:bg-white/10 transition-all"
+                                className="p-1.5 rounded-lg text-gray-500 hover:text-white hover:bg-gray-800/40/10 transition-all"
                             >
                                 <X className="w-5 h-5" />
                             </button>
@@ -82,8 +83,8 @@ export default function NpsSurvey({ onClose }) {
                                     key={i}
                                     onClick={() => setScore(i)}
                                     className={`aspect-square rounded-lg text-xs font-medium transition-all ${score === i
-                                        ? 'bg-emerald-500 text-white scale-110 shadow-lg shadow-emerald-500/30'
-                                        : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white'
+                                        ? 'bg-purple-500 text-white scale-110 shadow-lg shadow-purple-500/30'
+                                        : 'bg-gray-800/40/5 text-gray-400 hover:bg-gray-800/40/10 hover:text-white'
                                         }`}
                                 >
                                     {i}

@@ -1,3 +1,4 @@
+import { tw } from '@/lib/theme';
 import { useState, useEffect, useCallback } from 'react';
 import { Target, Plus, Trash2, X, Loader2, RefreshCw } from 'lucide-react';
 import { supabase } from '../lib/supabase';
@@ -145,14 +146,14 @@ export default function Goals() {
 
     return (
         <div className="py-6 space-y-6 animate-fade-in pb-20">
-            <div className="relative overflow-hidden flex flex-col sm:flex-row items-center justify-between rounded-[2.5rem] bg-gradient-to-br from-brand-600 via-teal-600 to-cyan-700 p-8 md:p-10 text-white shadow-[0_20px_50px_-15px_rgba(20,184,166,0.4)] border border-white/20 group perspective-1000">
+            <div className="relative overflow-hidden flex flex-col sm:flex-row items-center justify-between rounded-[2.5rem] bg-gradient-to-br from-brand-600 via-teal-600 to-fuchsia-700 p-8 md:p-10 text-white shadow-[0_20px_50px_-15px_rgba(20,184,166,0.4)] border border-white/20 group perspective-1000">
                 {/* Efeitos 3D Internos */}
                 <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+PGRlZnM+PG1hdHRlcm4gaWQ9ImciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTTAgNDBoNDBWMEgweiIgZmlsbD0ibm9uZSIvPjxwYXRoIGQ9Ik0wIDEwaDQwTTAgMjBoNDBNMCAzMGg0ME0xMCAwdjQwTTIwIDB2NDBNMzAgMHY0MCIgc3Ryb2tlPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMDUpIiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZykiLz48L3N2Zz4=')] opacity-30" />
-                <div className="absolute -left-20 -top-20 w-80 h-80 bg-white/10 rounded-full mix-blend-overlay filter blur-[40px] opacity-60 group-hover:scale-125 transition-transform duration-1000 ease-out" />
+                <div className="absolute -left-20 -top-20 w-80 h-80 bg-gray-800/40/10 rounded-full mix-blend-overlay filter blur-[40px] opacity-60 group-hover:scale-125 transition-transform duration-1000 ease-out" />
                 <div className="absolute bottom-0 right-0 w-64 h-64 bg-cyan-400/20 rounded-full mix-blend-color-dodge filter blur-[40px] opacity-60 group-hover:-translate-x-10 transition-transform duration-1000 ease-out delay-100" />
 
                 <div className="relative z-10 flex-1 flex gap-5 items-center">
-                    <div className="p-4 bg-white/10 rounded-2xl backdrop-blur-md shadow-inner border border-white/20 group-hover:-translate-y-2 group-hover:rotate-6 transition-transform duration-500">
+                    <div className="p-4 bg-gray-800/40/10 rounded-2xl backdrop-blur-md shadow-inner border border-white/20 group-hover:-translate-y-2 group-hover:rotate-6 transition-transform duration-500">
                         <Target className="w-12 h-12 text-yellow-300 drop-shadow-[0_0_15px_rgba(253,224,71,0.5)]" />
                     </div>
                     <div>
@@ -160,12 +161,12 @@ export default function Goals() {
                             Planejador de Metas
                         </h1>
                         <p className="text-brand-50 text-sm md:text-base font-medium max-w-xl leading-relaxed backdrop-blur-sm">
-                            Use o modelo de <strong className="text-white drop-shadow-md">Goal-Based Wealth</strong> e alinhe aportes aos seus grandes sonhos.
+                            Use o modelo de <strong className="text-white drop-shadow-lg shadow-black/10">Goal-Based Wealth</strong> e alinhe aportes aos seus grandes sonhos.
                         </p>
                     </div>
                 </div>
                 <div className="flex items-center gap-3">
-                    <button onClick={loadGoals} className="p-2.5 rounded-xl border border-gray-200 dark:border-white/10 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors text-gray-500">
+                    <button onClick={loadGoals} className="p-2.5 rounded-xl border border-gray-700/40 dark:border-white/10 hover:bg-gray-800/30 dark:hover:bg-gray-800/40/5 transition-colors text-gray-500">
                         <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
                     </button>
                     <button onClick={() => setShowAdd(true)} className="gradient-btn px-4 py-2 text-sm flex items-center gap-2 font-bold shadow-lg shadow-brand-500/20">
@@ -176,20 +177,20 @@ export default function Goals() {
 
             {/* Summary Block */}
             <div className="flex flex-wrap gap-4 items-stretch">
-                <div className="glass-card flex-1 min-w-[140px] relative overflow-hidden p-5 flex flex-col justify-center">
+                <div className="${tw.card} flex-1 min-w-[140px] relative overflow-hidden p-5 flex flex-col justify-center">
                     <p className="text-[10px] text-gray-500 dark:text-gray-400 font-black uppercase tracking-[0.15em] mb-1">Total em Metas</p>
-                    <p className="text-2xl md:text-3xl font-black text-brand-600 dark:text-brand-400 drop-shadow-sm">{fmt(totalSaved)}</p>
+                    <p className="text-2xl md:text-3xl font-black text-brand-600 dark:text-brand-400 drop-shadow-lg shadow-black/10">{fmt(totalSaved)}</p>
                 </div>
-                <div className="glass-card flex-1 min-w-[140px] relative p-5 flex flex-col justify-center">
+                <div className="${tw.card} flex-1 min-w-[140px] relative p-5 flex flex-col justify-center">
                     <p className="text-[10px] text-gray-500 dark:text-gray-400 font-black uppercase tracking-[0.15em] mb-1">Atingimento Alvo</p>
-                    <p className="text-2xl md:text-3xl font-black text-gray-900 dark:text-white drop-shadow-sm">{fmt(totalTarget)}</p>
+                    <p className="text-2xl md:text-3xl font-black text-white dark:text-white drop-shadow-lg shadow-black/10">{fmt(totalTarget)}</p>
                 </div>
-                <div className="glass-card flex-1 min-w-[140px] relative p-5 flex flex-col justify-center">
+                <div className="${tw.card} flex-1 min-w-[140px] relative p-5 flex flex-col justify-center">
                     <p className="flex justify-between text-[10px] text-gray-500 dark:text-gray-400 font-black uppercase tracking-[0.15em] mb-2">
                         <span>Eficiência</span>
                         <span className="text-blue-500">{totalTarget > 0 ? Math.round((totalSaved / totalTarget) * 100) : 0}%</span>
                     </p>
-                    <div className="mt-1 h-2.5 bg-gray-100 dark:bg-black/20 rounded-full overflow-hidden shadow-inner border border-gray-200 dark:border-white/5">
+                    <div className="mt-1 h-2.5 bg-gray-800/40 dark:bg-black/20 rounded-full overflow-hidden shadow-inner border border-gray-700/40 dark:border-white/5">
                         <div className="h-full bg-gradient-to-r from-blue-500 to-emerald-500 rounded-full transition-all duration-1000 shadow-[inset_0_2px_4px_rgba(255,255,255,0.3)]" style={{ width: `${totalTarget > 0 ? Math.min((totalSaved / totalTarget) * 100, 100) : 0}%` }} />
                     </div>
                 </div>
@@ -202,9 +203,9 @@ export default function Goals() {
                     <p className="text-sm font-medium animate-pulse text-gray-500">Calculando trajetórias...</p>
                 </div>
             ) : goals.length === 0 ? (
-                <div className="glass-card text-center py-16 border-dashed border-2 border-gray-200 dark:border-white/10 bg-transparent hover:bg-white/5 transition-colors cursor-pointer group" onClick={() => setShowAdd(true)}>
+                <div className="${tw.card} text-center py-16 border-dashed border-2 border-gray-700/40 dark:border-white/10 bg-transparent hover:bg-gray-800/40/5 transition-colors cursor-pointer group" onClick={() => setShowAdd(true)}>
                     <Target className="w-16 h-16 text-brand-500/50 mx-auto mb-4 group-hover:scale-110 group-hover:text-brand-500 transition-all" />
-                    <h4 className="text-lg text-gray-900 dark:text-white font-bold mb-2">Seu portfólio de metas está vazio</h4>
+                    <h4 className="text-lg text-white dark:text-white font-bold mb-2">Seu portfólio de metas está vazio</h4>
                     <p className="text-gray-500 text-sm mb-6 max-w-sm mx-auto">Use a inteligência baseada em objetivos para focar nas grandes faturas: viagens, carros, casas, ou sua liberdade.</p>
                     <button onClick={(e) => { e.stopPropagation(); setShowAdd(true); }} className="gradient-btn px-6 py-2.5 text-sm font-bold shadow-lg shadow-brand-500/30">Criar Primeira Meta</button>
                 </div>
@@ -222,11 +223,11 @@ export default function Goals() {
                                     <button
                                         disabled={saving}
                                         onClick={() => addContribution(goal.id, Number(goal.current_amount), goal.monthly_contribution || 100)}
-                                        className="flex-1 py-2 text-xs font-bold rounded-xl bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/20 hover:bg-emerald-100 transition-colors disabled:opacity-50">
+                                        className="flex-1 py-2 text-xs font-bold rounded-xl bg-purple-50 text-purple-600 dark:bg-purple-500/10 dark:text-purple-400 border border-purple-200 dark:border-purple-500/20 hover:bg-purple-100 transition-colors disabled:opacity-50">
                                         + Aportar
                                     </button>
                                 )}
-                                <button onClick={() => handleEdit(goal)} className="flex-1 py-2 text-xs font-bold rounded-xl bg-gray-50 dark:bg-white/5 text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-white/10 hover:border-blue-500/30 transition-all">
+                                <button onClick={() => handleEdit(goal)} className="flex-1 py-2 text-xs font-bold rounded-xl bg-gray-800/30 dark:bg-gray-800/40/5 text-gray-600 dark:text-gray-300 border border-gray-700/40 dark:border-white/10 hover:border-blue-500/30 transition-all">
                                     Editar
                                 </button>
                                 <button disabled={saving} onClick={() => handleDelete(goal.id)} className="p-2 rounded-xl text-red-500/60 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 border border-transparent hover:border-red-200 dark:hover:border-red-500/20 transition-all">
@@ -240,15 +241,15 @@ export default function Goals() {
 
             {showAdd && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
-                    <form onSubmit={handleSubmit} className="glass-card w-full max-w-md p-6 space-y-4 animate-slide-up relative z-10 border border-white/10 shadow-2xl">
-                        <button type="button" onClick={resetForm} className="absolute top-4 right-4 text-gray-500 hover:text-gray-900 dark:hover:text-white bg-gray-100 dark:bg-white/5 p-1 rounded-full transition-colors"><X className="w-5 h-5" /></button>
-                        <h2 className="text-xl font-black text-gray-900 dark:text-white flex items-center gap-2 mb-6">
+                    <form onSubmit={handleSubmit} className="${tw.card} w-full max-w-md p-6 space-y-4 animate-slide-up relative z-10 border border-white/10 shadow-2xl">
+                        <button type="button" onClick={resetForm} className="absolute top-4 right-4 text-gray-500 hover:text-white dark:hover:text-white bg-gray-800/40 dark:bg-gray-800/40/5 p-1 rounded-full transition-colors"><X className="w-5 h-5" /></button>
+                        <h2 className="text-xl font-black text-white dark:text-white flex items-center gap-2 mb-6">
                             <Target className="w-6 h-6 text-brand-500" /> {editId ? 'Configurar Meta' : 'Plano de Atingimento'}
                         </h2>
 
                         <div>
                             <label className="text-[10px] text-gray-400 uppercase font-black tracking-widest block mb-1">Motivador Principal (Nome)</label>
-                            <input required value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} className="w-full bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 text-gray-900 dark:text-white text-sm outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all" placeholder="Ex: Viagem Europa, Independência..." />
+                            <input required value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} className="w-full bg-gray-800/30 dark:bg-black/20 border border-gray-700/40 dark:border-white/10 rounded-xl px-4 py-3 text-white dark:text-white text-sm outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all" placeholder="Ex: Viagem Europa, Independência..." />
                         </div>
 
                         <div>
@@ -256,7 +257,7 @@ export default function Goals() {
                             <div className="flex gap-2 flex-wrap">
                                 {GOAL_ICONS.map(icon => (
                                     <button key={icon} type="button" onClick={() => setForm({ ...form, icon })}
-                                        className={`w-10 h-10 rounded-xl text-xl flex items-center justify-center transition-all ${form.icon === icon ? 'bg-brand-500/20 border-2 border-brand-500 scale-110 shadow-sm' : 'bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 hover:bg-gray-100 dark:hover:bg-white/10'}`}>
+                                        className={`w-10 h-10 rounded-xl text-xl flex items-center justify-center transition-all ${form.icon === icon ? 'bg-brand-500/20 border-2 border-brand-500 scale-110 shadow-lg shadow-black/10' : 'bg-gray-800/30 dark:bg-gray-800/40/5 border border-gray-700/40 dark:border-white/10 hover:bg-gray-800/40 dark:hover:bg-gray-800/40/10'}`}>
                                         {icon}
                                     </button>
                                 ))}
@@ -304,7 +305,7 @@ export default function Goals() {
                             </div>
                             <div>
                                 <label className="text-[10px] text-gray-400 uppercase font-black tracking-widest block mb-1">Prazo (opcional)</label>
-                                <input type="date" value={form.deadline} onChange={e => setForm({ ...form, deadline: e.target.value })} className="w-full bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 text-gray-900 dark:text-white text-sm outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500" />
+                                <input type="date" value={form.deadline} onChange={e => setForm({ ...form, deadline: e.target.value })} className="w-full bg-gray-800/30 dark:bg-black/20 border border-gray-700/40 dark:border-white/10 rounded-xl px-4 py-3 text-white dark:text-white text-sm outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500" />
                             </div>
                         </div>
 

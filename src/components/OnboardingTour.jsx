@@ -1,3 +1,4 @@
+import { tw } from '@/lib/theme';
 import { useState } from 'react';
 import { Wallet, ArrowRight, Plug, BarChart3, Bot, Target, CreditCard, Sparkles, CheckCircle } from 'lucide-react';
 
@@ -73,13 +74,13 @@ export default function OnboardingTour({ onComplete }) {
             <div className="w-full max-w-lg">
                 {/* Progress bar */}
                 <div className="mb-6 flex items-center gap-3">
-                    <div className="flex-1 h-1.5 bg-white/10 rounded-full overflow-hidden">
-                        <div className="h-full bg-gradient-to-r from-emerald-500 to-blue-500 rounded-full transition-all duration-500" style={{ width: `${progress}%` }} />
+                    <div className="flex-1 h-1.5 bg-gray-800/40/10 rounded-full overflow-hidden">
+                        <div className="h-full bg-gradient-to-r from-purple-500 to-blue-500 rounded-full transition-all duration-500" style={{ width: `${progress}%` }} />
                     </div>
                     <span className="text-xs text-gray-500 font-mono">{step + 1}/{STEPS.length}</span>
                 </div>
 
-                <div className="glass-card p-8 text-center relative overflow-hidden">
+                <div className="${tw.card} p-8 text-center relative overflow-hidden">
                     {/* Background decoration */}
                     <div className="absolute -top-20 -right-20 w-40 h-40 rounded-full opacity-10" style={{ backgroundColor: current.color }} />
                     <div className="absolute -bottom-10 -left-10 w-32 h-32 rounded-full opacity-5" style={{ backgroundColor: current.color }} />
@@ -95,7 +96,7 @@ export default function OnboardingTour({ onComplete }) {
                     </div>
 
                     {/* Content */}
-                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">{current.title}</h2>
+                    <h2 className="text-2xl font-bold text-white dark:text-white mb-3">{current.title}</h2>
                     <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed max-w-sm mx-auto">{current.description}</p>
 
                     {/* Step indicators */}
@@ -109,7 +110,7 @@ export default function OnboardingTour({ onComplete }) {
                     {/* Actions */}
                     <div className="flex gap-3 justify-center">
                         {step > 0 && (
-                            <button onClick={() => setStep(step - 1)} className="px-5 py-2.5 rounded-xl text-sm font-medium text-gray-400 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 transition-all">
+                            <button onClick={() => setStep(step - 1)} className="px-5 py-2.5 rounded-xl text-sm font-medium text-gray-400 hover:text-white bg-gray-800/40/5 hover:bg-gray-800/40/10 border border-white/10 transition-all">
                                 Voltar
                             </button>
                         )}

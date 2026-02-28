@@ -1,3 +1,4 @@
+import { tw } from '@/lib/theme';
 import { useState, useEffect } from 'react';
 import { Code2, Key, Copy, Check, RefreshCw, Zap, Server, Shield } from 'lucide-react';
 
@@ -46,7 +47,7 @@ export default function DeveloperAPI() {
     return (
         <div className="py-6 space-y-6 animate-fade-in max-w-4xl pb-20">
             <div>
-                <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                <h1 className="text-2xl font-bold text-white dark:text-white flex items-center gap-2">
                     <Code2 className="w-6 h-6 text-fuchsia-500" />
                     Webhooks & API
                 </h1>
@@ -56,13 +57,13 @@ export default function DeveloperAPI() {
             <div className="grid md:grid-cols-3 gap-6">
                 <div className="md:col-span-2 space-y-6">
                     {/* API Key Section */}
-                    <div className="glass-card p-6">
+                    <div className="${tw.card} p-6">
                         <div className="flex items-center gap-3 mb-6">
                             <div className="w-10 h-10 rounded-xl bg-fuchsia-500/10 flex items-center justify-center">
                                 <Key className="w-5 h-5 text-fuchsia-500" />
                             </div>
                             <div>
-                                <h2 className="text-lg font-bold text-gray-900 dark:text-white">API Key Pessoal</h2>
+                                <h2 className="text-lg font-bold text-white dark:text-white">API Key Pessoal</h2>
                                 <p className="text-sm text-gray-500">Use esta chave para autenticar suas requisições HTTP.</p>
                             </div>
                         </div>
@@ -70,14 +71,14 @@ export default function DeveloperAPI() {
                         {apiKey ? (
                             <div className="space-y-4">
                                 <div className="flex items-center gap-2">
-                                    <div className="flex-1 bg-gray-100 dark:bg-black/40 border border-gray-200 dark:border-white/10 p-3 rounded-xl font-mono text-sm text-gray-700 dark:text-gray-300 break-all select-all">
+                                    <div className="flex-1 bg-gray-800/40 dark:bg-black/40 border border-gray-700/40 dark:border-white/10 p-3 rounded-xl font-mono text-sm text-gray-300 dark:text-gray-300 break-all select-all">
                                         {apiKey}
                                     </div>
                                     <button
                                         onClick={() => copyToClipboard(apiKey)}
-                                        className="p-3 rounded-xl bg-gray-200 dark:bg-white/10 text-gray-600 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-white/20 transition-all"
+                                        className="p-3 rounded-xl bg-gray-800/50 dark:bg-gray-800/40/10 text-gray-600 dark:text-gray-300 hover:bg-gray-700/50 dark:hover:bg-gray-800/40/20 transition-all"
                                     >
-                                        {copied ? <Check className="w-5 h-5 text-emerald-500" /> : <Copy className="w-5 h-5" />}
+                                        {copied ? <Check className="w-5 h-5 text-purple-500" /> : <Copy className="w-5 h-5" />}
                                     </button>
                                 </div>
                                 <div className="flex justify-between items-center text-xs">
@@ -89,7 +90,7 @@ export default function DeveloperAPI() {
                                 </div>
                             </div>
                         ) : (
-                            <div className="text-center py-6 border border-dashed border-gray-300 dark:border-white/10 rounded-xl">
+                            <div className="text-center py-6 border border-dashed border-gray-700/50 dark:border-white/10 rounded-xl">
                                 <p className="text-sm text-gray-500 mb-4">Você ainda não gerou uma chave de API.</p>
                                 <button onClick={generateKey} disabled={generating} className="gradient-btn-fuchsia flex items-center gap-2 mx-auto">
                                     {generating ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Key className="w-4 h-4" />}
@@ -100,25 +101,25 @@ export default function DeveloperAPI() {
                     </div>
 
                     {/* Code Example */}
-                    <div className="glass-card p-6 border-fuchsia-500/20 bg-gradient-to-b from-fuchsia-500/5 to-transparent">
+                    <div className="${tw.card} p-6 border-fuchsia-500/20 bg-gradient-to-b from-fuchsia-500/5 to-transparent">
                         <div className="flex items-center gap-3 mb-6">
                             <div className="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center">
                                 <Server className="w-5 h-5 text-purple-500" />
                             </div>
                             <div>
-                                <h2 className="text-lg font-bold text-gray-900 dark:text-white">Endpoint de Transações</h2>
+                                <h2 className="text-lg font-bold text-white dark:text-white">Endpoint de Transações</h2>
                                 <p className="text-sm text-gray-500">Crie transações enviando um POST para nosso Webhook HTTP.</p>
                             </div>
                         </div>
 
                         <div className="relative group">
-                            <div className="absolute -inset-1 bg-gradient-to-r from-fuchsia-500 to-cyan-500 rounded-xl blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
+                            <div className="absolute -inset-1 bg-gradient-to-r from-fuchsia-500 to-fuchsia-500 rounded-xl blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
                             <div className="relative bg-[#0d1117] rounded-xl overflow-hidden ring-1 ring-white/10">
-                                <div className="flex items-center justify-between px-4 py-2 bg-white/5 border-b border-white/5">
+                                <div className="flex items-center justify-between px-4 py-2 bg-gray-800/40/5 border-b border-white/5">
                                     <div className="flex gap-2">
                                         <div className="w-3 h-3 rounded-full bg-red-500"></div>
                                         <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-                                        <div className="w-3 h-3 rounded-full bg-emerald-500"></div>
+                                        <div className="w-3 h-3 rounded-full bg-purple-500"></div>
                                     </div>
                                     <span className="text-xs text-gray-400 font-mono">cURL Example</span>
                                     <button onClick={() => copyToClipboard(curlExample)} className="text-gray-400 hover:text-white transition-colors">
@@ -135,23 +136,23 @@ export default function DeveloperAPI() {
 
                 {/* Automation Cards */}
                 <div className="space-y-4">
-                    <h3 className="text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wider mb-2">Casos de Uso Comuns</h3>
+                    <h3 className="text-sm font-bold text-white dark:text-white uppercase tracking-wider mb-2">Casos de Uso Comuns</h3>
 
-                    <div className="glass-card p-4 hover:border-orange-500/30 transition-colors cursor-pointer group">
+                    <div className="${tw.card} p-4 hover:border-orange-500/30 transition-colors cursor-pointer group">
                         <div className="flex items-start gap-3">
                             <div className="bg-orange-500/10 p-2 rounded-lg text-orange-500"><Zap className="w-5 h-5" /></div>
                             <div>
-                                <h4 className="font-bold text-gray-900 dark:text-white text-sm group-hover:text-orange-500 transition-colors">Zapier & Make</h4>
+                                <h4 className="font-bold text-white dark:text-white text-sm group-hover:text-orange-500 transition-colors">Zapier & Make</h4>
                                 <p className="text-[11px] text-gray-500 mt-1">Sempre que uma compra for aprovada no Mercado Pago, registre como despesa aqui.</p>
                             </div>
                         </div>
                     </div>
 
-                    <div className="glass-card p-4 hover:border-emerald-500/30 transition-colors cursor-pointer group">
+                    <div className="${tw.card} p-4 hover:border-purple-500/30 transition-colors cursor-pointer group">
                         <div className="flex items-start gap-3">
-                            <div className="bg-emerald-500/10 p-2 rounded-lg text-emerald-500"><Code2 className="w-5 h-5" /></div>
+                            <div className="bg-purple-500/10 p-2 rounded-lg text-purple-500"><Code2 className="w-5 h-5" /></div>
                             <div>
-                                <h4 className="font-bold text-gray-900 dark:text-white text-sm group-hover:text-emerald-500 transition-colors">Sistema Interno</h4>
+                                <h4 className="font-bold text-white dark:text-white text-sm group-hover:text-purple-500 transition-colors">Sistema Interno</h4>
                                 <p className="text-[11px] text-gray-500 mt-1">Dispare eventos do seu backend direto para o seu dashboard do MetaFin.</p>
                             </div>
                         </div>

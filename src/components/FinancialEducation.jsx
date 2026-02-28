@@ -1,3 +1,4 @@
+import { tw } from '@/lib/theme';
 import { useNavigate } from 'react-router-dom';
 import { GraduationCap, BookOpen, Brain, TrendingUp, Shield, Rocket, ArrowRight } from 'lucide-react';
 
@@ -16,8 +17,8 @@ export default function FinancialEducation() {
         {
             id: 'tax_optimization',
             title: 'Hacker de Imposto (PGBL)',
-            icon: <Shield className="w-8 h-8 text-emerald-500" />,
-            color: 'bg-emerald-500/10 border-emerald-500/20 text-emerald-600 dark:text-emerald-400',
+            icon: <Shield className="w-8 h-8 text-purple-500" />,
+            color: 'bg-purple-500/10 border-purple-500/20 text-purple-600 dark:text-purple-400',
             description: 'Como usar a Previdência Privada PGBL para receber restituição gorda todo ano.',
             prompt: 'Atue como um exímio planejador tributário do Brasil. Me explique o hack do PGBL: como investir até 12% da renda bruta tributável nele devolve parte do imposto na Restituição, e por que a tabela regressiva de IR compensa em 10 anos.'
         },
@@ -49,12 +50,12 @@ export default function FinancialEducation() {
         <div className="space-y-6 animate-fade-in">
             <div className="relative overflow-hidden flex flex-col items-center justify-center rounded-[2.5rem] bg-gradient-to-br from-gray-900 via-indigo-950 to-black p-10 md:p-14 text-white shadow-[0_20px_50px_-15px_rgba(0,0,0,0.5)] border border-white/10 text-center group perspective-1000">
                 {/* Efeitos 3D Internos */}
-                <div className="absolute inset-x-0 -bottom-20 h-64 bg-gradient-to-t from-emerald-900/20 to-transparent blur-2xl" />
+                <div className="absolute inset-x-0 -bottom-20 h-64 bg-gradient-to-t from-purple-900/20 to-transparent blur-2xl" />
                 <div className="absolute -left-20 -top-20 w-80 h-80 bg-brand-500/10 rounded-full mix-blend-screen filter blur-[40px] opacity-60 group-hover:scale-125 transition-transform duration-1000 ease-out" />
-                <div className="absolute bottom-0 right-0 w-64 h-64 bg-emerald-500/10 rounded-full mix-blend-screen filter blur-[40px] opacity-60 group-hover:-translate-x-10 transition-transform duration-1000 ease-out delay-100" />
+                <div className="absolute bottom-0 right-0 w-64 h-64 bg-purple-500/10 rounded-full mix-blend-screen filter blur-[40px] opacity-60 group-hover:-translate-x-10 transition-transform duration-1000 ease-out delay-100" />
                 <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+PGRlZnM+PG1hdHRlcm4gaWQ9ImciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTTAgNDBoNDBWMEgweiIgZmlsbD0ibm9uZSIvPjxwYXRoIGQ9Ik0wIDEwaDQwTTAgMjBoNDBNMCAzMGg0ME0xMCAwdjQwTTIwIDB2NDBNMzAgMHY0MCIgc3Ryb2tlPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMDUpIiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZykiLz48L3N2Zz4=')] opacity-20" />
 
-                <div className="relative z-10 p-5 bg-white/5 rounded-[2rem] backdrop-blur-md shadow-inner border border-white/10 mb-6 group-hover:-translate-y-2 group-hover:rotate-3 transition-transform duration-500">
+                <div className="relative z-10 p-5 bg-gray-800/40/5 rounded-[2rem] backdrop-blur-md shadow-inner border border-white/10 mb-6 group-hover:-translate-y-2 group-hover:rotate-3 transition-transform duration-500">
                     <GraduationCap className="w-16 h-16 text-brand-400 drop-shadow-[0_0_15px_rgba(16,185,129,0.5)] animate-bounce-slow" />
                 </div>
 
@@ -71,17 +72,17 @@ export default function FinancialEducation() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 pt-4">
                 {tracks.map(track => (
-                    <div key={track.id} className="glass-card p-6 flex flex-col group hover:-translate-y-1 transition-all duration-300">
+                    <div key={track.id} className="${tw.card} p-6 flex flex-col group hover:-translate-y-1 transition-all duration-300">
                         <div className="flex items-start justify-between mb-4">
-                            <div className={`p-4 rounded-2xl border ${track.color} transition-all group-hover:scale-110 shadow-sm`}>
+                            <div className={`p-4 rounded-2xl border ${track.color} transition-all group-hover:scale-110 shadow-lg shadow-black/10`}>
                                 {track.icon}
                             </div>
-                            <div className="text-[10px] uppercase tracking-widest font-black text-gray-400 flex items-center gap-1 bg-gray-100 dark:bg-white/5 px-2 py-1 rounded-md">
+                            <div className="text-[10px] uppercase tracking-widest font-black text-gray-400 flex items-center gap-1 bg-gray-800/40 dark:bg-gray-800/40/5 px-2 py-1 rounded-md">
                                 <BookOpen className="w-3 h-3" /> Trilha IA
                             </div>
                         </div>
 
-                        <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2 group-hover:text-brand-500 transition-colors">
+                        <h3 className="text-xl font-bold text-white dark:text-white mb-2 group-hover:text-brand-500 transition-colors">
                             {track.title}
                         </h3>
 
@@ -91,7 +92,7 @@ export default function FinancialEducation() {
 
                         <button
                             onClick={() => handleStartTrack(track.prompt)}
-                            className="w-full flex items-center justify-between px-5 py-3 rounded-xl bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-sm font-bold text-gray-700 dark:text-gray-300 hover:bg-white dark:hover:bg-white/10 hover:border-brand-500/50 hover:text-brand-500 transition-all"
+                            className="w-full flex items-center justify-between px-5 py-3 rounded-xl bg-gray-800/30 dark:bg-gray-800/40/5 border border-gray-700/40 dark:border-white/10 text-sm font-bold text-gray-300 dark:text-gray-300 hover:bg-gray-800/40 dark:hover:bg-gray-800/40/10 hover:border-brand-500/50 hover:text-brand-500 transition-all"
                         >
                             <span>Iniciar Aula com a IA</span>
                             <ArrowRight className="w-4 h-4" />

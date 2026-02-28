@@ -1,3 +1,4 @@
+import { tw } from '@/lib/theme';
 import { Wifi, Eye, EyeOff } from "lucide-react";
 import { useVisibility } from "../hooks/useVisibility";
 
@@ -18,7 +19,7 @@ export default function CreditCard() {
                 <div className="flex items-center gap-3">
                     <button
                         onClick={() => toggleVisibility()}
-                        className="p-1.5 rounded-lg bg-white/5 opacity-0 group-hover:opacity-100 transition-all hover:bg-white/10"
+                        className="p-1.5 rounded-lg bg-gray-800/40/5 opacity-0 group-hover:opacity-100 transition-all hover:bg-gray-800/40/10"
                     >
                         {isVisible ? <EyeOff size={14} className="text-white/40" /> : <Eye size={14} className="text-white/40" />}
                     </button>
@@ -32,11 +33,11 @@ export default function CreditCard() {
             {/* Card Visual */}
             <div className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-slate-800 to-slate-900 border border-white/10 p-5 flex-1 min-h-[120px] shadow-2xl">
                 <div className="absolute inset-0 bg-gradient-to-br from-violet-500/10 to-transparent" />
-                <div className="absolute -bottom-10 -right-10 w-24 h-24 bg-white/5 rounded-full blur-xl" />
+                <div className="absolute -bottom-10 -right-10 w-24 h-24 bg-gray-800/40/5 rounded-full blur-xl" />
 
                 <div className="relative z-10 flex flex-col h-full justify-between">
                     <div className="flex items-center justify-between">
-                        <div className="w-8 h-6 rounded-sm bg-gradient-to-br from-yellow-400 to-yellow-600 opacity-90 shadow-sm" />
+                        <div className="w-8 h-6 rounded-sm bg-gradient-to-br from-yellow-400 to-yellow-600 opacity-90 shadow-lg shadow-black/10" />
                         <Wifi size={18} className="text-white/30 rotate-90" />
                     </div>
 
@@ -66,14 +67,14 @@ export default function CreditCard() {
                         {isVisible ? `${fmt(2150)} / ${fmt(8000)}` : "R$ •••• / R$ ••••"}
                     </span>
                 </div>
-                <div className="h-2 bg-white/5 rounded-full overflow-hidden p-[1px] border border-white/5">
+                <div className="h-2 bg-gray-800/40/5 rounded-full overflow-hidden p-[1px] border border-white/5">
                     <div
                         className="h-full bg-gradient-to-r from-violet-500 to-indigo-500 rounded-full transition-all duration-1000 shadow-[0_0_10px_rgba(139,92,246,0.3)]"
                         style={{ width: "26.9%" }}
                     />
                 </div>
                 <div className="flex justify-between mt-1 pt-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <p className="text-[9px] text-emerald-400 font-bold">Limite Disponível: {isVisible ? fmt(5850) : "R$ ••••"}</p>
+                    <p className="text-[9px] text-purple-400 font-bold">Limite Disponível: {isVisible ? fmt(5850) : "R$ ••••"}</p>
                     <p className="text-[9px] text-white/20 font-medium italic">Vence em 12 dias</p>
                 </div>
             </div>

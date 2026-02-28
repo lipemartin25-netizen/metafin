@@ -1,3 +1,4 @@
+import { tw } from '@/lib/theme';
 import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import {
     Send, X, Loader2, Bot,
@@ -160,7 +161,7 @@ export default function AiChat() {
                         onClick={() => setIsOpen(false)}
                     >
                         <div
-                            className="glass-card w-full max-w-md text-center animate-slide-up relative overflow-hidden bg-gray-900 border-emerald-500/30"
+                            className="${tw.card} w-full max-w-md text-center animate-slide-up relative overflow-hidden bg-gray-900 border-purple-500/30"
                             onClick={(e) => e.stopPropagation()}
                         >
                             <button
@@ -171,12 +172,12 @@ export default function AiChat() {
                                 <X className="w-5 h-5" />
                             </button>
 
-                            <div className="w-20 h-20 bg-emerald-500/10 rounded-full flex items-center justify-center mx-auto mb-6 ring-4 ring-emerald-500/5">
-                                <Sparkles className="w-10 h-10 text-emerald-400 animate-pulse" />
+                            <div className="w-20 h-20 bg-purple-500/10 rounded-full flex items-center justify-center mx-auto mb-6 ring-4 ring-emerald-500/5">
+                                <Sparkles className="w-10 h-10 text-purple-400 animate-pulse" />
                             </div>
 
                             <h2 className="text-2xl font-bold text-white mb-2">
-                                Inteligência Financeira <span className="text-emerald-400">Pro</span>
+                                Inteligência Financeira <span className="text-purple-400">Pro</span>
                             </h2>
 
                             <p className="text-gray-400 text-sm mb-8 leading-relaxed px-4">
@@ -184,14 +185,14 @@ export default function AiChat() {
                             </p>
 
                             <div className="grid grid-cols-2 gap-2 mb-8 text-left text-xs text-gray-300 px-4">
-                                <div className="flex items-center gap-2"><Check className="w-4 h-4 text-emerald-400" /> GPT-4o & Gemini Pro</div>
-                                <div className="flex items-center gap-2"><Check className="w-4 h-4 text-emerald-400" /> Categorização Auto</div>
-                                <div className="flex items-center gap-2"><Check className="w-4 h-4 text-emerald-400" /> DeepSeek & Claude 3.5</div>
-                                <div className="flex items-center gap-2"><Check className="w-4 h-4 text-emerald-400" /> Planejamento de Gastos</div>
+                                <div className="flex items-center gap-2"><Check className="w-4 h-4 text-purple-400" /> GPT-4o & Gemini Pro</div>
+                                <div className="flex items-center gap-2"><Check className="w-4 h-4 text-purple-400" /> Categorização Auto</div>
+                                <div className="flex items-center gap-2"><Check className="w-4 h-4 text-purple-400" /> DeepSeek & Claude 3.5</div>
+                                <div className="flex items-center gap-2"><Check className="w-4 h-4 text-purple-400" /> Planejamento de Gastos</div>
                             </div>
 
                             <div className="flex flex-col gap-3 px-4 pb-6">
-                                <button className="gradient-btn w-full py-3 text-sm font-bold shadow-lg shadow-emerald-500/20">
+                                <button className="gradient-btn w-full py-3 text-sm font-bold shadow-lg shadow-purple-500/20">
                                     💎 Assinar Pro — R$ 29,90/mês
                                 </button>
                                 <button
@@ -215,7 +216,7 @@ export default function AiChat() {
             {!isOpen && (
                 <button
                     onClick={() => setIsOpen(true)}
-                    className="fixed bottom-6 right-6 z-40 w-14 h-14 rounded-full bg-gradient-to-r from-emerald-500 to-cyan-500 shadow-lg shadow-emerald-500/25 flex items-center justify-center hover:scale-110 transition-transform group"
+                    className="fixed bottom-6 right-6 z-40 w-14 h-14 rounded-full bg-gradient-to-r from-purple-500 to-fuchsia-500 shadow-lg shadow-purple-500/25 flex items-center justify-center hover:scale-110 transition-transform group"
                     aria-label="Abrir chat IA"
                 >
                     <Sparkles className="w-6 h-6 text-white group-hover:rotate-12 transition-transform" />
@@ -229,18 +230,18 @@ export default function AiChat() {
                     {/* Header */}
                     <div className="flex items-center justify-between px-4 py-3 border-b border-white/5 bg-gray-900/95 backdrop-blur-xl">
                         <div className="flex items-center gap-2">
-                            <div className="bg-emerald-500/10 p-1.5 rounded-lg">
-                                <Bot className="w-4 h-4 text-emerald-400" />
+                            <div className="bg-purple-500/10 p-1.5 rounded-lg">
+                                <Bot className="w-4 h-4 text-purple-400" />
                             </div>
                             <div>
                                 <span className="font-semibold text-white text-sm block">MetaFin AI</span>
-                                <span className="text-[10px] text-emerald-400 font-medium tracking-wide bg-emerald-500/10 px-1.5 py-0.5 rounded uppercase">PRO ATIVO</span>
+                                <span className="text-[10px] text-purple-400 font-medium tracking-wide bg-purple-500/10 px-1.5 py-0.5 rounded uppercase">PRO ATIVO</span>
                             </div>
                         </div>
                         <div className="flex items-center gap-1">
                             <button
                                 onClick={handleClear}
-                                className="p-1.5 rounded-lg text-gray-500 hover:text-white hover:bg-white/10 transition-all"
+                                className="p-1.5 rounded-lg text-gray-500 hover:text-white hover:bg-gray-800/40/10 transition-all"
                                 title="Limpar conversa"
                                 aria-label="Limpar conversa"
                             >
@@ -248,7 +249,7 @@ export default function AiChat() {
                             </button>
                             <button
                                 onClick={() => setIsOpen(false)}
-                                className="p-1.5 rounded-lg text-gray-500 hover:text-white hover:bg-white/10 transition-all"
+                                className="p-1.5 rounded-lg text-gray-500 hover:text-white hover:bg-gray-800/40/10 transition-all"
                                 aria-label="Fechar chat"
                             >
                                 <X className="w-4 h-4" />
@@ -260,7 +261,7 @@ export default function AiChat() {
                     <div className="px-4 py-2 border-b border-white/5 bg-black/20">
                         <button
                             onClick={() => setShowModelPicker(!showModelPicker)}
-                            className="flex items-center gap-2 text-xs text-gray-300 hover:text-white transition-colors w-full bg-white/5 hover:bg-white/10 p-2 rounded-lg border border-white/5"
+                            className="flex items-center gap-2 text-xs text-gray-300 hover:text-white transition-colors w-full bg-gray-800/40/5 hover:bg-gray-800/40/10 p-2 rounded-lg border border-white/5"
                             aria-expanded={showModelPicker}
                         >
                             <span className="text-base">{currentModel?.icon}</span>
@@ -287,9 +288,9 @@ export default function AiChat() {
                                             }}
                                             disabled={!isAvailable}
                                             className={`flex items-center gap-3 w-full px-3 py-2 rounded-xl text-xs transition-all ${isActive
-                                                ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                                                ? 'bg-purple-500/10 text-purple-400 border border-purple-500/20'
                                                 : isAvailable
-                                                    ? 'text-gray-400 hover:bg-white/5 hover:text-white border border-transparent'
+                                                    ? 'text-gray-400 hover:bg-gray-800/40/5 hover:text-white border border-transparent'
                                                     : 'opacity-40 cursor-not-allowed text-gray-600'
                                                 }`}
                                         >
@@ -297,14 +298,14 @@ export default function AiChat() {
                                             <div className="flex-1 text-left">
                                                 <div className="font-medium flex items-center gap-2">
                                                     {m.name}
-                                                    <span className={`text-[9px] px-1 rounded ${m.costTier === 'free' ? 'bg-emerald-500/10 text-emerald-500' : 'bg-white/5 text-gray-500'}`}>
+                                                    <span className={`text-[9px] px-1 rounded ${m.costTier === 'free' ? 'bg-purple-500/10 text-purple-500' : 'bg-gray-800/40/5 text-gray-500'}`}>
                                                         {m.costTier.toUpperCase()}
                                                     </span>
                                                 </div>
                                                 <div className="text-[10px] text-gray-600 truncate max-w-[200px]">{m.description}</div>
                                             </div>
-                                            {isActive && <Check className="w-3 h-3 text-emerald-500" />}
-                                            {!isAvailable && <Lock className="w-3 h-3 text-gray-700" />}
+                                            {isActive && <Check className="w-3 h-3 text-purple-500" />}
+                                            {!isAvailable && <Lock className="w-3 h-3 text-gray-300" />}
                                         </button>
                                     );
                                 })}
@@ -317,8 +318,8 @@ export default function AiChat() {
                         {/* Empty State */}
                         {messages.length === 0 && (
                             <div className="text-center py-10 px-4">
-                                <div className="w-16 h-16 bg-gradient-to-br from-emerald-500/20 to-cyan-500/20 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-emerald-500/10 border border-emerald-500/10">
-                                    <Sparkles className="w-8 h-8 text-emerald-400" />
+                                <div className="w-16 h-16 bg-gradient-to-br from-purple-500/20 to-fuchsia-500/20 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-purple-500/10 border border-purple-500/10">
+                                    <Sparkles className="w-8 h-8 text-purple-400" />
                                 </div>
                                 <h3 className="text-white font-semibold mb-2">Olá! Vamos analisar suas finanças?</h3>
                                 <p className="text-gray-500 text-[11px] mb-8 max-w-[260px] mx-auto leading-relaxed">
@@ -329,7 +330,7 @@ export default function AiChat() {
                                         <button
                                             key={key}
                                             onClick={() => handleSend(action.prompt)}
-                                            className="p-3 rounded-xl bg-white/[0.03] border border-white/5 text-xs text-gray-300 hover:bg-white/[0.08] hover:text-white hover:border-emerald-500/30 transition-all text-left flex items-center gap-3 group"
+                                            className="p-3 rounded-xl bg-gray-800/40/[0.03] border border-white/5 text-xs text-gray-300 hover:bg-gray-800/40/[0.08] hover:text-white hover:border-purple-500/30 transition-all text-left flex items-center gap-3 group"
                                         >
                                             <span className="text-lg opacity-70 group-hover:opacity-100 transition-opacity">{action.label.split(' ')[0]}</span>
                                             <span className="font-medium">{action.label.split(' ').slice(1).join(' ')}</span>
@@ -352,11 +353,11 @@ export default function AiChat() {
                                     </span>
 
                                     <div
-                                        className={`rounded-2xl px-4 py-3 text-sm leading-relaxed shadow-sm ${msg.role === 'user'
-                                            ? 'bg-emerald-600 text-white rounded-tr-sm'
+                                        className={`rounded-2xl px-4 py-3 text-sm leading-relaxed shadow-lg shadow-black/10 ${msg.role === 'user'
+                                            ? 'bg-purple-600 text-white rounded-tr-sm'
                                             : msg.isError
                                                 ? 'bg-red-500/10 text-red-300 border border-red-500/20 rounded-tl-sm'
-                                                : 'bg-white/5 text-gray-200 border border-white/5 rounded-tl-sm'
+                                                : 'bg-gray-800/40/5 text-gray-200 border border-white/5 rounded-tl-sm'
                                             }`}
                                     >
                                         {/* Content - sanitizado se for da IA */}
@@ -382,7 +383,7 @@ export default function AiChat() {
                                                 <div className="w-1 h-1 rounded-full bg-gray-700"></div>
                                                 <button
                                                     onClick={() => handleCopy(msg.content, msg.id)}
-                                                    className="text-[10px] text-emerald-400 hover:text-emerald-300 flex items-center gap-1 transition-colors font-medium"
+                                                    className="text-[10px] text-purple-400 hover:text-purple-300 flex items-center gap-1 transition-colors font-medium"
                                                 >
                                                     {isCopied(msg.id) ? (
                                                         <><Check className="w-3 h-3" /> Copiado</>
@@ -400,10 +401,10 @@ export default function AiChat() {
                         {/* Loading */}
                         {loading && (
                             <div className="flex justify-start animate-pulse">
-                                <div className="bg-white/5 border border-white/5 rounded-2xl rounded-tl-sm px-4 py-3 flex items-center gap-3">
-                                    <div className="w-2 h-2 bg-emerald-400 rounded-full animate-bounce"></div>
-                                    <div className="w-2 h-2 bg-emerald-400 rounded-full animate-bounce" style={{ animationDelay: '75ms' }}></div>
-                                    <div className="w-2 h-2 bg-emerald-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                                <div className="bg-gray-800/40/5 border border-white/5 rounded-2xl rounded-tl-sm px-4 py-3 flex items-center gap-3">
+                                    <div className="w-2 h-2 bg-purple-400 rounded-full animate-bounce"></div>
+                                    <div className="w-2 h-2 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: '75ms' }}></div>
+                                    <div className="w-2 h-2 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
                                     <span className="text-[11px] text-gray-400 ml-1 font-medium">
                                         {currentModel?.name} analisando...
                                     </span>
@@ -421,7 +422,7 @@ export default function AiChat() {
                                 <button
                                     key={key}
                                     onClick={() => handleSend(action.prompt)}
-                                    className="shrink-0 px-3 py-1.5 rounded-full bg-white/5 border border-white/5 text-[10px] text-gray-400 hover:text-white hover:bg-white/10 hover:border-emerald-500/30 transition-all whitespace-nowrap"
+                                    className="shrink-0 px-3 py-1.5 rounded-full bg-gray-800/40/5 border border-white/5 text-[10px] text-gray-400 hover:text-white hover:bg-gray-800/40/10 hover:border-purple-500/30 transition-all whitespace-nowrap"
                                 >
                                     {action.label}
                                 </button>
@@ -438,7 +439,7 @@ export default function AiChat() {
                         )}
                         <form
                             onSubmit={handleSubmit}
-                            className="flex items-center gap-2 bg-black/40 p-1.5 rounded-2xl border border-white/10 focus-within:border-emerald-500/50 transition-colors shadow-inner"
+                            className="flex items-center gap-2 bg-black/40 p-1.5 rounded-2xl border border-white/10 focus-within:border-purple-500/50 transition-colors shadow-inner"
                         >
                             <input
                                 ref={inputRef}
@@ -452,7 +453,7 @@ export default function AiChat() {
                             <button
                                 type="submit"
                                 disabled={loading || !input.trim()}
-                                className="p-2.5 rounded-xl bg-emerald-500 text-white hover:bg-emerald-600 transition-all disabled:opacity-30 disabled:cursor-not-allowed shadow-lg shadow-emerald-500/20"
+                                className="p-2.5 rounded-xl bg-purple-500 text-white hover:bg-purple-600 transition-all disabled:opacity-30 disabled:cursor-not-allowed shadow-lg shadow-purple-500/20"
                                 aria-label="Enviar mensagem"
                             >
                                 {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}

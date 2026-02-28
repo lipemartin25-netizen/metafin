@@ -61,165 +61,167 @@ export default function App() {
   const isAppRoute = location.pathname.startsWith('/app');
 
   return (
-    <Suspense fallback={<PageLoader message="Carregando..." />}>
-      <Routes>
-        {/* Rotas públicas */}
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<SignUp />} />
+    <div className="min-h-screen bg-[#06060a] text-white">
+      <Suspense fallback={<PageLoader message="Carregando..." />}>
+        <Routes>
+          {/* Rotas públicas */}
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<SignUp />} />
 
-        {/* Rotas protegidas do app */}
-        <Route
-          path="/app"
-          element={
-            <ProtectedRoute>
-              <Layout />
-            </ProtectedRoute>
-          }
-        >
+          {/* Rotas protegidas do app */}
           <Route
-            index
+            path="/app"
             element={
-              <Suspense fallback={<PageLoader message="Carregando dashboard..." />}>
-                <Dashboard />
-              </Suspense>
+              <ProtectedRoute>
+                <Layout />
+              </ProtectedRoute>
             }
-          />
-          <Route
-            path="transactions"
-            element={
-              <Suspense fallback={<PageLoader message="Carregando transações..." />}>
-                <Transactions />
-              </Suspense>
-            }
-          />
-          <Route
-            path="accounts"
-            element={
-              <Suspense fallback={<PageLoader message="Carregando contas..." />}>
-                <BankAccounts />
-              </Suspense>
-            }
-          />
-          <Route
-            path="cards"
-            element={
-              <Suspense fallback={<PageLoader message="Carregando cartões..." />}>
-                <CreditCards />
-              </Suspense>
-            }
-          />
-          <Route
-            path="bills"
-            element={
-              <Suspense fallback={<PageLoader message="Carregando faturas..." />}>
-                <Bills />
-              </Suspense>
-            }
-          />
-          <Route
-            path="investments"
-            element={
-              <Suspense fallback={<PageLoader message="Carregando investimentos..." />}>
-                <Investments />
-              </Suspense>
-            }
-          />
-          <Route
-            path="patrimony"
-            element={
-              <Suspense fallback={<PageLoader message="Carregando patrimônio..." />}>
-                <NetWorth />
-              </Suspense>
-            }
-          />
-          <Route
-            path="health"
-            element={
-              <Suspense fallback={<PageLoader message="Analisando saúde financeira..." />}>
-                <FinancialHealth />
-              </Suspense>
-            }
-          />
-          <Route
-            path="budget"
-            element={
-              <Suspense fallback={<PageLoader message="Carregando orçamento..." />}>
-                <Budget />
-              </Suspense>
-            }
-          />
-          <Route
-            path="goals"
-            element={
-              <Suspense fallback={<PageLoader message="Carregando metas..." />}>
-                <Goals />
-              </Suspense>
-            }
-          />
-          <Route
-            path="reports"
-            element={
-              <Suspense fallback={<PageLoader message="Gerando relatórios..." />}>
-                <Reports />
-              </Suspense>
-            }
-          />
-          <Route
-            path="advisor"
-            element={
-              <Suspense fallback={<PageLoader message="Despertando IA..." />}>
-                <AIAssistant />
-              </Suspense>
-            }
-          />
-          <Route
-            path="lab"
-            element={
-              <Suspense fallback={<PageLoader message="Abrindo laboratório wealth..." />}>
-                <Simulators />
-              </Suspense>
-            }
-          />
-          <Route
-            path="upgrade"
-            element={
-              <Suspense fallback={<PageLoader message="Carregando planos..." />}>
-                <Upgrade />
-              </Suspense>
-            }
-          />
-          <Route
-            path="settings"
-            element={
-              <Suspense fallback={<PageLoader message="Carregando configurações..." />}>
-                <Settings />
-              </Suspense>
-            }
-          />
-          <Route
-            path="webhooks"
-            element={
-              <Suspense fallback={<PageLoader message="Carregando webhooks..." />}>
-                <Webhooks />
-              </Suspense>
-            }
-          />
-        </Route>
+          >
+            <Route
+              index
+              element={
+                <Suspense fallback={<PageLoader message="Carregando dashboard..." />}>
+                  <Dashboard />
+                </Suspense>
+              }
+            />
+            <Route
+              path="transactions"
+              element={
+                <Suspense fallback={<PageLoader message="Carregando transações..." />}>
+                  <Transactions />
+                </Suspense>
+              }
+            />
+            <Route
+              path="accounts"
+              element={
+                <Suspense fallback={<PageLoader message="Carregando contas..." />}>
+                  <BankAccounts />
+                </Suspense>
+              }
+            />
+            <Route
+              path="cards"
+              element={
+                <Suspense fallback={<PageLoader message="Carregando cartões..." />}>
+                  <CreditCards />
+                </Suspense>
+              }
+            />
+            <Route
+              path="bills"
+              element={
+                <Suspense fallback={<PageLoader message="Carregando faturas..." />}>
+                  <Bills />
+                </Suspense>
+              }
+            />
+            <Route
+              path="investments"
+              element={
+                <Suspense fallback={<PageLoader message="Carregando investimentos..." />}>
+                  <Investments />
+                </Suspense>
+              }
+            />
+            <Route
+              path="patrimony"
+              element={
+                <Suspense fallback={<PageLoader message="Carregando patrimônio..." />}>
+                  <NetWorth />
+                </Suspense>
+              }
+            />
+            <Route
+              path="health"
+              element={
+                <Suspense fallback={<PageLoader message="Analisando saúde financeira..." />}>
+                  <FinancialHealth />
+                </Suspense>
+              }
+            />
+            <Route
+              path="budget"
+              element={
+                <Suspense fallback={<PageLoader message="Carregando orçamento..." />}>
+                  <Budget />
+                </Suspense>
+              }
+            />
+            <Route
+              path="goals"
+              element={
+                <Suspense fallback={<PageLoader message="Carregando metas..." />}>
+                  <Goals />
+                </Suspense>
+              }
+            />
+            <Route
+              path="reports"
+              element={
+                <Suspense fallback={<PageLoader message="Gerando relatórios..." />}>
+                  <Reports />
+                </Suspense>
+              }
+            />
+            <Route
+              path="advisor"
+              element={
+                <Suspense fallback={<PageLoader message="Despertando IA..." />}>
+                  <AIAssistant />
+                </Suspense>
+              }
+            />
+            <Route
+              path="lab"
+              element={
+                <Suspense fallback={<PageLoader message="Abrindo laboratório wealth..." />}>
+                  <Simulators />
+                </Suspense>
+              }
+            />
+            <Route
+              path="upgrade"
+              element={
+                <Suspense fallback={<PageLoader message="Carregando planos..." />}>
+                  <Upgrade />
+                </Suspense>
+              }
+            />
+            <Route
+              path="settings"
+              element={
+                <Suspense fallback={<PageLoader message="Carregando configurações..." />}>
+                  <Settings />
+                </Suspense>
+              }
+            />
+            <Route
+              path="webhooks"
+              element={
+                <Suspense fallback={<PageLoader message="Carregando webhooks..." />}>
+                  <Webhooks />
+                </Suspense>
+              }
+            />
+          </Route>
 
-        {/* Fallback para rotas não encontradas */}
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
+          {/* Fallback para rotas não encontradas */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
 
-      {/* AI Chat FAB - apenas no app */}
-      {isAppRoute && (
-        <Suspense fallback={null}>
-          <AiChat />
-        </Suspense>
-      )}
+        {/* AI Chat FAB - apenas no app */}
+        {isAppRoute && (
+          <Suspense fallback={null}>
+            <AiChat />
+          </Suspense>
+        )}
 
-      {/* NPS Survey */}
-      {showNps && <NpsSurvey onClose={handleNpsClose} />}
-    </Suspense>
+        {/* NPS Survey */}
+        {showNps && <NpsSurvey onClose={handleNpsClose} />}
+      </Suspense>
+    </div>
   );
 }

@@ -1,3 +1,4 @@
+import { tw } from '@/lib/theme';
 import { TrendingUp, TrendingDown, Wallet, PiggyBank, Eye, EyeOff } from "lucide-react";
 import { useTransactions } from "../hooks/useTransactions";
 import { useVisibility } from "../hooks/useVisibility";
@@ -53,10 +54,10 @@ export default function QuickStats() {
                 up: receitaChange === null ? true : receitaChange >= 0,
                 hasData: receita > 0,
                 icon: TrendingUp,
-                color: "from-emerald-500/20 to-emerald-600/5",
-                iconColor: "text-emerald-400",
+                color: "from-purple-500/20 to-emerald-600/5",
+                iconColor: "text-purple-400",
                 chartColor: "#10b981",
-                border: "border-emerald-500/10",
+                border: "border-purple-500/10",
                 trend: generateMockTrend()
             },
             {
@@ -116,7 +117,7 @@ export default function QuickStats() {
                         <div className="flex items-center gap-2">
                             <button
                                 onClick={(e) => { e.stopPropagation(); toggleVisibility(); }}
-                                className="p-1.5 rounded-lg bg-white/5 opacity-0 group-hover:opacity-100 transition-all hover:bg-white/10"
+                                className="p-1.5 rounded-lg bg-gray-800/40/5 opacity-0 group-hover:opacity-100 transition-all hover:bg-gray-800/40/10"
                             >
                                 {isVisible ? <EyeOff size={12} className="text-white/40" /> : <Eye size={12} className="text-white/40" />}
                             </button>
@@ -130,7 +131,7 @@ export default function QuickStats() {
                                 <p className="text-white text-2xl font-bold tracking-tight">
                                     {isVisible ? value : "R$ ••••"}
                                 </p>
-                                <p className={`text-[11px] mt-1 font-semibold ${up ? "text-emerald-400" : "text-red-400"}`}>
+                                <p className={`text-[11px] mt-1 font-semibold ${up ? "text-purple-400" : "text-red-400"}`}>
                                     {change}
                                 </p>
                             </>

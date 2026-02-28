@@ -104,6 +104,7 @@ export default function Budget() {
 
                 const payload = {
                     user_id: user.id,
+                    name: form.category,
                     category: form.category,
                     amount: limitValue,
                     period: 'monthly'

@@ -28,16 +28,16 @@ export default function ProGate({ feature, children, fallback, className = '' })
 
             {/* Overlay */}
             <div className="absolute inset-0 z-10 flex items-center justify-center rounded-2xl bg-gray-950/20 backdrop-blur-[2px]">
-                <div className="${tw.card} bg-gray-900/90 border border-purple-500/20 p-6 max-w-xs text-center shadow-2xl relative overflow-hidden">
+                <div className={`\${tw.card} bg-gray-900/90 border border-brand-primary/20 p-6 max-w-xs text-center shadow-2xl relative overflow-hidden`}>
                     {/* Efeito de brilho no fundo */}
                     <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-emerald-500 to-transparent opacity-50"></div>
 
-                    <div className="w-12 h-12 rounded-full bg-purple-500/10 flex items-center justify-center mx-auto mb-3 border border-purple-500/20 shadow-lg shadow-purple-500/10">
-                        <Lock className="w-5 h-5 text-purple-400" />
+                    <div className="w-12 h-12 rounded-full bg-brand-primary/10 flex items-center justify-center mx-auto mb-3 border border-brand-primary/20 shadow-lg shadow-brand-primary/10">
+                        <Lock className="w-5 h-5 text-brand-glow" />
                     </div>
 
                     <h3 className="text-white font-bold text-lg mb-1 flex items-center justify-center gap-2">
-                        Recurso Pro <span className="text-[10px] bg-purple-500 text-white px-1.5 py-0.5 rounded font-bold uppercase tracking-wider">PRO</span>
+                        Recurso Pro <span className="text-[10px] bg-brand-primary text-white px-1.5 py-0.5 rounded font-bold uppercase tracking-wider">PRO</span>
                     </h3>
 
                     <p className="text-gray-400 text-xs mb-5 leading-relaxed">
@@ -46,7 +46,7 @@ export default function ProGate({ feature, children, fallback, className = '' })
 
                     <Link
                         to="/app/upgrade"
-                        className="gradient-btn w-full text-sm py-2.5 flex items-center justify-center gap-2 hover:shadow-purple-500/25 transition-all group-hover:scale-[1.02]"
+                        className="gradient-btn w-full text-sm py-2.5 flex items-center justify-center gap-2 hover:shadow-brand-primary/25 transition-all group-hover:scale-[1.02]"
                     >
                         <Sparkles className="w-4 h-4 fill-white" />
                         Upgrade — R$ 24,90/mês

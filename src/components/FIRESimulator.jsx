@@ -67,8 +67,8 @@ export default function FIRESimulator({ financialData }) {
     return (
         <div className="space-y-6">
             {/* Inputs */}
-            <div className="rounded-2xl border border-gray-700/40 dark:border-white/10 
-        bg-gray-800/30/50 dark:bg-black/20 p-6 ${tw.card}">
+            <div className={`rounded-2xl border border-gray-700/40 dark:border-white/10 
+        bg-gray-800/30/50 dark:bg-black/20 p-6 \${tw.card}`}>
                 <h3 className="font-bold mb-4 flex items-center gap-2 text-white dark:text-white">
                     <DollarSign className="h-5 w-5 text-orange-500" /> Seus Dados Financeiros
                 </h3>
@@ -182,7 +182,7 @@ export default function FIRESimulator({ financialData }) {
             </div>
 
             {/* Gráfico de Projeção */}
-            <div className="rounded-3xl border border-gray-700/40 dark:border-white/10 ${tw.card} p-6 shadow-lg shadow-black/10">
+            <div className={`rounded-3xl border border-gray-700/40 dark:border-white/10 \${tw.card} p-6 shadow-lg shadow-black/10`}>
                 <h3 className="font-bold mb-6 flex items-center gap-2 text-white dark:text-white">
                     <TrendingUp className="h-5 w-5 text-orange-500" /> Projeção Patrimonial
                 </h3>
@@ -264,7 +264,7 @@ export default function FIRESimulator({ financialData }) {
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Cenários */}
-                <div className="rounded-3xl border border-gray-700/40 dark:border-white/10 ${tw.card} p-6 shadow-lg shadow-black/10">
+                <div className={`rounded-3xl border border-gray-700/40 dark:border-white/10 \${tw.card} p-6 shadow-lg shadow-black/10`}>
                     <h3 className="font-bold mb-4 flex items-center gap-2 text-white dark:text-white">
                         <Target className="h-5 w-5 text-blue-500" /> Cenários Estressados (a.a.)
                     </h3>
@@ -301,9 +301,9 @@ export default function FIRESimulator({ financialData }) {
                 </div>
 
                 {/* Milestones */}
-                <div className="rounded-3xl border border-gray-700/40 dark:border-white/10 ${tw.card} p-6 shadow-lg shadow-black/10">
+                <div className={`rounded-3xl border border-gray-700/40 dark:border-white/10 \${tw.card} p-6 shadow-lg shadow-black/10`}>
                     <h3 className="font-bold mb-4 flex items-center gap-2 text-white dark:text-white">
-                        <Calendar className="h-5 w-5 text-purple-500" /> Marcos do Caminho
+                        <Calendar className="h-5 w-5 text-brand-primary" /> Marcos do Caminho
                     </h3>
                     <div className="space-y-3">
                         {result.milestones.map(milestone => (
@@ -313,7 +313,7 @@ export default function FIRESimulator({ financialData }) {
                                 <div className="flex items-center gap-4">
                                     <div className={`w-11 h-11 rounded-full flex items-center 
                     justify-center text-sm font-black shadow-inner ${result.progress >= milestone.percentage
-                                            ? 'bg-gradient-to-br from-purple-400 to-green-600 text-white shadow-purple-500/30'
+                                            ? 'bg-gradient-to-br from-brand-glow to-green-600 text-white shadow-brand-primary/30'
                                             : 'bg-gray-800/40 dark:bg-gray-800 text-gray-400 border border-gray-700/40 dark:border-gray-700'
                                         }`}>
                                         {milestone.percentage}%
@@ -337,7 +337,7 @@ export default function FIRESimulator({ financialData }) {
             </div>
 
             {/* Impacto de poupar mais */}
-            <div className="rounded-3xl border border-gray-700/40 dark:border-white/10 ${tw.card} p-6 shadow-lg shadow-black/10">
+            <div className={`rounded-3xl border border-gray-700/40 dark:border-white/10 \${tw.card} p-6 shadow-lg shadow-black/10`}>
                 <h3 className="font-bold mb-6 flex items-center gap-2 text-white dark:text-white">
                     <Zap className="h-5 w-5 text-yellow-500" /> Turbo FIRE: E se Você Poupasse Mais?
                 </h3>
@@ -369,7 +369,7 @@ export default function FIRESimulator({ financialData }) {
                                         : 'N/A'}
                                 </span>
                                 {impact.yearsSaved > 0 && (
-                                    <span className="inline-flex items-center gap-1 mt-2 text-xs font-bold text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-500/10 px-2 py-1 rounded-md self-start">
+                                    <span className="inline-flex items-center gap-1 mt-2 text-xs font-bold text-brand-primary dark:text-brand-glow bg-purple-50 dark:bg-brand-primary/10 px-2 py-1 rounded-md self-start">
                                         <Zap className="w-3 h-3" /> {impact.yearsSaved}a {impact.monthsSavedRemainder}m mais rápido!
                                     </span>
                                 )}

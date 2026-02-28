@@ -48,7 +48,7 @@ export default function DeveloperAPI() {
         <div className="py-6 space-y-6 animate-fade-in max-w-4xl pb-20">
             <div>
                 <h1 className="text-2xl font-bold text-white dark:text-white flex items-center gap-2">
-                    <Code2 className="w-6 h-6 text-fuchsia-500" />
+                    <Code2 className="w-6 h-6 text-brand-glow" />
                     Webhooks & API
                 </h1>
                 <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">Conecte o MetaFin a qualquer plataforma (Zapier, Make, n8n).</p>
@@ -57,10 +57,10 @@ export default function DeveloperAPI() {
             <div className="grid md:grid-cols-3 gap-6">
                 <div className="md:col-span-2 space-y-6">
                     {/* API Key Section */}
-                    <div className="${tw.card} p-6">
+                    <div className={`\${tw.card} p-6`}>
                         <div className="flex items-center gap-3 mb-6">
-                            <div className="w-10 h-10 rounded-xl bg-fuchsia-500/10 flex items-center justify-center">
-                                <Key className="w-5 h-5 text-fuchsia-500" />
+                            <div className="w-10 h-10 rounded-xl bg-brand-glow/10 flex items-center justify-center">
+                                <Key className="w-5 h-5 text-brand-glow" />
                             </div>
                             <div>
                                 <h2 className="text-lg font-bold text-white dark:text-white">API Key Pessoal</h2>
@@ -78,12 +78,12 @@ export default function DeveloperAPI() {
                                         onClick={() => copyToClipboard(apiKey)}
                                         className="p-3 rounded-xl bg-gray-800/50 dark:bg-gray-800/40/10 text-gray-600 dark:text-gray-300 hover:bg-gray-700/50 dark:hover:bg-gray-800/40/20 transition-all"
                                     >
-                                        {copied ? <Check className="w-5 h-5 text-purple-500" /> : <Copy className="w-5 h-5" />}
+                                        {copied ? <Check className="w-5 h-5 text-brand-primary" /> : <Copy className="w-5 h-5" />}
                                     </button>
                                 </div>
                                 <div className="flex justify-between items-center text-xs">
                                     <span className="text-gray-500 flex items-center gap-1"><Shield className="w-3 h-3" /> Nunca compartilhe sua chave publica.</span>
-                                    <button onClick={generateKey} disabled={generating} className="text-fuchsia-500 hover:text-fuchsia-400 font-medium flex items-center gap-1">
+                                    <button onClick={generateKey} disabled={generating} className="text-brand-glow hover:text-brand-glow font-medium flex items-center gap-1">
                                         {generating ? <RefreshCw className="w-3 h-3 animate-spin" /> : <RefreshCw className="w-3 h-3" />}
                                         Gerar nova chave
                                     </button>
@@ -101,10 +101,10 @@ export default function DeveloperAPI() {
                     </div>
 
                     {/* Code Example */}
-                    <div className="${tw.card} p-6 border-fuchsia-500/20 bg-gradient-to-b from-fuchsia-500/5 to-transparent">
+                    <div className={`\${tw.card} p-6 border-brand-glow/20 bg-gradient-to-b from-brand-glow/5 to-transparent`}>
                         <div className="flex items-center gap-3 mb-6">
-                            <div className="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center">
-                                <Server className="w-5 h-5 text-purple-500" />
+                            <div className="w-10 h-10 rounded-xl bg-brand-primary/10 flex items-center justify-center">
+                                <Server className="w-5 h-5 text-brand-primary" />
                             </div>
                             <div>
                                 <h2 className="text-lg font-bold text-white dark:text-white">Endpoint de Transações</h2>
@@ -113,13 +113,13 @@ export default function DeveloperAPI() {
                         </div>
 
                         <div className="relative group">
-                            <div className="absolute -inset-1 bg-gradient-to-r from-fuchsia-500 to-fuchsia-500 rounded-xl blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
+                            <div className="absolute -inset-1 bg-gradient-to-r from-brand-glow to-brand-glow rounded-xl blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
                             <div className="relative bg-[#0d1117] rounded-xl overflow-hidden ring-1 ring-white/10">
                                 <div className="flex items-center justify-between px-4 py-2 bg-gray-800/40/5 border-b border-white/5">
                                     <div className="flex gap-2">
                                         <div className="w-3 h-3 rounded-full bg-red-500"></div>
                                         <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-                                        <div className="w-3 h-3 rounded-full bg-purple-500"></div>
+                                        <div className="w-3 h-3 rounded-full bg-brand-primary"></div>
                                     </div>
                                     <span className="text-xs text-gray-400 font-mono">cURL Example</span>
                                     <button onClick={() => copyToClipboard(curlExample)} className="text-gray-400 hover:text-white transition-colors">
@@ -138,7 +138,7 @@ export default function DeveloperAPI() {
                 <div className="space-y-4">
                     <h3 className="text-sm font-bold text-white dark:text-white uppercase tracking-wider mb-2">Casos de Uso Comuns</h3>
 
-                    <div className="${tw.card} p-4 hover:border-orange-500/30 transition-colors cursor-pointer group">
+                    <div className={`\${tw.card} p-4 hover:border-orange-500/30 transition-colors cursor-pointer group`}>
                         <div className="flex items-start gap-3">
                             <div className="bg-orange-500/10 p-2 rounded-lg text-orange-500"><Zap className="w-5 h-5" /></div>
                             <div>
@@ -148,11 +148,11 @@ export default function DeveloperAPI() {
                         </div>
                     </div>
 
-                    <div className="${tw.card} p-4 hover:border-purple-500/30 transition-colors cursor-pointer group">
+                    <div className={`\${tw.card} p-4 hover:border-brand-primary/30 transition-colors cursor-pointer group`}>
                         <div className="flex items-start gap-3">
-                            <div className="bg-purple-500/10 p-2 rounded-lg text-purple-500"><Code2 className="w-5 h-5" /></div>
+                            <div className="bg-brand-primary/10 p-2 rounded-lg text-brand-primary"><Code2 className="w-5 h-5" /></div>
                             <div>
-                                <h4 className="font-bold text-white dark:text-white text-sm group-hover:text-purple-500 transition-colors">Sistema Interno</h4>
+                                <h4 className="font-bold text-white dark:text-white text-sm group-hover:text-brand-primary transition-colors">Sistema Interno</h4>
                                 <p className="text-[11px] text-gray-500 mt-1">Dispare eventos do seu backend direto para o seu dashboard do MetaFin.</p>
                             </div>
                         </div>

@@ -5,7 +5,7 @@ import { Target, Eye, EyeOff } from 'lucide-react';
 
 const goals = [
     { label: "Viagem Europa", current: 4200, target: 8000, color: "bg-violet-500", shadow: "shadow-violet-500/20" },
-    { label: "Reserva Emergência", current: 12000, target: 15000, color: "bg-purple-500", shadow: "shadow-purple-500/20" },
+    { label: "Reserva Emergência", current: 12000, target: 15000, color: "bg-brand-primary", shadow: "shadow-brand-primary/20" },
     { label: "Notebook Novo", current: 1800, target: 3500, color: "bg-blue-500", shadow: "shadow-blue-500/20" },
 ];
 

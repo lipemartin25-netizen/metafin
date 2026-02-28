@@ -74,7 +74,7 @@ export default function CreditCard() {
                     />
                 </div>
                 <div className="flex justify-between mt-1 pt-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <p className="text-[9px] text-purple-400 font-bold">Limite Disponível: {isVisible ? fmt(5850) : "R$ ••••"}</p>
+                    <p className="text-[9px] text-brand-glow font-bold">Limite Disponível: {isVisible ? fmt(5850) : "R$ ••••"}</p>
                     <p className="text-[9px] text-white/20 font-medium italic">Vence em 12 dias</p>
                 </div>
             </div>

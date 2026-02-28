@@ -338,7 +338,7 @@ export default function FinancialHealth() {
                 <div className="space-y-4">
                     <h3 className="text-lg font-bold text-white dark:text-white flex items-center gap-2">
                         {aiTips.length > 0 ? (
-                            <><Sparkles className="w-5 h-5 text-fuchsia-500" /> MetaFin AI Insights</>
+                            <><Sparkles className="w-5 h-5 text-brand-glow" /> MetaFin AI Insights</>
                         ) : (
                             <><Lightbulb className="w-5 h-5 text-yellow-500" /> Recomendações</>
                         )}
@@ -347,7 +347,7 @@ export default function FinancialHealth() {
                     <div className="space-y-3">
                         {displayTips.map((tip, i) => {
                             const config = {
-                                success: { icon: CheckCircle, bg: 'bg-purple-500/10 border-purple-500/20', text: 'text-purple-600 dark:text-purple-400', ring: 'ring-emerald-500/20' },
+                                success: { icon: CheckCircle, bg: 'bg-brand-primary/10 border-brand-primary/20', text: 'text-brand-primary dark:text-brand-glow', ring: 'ring-emerald-500/20' },
                                 warning: { icon: AlertTriangle, bg: 'bg-yellow-500/10 border-yellow-500/20', text: 'text-yellow-600 dark:text-yellow-400', ring: 'ring-yellow-500/20' },
                                 danger: { icon: AlertTriangle, bg: 'bg-red-500/10 border-red-500/20', text: 'text-red-600 dark:text-red-400', ring: 'ring-red-500/20' },
                                 info: { icon: Lightbulb, bg: 'bg-blue-500/10 border-blue-500/20', text: 'text-blue-600 dark:text-blue-400', ring: 'ring-blue-500/20' },
@@ -372,20 +372,20 @@ export default function FinancialHealth() {
                     </div>
 
                     {/* Eco-Finance Gamification Widget */}
-                    <div className="${tw.card} mt-6 p-6 border-l-4 border-l-emerald-500 relative overflow-hidden bg-black/40 group">
-                        <div className="absolute -right-4 -top-4 w-32 h-32 bg-purple-500/10 rounded-full blur-[40px] group-hover:bg-purple-500/20 transition-all" />
+                    <div className={`\${tw.card} mt-6 p-6 border-l-4 border-l-emerald-500 relative overflow-hidden bg-black/40 group`}>
+                        <div className="absolute -right-4 -top-4 w-32 h-32 bg-brand-primary/10 rounded-full blur-[40px] group-hover:bg-brand-primary/20 transition-all" />
                         <h3 className="text-lg font-black text-white flex items-center gap-2 mb-2 uppercase tracking-widest relative z-10">
-                            <Leaf className="w-5 h-5 text-purple-500" /> Eco-Finance Tracker
+                            <Leaf className="w-5 h-5 text-brand-primary" /> Eco-Finance Tracker
                         </h3>
                         <div className="flex items-end justify-between relative z-10">
                             <div>
                                 <p className="text-sm text-gray-400 mb-1">Pegada de Carbono (Mensal)</p>
-                                <p className="text-3xl font-black text-purple-400 drop-shadow-[0_0_10px_rgba(16,185,129,0.5)]">
-                                    {(analysis.totalCO2).toFixed(1)} <span className="text-sm text-purple-500/60 uppercase">KG CO₂</span>
+                                <p className="text-3xl font-black text-brand-glow drop-shadow-[0_0_10px_rgba(16,185,129,0.5)]">
+                                    {(analysis.totalCO2).toFixed(1)} <span className="text-sm text-brand-primary/60 uppercase">KG CO₂</span>
                                 </p>
                             </div>
                             <div className="text-right">
-                                <Zap className={`w-8 h-8 ${analysis.totalCO2 > 500 ? 'text-red-500 animate-pulse' : 'text-purple-500'}`} />
+                                <Zap className={`w-8 h-8 ${analysis.totalCO2 > 500 ? 'text-red-500 animate-pulse' : 'text-brand-primary'}`} />
                             </div>
                         </div>
                         <div className="mt-4 pt-4 border-t border-white/10 relative z-10">
@@ -401,9 +401,9 @@ export default function FinancialHealth() {
                 {/* Metas de Orçamento por Categoria */}
                 <div className="space-y-4">
                     <h3 className="text-lg font-bold text-white dark:text-white flex items-center gap-2">
-                        <Shield className="w-5 h-5 text-purple-500" /> Limites de Gastos (MoM)
+                        <Shield className="w-5 h-5 text-brand-primary" /> Limites de Gastos (MoM)
                     </h3>
-                    <div className="${tw.card} space-y-6 p-6">
+                    <div className={`\${tw.card} space-y-6 p-6`}>
                         <p className="text-sm text-gray-500 dark:text-gray-400">Defina e monitore tetos de gastos inteligentes para suas categorias de alto impacto (Mês-a-Mês).</p>
 
                         {analysis.topCategories.map((cat) => {
@@ -411,10 +411,10 @@ export default function FinancialHealth() {
                             const hasGoal = currentGoal > 0;
                             const pctOfGoal = hasGoal ? Math.min((cat.total / currentGoal) * 100, 100) : 0;
                             const isOverBudget = hasGoal && cat.total > currentGoal;
-                            const barColor = isOverBudget ? 'bg-red-500 shadow-[0_0_10px_-2px_rgba(239,68,68,0.5)]' : (pctOfGoal > 80 ? 'bg-yellow-500 shadow-[0_0_10px_-2px_rgba(234,179,8,0.5)]' : 'bg-purple-500 shadow-[0_0_10px_-2px_rgba(16,185,129,0.5)]');
+                            const barColor = isOverBudget ? 'bg-red-500 shadow-[0_0_10px_-2px_rgba(239,68,68,0.5)]' : (pctOfGoal > 80 ? 'bg-yellow-500 shadow-[0_0_10px_-2px_rgba(234,179,8,0.5)]' : 'bg-brand-primary shadow-[0_0_10px_-2px_rgba(16,185,129,0.5)]');
 
                             return (
-                                <div key={cat.cat} className="space-y-3 group bg-gray-800/30/50 dark:bg-gray-800/40/[0.02] p-4 rounded-xl border border-transparent hover:border-purple-500/20 transition-all">
+                                <div key={cat.cat} className="space-y-3 group bg-gray-800/30/50 dark:bg-gray-800/40/[0.02] p-4 rounded-xl border border-transparent hover:border-brand-primary/20 transition-all">
                                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-sm">
                                         <div className="flex items-center gap-2">
                                             <div className="w-8 h-8 rounded-lg bg-indigo-500/10 flex items-center justify-center text-indigo-500 font-bold uppercase text-[10px] tracking-wider">
@@ -431,7 +431,7 @@ export default function FinancialHealth() {
                                             <input
                                                 type="number"
                                                 placeholder="Definir..."
-                                                className="w-24 px-2 py-1.5 text-xs font-bold bg-transparent text-white dark:text-white outline-none text-right focus:text-purple-500 placeholder-gray-400 transition-colors"
+                                                className="w-24 px-2 py-1.5 text-xs font-bold bg-transparent text-white dark:text-white outline-none text-right focus:text-brand-primary placeholder-gray-400 transition-colors"
                                                 value={currentGoal || ''}
                                                 onChange={(e) => updateBudget(cat.cat, parseFloat(e.target.value))}
                                             />

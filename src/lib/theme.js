@@ -131,36 +131,37 @@ export const theme = {
 
 export const tw = {
     // Cards
-    card: 'bg-gray-800/40 backdrop-blur-sm border border-gray-700/40 rounded-xl p-6 hover:bg-gray-800/60 hover:border-purple-500/30 transition-all duration-300',
-    cardElevated: 'bg-gray-800/70 backdrop-blur-sm border border-gray-700/50 rounded-xl p-6 shadow-lg shadow-black/10',
-    cardBrand: 'bg-gradient-to-br from-purple-500/10 to-fuchsia-500/10 backdrop-blur-sm border border-purple-500/20 rounded-xl p-6 shadow-lg shadow-purple-500/5',
+    card: 'tw-card p-6',
+    cardElevated: 'tw-card p-6',
+    cardBrand: 'tw-card p-6',
+    bankCard: 'tw-bank-card p-6',
 
     // Botões
-    btnPrimary: 'bg-gradient-to-r from-purple-600 to-fuchsia-600 hover:from-purple-500 hover:to-fuchsia-500 text-white font-semibold px-6 py-3 rounded-lg shadow-lg shadow-purple-500/20 hover:shadow-purple-500/40 transition-all duration-300 active:scale-[0.98]',
-    btnSecondary: 'bg-gray-800/60 border border-gray-700/40 hover:bg-gray-700/60 hover:border-purple-500/30 text-gray-300 hover:text-white font-medium px-5 py-2.5 rounded-lg transition-all duration-300',
-    btnGhost: 'border border-purple-500/40 text-purple-400 hover:bg-purple-500/10 hover:border-purple-500/60 font-medium px-5 py-2.5 rounded-lg transition-all duration-300',
+    btnPrimary: 'btn-primary px-6 py-3',
+    btnSecondary: 'btn-secondary px-5 py-2.5',
+    btnGhost: 'border border-brand-primary/40 text-brand-primary hover:bg-brand-primary/10 hover:border-brand-primary/60 font-medium px-5 py-2.5 rounded-lg transition-all duration-300',
     btnDanger: 'bg-red-500/10 border border-red-500/30 text-red-400 hover:bg-red-500/20 hover:border-red-500/50 font-medium px-5 py-2.5 rounded-lg transition-all duration-300',
 
     // Inputs
-    input: 'w-full bg-gray-800/60 border border-gray-700/40 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:border-purple-500 focus:ring-1 focus:ring-purple-500/50 focus:outline-none transition-all duration-200',
+    input: 'input-field w-full px-4 py-3',
 
     // Badges
     badgeSuccess: 'inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20',
     badgeWarning: 'inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-amber-500/10 text-amber-400 border border-amber-500/20',
     badgeDanger: 'inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-red-500/10 text-red-400 border border-red-500/20',
     badgeInfo: 'inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-500/10 text-blue-400 border border-blue-500/20',
-    badgeBrand: 'inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-purple-500/10 text-purple-400 border border-purple-500/20',
+    badgeBrand: 'inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-brand-primary/10 text-brand-primary border border-brand-primary/20',
 
     // Texto
-    textPrimary: 'text-white',
-    textSecondary: 'text-gray-400',
-    textMuted: 'text-gray-500',
-    textBrand: 'text-purple-400',
+    textPrimary: 'text-white dark:text-gray-100',
+    textSecondary: 'text-gray-400 dark:text-gray-300',
+    textMuted: 'text-gray-500 dark:text-gray-400',
+    textBrand: 'text-brand-primary',
 
     // Layout
     pageContainer: 'p-6 md:p-8 max-w-7xl mx-auto space-y-6',
-    sectionTitle: 'text-2xl font-bold text-white',
-    sectionSubtitle: 'text-gray-400 mt-1',
+    sectionTitle: 'text-2xl font-bold text-gray-900 dark:text-white',
+    sectionSubtitle: 'text-gray-500 dark:text-gray-400 mt-1',
 };
 
 export default theme;

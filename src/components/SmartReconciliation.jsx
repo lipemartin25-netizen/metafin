@@ -67,7 +67,7 @@ export default function SmartReconciliation() {
     if (pendingQs.length === 0) return null;
 
     return (
-        <div className="${tw.card} bg-indigo-50/50 dark:bg-indigo-500/5 border border-indigo-200 dark:border-indigo-500/20 shadow-lg shadow-indigo-500/5 mb-6 overflow-hidden relative group p-1">
+        <div className={`\${tw.card} bg-indigo-50/50 dark:bg-indigo-500/5 border border-indigo-200 dark:border-indigo-500/20 shadow-lg shadow-indigo-500/5 mb-6 overflow-hidden relative group p-1`}>
             {/* Glow logic */}
             <div className="absolute -top-10 -right-10 w-32 h-32 bg-indigo-500/20 rounded-full blur-3xl animate-pulse-slow" />
 
@@ -117,7 +117,7 @@ export default function SmartReconciliation() {
                                                 <p className="text-sm font-bold text-white dark:text-white truncate" title={tx.description}>
                                                     {tx.description}
                                                 </p>
-                                                <span className={`text-xs font-black shrink-0 ${tx.type === 'income' ? 'text-purple-500' : 'text-gray-600 dark:text-gray-300'}`}>
+                                                <span className={`text-xs font-black shrink-0 ${tx.type === 'income' ? 'text-brand-primary' : 'text-gray-600 dark:text-gray-300'}`}>
                                                     {tx.type === 'income' ? '+' : '-'}{new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(Math.abs(tx.amount))}
                                                 </span>
                                             </div>
@@ -138,7 +138,7 @@ export default function SmartReconciliation() {
                                         </button>
                                         <button
                                             onClick={() => handleAction(tx, 'approve')}
-                                            className="w-10 h-10 rounded-full bg-purple-50 dark:bg-purple-500/10 text-purple-500 hover:bg-purple-500 hover:text-white flex items-center justify-center transition-colors shadow-lg shadow-black/10 group/btn shrink-0"
+                                            className="w-10 h-10 rounded-full bg-purple-50 dark:bg-brand-primary/10 text-brand-primary hover:bg-brand-primary hover:text-white flex items-center justify-center transition-colors shadow-lg shadow-black/10 group/btn shrink-0"
                                             title="Aprovar Match"
                                         >
                                             <Check className="w-5 h-5 group-hover/btn:scale-110 transition-transform" />

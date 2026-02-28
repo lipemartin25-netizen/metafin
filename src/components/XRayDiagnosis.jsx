@@ -12,7 +12,7 @@ const QUESTIONS = [
         subtitle: 'Isso nos ajuda a calcular sua capacidade de poupança.',
         type: 'currency',
         key: 'income',
-        icon: <TrendingUp className="w-8 h-8 text-purple-500 mb-4" />
+        icon: <TrendingUp className="w-8 h-8 text-brand-primary mb-4" />
     },
     {
         id: 'step2',
@@ -108,7 +108,7 @@ export default function XRayDiagnosis({ onComplete, onClose }) {
         let color = '';
         if (score >= 80) {
             status = 'Excelente';
-            color = 'text-purple-500';
+            color = 'text-brand-primary';
             tip = 'Suas finanças estão formidáveis. Você tem boa capacidade de poupança e reservas sólidas. Seu foco agora deve ser otimização tributária e aceleração do F.I.R.E.';
         } else if (score >= 50) {
             status = 'Atenção';

@@ -18,9 +18,8 @@ export default function Navbar() {
     const [langMenuOpen, setLangMenuOpen] = useState(false);
 
     return (
-        <nav className="sticky top-0 z-30 border-b border-white/5 h-14 flex items-center justify-end px-4 sm:px-6"
-            style={{ background: 'rgba(10,12,20,0.8)', backdropFilter: 'blur(16px)' }}
-        >
+        <nav className="sticky top-0 z-30 h-14 flex items-center justify-end px-4 sm:px-6 bg-gray-900/50 dark:bg-[#06060a]/50 backdrop-blur-md">
+            <div className="absolute inset-x-0 bottom-0 h-[1px] bg-gradient-to-r from-transparent via-brand-primary/50 to-transparent" />
             <div className="flex items-center gap-3">
                 {isDemo && (
                     <span className="px-2 py-1 rounded-lg bg-orange-500/10 text-orange-400 text-xs font-medium">
@@ -42,12 +41,12 @@ export default function Navbar() {
                     {langMenuOpen && (
                         <>
                             <div className="fixed inset-0 z-10" onClick={() => setLangMenuOpen(false)} />
-                            <div className="absolute right-0 mt-2 w-40 ${tw.card} p-1 z-20 shadow-xl border border-white/10">
+                            <div className={`absolute right-0 mt-2 w-40 \${tw.card} p-1 z-20 shadow-xl border border-white/10`}>
                                 {Object.keys(FLAGS).map((code) => (
                                     <button
                                         key={code}
                                         onClick={() => { changeLanguage(code); setLangMenuOpen(false); }}
-                                        className={`w-full text-left px-3 py-2 rounded-lg text-sm flex items-center gap-2 hover:bg-gray-800/40 transition-all ${language === code ? 'text-purple-400 bg-purple-500/10' : 'text-gray-300'
+                                        className={`w-full text-left px-3 py-2 rounded-lg text-sm flex items-center gap-2 hover:bg-gray-800/40 transition-all ${language === code ? 'text-brand-glow bg-brand-primary/10' : 'text-gray-300'
                                             }`}
                                     >
                                         <span>{FLAGS[code]}</span>

@@ -140,39 +140,39 @@ export default function Reports() {
 
                 {/* Summary Grid */}
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                    <div className="${tw.card} bg-purple-500/5 border-purple-500/10">
+                    <div className={`\${tw.card} bg-brand-primary/5 border-brand-primary/10`}>
                         <p className="text-[10px] text-gray-500 dark:text-gray-400 uppercase font-bold mb-1">Receitas</p>
-                        <p className="text-xl font-bold text-purple-500">{fmt(report.income, isVisible)}</p>
+                        <p className="text-xl font-bold text-brand-primary">{fmt(report.income, isVisible)}</p>
                         {report.incomeChange !== 0 && (
-                            <p className={`text-[10px] mt-1 flex items-center gap-0.5 ${report.incomeChange > 0 ? 'text-purple-400' : 'text-red-400'}`}>
+                            <p className={`text-[10px] mt-1 flex items-center gap-0.5 ${report.incomeChange > 0 ? 'text-brand-glow' : 'text-red-400'}`}>
                                 {report.incomeChange > 0 ? <ArrowUpRight className="w-3 h-3" /> : <ArrowDownRight className="w-3 h-3" />}
                                 {Math.abs(report.incomeChange).toFixed(0)}% vs anterior
                             </p>
                         )}
                     </div>
-                    <div className="${tw.card} bg-red-500/5 border-red-500/10">
+                    <div className={`\${tw.card} bg-red-500/5 border-red-500/10`}>
                         <p className="text-[10px] text-gray-500 dark:text-gray-400 uppercase font-bold mb-1">Despesas</p>
                         <p className="text-xl font-bold text-red-500">{fmt(report.expenses, isVisible)}</p>
                         {report.expenseChange !== 0 && (
-                            <p className={`text-[10px] mt-1 flex items-center gap-0.5 ${report.expenseChange < 0 ? 'text-purple-400' : 'text-red-400'}`}>
+                            <p className={`text-[10px] mt-1 flex items-center gap-0.5 ${report.expenseChange < 0 ? 'text-brand-glow' : 'text-red-400'}`}>
                                 {report.expenseChange < 0 ? <ArrowDownRight className="w-3 h-3" /> : <ArrowUpRight className="w-3 h-3" />}
                                 {Math.abs(report.expenseChange).toFixed(0)}% vs anterior
                             </p>
                         )}
                     </div>
-                    <div className="${tw.card}">
+                    <div className={`\${tw.card}`}>
                         <p className="text-[10px] text-gray-500 dark:text-gray-400 uppercase font-bold mb-1">Resultado</p>
                         <p className={`text-xl font-bold ${report.balance >= 0 ? 'text-blue-500' : 'text-red-500'}`}>{fmt(report.balance, isVisible)}</p>
                     </div>
-                    <div className="${tw.card}">
+                    <div className={`\${tw.card}`}>
                         <p className="text-[10px] text-gray-500 dark:text-gray-400 uppercase font-bold mb-1">Taxa de Poupanca</p>
-                        <p className={`text-xl font-bold ${report.savingsRate >= 20 ? 'text-purple-500' : report.savingsRate >= 0 ? 'text-yellow-500' : 'text-red-500'}`}>{report.savingsRate.toFixed(0)}%</p>
+                        <p className={`text-xl font-bold ${report.savingsRate >= 20 ? 'text-brand-primary' : report.savingsRate >= 0 ? 'text-yellow-500' : 'text-red-500'}`}>{report.savingsRate.toFixed(0)}%</p>
                     </div>
                 </div>
 
                 {/* Spending by Category */}
                 <div className="grid lg:grid-cols-2 gap-6">
-                    <div className="${tw.card} p-6">
+                    <div className={`\${tw.card} p-6`}>
                         <h3 className="text-sm font-semibold text-white dark:text-white mb-4">Gastos por Categoria</h3>
                         {report.pieData.length > 0 ? (
                             <div className="h-[220px]">
@@ -190,7 +190,7 @@ export default function Reports() {
                         )}
                     </div>
 
-                    <div className="${tw.card} p-6">
+                    <div className={`\${tw.card} p-6`}>
                         <h3 className="text-sm font-semibold text-white dark:text-white mb-4">Detalhamento</h3>
                         <div className="space-y-3 max-h-[260px] overflow-y-auto custom-scrollbar">
                             {report.categories.map((cat, i) => (
@@ -216,7 +216,7 @@ export default function Reports() {
 
                 {/* Top Transactions */}
                 <div className="grid lg:grid-cols-2 gap-6">
-                    <div className="${tw.card} p-6">
+                    <div className={`\${tw.card} p-6`}>
                         <h3 className="text-sm font-semibold text-white dark:text-white mb-4 flex items-center gap-2">
                             <TrendingDown className="w-4 h-4 text-red-500" /> Maiores Despesas
                         </h3>
@@ -237,9 +237,9 @@ export default function Reports() {
                         </div>
                     </div>
 
-                    <div className="${tw.card} p-6">
+                    <div className={`\${tw.card} p-6`}>
                         <h3 className="text-sm font-semibold text-white dark:text-white mb-4 flex items-center gap-2">
-                            <TrendingUp className="w-4 h-4 text-purple-500" /> Maiores Receitas
+                            <TrendingUp className="w-4 h-4 text-brand-primary" /> Maiores Receitas
                         </h3>
                         <div className="space-y-2">
                             {report.topIncomes.map((tx, i) => (
@@ -251,7 +251,7 @@ export default function Reports() {
                                             <p className="text-[10px] text-gray-500">{new Date(tx.date + 'T12:00:00').toLocaleDateString('pt-BR')}</p>
                                         </div>
                                     </div>
-                                    <span className="text-sm font-bold text-purple-500">{fmt(Math.abs(tx.amount), isVisible)}</span>
+                                    <span className="text-sm font-bold text-brand-primary">{fmt(Math.abs(tx.amount), isVisible)}</span>
                                 </div>
                             ))}
                             {report.topIncomes.length === 0 && <p className="text-sm text-gray-500 text-center py-4">Sem receitas</p>}

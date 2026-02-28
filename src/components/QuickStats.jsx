@@ -54,10 +54,10 @@ export default function QuickStats() {
                 up: receitaChange === null ? true : receitaChange >= 0,
                 hasData: receita > 0,
                 icon: TrendingUp,
-                color: "from-purple-500/20 to-emerald-600/5",
-                iconColor: "text-purple-400",
+                color: "from-brand-primary/20 to-emerald-600/5",
+                iconColor: "text-brand-glow",
                 chartColor: "#10b981",
-                border: "border-purple-500/10",
+                border: "border-brand-primary/10",
                 trend: generateMockTrend()
             },
             {
@@ -131,7 +131,7 @@ export default function QuickStats() {
                                 <p className="text-white text-2xl font-bold tracking-tight">
                                     {isVisible ? value : "R$ ••••"}
                                 </p>
-                                <p className={`text-[11px] mt-1 font-semibold ${up ? "text-purple-400" : "text-red-400"}`}>
+                                <p className={`text-[11px] mt-1 font-semibold ${up ? "text-brand-glow" : "text-red-400"}`}>
                                     {change}
                                 </p>
                             </>

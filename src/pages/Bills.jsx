@@ -58,7 +58,7 @@ export default function Bills() {
     };
 
     const getStatus = (bill) => {
-        if (bill.paid) return { label: 'Pago', color: 'text-purple-400 bg-purple-500/10 border-purple-500/20', icon: CheckCircle };
+        if (bill.paid) return { label: 'Pago', color: 'text-brand-glow bg-brand-primary/10 border-brand-primary/20', icon: CheckCircle };
         const today = new Date().toISOString().split('T')[0];
         if (bill.dueDate < today) return { label: 'Vencida', color: 'text-red-400 bg-red-500/10 border-red-500/20', icon: AlertTriangle };
         const diff = Math.ceil((new Date(bill.dueDate) - new Date()) / (1000 * 60 * 60 * 24));
@@ -122,22 +122,22 @@ export default function Bills() {
 
             {/* Stats */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                <div className="${tw.card} text-center">
+                <div className={`\${tw.card} text-center`}>
                     <p className="text-2xl font-bold text-white dark:text-white">{stats.pending}</p>
                     <p className="text-[10px] text-gray-500 uppercase font-bold">Pendentes</p>
                 </div>
-                <div className="${tw.card} text-center">
+                <div className={`\${tw.card} text-center`}>
                     <p className="text-2xl font-bold text-red-500">{stats.overdue}</p>
                     <p className="text-[10px] text-gray-500 uppercase font-bold">Vencidas</p>
                 </div>
-                <div className="${tw.card} text-center hover:border-purple-500/30 transition-all cursor-pointer group" onClick={() => setFilter('subscriptions')}>
-                    <p className={`text-2xl font-bold flex items-center justify-center gap-1 transition-colors ${filter === 'subscriptions' ? 'text-purple-500' : 'text-white dark:text-white group-hover:text-purple-500'}`}>
-                        <Sparkles className={`w-5 h-5 ${filter === 'subscriptions' ? 'text-purple-500' : 'text-purple-500/50 group-hover:text-purple-500'} transition-colors`} />
+                <div className={`\${tw.card} text-center hover:border-brand-primary/30 transition-all cursor-pointer group`} onClick={() => setFilter('subscriptions')}>
+                    <p className={`text-2xl font-bold flex items-center justify-center gap-1 transition-colors ${filter === 'subscriptions' ? 'text-brand-primary' : 'text-white dark:text-white group-hover:text-brand-primary'}`}>
+                        <Sparkles className={`w-5 h-5 ${filter === 'subscriptions' ? 'text-brand-primary' : 'text-brand-primary/50 group-hover:text-brand-primary'} transition-colors`} />
                         {stats.subscriptions.length}
                     </p>
                     <p className="text-[10px] text-gray-500 uppercase font-bold mt-0.5">Assinaturas Info</p>
                 </div>
-                <div className="${tw.card} text-center">
+                <div className={`\${tw.card} text-center`}>
                     <p className="text-2xl font-bold text-blue-500">{fmt(stats.totalPending)}</p>
                     <p className="text-[10px] text-gray-500 uppercase font-bold">Total a Pagar</p>
                 </div>
@@ -153,7 +153,7 @@ export default function Bills() {
                     { id: 'subscriptions', label: '🛡️ Kill-Switch (Assinaturas)' },
                 ].map(f => (
                     <button key={f.id} onClick={() => setFilter(f.id)}
-                        className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${filter === f.id ? (f.id === 'subscriptions' ? 'bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-500/30 shadow-[0_0_15px_-3px_rgba(168,85,247,0.2)]' : 'bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/30') : 'bg-gray-800/30 dark:bg-gray-800/40/5 text-gray-500 border border-gray-700/40 dark:border-white/10 hover:border-blue-500/30 dark:hover:bg-gray-800/40/10'}`}
+                        className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${filter === f.id ? (f.id === 'subscriptions' ? 'bg-brand-primary/10 text-brand-primary dark:text-brand-glow border border-brand-primary/30 shadow-[0_0_15px_-3px_rgba(168,85,247,0.2)]' : 'bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/30') : 'bg-gray-800/30 dark:bg-gray-800/40/5 text-gray-500 border border-gray-700/40 dark:border-white/10 hover:border-blue-500/30 dark:hover:bg-gray-800/40/10'}`}
                     >{f.label}</button>
                 ))}
             </div>
@@ -161,7 +161,7 @@ export default function Bills() {
             {/* List Views */}
             {filter === 'subscriptions' ? (
                 <div className="space-y-6 animate-fade-in">
-                    <div className="${tw.card} p-6 border-l-4 border-l-red-500 relative overflow-hidden bg-black/40">
+                    <div className={`\${tw.card} p-6 border-l-4 border-l-red-500 relative overflow-hidden bg-black/40`}>
                         <div className="absolute top-0 right-0 p-8 opacity-10">
                             <Bot className="w-48 h-48 text-red-500" />
                         </div>
@@ -234,7 +234,7 @@ export default function Bills() {
             ) : (
                 <div className="space-y-2">
                     {filtered.length === 0 ? (
-                        <div className="${tw.card} text-center py-12 border-dashed border-2 border-gray-700/40 dark:border-white/10 bg-transparent">
+                        <div className={`\${tw.card} text-center py-12 border-dashed border-2 border-gray-700/40 dark:border-white/10 bg-transparent`}>
                             <CalendarDays className="w-12 h-12 text-blue-500 mx-auto mb-4 opacity-50" />
                             <p className="text-gray-500 text-sm">Nenhuma conta encontrada nesta categoria.</p>
                         </div>
@@ -244,7 +244,7 @@ export default function Bills() {
                         return (
                             <div key={bill.id} className={`${tw.card} flex items-center gap-4 ${bill.paid ? 'opacity-60' : ''}`}>
                                 <button onClick={() => togglePaid(bill.id)}
-                                    className={`w-8 h-8 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all ${bill.paid ? 'bg-purple-500/20 border-purple-500 text-purple-500' : 'border-gray-700/50 dark:border-white/20 hover:border-blue-500'}`}>
+                                    className={`w-8 h-8 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all ${bill.paid ? 'bg-brand-primary/20 border-brand-primary text-brand-primary' : 'border-gray-700/50 dark:border-white/20 hover:border-blue-500'}`}>
                                     {bill.paid && <CheckCircle className="w-4 h-4" />}
                                 </button>
                                 <div className="flex-1 min-w-0">
@@ -262,7 +262,7 @@ export default function Bills() {
                                 </div>
                                 <div className="flex items-center gap-3">
                                     <div className="text-right">
-                                        <p className={`text-sm font-bold flex items-center justify-end gap-1 ${bill.type === 'income' ? 'text-purple-500' : 'text-white dark:text-white'}`}>
+                                        <p className={`text-sm font-bold flex items-center justify-end gap-1 ${bill.type === 'income' ? 'text-brand-primary' : 'text-white dark:text-white'}`}>
                                             {bill.type === 'income' ? <ArrowUpRight className="w-3 h-3" /> : <ArrowDownRight className="w-3 h-3 text-red-500" />}
                                             {fmt(bill.amount)}
                                         </p>
@@ -284,7 +284,7 @@ export default function Bills() {
             {/* Add Modal */}
             {showAdd && (
                 <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
-                    <form onSubmit={handleAdd} className="${tw.card} w-full max-w-md p-6 space-y-4 animate-slide-up relative bg-gray-800/40 dark:bg-surface-900 border border-gray-700/40 dark:border-white/10">
+                    <form onSubmit={handleAdd} className={`\${tw.card} w-full max-w-md p-6 space-y-4 animate-slide-up relative bg-gray-800/40 dark:bg-surface-900 border border-gray-700/40 dark:border-white/10`}>
                         <button type="button" onClick={() => setShowAdd(false)} className="absolute top-4 right-4 text-gray-500 hover:text-white dark:hover:text-white transition-colors"><X className="w-5 h-5" /></button>
                         <h2 className="text-xl font-bold text-white dark:text-white flex items-center gap-2 mb-6"><CalendarDays className="w-5 h-5 text-blue-500" /> Nova Conta / Receita</h2>
 
@@ -313,7 +313,7 @@ export default function Bills() {
                                         SAÍDA
                                     </button>
                                     <button type="button" onClick={() => setForm({ ...form, type: 'income' })}
-                                        className={`w-full py-2.5 text-xs font-bold rounded-xl border transition-all ${form.type === 'income' ? 'bg-purple-500/10 border-purple-500/30 text-purple-500 shadow-[0_0_15px_-3px_rgba(16,185,129,0.2)]' : 'bg-gray-800/30 dark:bg-gray-800/40/5 border-gray-700/40 dark:border-white/10 text-gray-500 hover:bg-gray-800/40 dark:hover:bg-gray-800/40/10'}`}>
+                                        className={`w-full py-2.5 text-xs font-bold rounded-xl border transition-all ${form.type === 'income' ? 'bg-brand-primary/10 border-brand-primary/30 text-brand-primary shadow-[0_0_15px_-3px_rgba(16,185,129,0.2)]' : 'bg-gray-800/30 dark:bg-gray-800/40/5 border-gray-700/40 dark:border-white/10 text-gray-500 hover:bg-gray-800/40 dark:hover:bg-gray-800/40/10'}`}>
                                         ENTRADA
                                     </button>
                                 </div>

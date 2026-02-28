@@ -64,23 +64,17 @@ export default function Sidebar() {
         <>
             {/* Sidebar Desktop */}
             <aside
-                className={`hidden md:flex flex-col fixed top-0 left-0 h-screen z-40 transition-all duration-300 ${collapsed ? 'w-20' : 'w-64'
-                    }`}
-                style={{
-                    background: 'linear-gradient(180deg, rgba(16,19,28,0.98) 0%, rgba(10,12,20,0.99) 100%)',
-                    borderRight: '1px solid rgba(255,255,255,0.06)',
-                    boxShadow: '4px 0 24px rgba(0,0,0,0.3)',
-                }}
+                className={`hidden md:flex flex-col fixed top-0 left-0 h-screen z-40 transition-all duration-300 ${collapsed ? 'w-20' : 'w-64'}`}
             >
                 {/* Header / Logo */}
                 <div className="flex items-center justify-between px-5 h-16 border-b border-white/5">
                     <NavLink to="/app" className="flex items-center gap-3">
-                        <div className="w-9 h-9 bg-gradient-to-br from-purple-500 to-fuchsia-500 rounded-xl flex items-center justify-center shadow-lg shadow-purple-500/20">
+                        <div className="w-9 h-9 bg-gradient-to-br from-brand-primary to-brand-glow rounded-xl flex items-center justify-center shadow-lg shadow-brand-primary/20">
                             <TrendingUp className="w-5 h-5 text-white" />
                         </div>
                         {!collapsed && (
                             <div className="flex flex-col">
-                                <span className="text-base font-bold bg-gradient-to-r from-purple-400 to-fuchsia-400 bg-clip-text text-transparent">
+                                <span className="text-base font-bold bg-gradient-to-r from-brand-glow to-brand-glow bg-clip-text text-transparent">
                                     Meta
                                 </span>
                                 <span className="text-[10px] text-gray-500 -mt-0.5 tracking-wider uppercase">
@@ -101,14 +95,14 @@ export default function Sidebar() {
                 {!collapsed && (
                     <div className="px-4 pt-4 pb-2">
                         {isPro ? (
-                            <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-gradient-to-r from-purple-500/10 to-fuchsia-500/10 border border-purple-500/20">
-                                <Crown className="w-4 h-4 text-purple-400" />
-                                <span className="text-xs font-semibold text-purple-400">Plano Pro Ativo</span>
+                            <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-gradient-to-r from-brand-primary/10 to-brand-glow/10 border border-brand-primary/20">
+                                <Crown className="w-4 h-4 text-brand-glow" />
+                                <span className="text-xs font-semibold text-brand-glow">Plano Pro Ativo</span>
                             </div>
                         ) : (
                             <Link
                                 to="/app/upgrade"
-                                className="flex items-center gap-2 px-3 py-2 rounded-xl bg-gradient-to-r from-purple-500 to-fuchsia-500 text-white text-xs font-bold hover:shadow-lg hover:shadow-purple-500/25 transition-all"
+                                className="flex items-center gap-2 px-3 py-2 rounded-xl bg-gradient-to-r from-brand-primary to-brand-glow text-white text-xs font-bold hover:shadow-lg hover:shadow-brand-primary/25 transition-all"
                             >
                                 <Sparkles className="w-3.5 h-3.5" />
                                 Desbloquear Pro
@@ -129,7 +123,7 @@ export default function Sidebar() {
                             aria-current={({ isActive }) => (isActive ? 'page' : undefined)}
                             className={({ isActive }) =>
                                 `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all group ${isActive
-                                    ? 'bg-gradient-to-r from-purple-500/15 to-fuchsia-500/10 text-purple-400 border border-purple-500/20 shadow-lg shadow-black/10 shadow-purple-500/5'
+                                    ? 'bg-gradient-to-r from-brand-primary/15 to-brand-glow/10 text-brand-glow border border-brand-primary/20 shadow-lg shadow-black/10 shadow-brand-primary/5'
                                     : 'text-gray-400 hover:text-white hover:bg-gray-800/40/[0.04] border border-transparent'
                                 } ${collapsed ? 'justify-center' : ''}`
                             }
@@ -211,7 +205,7 @@ function MobileNav({ navItems, handleSignOut }) {
                             end={item.end}
                             className={({ isActive }) =>
                                 `flex flex-col items-center justify-center min-w-[64px] h-[52px] gap-1 rounded-2xl transition-all ${isActive
-                                    ? 'text-purple-400 bg-purple-500/10'
+                                    ? 'text-brand-glow bg-brand-primary/10'
                                     : 'text-gray-500 hover:text-white'
                                 }`
                             }
@@ -267,12 +261,12 @@ function MobileNav({ navItems, handleSignOut }) {
                                                     onClick={() => setIsMenuOpen(false)}
                                                     className={({ isActive }) =>
                                                         `flex flex-col items-center justify-center p-4 rounded-[2rem] border transition-all duration-300 group ${isActive
-                                                            ? 'bg-purple-500/10 border-purple-500/30 text-purple-400 shadow-[0_0_20px_-5px_rgba(16,185,129,0.3)]'
+                                                            ? 'bg-brand-primary/10 border-brand-primary/30 text-brand-glow shadow-[0_0_20px_-5px_rgba(16,185,129,0.3)]'
                                                             : 'bg-gray-800/40/[0.03] border-white/5 text-gray-400 hover:bg-gray-800/40/[0.08] hover:border-white/10'
                                                         }`
                                                     }
                                                 >
-                                                    <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-2 transition-transform group-hover:scale-110 ${location.pathname === item.to ? 'bg-purple-500/20' : 'bg-gray-800/40/5 animate-pulse-slow'
+                                                    <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-2 transition-transform group-hover:scale-110 ${location.pathname === item.to ? 'bg-brand-primary/20' : 'bg-gray-800/40/5 animate-pulse-slow'
                                                         }`}>
                                                         <item.icon className="w-6 h-6" />
                                                     </div>

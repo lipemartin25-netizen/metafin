@@ -86,10 +86,10 @@ export default function Home() {
     ];
 
     return (
-        <div className="min-h-screen bg-[#0f172a] text-white overflow-x-hidden selection:bg-purple-500/30 font-sans antialiased">
+        <div className="min-h-screen bg-[#0f172a] text-white overflow-x-hidden selection:bg-brand-primary/30 font-sans antialiased">
             {/* Background */}
             <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-                <div className="absolute top-[-10%] right-[-5%] w-[50%] h-[50%] bg-purple-500/[0.03] blur-[160px] rounded-full" />
+                <div className="absolute top-[-10%] right-[-5%] w-[50%] h-[50%] bg-brand-primary/[0.03] blur-[160px] rounded-full" />
                 <div className="absolute bottom-[-10%] left-[-5%] w-[50%] h-[50%] bg-blue-500/[0.02] blur-[160px] rounded-full" />
                 <div className="absolute inset-0 opacity-[0.03] bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]" />
             </div>
@@ -114,7 +114,7 @@ export default function Home() {
                         <Link to="/login" className="text-[14px] font-bold text-slate-300 hover:text-white transition-colors">
                             Entrar
                         </Link>
-                        <Link to="/signup" className="px-6 py-2.5 bg-purple-500 hover:bg-purple-400 text-slate-950 text-[13px] font-extrabold rounded-xl transition-all shadow-xl shadow-purple-500/10 active:scale-95">
+                        <Link to="/signup" className="px-6 py-2.5 bg-brand-primary hover:bg-brand-glow text-slate-950 text-[13px] font-extrabold rounded-xl transition-all shadow-xl shadow-brand-primary/10 active:scale-95">
                             Acesso Gratuito
                         </Link>
                     </div>
@@ -161,7 +161,7 @@ export default function Home() {
                                         <Link
                                             to="/signup"
                                             onClick={() => setIsMenuOpen(false)}
-                                            className="w-full py-4 bg-purple-500 text-slate-950 text-center font-black rounded-2xl"
+                                            className="w-full py-4 bg-brand-primary text-slate-950 text-center font-black rounded-2xl"
                                         >
                                             Acesso Gratuito
                                         </Link>
@@ -179,7 +179,7 @@ export default function Home() {
                     <motion.div
                         initial={{ opacity: 0, scale: 0.98 }}
                         animate={{ opacity: 1, scale: 1 }}
-                        className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-slate-800/50 border border-white/10 text-purple-400 text-[11px] font-bold uppercase tracking-widest mb-12 shadow-inner"
+                        className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-slate-800/50 border border-white/10 text-brand-glow text-[11px] font-bold uppercase tracking-widest mb-12 shadow-inner"
                     >
                         <Shield className="w-4 h-4" />
                         <span>Infraestrutura Nexus IA Certificada</span>
@@ -191,7 +191,7 @@ export default function Home() {
                         className="text-6xl md:text-[5.5rem] font-extrabold tracking-tight leading-[1.05] text-white mb-10 text-balance"
                     >
                         O futuro da gestão <br />
-                        <span className="text-purple-500/90">patrimonial é aqui.</span>
+                        <span className="text-brand-primary/90">patrimonial é aqui.</span>
                     </motion.h1>
 
                     <motion.p
@@ -246,23 +246,23 @@ export default function Home() {
                     <div className="grid md:grid-cols-3 gap-8">
                         {[
                             {
-                                icon: <BarChart3 className="w-8 h-8 text-purple-500" />,
+                                icon: <BarChart3 className="w-8 h-8 text-brand-primary" />,
                                 title: "Predição Inteligente",
                                 desc: "Algoritmos de alta performance que antecipam fluxos e sugerem realocações estratégicas com precisão matemática."
                             },
                             {
-                                icon: <Layers className="w-8 h-8 text-purple-500" />,
+                                icon: <Layers className="w-8 h-8 text-brand-primary" />,
                                 title: "Consolidação Agregada",
                                 desc: "Visão 360 do seu patrimônio com integração fluida e automática de todas as suas instituições financeiras."
                             },
                             {
-                                icon: <Lock className="w-8 h-8 text-purple-500" />,
+                                icon: <Lock className="w-8 h-8 text-brand-primary" />,
                                 title: "Segurança Institucional",
                                 desc: "Conformidade total com as regulamentações BACEN e LGPD para uma proteção de dados em nível de estado-da-arte."
                             }
                         ].map((feature, i) => (
-                            <div key={i} className="p-10 bg-slate-900/30 border border-white/5 rounded-[2.5rem] hover:bg-slate-900/50 hover:border-purple-500/20 transition-all duration-500 group">
-                                <div className="w-16 h-16 rounded-2xl bg-slate-800/40 flex items-center justify-center mb-8 border border-white/5 group-hover:bg-purple-500/10 group-hover:border-purple-400/20 transition-all duration-500">
+                            <div key={i} className="p-10 bg-slate-900/30 border border-white/5 rounded-[2.5rem] hover:bg-slate-900/50 hover:border-brand-primary/20 transition-all duration-500 group">
+                                <div className="w-16 h-16 rounded-2xl bg-slate-800/40 flex items-center justify-center mb-8 border border-white/5 group-hover:bg-brand-primary/10 group-hover:border-brand-glow/20 transition-all duration-500">
                                     {feature.icon}
                                 </div>
                                 <h3 className="text-xl font-bold mb-4 text-white uppercase tracking-tight">{feature.title}</h3>
@@ -283,10 +283,10 @@ export default function Home() {
 
                     <div className="grid lg:grid-cols-3 gap-8">
                         {plans.map((plan, i) => (
-                            <div key={i} className={`p-10 rounded-[3rem] bg-slate-900/60 border transition-all duration-500 flex flex-col relative ${plan.popular ? 'border-purple-500/40 shadow-2xl ring-1 ring-emerald-500/20' : 'border-white/5'}`}>
+                            <div key={i} className={`p-10 rounded-[3rem] bg-slate-900/60 border transition-all duration-500 flex flex-col relative ${plan.popular ? 'border-brand-primary/40 shadow-2xl ring-1 ring-emerald-500/20' : 'border-white/5'}`}>
                                 {plan.popular && (
                                     <div className="absolute top-10 right-10">
-                                        <span className="bg-purple-500 text-slate-950 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.1em]">
+                                        <span className="bg-brand-primary text-slate-950 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.1em]">
                                             Estratégico
                                         </span>
                                     </div>
@@ -305,13 +305,13 @@ export default function Home() {
                                 <div className="space-y-4 mb-14 flex-1">
                                     {plan.features.map((feat, idx) => (
                                         <div key={idx} className="flex gap-4 text-slate-100 text-[14px] font-semibold items-center">
-                                            <CheckCircle2 className="w-5 h-5 text-purple-500/90 flex-shrink-0" />
+                                            <CheckCircle2 className="w-5 h-5 text-brand-primary/90 flex-shrink-0" />
                                             <span>{feat}</span>
                                         </div>
                                     ))}
                                 </div>
 
-                                <Link to="/signup" className={plan.variant === 'primary' ? 'btn-clean-primary w-full shadow-purple-500/10' : 'px-8 py-4 bg-slate-800/60 hover:bg-slate-800 text-white font-bold rounded-2xl text-center transition-all border border-white/5'}>
+                                <Link to="/signup" className={plan.variant === 'primary' ? 'btn-clean-primary w-full shadow-brand-primary/10' : 'px-8 py-4 bg-slate-800/60 hover:bg-slate-800 text-white font-bold rounded-2xl text-center transition-all border border-white/5'}>
                                     {plan.buttonText}
                                 </Link>
                             </div>
@@ -331,7 +331,7 @@ export default function Home() {
                         </p>
                         <div className="flex gap-4">
                             {[Smartphone, Shield, Globe, Activity].map((Icon, i) => (
-                                <div key={i} className="p-3.5 rounded-2xl bg-slate-900 border border-white/5 hover:border-purple-500/30 transition-all cursor-pointer">
+                                <div key={i} className="p-3.5 rounded-2xl bg-slate-900 border border-white/5 hover:border-brand-primary/30 transition-all cursor-pointer">
                                     <Icon className="w-4 h-4 text-slate-400" />
                                 </div>
                             ))}
@@ -386,7 +386,7 @@ export default function Home() {
                     </p>
                     <div className="flex items-center gap-8">
                         <span className="text-[11px] font-bold text-slate-400 flex items-center gap-2 uppercase tracking-widest bg-slate-900/50 px-4 py-1.5 rounded-full border border-white/5">
-                            <Lock className="w-3.5 h-3.5 text-purple-500/80" /> 256-bit AES SECURE PROTOCOL
+                            <Lock className="w-3.5 h-3.5 text-brand-primary/80" /> 256-bit AES SECURE PROTOCOL
                         </span>
                     </div>
                 </div>

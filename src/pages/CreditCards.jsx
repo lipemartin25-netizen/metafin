@@ -91,29 +91,29 @@ export default function CreditCards() {
 
             {/* Summary Cards */}
             <div className="grid sm:grid-cols-4 gap-4">
-                <div className="${tw.card} hover:border-gray-700/50 dark:hover:border-white/20 transition-colors">
+                <div className={`\${tw.card} hover:border-gray-700/50 dark:hover:border-white/20 transition-colors`}>
                     <p className="text-xs text-gray-500 dark:text-gray-400 mb-2 uppercase font-bold tracking-wider">Limite Total</p>
                     <p className="text-2xl font-black text-white dark:text-white">{fmt(totals.totalLimit)}</p>
                 </div>
-                <div className="${tw.card} bg-red-500/5 hover:bg-red-500/10 border-red-500/20 transition-colors">
+                <div className={`\${tw.card} bg-red-500/5 hover:bg-red-500/10 border-red-500/20 transition-colors`}>
                     <p className="text-xs text-red-600/70 dark:text-red-400/70 mb-2 uppercase font-bold tracking-wider">Fatura Atual</p>
                     <p className="text-2xl font-black text-red-600 dark:text-red-400">{fmt(totals.totalUsed)}</p>
                 </div>
-                <div className="${tw.card} bg-purple-500/5 hover:bg-purple-500/10 border-purple-500/20 transition-colors">
-                    <p className="text-xs text-purple-600/70 dark:text-purple-400/70 mb-2 uppercase font-bold tracking-wider">Disponível</p>
-                    <p className="text-2xl font-black text-purple-600 dark:text-purple-400">{fmt(totals.available)}</p>
+                <div className={`\${tw.card} bg-brand-primary/5 hover:bg-brand-primary/10 border-brand-primary/20 transition-colors`}>
+                    <p className="text-xs text-brand-primary/70 dark:text-brand-glow/70 mb-2 uppercase font-bold tracking-wider">Disponível</p>
+                    <p className="text-2xl font-black text-brand-primary dark:text-brand-glow">{fmt(totals.available)}</p>
                     {totals.totalLimit > 0 && (
                         <div className="mt-3 h-1.5 bg-gray-800/50 dark:bg-black/20 rounded-full overflow-hidden">
                             <motion.div
                                 initial={{ width: 0 }}
                                 animate={{ width: `${Math.min((totals.totalUsed / totals.totalLimit) * 100, 100)}%` }}
                                 transition={{ duration: 1, ease: 'easeOut' }}
-                                className={`h-full rounded-full ${(totals.totalUsed / totals.totalLimit) > 0.8 ? 'bg-red-500' : (totals.totalUsed / totals.totalLimit) > 0.5 ? 'bg-yellow-500' : 'bg-purple-500'}`}
+                                className={`h-full rounded-full ${(totals.totalUsed / totals.totalLimit) > 0.8 ? 'bg-red-500' : (totals.totalUsed / totals.totalLimit) > 0.5 ? 'bg-yellow-500' : 'bg-brand-primary'}`}
                             />
                         </div>
                     )}
                 </div>
-                <div className="${tw.card} hover:border-gray-700/50 dark:hover:border-white/20 transition-colors">
+                <div className={`\${tw.card} hover:border-gray-700/50 dark:hover:border-white/20 transition-colors`}>
                     <p className="text-xs text-gray-500 dark:text-gray-400 mb-2 uppercase font-bold tracking-wider flex items-center gap-1.5">
                         <Zap className="w-3.5 h-3.5" /> Est. Cashback
                     </p>
@@ -124,7 +124,7 @@ export default function CreditCards() {
 
             {/* Cards List */}
             {cards.length === 0 ? (
-                <div className="${tw.card} text-center py-16 border-dashed border-2 border-gray-700/40 dark:border-white/10 bg-transparent flex flex-col items-center justify-center">
+                <div className={`\${tw.card} text-center py-16 border-dashed border-2 border-gray-700/40 dark:border-white/10 bg-transparent flex flex-col items-center justify-center`}>
                     <div className="w-20 h-20 bg-gray-800/40 dark:bg-gray-800/40/5 rounded-full flex items-center justify-center mb-6">
                         <CreditCard className="w-10 h-10 text-gray-400 dark:text-gray-500" />
                     </div>
@@ -207,7 +207,7 @@ export default function CreditCards() {
                                     </div>
 
                                     {/* Action Bar */}
-                                    <div className="${tw.card} mt-[-10px] pt-6 pb-4 px-4 rounded-xl shadow-lg border-t-0 rounded-t-none relative z-0">
+                                    <div className={`\${tw.card} mt-[-10px] pt-6 pb-4 px-4 rounded-xl shadow-lg border-t-0 rounded-t-none relative z-0`}>
                                         <div className="flex items-center justify-between mb-4">
                                             <div className="flex gap-2">
                                                 <button onClick={() => toggleLock(card.id)} className={`p-2 rounded-xl transition-colors border ${card.isLocked ? 'bg-amber-500/10 text-amber-500 border-amber-500/20 hover:bg-amber-500/20' : 'bg-gray-800/40 dark:bg-gray-800/40/5 text-gray-500 hover:text-white dark:hover:text-white border-transparent'}`}>
@@ -260,7 +260,7 @@ export default function CreditCards() {
                             exit={{ scale: 0.95, opacity: 0, y: 20 }}
                             transition={{ type: "spring", stiffness: 300, damping: 25 }}
                             onSubmit={handleAdd}
-                            className="${tw.card} w-full max-w-md p-8 relative rounded-3xl"
+                            className={`\${tw.card} w-full max-w-md p-8 relative rounded-3xl`}
                         >
                             <button type="button" onClick={() => setShowAdd(false)} className="absolute top-6 right-6 p-2 rounded-xl bg-gray-800/40 dark:bg-gray-800/40/5 text-gray-500 hover:text-white dark:hover:text-white transition-colors"><X className="w-5 h-5" /></button>
 

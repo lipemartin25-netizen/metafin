@@ -89,7 +89,7 @@ export default function RetirementSimulator({ financialData }) {
                         <p className={`text-lg md:text-xl font-black drop-shadow-[0_2px_10px_rgba(0,0,0,0.3)] mt-1 flex items-center gap-2 ${result.isSustainable ? 'text-purple-300' : 'text-red-300'}`}>
                             {result.isSustainable ? (
                                 <>
-                                    <span className="h-3 w-3 rounded-full bg-purple-400 animate-pulse shadow-[0_0_10px_rgba(52,211,153,0.8)]" />
+                                    <span className="h-3 w-3 rounded-full bg-brand-glow animate-pulse shadow-[0_0_10px_rgba(52,211,153,0.8)]" />
                                     Seguro e Sustentável
                                 </>
                             ) : (
@@ -104,7 +104,7 @@ export default function RetirementSimulator({ financialData }) {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div className="${tw.card} p-5 space-y-4">
+                <div className={`\${tw.card} p-5 space-y-4`}>
                     <h3 className="font-bold text-white dark:text-white flex items-center gap-2 mb-4">
                         Configurações Base
                     </h3>
@@ -135,7 +135,7 @@ export default function RetirementSimulator({ financialData }) {
                             <label className="text-xs text-gray-500 font-bold uppercase tracking-wider block mb-1">Renda Passiva Desejada</label>
                             <input
                                 type="number"
-                                className="w-full bg-gray-800/30 dark:bg-black/20 border border-gray-700/40 dark:border-white/10 rounded-xl px-3 py-2 text-sm text-white dark:text-white outline-none focus:border-purple-500"
+                                className="w-full bg-gray-800/30 dark:bg-black/20 border border-gray-700/40 dark:border-white/10 rounded-xl px-3 py-2 text-sm text-white dark:text-white outline-none focus:border-brand-primary"
                                 value={params.desiredRetirementIncome}
                                 onChange={(e) => setParams({ ...params, desiredRetirementIncome: Number(e.target.value) })}
                             />
@@ -156,7 +156,7 @@ export default function RetirementSimulator({ financialData }) {
                 </div>
 
                 <div className="lg:col-span-2 space-y-6">
-                    <div className="${tw.card} p-5">
+                    <div className={`\${tw.card} p-5`}>
                         <h3 className="font-bold text-white dark:text-white mb-4 flex items-center gap-2">
                             <HeartPulse className="h-5 w-5 text-indigo-500" /> Trajetória de Longevidade
                         </h3>

@@ -80,7 +80,7 @@ export default function Dashboard() {
     }, [transactions]);
     // =====================================
 
-    if (loading) return <div className="flex items-center justify-center h-[60vh]"><Loader2 className="w-8 h-8 text-purple-400 animate-spin" /></div>;
+    if (loading) return <div className="flex items-center justify-center h-[60vh]"><Loader2 className="w-8 h-8 text-brand-glow animate-spin" /></div>;
 
     const ttStyle = { backgroundColor: '#1f2937', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', color: '#fff' };
 
@@ -91,26 +91,26 @@ export default function Dashboard() {
             </div>
 
             <div className="grid sm:grid-cols-3 gap-4">
-                <div className="${tw.card} relative overflow-hidden group border-purple-500/20 bg-gradient-to-br from-surface-900 to-emerald-950/20">
+                <div className={`\${tw.card} relative overflow-hidden group border-brand-primary/20 bg-gradient-to-br from-surface-900 to-emerald-950/20`}>
                     <div className="flex items-center justify-between relative z-10">
                         <div>
                             <p className="text-gray-400 text-xs font-bold uppercase tracking-wider mb-2">{t('total_balance')}</p>
                             <h2 className="text-3xl font-bold text-white">{fmt(summary.balance)}</h2>
                         </div>
-                        <div className="w-12 h-12 rounded-2xl bg-purple-500/20 flex items-center justify-center border border-purple-500/30 group-hover:scale-110 transition-transform">
-                            <Wallet className="w-6 h-6 text-purple-400" />
+                        <div className="w-12 h-12 rounded-2xl bg-brand-primary/20 flex items-center justify-center border border-brand-primary/30 group-hover:scale-110 transition-transform">
+                            <Wallet className="w-6 h-6 text-brand-glow" />
                         </div>
                     </div>
                 </div>
 
-                <div className="${tw.card} group border-purple-500/20">
+                <div className={`\${tw.card} group border-brand-primary/20`}>
                     <div className="flex items-center justify-between">
-                        <div><p className="text-gray-400 text-xs font-bold uppercase tracking-wider mb-1">{t('income')}</p><h2 className="text-2xl font-bold text-purple-400">{fmt(summary.totalIncome)}</h2></div>
-                        <div className="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center group-hover:bg-purple-500/20 transition-colors"><TrendingUp className="w-5 h-5 text-purple-400" /></div>
+                        <div><p className="text-gray-400 text-xs font-bold uppercase tracking-wider mb-1">{t('income')}</p><h2 className="text-2xl font-bold text-brand-glow">{fmt(summary.totalIncome)}</h2></div>
+                        <div className="w-10 h-10 rounded-xl bg-brand-primary/10 flex items-center justify-center group-hover:bg-brand-primary/20 transition-colors"><TrendingUp className="w-5 h-5 text-brand-glow" /></div>
                     </div>
                 </div>
 
-                <div className="${tw.card} group border-rose-500/20">
+                <div className={`\${tw.card} group border-rose-500/20`}>
                     <div className="flex items-center justify-between">
                         <div><p className="text-gray-400 text-xs font-bold uppercase tracking-wider mb-1">{t('expenses')}</p><h2 className="text-2xl font-bold text-rose-400">{fmt(summary.totalExpenses)}</h2></div>
                         <div className="w-10 h-10 rounded-xl bg-rose-500/10 flex items-center justify-center group-hover:bg-rose-500/20 transition-colors"><TrendingDown className="w-5 h-5 text-rose-400" /></div>
@@ -120,11 +120,11 @@ export default function Dashboard() {
 
             {/* Charts Grid */}
             <div className="grid lg:grid-cols-3 gap-6">
-                <div className="${tw.card} lg:col-span-2 p-6">
+                <div className={`\${tw.card} lg:col-span-2 p-6`}>
                     <div className="flex items-center justify-between mb-8">
-                        <h3 className="text-lg font-bold text-white flex items-center gap-2 uppercase tracking-tight"><TrendingUp className="w-5 h-5 text-purple-400" /> {t('cash_flow')}</h3>
+                        <h3 className="text-lg font-bold text-white flex items-center gap-2 uppercase tracking-tight"><TrendingUp className="w-5 h-5 text-brand-glow" /> {t('cash_flow')}</h3>
                         <div className="flex gap-2">
-                            <div className="flex items-center gap-1.5"><div className="w-2.5 h-2.5 rounded-full bg-purple-400" /><span className="text-[10px] text-gray-500 font-bold uppercase">{t('income')}</span></div>
+                            <div className="flex items-center gap-1.5"><div className="w-2.5 h-2.5 rounded-full bg-brand-glow" /><span className="text-[10px] text-gray-500 font-bold uppercase">{t('income')}</span></div>
                             <div className="flex items-center gap-1.5"><div className="w-2.5 h-2.5 rounded-full bg-rose-400" /><span className="text-[10px] text-gray-500 font-bold uppercase">{t('expenses')}</span></div>
                         </div>
                     </div>
@@ -147,7 +147,7 @@ export default function Dashboard() {
                     </div>
                 </div>
 
-                <div className="${tw.card} p-6">
+                <div className={`\${tw.card} p-6`}>
                     <h3 className="text-lg font-bold text-white mb-8 uppercase tracking-tight">{t('expenses_by_category')}</h3>
                     <div className="h-[200px]">
                         {categoryData.length > 0 ? (
@@ -178,25 +178,25 @@ export default function Dashboard() {
             </div>
 
             {/* Recent Transactions */}
-            <div className="${tw.card} p-0 overflow-hidden flex flex-col border-white/5">
+            <div className={`\${tw.card} p-0 overflow-hidden flex flex-col border-white/5`}>
                 <div className="p-6 border-b border-white/5 flex items-center justify-between">
                     <h3 className="text-lg font-bold text-white uppercase tracking-tight">{t('recent_transactions')}</h3>
-                    <Link to="/app/transactions" className="text-xs text-purple-400 hover:text-purple-300 font-bold uppercase tracking-widest transition-colors">{t('see_all')}</Link>
+                    <Link to="/app/transactions" className="text-xs text-brand-glow hover:text-purple-300 font-bold uppercase tracking-widest transition-colors">{t('see_all')}</Link>
                 </div>
                 <div className="divide-y divide-white/5">
                     {recentTransactions.map((tx) => (
                         <div key={tx.id} className="p-4 flex items-center justify-between hover:bg-gray-800/40/[0.02] transition-colors group">
                             <div className="flex items-center gap-4">
                                 <div className="w-10 h-10 rounded-xl bg-surface-800 border border-white/5 flex items-center justify-center group-hover:scale-110 transition-transform">
-                                    {tx.type === 'income' ? <ArrowUpRight className="w-5 h-5 text-purple-400" /> : <ArrowDownRight className="w-5 h-5 text-rose-400" />}
+                                    {tx.type === 'income' ? <ArrowUpRight className="w-5 h-5 text-brand-glow" /> : <ArrowDownRight className="w-5 h-5 text-rose-400" />}
                                 </div>
                                 <div>
-                                    <p className="text-sm font-bold text-white group-hover:text-purple-400 transition-colors">{tx.description}</p>
+                                    <p className="text-sm font-bold text-white group-hover:text-brand-glow transition-colors">{tx.description}</p>
                                     <p className="text-[10px] text-gray-500 font-bold uppercase tracking-wider">{categoryConfig[tx.category]?.label || tx.category}</p>
                                 </div>
                             </div>
                             <div className="text-right">
-                                <p className={`text-sm font-bold ${tx.type === 'income' ? 'text-purple-400' : 'text-white'}`}>
+                                <p className={`text-sm font-bold ${tx.type === 'income' ? 'text-brand-glow' : 'text-white'}`}>
                                     {tx.type === 'income' ? '+' : '-'} {fmt(Math.abs(tx.amount))}
                                 </p>
                                 <p className="text-[10px] text-gray-600 font-medium">{tx.date}</p>
@@ -214,11 +214,11 @@ export default function Dashboard() {
 
             {/* AI Insights Section */}
             <ProGate feature="aiInsights">
-                <div className="${tw.card} border border-purple-500/10 p-6 flex flex-col md:flex-row gap-8 items-center bg-gradient-to-r from-surface-900 to-emerald-950/10">
+                <div className={`\${tw.card} border border-brand-primary/10 p-6 flex flex-col md:flex-row gap-8 items-center bg-gradient-to-r from-surface-900 to-emerald-950/10`}>
                     <div className="flex-1">
                         <div className="flex items-center gap-3 mb-3">
-                            <div className="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center border border-purple-500/20">
-                                <Sparkles className="w-5 h-5 text-purple-400" />
+                            <div className="w-10 h-10 rounded-xl bg-brand-primary/10 flex items-center justify-center border border-brand-primary/20">
+                                <Sparkles className="w-5 h-5 text-brand-glow" />
                             </div>
                             <h3 className="text-xl font-bold text-white uppercase tracking-tight">Otimize com IA</h3>
                         </div>
@@ -237,10 +237,10 @@ export default function Dashboard() {
                             <Link
                                 key={item.label}
                                 to={`/app/advisor?q=${encodeURIComponent(item.prompt)}`}
-                                className="p-4 rounded-2xl bg-gray-800/40/[0.03] border border-white/5 text-center hover:bg-purple-500/10 hover:border-purple-500/30 transition-all group/card shadow-lg"
+                                className="p-4 rounded-2xl bg-gray-800/40/[0.03] border border-white/5 text-center hover:bg-brand-primary/10 hover:border-brand-primary/30 transition-all group/card shadow-lg"
                             >
                                 <span className="text-2xl block mb-2 transition-transform group-hover/card:scale-125">{item.icon}</span>
-                                <p className="text-[10px] font-bold text-gray-300 uppercase tracking-widest group-hover/card:text-purple-400">{item.label}</p>
+                                <p className="text-[10px] font-bold text-gray-300 uppercase tracking-widest group-hover/card:text-brand-glow">{item.label}</p>
                             </Link>
                         ))}
                     </div>

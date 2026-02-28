@@ -9,8 +9,8 @@ const ToastContext = createContext(null);
 const TOAST_TYPES = {
     success: {
         icon: CheckCircle,
-        className: 'bg-purple-500/10 border-purple-500/20 text-purple-400',
-        iconClass: 'text-purple-400',
+        className: 'bg-brand-primary/10 border-brand-primary/20 text-brand-glow',
+        iconClass: 'text-brand-glow',
     },
     error: {
         icon: AlertCircle,

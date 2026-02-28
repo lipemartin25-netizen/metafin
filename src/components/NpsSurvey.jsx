@@ -44,7 +44,7 @@ export default function NpsSurvey({ onClose }) {
 
     return (
         <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in">
-            <div className="${tw.card} w-full max-w-md animate-slide-up">
+            <div className={`\${tw.card} w-full max-w-md animate-slide-up`}>
                 {submitted ? (
                     <div className="text-center py-8">
                         <div className="text-4xl mb-4">🎉</div>
@@ -83,7 +83,7 @@ export default function NpsSurvey({ onClose }) {
                                     key={i}
                                     onClick={() => setScore(i)}
                                     className={`aspect-square rounded-lg text-xs font-medium transition-all ${score === i
-                                        ? 'bg-purple-500 text-white scale-110 shadow-lg shadow-purple-500/30'
+                                        ? 'bg-brand-primary text-white scale-110 shadow-lg shadow-brand-primary/30'
                                         : 'bg-gray-800/40/5 text-gray-400 hover:bg-gray-800/40/10 hover:text-white'
                                         }`}
                                 >

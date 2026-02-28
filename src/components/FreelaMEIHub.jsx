@@ -20,7 +20,7 @@ export default function FreelaMEIHub() {
 
     return (
         <div className="space-y-8 animate-fade-in text-white/90 pb-20">
-            <div className="${tw.card} p-6 border-l-4 border-l-cyan-500 relative overflow-hidden bg-black/40">
+            <div className={`\${tw.card} p-6 border-l-4 border-l-cyan-500 relative overflow-hidden bg-black/40`}>
                 <div className="absolute top-0 right-0 p-8 opacity-10">
                     <Briefcase className="w-32 h-32 text-cyan-500" />
                 </div>
@@ -33,7 +33,7 @@ export default function FreelaMEIHub() {
             </div>
 
             <div className="grid md:grid-cols-2 gap-6">
-                <div className="${tw.card} p-6 bg-black/20 border border-white/5 space-y-4">
+                <div className={`\${tw.card} p-6 bg-black/20 border border-white/5 space-y-4`}>
                     <h3 className="font-bold uppercase tracking-widest text-xs text-gray-400">Faturamento Mensal (CNPJ)</h3>
                     <input
                         type="number"
@@ -42,7 +42,7 @@ export default function FreelaMEIHub() {
                         className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white text-xl font-black outline-none focus:border-cyan-500 transition-colors"
                     />
                 </div>
-                <div className="${tw.card} p-6 bg-black/20 border border-white/5 space-y-4">
+                <div className={`\${tw.card} p-6 bg-black/20 border border-white/5 space-y-4`}>
                     <h3 className="font-bold uppercase tracking-widest text-xs text-gray-400">Custos da Operação</h3>
                     <input
                         type="number"
@@ -55,7 +55,7 @@ export default function FreelaMEIHub() {
 
             <div className="grid md:grid-cols-3 gap-6">
                 {/* DAS / Imposto */}
-                <div className="${tw.card} flex flex-col gap-4 p-6 border border-gray-800">
+                <div className={`\${tw.card} flex flex-col gap-4 p-6 border border-gray-800`}>
                     <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded-lg bg-orange-500/10 flex items-center justify-center border border-orange-500/20">
                             <Receipt className="w-5 h-5 text-orange-400" />
@@ -71,7 +71,7 @@ export default function FreelaMEIHub() {
                 </div>
 
                 {/* ProLabore Suggestion */}
-                <div className="${tw.card} flex flex-col gap-4 p-6 border border-cyan-500/30 shadow-[0_0_20px_rgba(6,182,212,0.1)] relative overflow-hidden">
+                <div className={`\${tw.card} flex flex-col gap-4 p-6 border border-cyan-500/30 shadow-[0_0_20px_rgba(6,182,212,0.1)] relative overflow-hidden`}>
                     <div className="absolute top-0 right-0 bg-cyan-500 text-white text-[9px] font-black tracking-widest px-2 py-0.5 rounded-bl-lg uppercase">
                         Pró-Labore
                     </div>
@@ -90,7 +90,7 @@ export default function FreelaMEIHub() {
                 </div>
 
                 {/* Caixa da Empresa */}
-                <div className="${tw.card} flex flex-col gap-4 p-6 border border-accent/20">
+                <div className={`\${tw.card} flex flex-col gap-4 p-6 border border-accent/20`}>
                     <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center border border-accent/20">
                             <Percent className="w-5 h-5 text-accent" />
@@ -106,7 +106,7 @@ export default function FreelaMEIHub() {
                 </div>
             </div>
 
-            <div className="text-center mt-10 p-6 ${tw.card} bg-black/20 border-dashed border-2 border-white/10 uppercase font-black tracking-widest text-sm text-gray-500">
+            <div className={`text-center mt-10 p-6 \${tw.card} bg-black/20 border-dashed border-2 border-white/10 uppercase font-black tracking-widest text-sm text-gray-500`}>
                 Módulo MEI / Integração de Emissão de Nota Fiscal em Breve
             </div>
         </div>

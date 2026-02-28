@@ -21,9 +21,9 @@ function fmt(v) {
 function ToolChip({ tool }) {
     const map = {
         searchByKeyword: { icon: Search, label: 'Busca por palavra', color: 'text-blue-400   bg-blue-500/10   border-blue-500/20' },
-        searchByCategory: { icon: Tag, label: 'Busca por categoria', color: 'text-purple-400 bg-purple-500/10 border-purple-500/20' },
+        searchByCategory: { icon: Tag, label: 'Busca por categoria', color: 'text-brand-glow bg-brand-primary/10 border-brand-primary/20' },
         topExpenses: { icon: TrendingUp, label: 'Maiores gastos', color: 'text-orange-400 bg-orange-500/10 border-orange-500/20' },
-        summary: { icon: Activity, label: 'Resumo financeiro', color: 'text-purple-400 bg-purple-500/10 border-purple-500/20' },
+        summary: { icon: Activity, label: 'Resumo financeiro', color: 'text-brand-glow bg-brand-primary/10 border-brand-primary/20' },
         compare: { icon: Calendar, label: 'Comparativo', color: 'text-cyan-400   bg-cyan-500/10   border-cyan-500/20' },
         recurring: { icon: RotateCcw, label: 'Recorrentes', color: 'text-yellow-400 bg-yellow-500/10 border-yellow-500/20' },
         pending: { icon: ShoppingBag, label: 'Pendentes', color: 'text-rose-400   bg-rose-500/10   border-rose-500/20' },
@@ -150,7 +150,7 @@ export default function AIAssistant() {
         return (
             <div className="flex items-center justify-center h-[70vh]">
                 <div className="flex flex-col items-center gap-3">
-                    <Loader2 className="w-8 h-8 text-purple-400 animate-spin" />
+                    <Loader2 className="w-8 h-8 text-brand-glow animate-spin" />
                     <p className="text-gray-500 text-sm">Carregando dados financeiros...</p>
                 </div>
             </div>
@@ -163,7 +163,7 @@ export default function AIAssistant() {
             {/* ── Header ── */}
             <div className="flex items-center justify-between mb-4 flex-shrink-0">
                 <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500 via-purple-500 to-fuchsia-600 flex items-center justify-center shadow-lg shadow-purple-500/25">
+                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500 via-brand-primary to-brand-glow flex items-center justify-center shadow-lg shadow-brand-primary/25">
                         <Bot className="w-5 h-5 text-white" />
                     </div>
                     <div>
@@ -192,17 +192,17 @@ export default function AIAssistant() {
             {/* ── Stats Bar ── */}
             {transactions.length > 0 && (
                 <div className="grid grid-cols-3 gap-3 mb-4 flex-shrink-0">
-                    <div className="${tw.card} py-3 px-4 text-center">
-                        <TrendingUp className="w-4 h-4 text-purple-400 mx-auto mb-1" />
+                    <div className={`\${tw.card} py-3 px-4 text-center`}>
+                        <TrendingUp className="w-4 h-4 text-brand-glow mx-auto mb-1" />
                         <p className="text-[10px] text-gray-500 uppercase tracking-wider">Receita total</p>
-                        <p className="text-sm font-bold text-purple-400">{fmt(totalIncome)}</p>
+                        <p className="text-sm font-bold text-brand-glow">{fmt(totalIncome)}</p>
                     </div>
-                    <div className="${tw.card} py-3 px-4 text-center">
+                    <div className={`\${tw.card} py-3 px-4 text-center`}>
                         <PiggyBank className="w-4 h-4 text-violet-400 mx-auto mb-1" />
                         <p className="text-[10px] text-gray-500 uppercase tracking-wider">Poupança</p>
                         <p className="text-sm font-bold text-violet-400">{savingsRate.toFixed(0)}%</p>
                     </div>
-                    <div className="${tw.card} py-3 px-4 text-center">
+                    <div className={`\${tw.card} py-3 px-4 text-center`}>
                         <Wallet className="w-4 h-4 text-cyan-400 mx-auto mb-1" />
                         <p className="text-[10px] text-gray-500 uppercase tracking-wider">Transações</p>
                         <p className="text-sm font-bold text-cyan-400">{transactions.length}</p>
@@ -218,10 +218,10 @@ export default function AIAssistant() {
                     <div className="p-6 h-full flex flex-col justify-between">
                         {/* Welcome message */}
                         <div className="flex items-start gap-3 mb-6">
-                            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-violet-500 to-fuchsia-600 flex items-center justify-center flex-shrink-0 shadow-lg shadow-black/10">
+                            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-violet-500 to-brand-glow flex items-center justify-center flex-shrink-0 shadow-lg shadow-black/10">
                                 <Bot size={15} className="text-white" />
                             </div>
-                            <div className="${tw.card} flex-1 py-4 px-5">
+                            <div className={`\${tw.card} flex-1 py-4 px-5`}>
                                 <p className="text-gray-200 text-sm leading-relaxed">
                                     Olá, <span className="text-white font-semibold">{displayName}</span>! 👋{' '}
                                     Sou o <strong className="text-violet-400">MetaFin Agent</strong> — consulto suas
@@ -273,7 +273,7 @@ export default function AIAssistant() {
                                 className={`flex gap-3 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
                             >
                                 {msg.role === 'assistant' && (
-                                    <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-violet-500 to-fuchsia-600 flex items-center justify-center flex-shrink-0 mt-1 shadow-lg shadow-black/10">
+                                    <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-violet-500 to-brand-glow flex items-center justify-center flex-shrink-0 mt-1 shadow-lg shadow-black/10">
                                         <Bot size={13} className="text-white" />
                                     </div>
                                 )}
@@ -306,7 +306,7 @@ export default function AIAssistant() {
                         {/* Typing indicator */}
                         {isTyping && (
                             <div className="flex gap-3 items-start">
-                                <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-violet-500 to-fuchsia-600 flex items-center justify-center flex-shrink-0">
+                                <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-violet-500 to-brand-glow flex items-center justify-center flex-shrink-0">
                                     <Bot size={13} className="text-white" />
                                 </div>
                                 <div className="bg-gray-800/40/5 border border-white/8 rounded-2xl rounded-tl-sm px-4 py-3 flex items-center gap-2">
@@ -355,7 +355,7 @@ export default function AIAssistant() {
                     <button
                         type="submit"
                         disabled={!input.trim() || isTyping}
-                        className="p-2 rounded-xl bg-gradient-to-r from-violet-500 to-fuchsia-600 text-white hover:opacity-90 transition-all disabled:opacity-30 disabled:cursor-not-allowed shadow-lg shadow-violet-500/20 flex-shrink-0"
+                        className="p-2 rounded-xl bg-gradient-to-r from-violet-500 to-brand-glow text-white hover:opacity-90 transition-all disabled:opacity-30 disabled:cursor-not-allowed shadow-lg shadow-violet-500/20 flex-shrink-0"
                     >
                         <Send size={14} />
                     </button>

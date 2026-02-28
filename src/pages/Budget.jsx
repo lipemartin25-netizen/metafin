@@ -167,7 +167,7 @@ export default function Budget() {
     if (loading) {
         return (
             <div className="flex items-center justify-center min-h-[60vh]">
-                <Loader2 className="w-8 h-8 text-fuchsia-500 animate-spin" />
+                <Loader2 className="w-8 h-8 text-brand-glow animate-spin" />
             </div>
         );
     }
@@ -212,20 +212,20 @@ export default function Budget() {
 
             {/* Summary */}
             <div className="grid sm:grid-cols-3 gap-4">
-                <div className="${tw.card}">
+                <div className={`\${tw.card}`}>
                     <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Orçamento Total</p>
                     <p className="text-2xl font-bold text-white dark:text-white">{fmt(totalBudget)}</p>
                 </div>
-                <div className="${tw.card}">
+                <div className={`\${tw.card}`}>
                     <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Gasto Este Mês</p>
                     <p className="text-2xl font-bold text-red-500">{fmt(totalSpent)}</p>
                 </div>
-                <div className="${tw.card}">
+                <div className={`\${tw.card}`}>
                     <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Disponível</p>
-                    <p className={`text-2xl font-bold ${totalBudget - totalSpent >= 0 ? 'text-purple-500' : 'text-red-500'}`}>{fmt(totalBudget - totalSpent)}</p>
+                    <p className={`text-2xl font-bold ${totalBudget - totalSpent >= 0 ? 'text-brand-primary' : 'text-red-500'}`}>{fmt(totalBudget - totalSpent)}</p>
                     {totalBudget > 0 && (
                         <div className="mt-2 h-2 bg-gray-800/50 dark:bg-gray-800/40/10 rounded-full overflow-hidden">
-                            <div className={`h-full rounded-full transition-all ${(totalSpent / totalBudget) > 0.9 ? 'bg-red-500' : (totalSpent / totalBudget) > 0.7 ? 'bg-yellow-500' : 'bg-purple-500'}`}
+                            <div className={`h-full rounded-full transition-all ${(totalSpent / totalBudget) > 0.9 ? 'bg-red-500' : (totalSpent / totalBudget) > 0.7 ? 'bg-yellow-500' : 'bg-brand-primary'}`}
                                 style={{ width: `${Math.min((totalSpent / totalBudget) * 100, 100)}%` }} />
                         </div>
                     )}
@@ -234,7 +234,7 @@ export default function Budget() {
 
             {/* Budget Items */}
             {budgets.length === 0 ? (
-                <div className="${tw.card} text-center py-12 border-dashed border-2 border-gray-700/40 dark:border-white/10 bg-transparent relative overflow-hidden">
+                <div className={`\${tw.card} text-center py-12 border-dashed border-2 border-gray-700/40 dark:border-white/10 bg-transparent relative overflow-hidden`}>
                     <div className="absolute inset-0 bg-gradient-to-b from-transparent to-pink-500/5 pointer-events-none" />
                     <PiggyBank className="w-12 h-12 text-pink-500 mx-auto mb-4 opacity-50 relative z-10" />
                     <h4 className="text-white dark:text-white font-medium mb-1 relative z-10">Nenhum orçamento definido</h4>
@@ -271,7 +271,7 @@ export default function Budget() {
                                                 {over ? (
                                                     <span className="flex items-center gap-0.5"><AlertTriangle className="w-2.5 h-2.5" /> Excedeu {fmt(Math.abs(remaining))}</span>
                                                 ) : (
-                                                    <span className="flex items-center gap-0.5"><CheckCircle className="w-2.5 h-2.5 text-purple-500" /> Sobra {fmt(remaining)}</span>
+                                                    <span className="flex items-center gap-0.5"><CheckCircle className="w-2.5 h-2.5 text-brand-primary" /> Sobra {fmt(remaining)}</span>
                                                 )}
                                             </p>
                                         </div>
@@ -285,7 +285,7 @@ export default function Budget() {
                                 </div>
 
                                 <div className="h-3 bg-gray-800/50 dark:bg-gray-800/40/10 rounded-full overflow-hidden">
-                                    <div className={`h-full rounded-full transition-all duration-500 ${over ? 'bg-red-500' : pct > 70 ? 'bg-yellow-500' : 'bg-purple-500'}`}
+                                    <div className={`h-full rounded-full transition-all duration-500 ${over ? 'bg-red-500' : pct > 70 ? 'bg-yellow-500' : 'bg-brand-primary'}`}
                                         style={{ width: `${pct}%` }} />
                                 </div>
                                 <div className="flex justify-between mt-1.5 text-[10px] text-gray-500 flex-wrap">
@@ -315,7 +315,7 @@ export default function Budget() {
                                         value={form.category}
                                         onChange={(e) => setForm({ ...form, category: e.target.value })}
                                         required
-                                        className="w-full bg-gray-800/40/[0.03] border border-white/10 rounded-xl px-4 py-3.5 text-white focus:border-fuchsia-500/50 focus:ring-1 focus:ring-fuchsia-500/50 outline-none transition-all appearance-none"
+                                        className="w-full bg-gray-800/40/[0.03] border border-white/10 rounded-xl px-4 py-3.5 text-white focus:border-brand-glow/50 focus:ring-1 focus:ring-brand-glow/50 outline-none transition-all appearance-none"
                                     >
                                         <option value="" disabled className="bg-[#0d1424] text-slate-500">Selecione uma categoria...</option>
                                         {availableCategories.map(c => (
@@ -333,7 +333,7 @@ export default function Budget() {
                                         onChange={(e) => setForm({ ...form, limit: e.target.value })}
                                         required
                                         placeholder="0,00"
-                                        className="w-full bg-gray-800/40/[0.03] border border-white/10 rounded-xl px-4 py-3.5 text-white placeholder-slate-500 focus:border-fuchsia-500/50 focus:ring-1 focus:ring-fuchsia-500/50 outline-none transition-all"
+                                        className="w-full bg-gray-800/40/[0.03] border border-white/10 rounded-xl px-4 py-3.5 text-white placeholder-slate-500 focus:border-brand-glow/50 focus:ring-1 focus:ring-brand-glow/50 outline-none transition-all"
                                     />
                                 </div>
 

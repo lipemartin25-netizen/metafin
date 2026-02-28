@@ -136,7 +136,7 @@ export default function Investments() {
             <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
                 <div>
                     <h1 className="text-2xl font-bold text-white flex items-center gap-2">
-                        <Briefcase className="w-6 h-6 text-purple-400" />
+                        <Briefcase className="w-6 h-6 text-brand-glow" />
                         Investimentos
                     </h1>
                     <p className="text-slate-400 text-sm mt-1">
@@ -165,25 +165,25 @@ export default function Investments() {
             )}
 
             {/* Security Badge */}
-            <div className="flex items-center gap-3 bg-purple-500/5 border border-purple-500/15 rounded-xl p-3">
-                <ShieldCheck className="w-5 h-5 text-purple-400 flex-shrink-0" />
+            <div className="flex items-center gap-3 bg-brand-primary/5 border border-brand-primary/15 rounded-xl p-3">
+                <ShieldCheck className="w-5 h-5 text-brand-glow flex-shrink-0" />
                 <div>
-                    <p className="text-xs font-semibold text-purple-400">Conexão segura via Open Finance</p>
+                    <p className="text-xs font-semibold text-brand-glow">Conexão segura via Open Finance</p>
                     <p className="text-[10px] text-slate-400">Dados criptografados end-to-end · regulado pelo Banco Central do Brasil</p>
                 </div>
             </div>
 
             {/* Portfolio Summary */}
             <div className="grid md:grid-cols-3 gap-6">
-                <div className="${tw.card} col-span-2 relative overflow-hidden">
+                <div className={`\${tw.card} col-span-2 relative overflow-hidden`}>
                     <div className="absolute top-0 right-0 p-4 opacity-5">
-                        <Building2 className="w-32 h-32 text-purple-500" />
+                        <Building2 className="w-32 h-32 text-brand-primary" />
                     </div>
                     <p className="text-sm text-slate-400 font-medium">Patrimônio Total</p>
                     <h2 className="text-4xl font-bold text-white mt-2">{fmt(portfolio.total)}</h2>
                     {portfolio.total > 0 && (
                         <div className="mt-4 flex items-center gap-2 text-sm">
-                            <span className="bg-purple-500/10 text-purple-400 px-2 py-1 rounded-lg flex items-center gap-1 font-medium">
+                            <span className="bg-brand-primary/10 text-brand-glow px-2 py-1 rounded-lg flex items-center gap-1 font-medium">
                                 <TrendingUp className="w-3 h-3" /> Atualizado via Pluggy
                             </span>
                         </div>
@@ -193,7 +193,7 @@ export default function Investments() {
                     )}
                 </div>
 
-                <div className="${tw.card} flex flex-col justify-center items-center relative">
+                <div className={`\${tw.card} flex flex-col justify-center items-center relative`}>
                     <h3 className="text-sm font-semibold text-slate-300 absolute top-4 left-4">Alocação</h3>
                     {portfolio.total > 0 ? (
                         <div className="w-full h-[160px]">
@@ -218,7 +218,7 @@ export default function Investments() {
 
             {/* Evolution Chart — só exibe se tiver dados */}
             {evolutionData.length > 0 && (
-                <div className="${tw.card} p-6">
+                <div className={`\${tw.card} p-6`}>
                     <div className="flex items-center justify-between mb-6">
                         <div>
                             <h3 className="text-lg font-semibold text-white">Evolução do Patrimônio</h3>
@@ -226,7 +226,7 @@ export default function Investments() {
                         </div>
                         <div className="flex gap-4">
                             <div className="flex items-center gap-1.5">
-                                <div className="w-2.5 h-2.5 rounded-full bg-purple-500" />
+                                <div className="w-2.5 h-2.5 rounded-full bg-brand-primary" />
                                 <span className="text-[10px] text-slate-400 font-bold uppercase">Carteira</span>
                             </div>
                             <div className="flex items-center gap-1.5">
@@ -264,9 +264,9 @@ export default function Investments() {
                 </h3>
 
                 {connectedBrokers.length === 0 ? (
-                    <div className="${tw.card} text-center py-12 border-dashed border-2 border-white/10">
-                        <div className="w-16 h-16 rounded-full bg-purple-500/10 mx-auto flex items-center justify-center mb-4">
-                            <Plug className="w-8 h-8 text-purple-400" />
+                    <div className={`\${tw.card} text-center py-12 border-dashed border-2 border-white/10`}>
+                        <div className="w-16 h-16 rounded-full bg-brand-primary/10 mx-auto flex items-center justify-center mb-4">
+                            <Plug className="w-8 h-8 text-brand-glow" />
                         </div>
                         <h4 className="text-white font-medium mb-1">Nenhuma corretora conectada</h4>
                         <p className="text-slate-400 text-sm mb-6 max-w-sm mx-auto">
@@ -276,7 +276,7 @@ export default function Investments() {
                 ) : (
                     <div className="grid gap-4">
                         {connectedBrokers.map(broker => (
-                            <div key={broker.id} className="${tw.card}">
+                            <div key={broker.id} className={`\${tw.card}`}>
                                 <div className="flex items-center justify-between mb-4 border-b border-white/5 pb-4">
                                     <div className="flex items-center gap-3">
                                         <div className="w-10 h-10 rounded-xl flex items-center justify-center font-bold shadow-lg text-white" style={{ backgroundColor: broker.color || '#6b7280' }}>
@@ -286,14 +286,14 @@ export default function Investments() {
                                             <h4 className="font-bold text-white">{broker.name}</h4>
                                             <p className="text-xs text-slate-400">
                                                 Conectado em {new Date(broker.connectedAt).toLocaleDateString('pt-BR')}
-                                                <span className="ml-1 text-purple-400">· via Pluggy</span>
+                                                <span className="ml-1 text-brand-glow">· via Pluggy</span>
                                             </p>
                                         </div>
                                     </div>
                                     <div className="flex items-center gap-3">
                                         <div className="text-right">
                                             <p className="text-xs text-slate-400">Total</p>
-                                            <p className="text-xl font-bold text-purple-400">{fmt(broker.totalValue || 0)}</p>
+                                            <p className="text-xl font-bold text-brand-glow">{fmt(broker.totalValue || 0)}</p>
                                         </div>
                                         <button onClick={() => handleDisconnectBroker(broker.id)} className="p-2 rounded-lg text-red-400/50 hover:text-red-400 hover:bg-red-500/10 transition-all" title="Excluir carteira">
                                             <Trash2 className="w-4 h-4" />
@@ -331,7 +331,7 @@ export default function Investments() {
             <div id="connect-broker">
                 <h3 className="text-lg font-semibold text-white mb-4">Conectar Corretora</h3>
                 <p className="text-xs text-slate-400 mb-3 flex items-center gap-1">
-                    <CheckCircle className="w-3 h-3 text-purple-400" />
+                    <CheckCircle className="w-3 h-3 text-brand-glow" />
                     Clique em qualquer instituição para conectar via Pluggy Open Finance:
                 </p>
                 <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2">
@@ -339,7 +339,7 @@ export default function Investments() {
                         <button
                             key={broker.id}
                             onClick={() => handleBrokerClick(broker)}
-                            className="p-3 rounded-xl bg-gray-800/40/5 hover:bg-gray-800/40/10 border border-white/5 hover:border-purple-500/30 transition-all flex flex-col items-center gap-2 text-center group"
+                            className="p-3 rounded-xl bg-gray-800/40/5 hover:bg-gray-800/40/10 border border-white/5 hover:border-brand-primary/30 transition-all flex flex-col items-center gap-2 text-center group"
                             title={`Conectar ${broker.name}`}
                         >
                             <div className="w-10 h-10 rounded-lg flex items-center justify-center text-white font-bold text-sm shadow group-hover:scale-110 transition-transform" style={{ backgroundColor: broker.color, color: broker.textColor }}>
@@ -354,7 +354,7 @@ export default function Investments() {
                 <div className="grid sm:grid-cols-2 gap-4 mt-6">
                     <button
                         onClick={() => setShowB3Modal(true)}
-                        className="${tw.card} p-4 flex items-center gap-4 bg-gradient-to-r from-yellow-500/5 to-transparent border-yellow-500/20 hover:border-yellow-500/50 transition-all group text-left"
+                        className={`\${tw.card} p-4 flex items-center gap-4 bg-gradient-to-r from-yellow-500/5 to-transparent border-yellow-500/20 hover:border-yellow-500/50 transition-all group text-left`}
                     >
                         <div className="w-12 h-12 rounded-xl bg-yellow-500 text-white flex items-center justify-center font-bold text-xl shadow-lg shadow-yellow-500/20 group-hover:scale-110 transition-transform">B3</div>
                         <div className="flex-1">
@@ -365,8 +365,8 @@ export default function Investments() {
                         </div>
                     </button>
 
-                    <div className="${tw.card} p-4 flex items-center gap-4 bg-gradient-to-r from-purple-500/5 to-transparent border-purple-500/20">
-                        <div className="w-12 h-12 rounded-xl bg-purple-600 text-white flex items-center justify-center shadow-lg">
+                    <div className={`\${tw.card} p-4 flex items-center gap-4 bg-gradient-to-r from-brand-primary/5 to-transparent border-brand-primary/20`}>
+                        <div className="w-12 h-12 rounded-xl bg-brand-primary text-white flex items-center justify-center shadow-lg">
                             <ShieldCheck className="w-6 h-6" />
                         </div>
                         <div className="flex-1">
@@ -406,12 +406,12 @@ export default function Investments() {
                             </div>
                             <div className="text-center">
                                 <p className="text-[10px] text-slate-500 uppercase font-bold tracking-wider mb-1">Var. 12m</p>
-                                <p className={`text-2xl font-bold ${b3Stats.ibovVar >= 0 ? 'text-purple-400' : 'text-rose-400'}`}>
+                                <p className={`text-2xl font-bold ${b3Stats.ibovVar >= 0 ? 'text-brand-glow' : 'text-rose-400'}`}>
                                     {b3Stats.ibovVar >= 0 ? '+' : ''}{b3Stats.ibovVar.toFixed(1)}%
                                 </p>
                                 <div className="flex items-center justify-center gap-1 mt-0.5">
                                     {b3Stats.ibovVar >= 0
-                                        ? <TrendingUp className="w-3 h-3 text-purple-400" />
+                                        ? <TrendingUp className="w-3 h-3 text-brand-glow" />
                                         : <TrendingDown className="w-3 h-3 text-rose-400" />}
                                     <p className="text-xs text-slate-400">Ibovespa</p>
                                 </div>

@@ -3,9 +3,9 @@ export default function StatusChip({ status }) {
     const config = {
         categorized: {
             label: 'Categorizado',
-            bg: 'bg-purple-500/10',
-            text: 'text-purple-400',
-            dot: 'bg-purple-400',
+            bg: 'bg-brand-primary/10',
+            text: 'text-brand-glow',
+            dot: 'bg-brand-glow',
         },
         pending: {
             label: 'Pendente',

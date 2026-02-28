@@ -17,8 +17,8 @@ export default function FinancialEducation() {
         {
             id: 'tax_optimization',
             title: 'Hacker de Imposto (PGBL)',
-            icon: <Shield className="w-8 h-8 text-purple-500" />,
-            color: 'bg-purple-500/10 border-purple-500/20 text-purple-600 dark:text-purple-400',
+            icon: <Shield className="w-8 h-8 text-brand-primary" />,
+            color: 'bg-brand-primary/10 border-brand-primary/20 text-brand-primary dark:text-brand-glow',
             description: 'Como usar a Previdência Privada PGBL para receber restituição gorda todo ano.',
             prompt: 'Atue como um exímio planejador tributário do Brasil. Me explique o hack do PGBL: como investir até 12% da renda bruta tributável nele devolve parte do imposto na Restituição, e por que a tabela regressiva de IR compensa em 10 anos.'
         },
@@ -33,8 +33,8 @@ export default function FinancialEducation() {
         {
             id: 'behavioral',
             title: 'Psicologia do Dinheiro',
-            icon: <Brain className="w-8 h-8 text-purple-500" />,
-            color: 'bg-purple-500/10 border-purple-500/20 text-purple-600 dark:text-purple-400',
+            icon: <Brain className="w-8 h-8 text-brand-primary" />,
+            color: 'bg-brand-primary/10 border-brand-primary/20 text-brand-primary dark:text-brand-glow',
             description: 'Vieses cognitivos, inflação do estilo de vida e como blindar sua mente contra gastos impulsivos.',
             prompt: 'Com base no livro "Psicologia Financeira" de Morgan Housel, resuma as 3 lições mais valiosas sobre como a nossa mente sabota a criação de riqueza, foque na "inflação do estilo de vida" e na "força bruta das taxas de poupança".'
         }
@@ -50,9 +50,9 @@ export default function FinancialEducation() {
         <div className="space-y-6 animate-fade-in">
             <div className="relative overflow-hidden flex flex-col items-center justify-center rounded-[2.5rem] bg-gradient-to-br from-gray-900 via-indigo-950 to-black p-10 md:p-14 text-white shadow-[0_20px_50px_-15px_rgba(0,0,0,0.5)] border border-white/10 text-center group perspective-1000">
                 {/* Efeitos 3D Internos */}
-                <div className="absolute inset-x-0 -bottom-20 h-64 bg-gradient-to-t from-purple-900/20 to-transparent blur-2xl" />
+                <div className="absolute inset-x-0 -bottom-20 h-64 bg-gradient-to-t from-brand-dark/20 to-transparent blur-2xl" />
                 <div className="absolute -left-20 -top-20 w-80 h-80 bg-brand-500/10 rounded-full mix-blend-screen filter blur-[40px] opacity-60 group-hover:scale-125 transition-transform duration-1000 ease-out" />
-                <div className="absolute bottom-0 right-0 w-64 h-64 bg-purple-500/10 rounded-full mix-blend-screen filter blur-[40px] opacity-60 group-hover:-translate-x-10 transition-transform duration-1000 ease-out delay-100" />
+                <div className="absolute bottom-0 right-0 w-64 h-64 bg-brand-primary/10 rounded-full mix-blend-screen filter blur-[40px] opacity-60 group-hover:-translate-x-10 transition-transform duration-1000 ease-out delay-100" />
                 <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+PGRlZnM+PG1hdHRlcm4gaWQ9ImciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTTAgNDBoNDBWMEgweiIgZmlsbD0ibm9uZSIvPjxwYXRoIGQ9Ik0wIDEwaDQwTTAgMjBoNDBNMCAzMGg0ME0xMCAwdjQwTTIwIDB2NDBNMzAgMHY0MCIgc3Ryb2tlPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMDUpIiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZykiLz48L3N2Zz4=')] opacity-20" />
 
                 <div className="relative z-10 p-5 bg-gray-800/40/5 rounded-[2rem] backdrop-blur-md shadow-inner border border-white/10 mb-6 group-hover:-translate-y-2 group-hover:rotate-3 transition-transform duration-500">
@@ -72,7 +72,7 @@ export default function FinancialEducation() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 pt-4">
                 {tracks.map(track => (
-                    <div key={track.id} className="${tw.card} p-6 flex flex-col group hover:-translate-y-1 transition-all duration-300">
+                    <div key={track.id} className={`\${tw.card} p-6 flex flex-col group hover:-translate-y-1 transition-all duration-300`}>
                         <div className="flex items-start justify-between mb-4">
                             <div className={`p-4 rounded-2xl border ${track.color} transition-all group-hover:scale-110 shadow-lg shadow-black/10`}>
                                 {track.icon}

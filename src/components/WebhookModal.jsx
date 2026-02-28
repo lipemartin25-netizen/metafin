@@ -90,8 +90,8 @@ export default function WebhookModal({ isOpen, onClose, onSuccess }) {
                 {/* Header */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between p-6 border-b border-white/5 gap-4">
                     <h2 className="text-xl font-bold text-white flex items-center gap-3">
-                        <div className="p-2 bg-fuchsia-500/10 rounded-xl">
-                            <Webhook className="w-5 h-5 text-fuchsia-400" />
+                        <div className="p-2 bg-brand-glow/10 rounded-xl">
+                            <Webhook className="w-5 h-5 text-brand-glow" />
                         </div>
                         Novo Webhook
                     </h2>
@@ -117,7 +117,7 @@ export default function WebhookModal({ isOpen, onClose, onSuccess }) {
                             value={name}
                             onChange={(e) => setName(e.target.value)}
                             placeholder="Ex: Notificação Discord"
-                            className="w-full px-4 py-3 bg-black/20 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-fuchsia-500/50 focus:border-fuchsia-500/50 transition-all font-medium"
+                            className="w-full px-4 py-3 bg-black/20 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-glow/50 focus:border-brand-glow/50 transition-all font-medium"
                         />
                     </div>
 
@@ -125,14 +125,14 @@ export default function WebhookModal({ isOpen, onClose, onSuccess }) {
                     <div className="space-y-2">
                         <label className="block text-sm font-semibold text-gray-300 flex items-center justify-between">
                             URL do Endpoint
-                            <span className="text-[10px] uppercase tracking-widest text-fuchsia-400 font-bold bg-fuchsia-400/10 px-2 py-0.5 rounded-md">HTTPS Obrigatório</span>
+                            <span className="text-[10px] uppercase tracking-widest text-brand-glow font-bold bg-brand-glow/10 px-2 py-0.5 rounded-md">HTTPS Obrigatório</span>
                         </label>
                         <input
                             type="url"
                             value={url}
                             onChange={(e) => setUrl(e.target.value)}
                             placeholder="https://seu-servidor.com/webhook"
-                            className="w-full px-4 py-3 bg-black/20 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-fuchsia-500/50 focus:border-fuchsia-500/50 transition-all font-mono text-sm"
+                            className="w-full px-4 py-3 bg-black/20 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-glow/50 focus:border-brand-glow/50 transition-all font-mono text-sm"
                         />
                     </div>
 
@@ -148,12 +148,12 @@ export default function WebhookModal({ isOpen, onClose, onSuccess }) {
                                     <label
                                         key={evt.id}
                                         className={`flex items-start gap-3 p-3.5 rounded-xl cursor-pointer transition-all border ${selected
-                                            ? 'bg-fuchsia-500/10 border-fuchsia-500/30'
+                                            ? 'bg-brand-glow/10 border-brand-glow/30'
                                             : 'bg-black/20 border-white/5 hover:border-white/10'
                                             }`}
                                     >
                                         <div className={`mt-0.5 flex-shrink-0 w-5 h-5 rounded-md flex items-center justify-center border transition-all ${selected
-                                            ? 'bg-fuchsia-500 border-fuchsia-500'
+                                            ? 'bg-brand-glow border-brand-glow'
                                             : 'border-gray-500 bg-transparent'
                                             }`}>
                                             {selected && <CheckCircle className="w-3.5 h-3.5 text-white" />}
@@ -176,7 +176,7 @@ export default function WebhookModal({ isOpen, onClose, onSuccess }) {
                     {/* Secret */}
                     <div className="space-y-2 pt-2 border-t border-white/5">
                         <label className="block text-sm font-semibold text-gray-300 flex items-center gap-2">
-                            🔐 Secret Key <span className="text-xs text-fuchsia-400 font-normal">(Gerado automaticamente)</span>
+                            🔐 Secret Key <span className="text-xs text-brand-glow font-normal">(Gerado automaticamente)</span>
                         </label>
                         <div className="flex gap-2">
                             <code className="flex-1 px-4 py-3 bg-black/30 border border-white/5 rounded-xl text-fuchsia-300 text-sm font-mono truncate select-all">
@@ -187,7 +187,7 @@ export default function WebhookModal({ isOpen, onClose, onSuccess }) {
                                 onClick={copySecret}
                                 className="px-4 py-3 bg-gray-800/40/5 hover:bg-gray-800/40/10 border border-white/5 rounded-xl text-white text-sm font-semibold transition-colors whitespace-nowrap flex items-center gap-2"
                             >
-                                {copied ? <><CheckCircle className="w-4 h-4 text-purple-400" /> Copiado</> : <><Copy className="w-4 h-4" /> Copiar</>}
+                                {copied ? <><CheckCircle className="w-4 h-4 text-brand-glow" /> Copiado</> : <><Copy className="w-4 h-4" /> Copiar</>}
                             </button>
                         </div>
                         <p className="text-[11px] text-gray-400 leading-relaxed pt-1">
@@ -215,7 +215,7 @@ export default function WebhookModal({ isOpen, onClose, onSuccess }) {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="flex-1 px-4 py-3.5 bg-fuchsia-600 hover:bg-fuchsia-500 disabled:bg-fuchsia-900/50 disabled:text-white/50 disabled:cursor-not-allowed rounded-xl text-white font-bold transition-colors flex items-center justify-center gap-2 shadow-lg shadow-fuchsia-500/20"
+                            className="flex-1 px-4 py-3.5 bg-brand-glow hover:bg-brand-glow disabled:bg-fuchsia-900/50 disabled:text-white/50 disabled:cursor-not-allowed rounded-xl text-white font-bold transition-colors flex items-center justify-center gap-2 shadow-lg shadow-brand-glow/20"
                         >
                             {loading ? (
                                 <><RefreshCw className="w-4 h-4 animate-spin" /> Salvando...</>

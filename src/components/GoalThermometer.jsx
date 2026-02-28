@@ -20,18 +20,18 @@ export default function GoalThermometer({ goal }) {
         }).format(v);
 
     const getColor = () => {
-        if (pct >= 100) return 'from-purple-400 to-emerald-600';
+        if (pct >= 100) return 'from-brand-glow to-emerald-600';
         if (pct >= 60) return 'from-blue-400 to-blue-600';
         if (pct >= 30) return 'from-yellow-400 to-orange-500';
         return 'from-red-400 to-red-600';
     };
 
     return (
-        <div className="relative rounded-2xl border p-5 ${tw.card} shadow-lg shadow-black/10 hover:shadow-lg transition-all duration-300 group overflow-hidden">
+        <div className={`relative rounded-2xl border p-5 \${tw.card} shadow-lg shadow-black/10 hover:shadow-lg transition-all duration-300 group overflow-hidden`}>
 
             {pct >= 100 && (
                 <div className="absolute -top-2 -right-2">
-                    <CheckCircle2 className="h-10 w-10 text-purple-500 animate-pulse drop-shadow-lg shadow-black/10" />
+                    <CheckCircle2 className="h-10 w-10 text-brand-primary animate-pulse drop-shadow-lg shadow-black/10" />
                 </div>
             )}
 

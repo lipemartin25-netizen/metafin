@@ -16,11 +16,11 @@ function WebhookCard({ webhook, onToggle, onDelete }) {
     const eventsDetails = webhook.events.map(eventId => WEBHOOK_EVENTS.find(e => e.id === eventId)).filter(Boolean);
 
     return (
-        <div className={`${tw.card} p-5 space-y-4 border ${webhook.active ? 'border-fuchsia-500/30 shadow-[0_0_15px_rgba(217,70,239,0.1)]' : 'border-white/5 opacity-70'}`}>
+        <div className={`${tw.card} p-5 space-y-4 border ${webhook.active ? 'border-brand-glow/30 shadow-[0_0_15px_rgba(217,70,239,0.1)]' : 'border-white/5 opacity-70'}`}>
             <div className="flex justify-between items-start gap-4">
                 <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
-                        <div className={`w-2.5 h-2.5 rounded-full ${webhook.active ? 'bg-purple-500 shadow-[0_0_8px_rgba(16,185,129,0.8)] animate-pulse' : 'bg-gray-500'}`} />
+                        <div className={`w-2.5 h-2.5 rounded-full ${webhook.active ? 'bg-brand-primary shadow-[0_0_8px_rgba(16,185,129,0.8)] animate-pulse' : 'bg-gray-500'}`} />
                         <h3 className="text-lg font-bold text-white truncate">{webhook.name}</h3>
                     </div>
                     <p className="text-xs font-mono text-gray-400 truncate bg-black/20 p-1.5 rounded-md inline-block max-w-full">
@@ -30,7 +30,7 @@ function WebhookCard({ webhook, onToggle, onDelete }) {
                 <div className="flex items-center gap-2">
                     <button
                         onClick={() => onToggle(webhook.id, !webhook.active)}
-                        className={`p-2 rounded-xl transition-colors ${webhook.active ? 'text-purple-400 hover:bg-purple-500/10' : 'text-gray-400 hover:bg-gray-500/10'}`}
+                        className={`p-2 rounded-xl transition-colors ${webhook.active ? 'text-brand-glow hover:bg-brand-primary/10' : 'text-gray-400 hover:bg-gray-500/10'}`}
                         title={webhook.active ? "Desativar Webhook" : "Ativar Webhook"}
                     >
                         {webhook.active ? <Power className="w-5 h-5" /> : <PowerOff className="w-5 h-5" />}
@@ -47,7 +47,7 @@ function WebhookCard({ webhook, onToggle, onDelete }) {
 
             <div className="flex flex-wrap gap-2 pt-2 border-t border-white/5">
                 {eventsDetails.map(evt => (
-                    <span key={evt.id} className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-fuchsia-500/10 text-fuchsia-300 border border-fuchsia-500/20 flex items-center gap-1.5">
+                    <span key={evt.id} className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-brand-glow/10 text-fuchsia-300 border border-brand-glow/20 flex items-center gap-1.5">
                         <evt.icon className="w-3 h-3" style={{ color: evt.color }} />
                         {evt.id}
                     </span>
@@ -149,7 +149,7 @@ export default function Webhooks() {
             <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
                 <div>
                     <h1 className="text-3xl font-bold text-white flex items-center gap-3 mb-2">
-                        <Webhook className="w-8 h-8 text-fuchsia-400" />
+                        <Webhook className="w-8 h-8 text-brand-glow" />
                         Webhooks {webhooks.length > 0 && <span className="text-xl text-gray-500 font-normal">({webhooks.length})</span>}
                     </h1>
                     <p className="text-gray-400 text-sm">Integre o MetaFin com serviços externos via webhooks HTTP.</p>
@@ -165,12 +165,12 @@ export default function Webhooks() {
 
             {loading ? (
                 <div className="flex justify-center items-center py-20">
-                    <RefreshCw className="w-8 h-8 text-fuchsia-500 animate-spin" />
+                    <RefreshCw className="w-8 h-8 text-brand-glow animate-spin" />
                 </div>
             ) : webhooks.length === 0 ? (
-                <div className="${tw.card} p-10 text-center space-y-4">
-                    <div className="w-16 h-16 rounded-2xl bg-fuchsia-500/10 flex items-center justify-center mx-auto">
-                        <Webhook className="w-8 h-8 text-fuchsia-400" />
+                <div className={`\${tw.card} p-10 text-center space-y-4`}>
+                    <div className="w-16 h-16 rounded-2xl bg-brand-glow/10 flex items-center justify-center mx-auto">
+                        <Webhook className="w-8 h-8 text-brand-glow" />
                     </div>
                     <h3 className="text-lg font-bold text-white">Nenhum webhook configurado</h3>
                     <p className="text-gray-400 text-sm max-w-md mx-auto leading-relaxed">
@@ -203,14 +203,14 @@ export default function Webhooks() {
                 <h2 className="text-sm font-bold text-gray-500 uppercase tracking-widest">Eventos Suportados</h2>
                 <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
                     {WEBHOOK_EVENTS.map((evt) => (
-                        <div key={evt.id} className="${tw.card} !p-4 flex items-start gap-3 border border-white/5 hover:border-fuchsia-500/20 transition-all group">
+                        <div key={evt.id} className={`\${tw.card} !p-4 flex items-start gap-3 border border-white/5 hover:border-brand-glow/20 transition-all group`}>
                             <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style={{ backgroundColor: `${evt.color}15` }}>
                                 <evt.icon className="w-5 h-5" style={{ color: evt.color }} />
                             </div>
                             <div className="min-w-0">
                                 <p className="text-sm font-semibold text-white group-hover:text-fuchsia-300 transition-colors">{evt.label}</p>
                                 <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">{evt.description}</p>
-                                <code className="text-[10px] text-fuchsia-400/60 font-mono mt-1 block">{evt.id}</code>
+                                <code className="text-[10px] text-brand-glow/60 font-mono mt-1 block">{evt.id}</code>
                             </div>
                         </div>
                     ))}
@@ -218,11 +218,11 @@ export default function Webhooks() {
             </div>
 
             {/* Exemplo de Payload */}
-            <div className="${tw.card} space-y-3">
+            <div className={`\${tw.card} space-y-3`}>
                 <div className="flex items-center justify-between">
                     <h3 className="text-sm font-bold text-gray-400 uppercase tracking-wider">Exemplo de Payload</h3>
                     <button onClick={handleCopy} className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-white transition-colors px-2 py-1 rounded-lg hover:bg-gray-800/40/5">
-                        {copied ? <><CheckCircle className="w-3 h-3 text-purple-400" /> Copiado!</> : <><Copy className="w-3 h-3" /> Copiar</>}
+                        {copied ? <><CheckCircle className="w-3 h-3 text-brand-glow" /> Copiado!</> : <><Copy className="w-3 h-3" /> Copiar</>}
                     </button>
                 </div>
                 <pre className="bg-black/30 rounded-xl p-4 text-xs text-purple-300 font-mono overflow-x-auto border border-white/5">

@@ -50,7 +50,7 @@ export default function BalanceCard() {
     const hasData = transactions.length > 0;
 
     return (
-        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-violet-600 via-indigo-600 to-purple-700 p-6 h-full min-h-[180px] group">
+        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-violet-600 via-indigo-600 to-brand-dark p-6 h-full min-h-[180px] group">
             {/* Background Sparkline */}
             <div className="absolute inset-0 opacity-20 pointer-events-none group-hover:opacity-40 transition-opacity">
                 <ResponsiveContainer width="100%" height="100%">

@@ -10,85 +10,45 @@
 
 /* ── DARK THEME (padrão) ── */
 :root {
-    --bg-main: #080d1a;
-    --bg-secondary: #0d1424;
-    --surface-1: #111827;
-    --surface-2: #1a2438;
-    --surface-3: #243048;
-    --text-primary: #f1f5f9;
-    --text-secondary: #cbd5e1;
+    --bg-main: #06060a;
+    --bg-secondary: #0a0a12;
+    --surface-1: rgba(16, 185, 129, 0.06);
+    --surface-2: rgba(16, 185, 129, 0.04);
+    --surface-3: rgba(16, 185, 129, 0.02);
+    --text-primary: #e2e8f0;
+    --text-secondary: #94a3b8;
     --text-muted: #64748b;
-    --brand-primary: #8b5cf6;
-    --brand-secondary: #6366f1;
-    --brand-accent: #0ea5e9;
+    --brand-primary: #10B981;
+    --brand-dark: #064E3B;
+    --brand-glow: #34D399;
     --success: #10b981;
     --danger: #f43f5e;
     --warning: #f59e0b;
-    --border-subtle: rgba(255, 255, 255, 0.06);
-    --border-medium: rgba(255, 255, 255, 0.10);
-    --border-strong: rgba(255, 255, 255, 0.16);
-    --glow-purple: rgba(139, 92, 246, 0.20);
-    --glow-blue: rgba(99, 102, 241, 0.18);
-    --card-shadow:
-        0 1px 0 rgba(255, 255, 255, 0.04) inset,
-        0 0 0 1px rgba(255, 255, 255, 0.06),
-        0 4px 16px rgba(0, 0, 0, 0.40),
-        0 16px 48px rgba(0, 0, 0, 0.28);
-    --card-shadow-hover:
-        0 1px 0 rgba(255, 255, 255, 0.06) inset,
-        0 0 0 1px rgba(139, 92, 246, 0.25),
-        0 8px 32px rgba(0, 0, 0, 0.50),
-        0 0 40px rgba(139, 92, 246, 0.12);
-    --btn-shadow:
-        0 1px 0 rgba(255, 255, 255, 0.12) inset,
-        0 -1px 0 rgba(0, 0, 0, 0.30) inset,
-        0 4px 12px rgba(0, 0, 0, 0.30);
-    --btn-shadow-hover:
-        0 1px 0 rgba(255, 255, 255, 0.18) inset,
-        0 -1px 0 rgba(0, 0, 0, 0.35) inset,
-        0 8px 24px rgba(139, 92, 246, 0.35);
+    --border-subtle: rgba(16, 185, 129, 0.15);
+    --border-medium: rgba(16, 185, 129, 0.20);
+    --border-strong: rgba(16, 185, 129, 0.30);
 }
 
 /* ── LIGHT THEME ── */
 :root.light,
 .light {
-    --bg-main: #eef2f9;
-    --bg-secondary: #e4eaf6;
-    --surface-1: #ffffff;
-    --surface-2: #f8faff;
-    --surface-3: #f0f4fd;
-    --text-primary: #0f172a;
-    --text-secondary: #334155;
-    --text-muted: #64748b;
-    --brand-primary: #7c3aed;
-    --brand-secondary: #4f46e5;
-    --brand-accent: #0284c7;
+    --bg-main: #f8f7fc;
+    --bg-secondary: #ffffff;
+    --surface-1: rgba(139, 92, 246, 0.05);
+    --surface-2: rgba(139, 92, 246, 0.03);
+    --surface-3: rgba(139, 92, 246, 0.01);
+    --text-primary: #1e1b4b;
+    --text-secondary: #6b7280;
+    --text-muted: #9ca3af;
+    --brand-primary: #8B5CF6;
+    --brand-dark: #6D28D9;
+    --brand-glow: #A78BFA;
     --success: #059669;
     --danger: #e11d48;
     --warning: #d97706;
-    --border-subtle: rgba(15, 23, 42, 0.06);
-    --border-medium: rgba(15, 23, 42, 0.10);
-    --border-strong: rgba(15, 23, 42, 0.16);
-    --glow-purple: rgba(124, 58, 237, 0.10);
-    --glow-blue: rgba(79, 70, 229, 0.08);
-    --card-shadow:
-        0 1px 0 rgba(255, 255, 255, 0.90) inset,
-        0 0 0 1px rgba(15, 23, 42, 0.07),
-        0 2px 8px rgba(15, 23, 42, 0.06),
-        0 8px 32px rgba(100, 120, 180, 0.12);
-    --card-shadow-hover:
-        0 1px 0 rgba(255, 255, 255, 1.00) inset,
-        0 0 0 1px rgba(124, 58, 237, 0.18),
-        0 4px 16px rgba(15, 23, 42, 0.10),
-        0 16px 48px rgba(100, 120, 180, 0.18);
-    --btn-shadow:
-        0 1px 0 rgba(255, 255, 255, 0.80) inset,
-        0 -1px 0 rgba(0, 0, 0, 0.10) inset,
-        0 2px 8px rgba(0, 0, 0, 0.10);
-    --btn-shadow-hover:
-        0 1px 0 rgba(255, 255, 255, 0.90) inset,
-        0 -1px 0 rgba(0, 0, 0, 0.14) inset,
-        0 6px 20px rgba(124, 58, 237, 0.22);
+    --border-subtle: rgba(139, 92, 246, 0.20);
+    --border-medium: rgba(139, 92, 246, 0.25);
+    --border-strong: rgba(139, 92, 246, 0.35);
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -138,71 +98,98 @@ body::before {
 /* ═══════════════════════════════════════════════════════════
    GLASS CARD
    ═══════════════════════════════════════════════════════════ */
-.glass-card {
-    border-radius: 1.25rem;
-    padding: 1.25rem;
-    transition: box-shadow 0.25s ease, transform 0.25s ease, border-color 0.25s ease;
-    position: relative;
-    overflow: hidden;
+.tw-card {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-:root:not(.light) .glass-card {
-    background: linear-gradient(145deg,
-            rgba(26, 36, 56, 0.95) 0%,
-            rgba(17, 24, 39, 0.90) 100%);
-    border: 1px solid var(--border-medium);
-    box-shadow: var(--card-shadow);
+:root:not(.light) .tw-card {
+    background: linear-gradient(145deg, rgba(16, 185, 129, 0.08), rgba(6, 6, 10, 0.9));
+    border: 1px solid rgba(16, 185, 129, 0.12);
+    border-radius: 20px;
+    box-shadow:
+        0 4px 6px rgba(0, 0, 0, 0.4),
+        0 10px 30px rgba(0, 0, 0, 0.5),
+        0 1px 0 rgba(16, 185, 129, 0.15) inset,
+        0 -1px 0 rgba(0, 0, 0, 0.3) inset;
+    backdrop-filter: blur(16px);
+    transform: translateZ(0);
 }
 
-:root:not(.light) .glass-card::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    background: linear-gradient(135deg,
-            rgba(255, 255, 255, 0.04) 0%,
-            transparent 50%);
-    pointer-events: none;
-    z-index: 0;
+:root:not(.light) .tw-card:hover {
+    transform: translateY(-4px) scale(1.01);
+    box-shadow:
+        0 8px 16px rgba(0, 0, 0, 0.5),
+        0 20px 50px rgba(16, 185, 129, 0.12),
+        0 1px 0 rgba(16, 185, 129, 0.25) inset;
+    border-color: rgba(16, 185, 129, 0.3);
 }
 
-:root:not(.light) .glass-card:hover {
-    box-shadow: var(--card-shadow-hover);
-    border-color: rgba(139, 92, 246, 0.25);
-    transform: translateY(-2px);
+.light .tw-card {
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(243, 240, 255, 0.8));
+    border: 1px solid rgba(139, 92, 246, 0.15);
+    border-radius: 20px;
+    box-shadow:
+        0 4px 6px rgba(139, 92, 246, 0.06),
+        0 10px 30px rgba(139, 92, 246, 0.08),
+        0 1px 0 rgba(255, 255, 255, 1) inset,
+        0 -1px 0 rgba(139, 92, 246, 0.06) inset;
 }
 
-.light .glass-card {
-    background: linear-gradient(145deg,
-            rgba(255, 255, 255, 0.98) 0%,
-            rgba(248, 250, 255, 0.95) 100%);
-    border: 1px solid rgba(255, 255, 255, 0.90);
-    border-bottom-color: rgba(180, 200, 240, 0.30);
-    border-right-color: rgba(180, 200, 240, 0.30);
-    box-shadow: var(--card-shadow);
+.light .tw-card:hover {
+    transform: translateY(-4px) scale(1.01);
+    box-shadow:
+        0 8px 16px rgba(139, 92, 246, 0.1),
+        0 20px 50px rgba(139, 92, 246, 0.12),
+        0 1px 0 rgba(255, 255, 255, 1) inset;
+    border-color: rgba(139, 92, 246, 0.3);
 }
 
-.light .glass-card::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    background: linear-gradient(135deg,
-            rgba(255, 255, 255, 0.60) 0%,
-            transparent 45%);
-    pointer-events: none;
-    z-index: 0;
+/* BANK CARD */
+.tw-bank-card {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.light .glass-card:hover {
-    box-shadow: var(--card-shadow-hover);
-    border-color: rgba(124, 58, 237, 0.20);
-    transform: translateY(-2px);
+:root:not(.light) .tw-bank-card {
+    background: linear-gradient(160deg, rgba(16, 185, 129, 0.12), rgba(6, 6, 10, 0.95));
+    border: 1.5px solid rgba(16, 185, 129, 0.2);
+    border-radius: 24px;
+    box-shadow:
+        0 8px 20px rgba(0, 0, 0, 0.6),
+        0 20px 60px rgba(0, 0, 0, 0.4),
+        0 2px 0 rgba(16, 185, 129, 0.2) inset,
+        0 -2px 0 rgba(0, 0, 0, 0.4) inset,
+        0 0 40px rgba(16, 185, 129, 0.05);
+    backdrop-filter: blur(20px);
+    transform: perspective(1000px) rotateX(1deg);
 }
 
-.glass-card>* {
-    position: relative;
-    z-index: 1;
+:root:not(.light) .tw-bank-card:hover {
+    transform: perspective(1000px) rotateX(0deg) translateY(-6px) scale(1.02);
+    box-shadow:
+        0 12px 30px rgba(0, 0, 0, 0.7),
+        0 30px 80px rgba(16, 185, 129, 0.15),
+        0 0 60px rgba(16, 185, 129, 0.1);
+    border-color: rgba(16, 185, 129, 0.4);
+}
+
+.light .tw-bank-card {
+    background: linear-gradient(160deg, rgba(255, 255, 255, 1), rgba(237, 233, 254, 0.6));
+    border: 1.5px solid rgba(139, 92, 246, 0.2);
+    border-radius: 24px;
+    box-shadow:
+        0 8px 20px rgba(139, 92, 246, 0.08),
+        0 20px 60px rgba(139, 92, 246, 0.06),
+        0 2px 0 rgba(255, 255, 255, 1) inset,
+        0 -2px 0 rgba(139, 92, 246, 0.05) inset;
+    transform: perspective(1000px) rotateX(1deg);
+}
+
+.light .tw-bank-card:hover {
+    transform: perspective(1000px) rotateX(0deg) translateY(-6px) scale(1.02);
+    box-shadow:
+        0 12px 30px rgba(139, 92, 246, 0.12),
+        0 30px 80px rgba(139, 92, 246, 0.1);
+    border-color: rgba(139, 92, 246, 0.4);
 }
 
 /* ═══════════════════════════════════════════════════════════

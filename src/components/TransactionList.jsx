@@ -5,7 +5,7 @@ import { useVisibility } from "../hooks/useVisibility";
 
 const transactions = [
     { icon: ShoppingCart, label: "Mercado Livre", category: "Compras", amount: -289.90, date: "Hoje, 14:32", color: "text-orange-400", bg: "bg-orange-500/10" },
-    { icon: TrendingUp, label: "Dividendos ITSA4", category: "Investimentos", amount: +420.00, date: "Hoje, 09:15", color: "text-purple-400", bg: "bg-purple-500/10" },
+    { icon: TrendingUp, label: "Dividendos ITSA4", category: "Investimentos", amount: +420.00, date: "Hoje, 09:15", color: "text-brand-glow", bg: "bg-brand-primary/10" },
     { icon: Utensils, label: "iFood", category: "Alimentação", amount: -67.50, date: "Ontem, 20:08", color: "text-red-400", bg: "bg-red-500/10" },
     { icon: Zap, label: "CPFL Energia", category: "Contas", amount: -184.30, date: "23 Fev", color: "text-yellow-400", bg: "bg-yellow-500/10" },
     { icon: Car, label: "Posto Shell", category: "Transporte", amount: -120.00, date: "22 Fev", color: "text-blue-400", bg: "bg-blue-500/10" },
@@ -55,7 +55,7 @@ export default function TransactionList() {
                         </div>
 
                         <div className="text-right flex-shrink-0">
-                            <p className={`text-sm font-semibold ${amount > 0 ? "text-purple-400" : "text-white/70"}`}>
+                            <p className={`text-sm font-semibold ${amount > 0 ? "text-brand-glow" : "text-white/70"}`}>
                                 {isVisible ? (
                                     <>
                                         {amount > 0 ? "+" : ""}

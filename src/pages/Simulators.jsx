@@ -47,10 +47,10 @@ const SIMULATORS = [
         name: 'Simulador de Investimentos',
         subtitle: 'Compare rendimentos lado a lado',
         icon: TrendingUp,
-        color: 'from-purple-500 to-emerald-600',
+        color: 'from-brand-primary to-emerald-600',
         bgLight: 'bg-purple-50',
         bgDark: 'dark:bg-purple-950/20',
-        textColor: 'text-purple-600 dark:text-purple-400',
+        textColor: 'text-brand-primary dark:text-brand-glow',
         component: InvestmentSimulator
     },
     {
@@ -58,10 +58,10 @@ const SIMULATORS = [
         name: 'Planejador Tributário',
         subtitle: 'Economize no Imposto de Renda',
         icon: Calculator,
-        color: 'from-purple-500 to-violet-600',
+        color: 'from-brand-primary to-violet-600',
         bgLight: 'bg-purple-50',
         bgDark: 'dark:bg-purple-950/20',
-        textColor: 'text-purple-600 dark:text-purple-400',
+        textColor: 'text-brand-primary dark:text-brand-glow',
         component: TaxPlanner
     },
     {
@@ -153,7 +153,7 @@ export default function Simulators({ financialData }) {
             {/* Background 3D Animated Layers */}
             <div className="fixed inset-0 pointer-events-none z-[-1] overflow-hidden">
                 <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-indigo-500/10 rounded-full blur-[100px] mix-blend-multiply dark:mix-blend-screen animate-blob" />
-                <div className="absolute top-[20%] right-[-10%] w-[50%] h-[50%] bg-purple-500/10 rounded-full blur-[100px] mix-blend-multiply dark:mix-blend-screen animate-blob animation-delay-2000" />
+                <div className="absolute top-[20%] right-[-10%] w-[50%] h-[50%] bg-brand-primary/10 rounded-full blur-[100px] mix-blend-multiply dark:mix-blend-screen animate-blob animation-delay-2000" />
                 <div className="absolute bottom-[-20%] left-[20%] w-[60%] h-[60%] bg-blue-500/10 rounded-full blur-[100px] mix-blend-multiply dark:mix-blend-screen animate-blob animation-delay-4000" />
             </div>
 
@@ -161,7 +161,7 @@ export default function Simulators({ financialData }) {
             <div className="relative z-10 mb-12">
                 <div className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-gray-900 via-indigo-950 to-black p-8 md:p-12 text-white shadow-[0_20px_50px_-15px_rgba(79,70,229,0.3)] border border-white/10 group">
                     {/* Floating Orbs inside card */}
-                    <div className="absolute -right-20 -top-20 w-64 h-64 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full mix-blend-screen filter blur-[40px] opacity-40 group-hover:scale-110 transition-transform duration-1000" />
+                    <div className="absolute -right-20 -top-20 w-64 h-64 bg-gradient-to-br from-indigo-500 to-brand-primary rounded-full mix-blend-screen filter blur-[40px] opacity-40 group-hover:scale-110 transition-transform duration-1000" />
                     <div className="absolute -left-20 -bottom-20 w-80 h-80 bg-gradient-to-tr from-blue-600 to-emerald-500 rounded-full mix-blend-screen filter blur-[60px] opacity-30 group-hover:scale-110 transition-transform duration-1000 delay-100" />
 
                     <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+PGRlZnM+PG1hdHRlcm4gaWQ9ImciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTTAgNDBoNDBWMEgweiIgZmlsbD0ibm9uZSIvPjxwYXRoIGQ9Ik0wIDEwaDQwTTAgMjBoNDBNMCAzMGg0ME0xMCAwdjQwTTIwIDB2NDBNMzAgMHY0MCIgc3Ryb2tlPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMDUpIiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZykiLz48L3N2Zz4=')] opacity-20" />
@@ -182,7 +182,7 @@ export default function Simulators({ financialData }) {
 
                         {/* 3D Visual Decorative Element for desktop */}
                         <div className="hidden lg:flex relative w-72 h-72 items-center justify-center">
-                            <div className="absolute inset-x-8 inset-y-8 bg-gradient-to-tr from-indigo-500/30 to-purple-500/30 rounded-3xl animate-[spin_10s_linear_infinite] border border-white/20 backdrop-blur-xl" />
+                            <div className="absolute inset-x-8 inset-y-8 bg-gradient-to-tr from-indigo-500/30 to-brand-primary/30 rounded-3xl animate-[spin_10s_linear_infinite] border border-white/20 backdrop-blur-xl" />
                             <div className="absolute inset-x-12 inset-y-12 bg-gradient-to-br from-blue-500/30 to-emerald-500/30 rounded-full animate-[spin_15s_linear_infinite_reverse] border border-white/20 backdrop-blur-md" />
                             <div className="relative w-32 h-32 bg-gradient-to-br from-white/10 to-transparent rounded-2xl flex items-center justify-center border border-white/30 backdrop-blur-md shadow-[0_0_50px_rgba(255,255,255,0.2)] transform hover:scale-110 transition-transform duration-500 hover:-rotate-12 cursor-pointer z-20">
                                 <Target className="w-16 h-16 text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.5)]" />

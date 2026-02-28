@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { tw } from '@/lib/theme';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { Eye, EyeOff, Loader2, Sparkles, ArrowRight, Lock } from 'lucide-react';
@@ -70,7 +71,7 @@ export default function SignUp() {
                     <div className="absolute inset-0 opacity-[0.03] bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]" />
                 </div>
 
-                <div className="w-full max-w-md text-center animate-fade-in p-12 bg-slate-900/60 border border-white/5 rounded-[3rem] backdrop-blur-3xl shadow-2xl z-10">
+                <div className={`w-full max-w-md text-center animate-fade-in p-12 ${tw.card} shadow-2xl z-10`}>
                     <div className="w-20 h-20 bg-brand-primary/10 rounded-full flex items-center justify-center mx-auto mb-10 shadow-inner">
                         <Sparkles className="w-10 h-10 text-brand-primary" />
                     </div>
@@ -104,7 +105,7 @@ export default function SignUp() {
                     </p>
                 </div>
 
-                <div className="bg-slate-900/60 border border-white/5 p-10 rounded-[3rem] shadow-[0_30px_70px_-20px_rgba(0,0,0,0.6)] backdrop-blur-3xl relative overflow-hidden">
+                <div className={`p-10 ${tw.card} relative overflow-hidden`}>
                     {/* Interior glow for depth */}
                     <div className="absolute -top-24 -right-24 w-48 h-48 bg-brand-primary/[0.08] rounded-full blur-[80px] pointer-events-none" />
 

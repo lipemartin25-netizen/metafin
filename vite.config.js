@@ -71,17 +71,20 @@ export default defineConfig({
         safari10: true, // Compatibilidade com Safari 10
       },
     },
-    // Aumentar limite de warning para chunks grandes
-    chunkSizeWarningLimit: 1000,
+    // Limite de warning reduzido para detectar chunks pesados mais cedo
+    chunkSizeWarningLimit: 400,
     rollupOptions: {
       output: {
-        // Separação estática de chunks recomendada pelo usuário para evitar avisos circulares
+        // Chunk splitting manual — carregamento sob demanda por rota
         manualChunks: {
           'vendor-react': ['react', 'react-dom', 'react-router-dom'],
           'vendor-supabase': ['@supabase/supabase-js'],
           'vendor-charts': ['recharts'],
           'vendor-icons': ['lucide-react'],
+          'vendor-ui': ['framer-motion'],
           'vendor-utils': ['date-fns', 'papaparse', 'dompurify'],
+          // Bibliotecas de PDF isoladas — só carregam quando usuário acessa Relatórios
+          'vendor-pdf': ['jspdf', 'html2canvas'],
         },
       },
     },

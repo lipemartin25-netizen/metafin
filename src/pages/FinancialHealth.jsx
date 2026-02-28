@@ -2,7 +2,7 @@ import { useMemo, useEffect, useState } from 'react';
 import { useTransactions } from '../hooks/useTransactions';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
-import { Heart, TrendingUp, TrendingDown, AlertTriangle, CheckCircle, Shield, Lightbulb, ArrowRight, Leaf, Zap, Sparkles } from 'lucide-react';
+import { Heart, TrendingUp, TrendingDown, AlertTriangle, CheckCircle, Shield, Lightbulb, ArrowRight, Leaf, Zap, Sparkles, RefreshCw } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { usePersistentState } from '../hooks/usePersistentState';
 import { calculateScore, calculateEcoImpact } from '../lib/scoreCalculator';
@@ -227,44 +227,59 @@ export default function FinancialHealth() {
                 </div>
             </div>
 
-            {/* Main Score Premium Display — Redesenhado */}
-            <div className="glass-card relative overflow-hidden border-none bg-gradient-to-br from-[#1e293b] to-[#0f172a] shadow-2xl p-6">
-                {/* Background Decorativo */}
-                <div className="absolute -right-32 -top-32 w-96 h-96 rounded-full blur-[100px] opacity-10 bg-pink-500" />
-                <div className="absolute -left-32 -bottom-32 w-96 h-96 rounded-full blur-[100px] opacity-10 bg-blue-500" />
+            {/* Main Score Premium Display — Redesenhado v2 (sem espaço vazio) */}
+            <div className="relative overflow-hidden rounded-2xl border border-white/5 shadow-2xl" style={{ background: 'linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%)' }}>
+                {/* Background Glows Decorativos */}
+                <div className="absolute -right-24 -top-24 w-72 h-72 rounded-full blur-[90px] opacity-15 bg-pink-500 pointer-events-none" />
+                <div className="absolute -left-24 -bottom-24 w-72 h-72 rounded-full blur-[90px] opacity-10 bg-indigo-500 pointer-events-none" />
+                <div className="absolute left-1/2 top-0 w-48 h-24 rounded-full blur-[60px] opacity-10 bg-cyan-400 pointer-events-none -translate-x-1/2" />
 
-                <div className="relative z-10 flex flex-col md:flex-row items-center gap-8">
-                    {/* Score (Left Column) */}
-                    <div className="flex flex-col items-center justify-center md:w-2/5 border-b md:border-b-0 md:border-r border-white/5 pb-6 md:pb-0 md:pr-8">
-                        <div className="relative w-36 h-36 flex-shrink-0">
+                {/* Badge de status no topo */}
+                <div className="relative z-10 px-6 pt-5 pb-0 flex items-center justify-between">
+                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/30">Score de Saúde</span>
+                    <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/5 border border-white/10">
+                        <span className="text-xs">{getScoreIcon(analysis.score)}</span>
+                        <span className="text-xs font-bold text-white uppercase tracking-wider">{getScoreLabel(analysis.score)}</span>
+                    </div>
+                </div>
+
+                {/* Layout Principal: Score (esquerda) + Métricas (direita) */}
+                <div className="relative z-10 flex flex-col sm:flex-row items-center gap-6 p-6 pt-4">
+
+                    {/* Score Circular — Compacto e centralizado */}
+                    <div className="flex flex-col items-center gap-3 sm:w-40 flex-shrink-0">
+                        <div className="relative w-32 h-32">
+                            {/* Anel de fundo */}
                             <svg className="w-full h-full transform -rotate-90" viewBox="0 0 160 160">
-                                <circle cx="80" cy="80" r="70" fill="none" strokeWidth="12" className="stroke-white/5" />
+                                <circle cx="80" cy="80" r="68" fill="none" strokeWidth="10" className="stroke-white/5" />
+                                {/* Anel de progresso colorido */}
                                 <circle
                                     cx="80"
                                     cy="80"
-                                    r="70"
+                                    r="68"
                                     fill="none"
-                                    strokeWidth="12"
+                                    strokeWidth="10"
                                     strokeLinecap="round"
                                     stroke={scoreColor}
-                                    strokeDasharray={2 * Math.PI * 70}
-                                    strokeDashoffset={(2 * Math.PI * 70) - (analysis.score / 100) * (2 * Math.PI * 70)}
-                                    className="transition-all duration-[2000ms] ease-out shadow-[0_0_20px_rgba(255,255,255,0.1)]"
+                                    strokeDasharray={2 * Math.PI * 68}
+                                    strokeDashoffset={(2 * Math.PI * 68) - (analysis.score / 100) * (2 * Math.PI * 68)}
+                                    className="transition-all duration-[2000ms] ease-out"
+                                    style={{ filter: `drop-shadow(0 0 8px ${scoreColor}80)` }}
                                 />
                             </svg>
+                            {/* Número central */}
                             <div className="absolute inset-0 flex flex-col items-center justify-center">
-                                <span className="text-4xl font-black text-white drop-shadow-lg">{analysis.score}</span>
-                                <span className="text-[10px] text-gray-500 font-bold uppercase tracking-widest mt-1">Score /100</span>
+                                <span className="text-4xl font-black text-white drop-shadow-lg leading-none">{analysis.score}</span>
+                                <span className="text-[9px] text-gray-500 font-bold uppercase tracking-widest mt-1">/100</span>
                             </div>
-                        </div>
-                        <div className="mt-4 flex items-center gap-2 px-3 py-1 bg-white/5 border border-white/10 rounded-full">
-                            <span className="text-sm">{getScoreIcon(analysis.score)}</span>
-                            <span className="text-sm font-bold text-white uppercase tracking-wider">{getScoreLabel(analysis.score)}</span>
                         </div>
                     </div>
 
-                    {/* Metrics (Right Column) */}
-                    <div className="w-full md:w-3/5 space-y-4">
+                    {/* Divisor vertical (apenas desktop) */}
+                    <div className="hidden sm:block w-px self-stretch bg-white/5 flex-shrink-0" />
+
+                    {/* Métricas — Direita (ou baixo no mobile) */}
+                    <div className="flex-1 w-full space-y-3.5">
                         {[
                             { label: 'Receitas', val: analysis.income, color: 'emerald-400', icon: TrendingUp, max: analysis.income > analysis.expenses ? analysis.income : analysis.expenses * 1.2 },
                             { label: 'Despesas', val: analysis.expenses, color: 'rose-400', icon: TrendingDown, max: analysis.income > analysis.expenses ? analysis.income : analysis.expenses * 1.2 },
@@ -276,15 +291,15 @@ export default function FinancialHealth() {
                             const pct = item.pct !== undefined ? Math.max(0, Math.min(item.pct, 100)) : (item.max ? (Math.max(0, valNum) / item.max) * 100 : 0);
 
                             return (
-                                <div key={idx} className="group/item">
-                                    <div className="flex items-center justify-between mb-1.5">
-                                        <div className="flex items-center gap-2 text-gray-400 text-xs font-semibold">
+                                <div key={idx}>
+                                    <div className="flex items-center justify-between mb-1">
+                                        <div className={`flex items-center gap-1.5 text-xs font-semibold text-gray-400`}>
                                             <item.icon className={`w-3.5 h-3.5 text-${item.color}`} />
                                             {item.label}
                                         </div>
                                         <span className={`text-sm font-black text-${item.color}`}>{displayVal}</span>
                                     </div>
-                                    <div className="h-1.5 bg-white/5 rounded-full overflow-hidden">
+                                    <div className="h-1.5 bg-white/[0.06] rounded-full overflow-hidden">
                                         <div
                                             className={`h-full bg-${item.color} rounded-full transition-all duration-1000 ease-out`}
                                             style={{ width: `${pct}%` }}
@@ -294,14 +309,11 @@ export default function FinancialHealth() {
                             );
                         })}
 
-                        {/* Top Categories Inline Bar */}
+                        {/* Top Categories compactas */}
                         {analysis.topCategories.length > 0 && (
-                            <div className="pt-4 mt-4 border-t border-white/5">
-                                <p className="text-[10px] text-gray-500 uppercase font-black tracking-widest mb-3 flex items-center justify-between">
-                                    Maiores Gastos
-                                    <span className="text-[9px] lowercase font-normal italic">top 4 categorias</span>
-                                </p>
-                                <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+                            <div className="pt-3 mt-1 border-t border-white/5">
+                                <p className="text-[9px] text-gray-500 uppercase font-black tracking-widest mb-2">Maiores Gastos</p>
+                                <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
                                     {analysis.topCategories.slice(0, 4).map((cat, i) => (
                                         <div key={i} className="flex-shrink-0 bg-white/5 border border-white/5 px-2.5 py-1.5 rounded-lg flex items-center gap-2">
                                             <div className="w-1.5 h-1.5 rounded-full bg-indigo-500" />
@@ -317,6 +329,7 @@ export default function FinancialHealth() {
                     </div>
                 </div>
             </div>
+
 
             {/* Divisão: Dicas e Metas - Ajustado Spacing (16px gap) */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-4">

@@ -51,9 +51,9 @@ export default function RetirementSimulator({ financialData }) {
 
  return (
  <div className="space-y-6 animate-fade-in">
- <div className="relative overflow-hidden rounded-[2.5rem] bg-surface-primary from-indigo-600 via-blue-600 to-fuchsia-700 p-8 md:p-12 text-content-primary shadow-card group border border-[var(--border)] perspective-1000">
+ <div className="relative overflow-hidden rounded-[2.5rem] bg-[var(--bg-base)] from-indigo-600 via-blue-600 to-fuchsia-700 p-8 md:p-12 text-[var(--text-primary)] shadow-glass-card group border border-[var(--border)] perspective-1000">
  {/* Efeitos 3D Internos */}
- <div className="absolute inset-x-0 -bottom-20 h-64 bg-surface-primary from-black/40 to-transparent" />
+ <div className="absolute inset-x-0 -bottom-20 h-64 bg-[var(--bg-base)] from-black/40 to-transparent" />
  <div className="absolute -left-20 -top-20 w-80 h-80 bg-gray-800/40/10 rounded-full mix-blend-overlay filter blur-[40px] opacity-60 group-hover:-translate-y-px transition-transform transition-transform duration-1000 ease-out" />
  <div className="absolute top-10 right-10 w-40 h-40 bg-cyan-400/20 rounded-full mix-blend-color-dodge filter blur-[40px] opacity-60 group-hover:-translate-y-px transition-transform duration-1000 ease-out delay-100" />
  <Umbrella className="absolute -right-10 -top-10 h-64 w-64 opacity-10 group-hover:-translate-y-px transition-transform group-hover:opacity-20 transition-all duration-1000 blur-xl" />
@@ -64,37 +64,37 @@ export default function RetirementSimulator({ financialData }) {
  </div>
  Simulador de Aposentadoria Segura
  </h2>
- <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 md:gap-6 relative z-10">
+ <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 md:gap-6 relative z-10 animate-fade-in">
  <div className="bg-gray-800/40/10 rounded-3xl p-5 border border-[var(--border)] shadow-inner group-hover:-translate-y-px transition-transform duration-300">
  <p className="text-[10px] uppercase font-black tracking-[0.2em] opacity-80 mb-2">Reserva Desejada</p>
- <p className="text-xl md:text-3xl font-black drop-shadow-card tracking-tight">
+ <p className="text-xl md:text-3xl font-black drop-shadow-glass-card tracking-tight">
  {formatCurrency(result.requiredPortfolio)}
  </p>
  </div>
  <div className="bg-gray-800/40/10 rounded-3xl p-5 border border-[var(--border)] shadow-inner group-hover:-translate-y-px transition-transform duration-300 delay-75">
  <p className="text-[10px] uppercase font-black tracking-[0.2em] opacity-80 mb-2">Aporte Necessário</p>
- <p className="text-xl md:text-3xl font-black drop-shadow-card text-yellow-300 tracking-tight">
+ <p className="text-xl md:text-3xl font-black drop-shadow-glass-card text-yellow-300 tracking-tight">
  {formatCurrency(result.monthlyContribution)}
- <span className="text-xs md:text-sm font-medium ml-1 text-content-primary/70">/mês</span>
+ <span className="text-xs md:text-sm font-medium ml-1 text-[var(--text-primary)]/70">/mês</span>
  </p>
  </div>
  <div className="bg-gray-800/40/10 rounded-3xl p-5 border border-[var(--border)] shadow-inner group-hover:-translate-y-px transition-transform duration-300 delay-100">
  <p className="text-[10px] uppercase font-black tracking-[0.2em] opacity-80 mb-2">Renda Vitalícia</p>
- <p className="text-xl md:text-3xl font-black drop-shadow-card tracking-tight">
+ <p className="text-xl md:text-3xl font-black drop-shadow-glass-card tracking-tight">
  {formatCurrency(params.desiredRetirementIncome)}
  </p>
  </div>
- <div className="lg:col-span-2 bg-black/20 rounded-3xl p-5 border border-[var(--border)] shadow-card group-hover:-translate-y-px transition-transform duration-300 delay-150">
+ <div className="lg:col-span-2 bg-black/20 rounded-3xl p-5 border border-[var(--border)] shadow-glass-card group-hover:-translate-y-px transition-transform duration-300 delay-150">
  <p className="text-[10px] uppercase font-black tracking-[0.2em] opacity-80 mb-2 text-indigo-200">Status do Plano</p>
- <p className={`text-lg md:text-xl font-black drop-shadow-card mt-1 flex items-center gap-2 ${result.isSustainable ? 'text-purple-300' : 'text-red-300'}`}>
+ <p className={`text-lg md:text-xl font-black drop-shadow-glass-card mt-1 flex items-center gap-2 ${result.isSustainable ? 'text-purple-300' : 'text-red-300'}`}>
  {result.isSustainable ? (
  <>
- <span className="h-3 w-3 rounded-full bg-brand-glow animate-pulse shadow-card" />
+ <span className="h-3 w-3 rounded-full bg-brand-glow animate-pulse shadow-glass-card" />
  Seguro e Sustentável
  </>
  ) : (
  <>
- <span className="h-3 w-3 rounded-full bg-red-400 animate-pulse shadow-card" />
+ <span className="h-3 w-3 rounded-full bg-red-400 animate-pulse shadow-glass-card" />
  Insuficiente (Dura apenas {result.sustainableYears} anos)
  </>
  )}
@@ -103,19 +103,19 @@ export default function RetirementSimulator({ financialData }) {
  </div>
  </div>
 
- <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
- <div className={`\${tw.card} p-5 space-y-4`}>
- <h3 className="font-bold text-content-primary dark:text-content-primary flex items-center gap-2 mb-4">
+ <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-fade-in">
+ <div className={`\${tw.glass-card} p-5 space-y-4`}>
+ <h3 className="font-bold text-[var(--text-primary)] dark:text-[var(--text-primary)] flex items-center gap-2 mb-4">
  Configurações Base
  </h3>
 
  <div className="space-y-3">
- <div className="grid grid-cols-2 gap-3">
+ <div className="grid grid-cols-2 gap-3 animate-fade-in">
  <div>
  <label className="text-xs text-gray-500 font-bold uppercase tracking-wider block mb-1">Idade Atual</label>
  <input
  type="number"
- className="w-full bg-gray-800/30 dark:bg-black/20 border border-gray-700/40 dark:border-[var(--border)] rounded-xl px-3 py-2 text-sm text-content-primary dark:text-content-primary outline-none focus:border-indigo-500"
+ className="w-full bg-gray-800/30 dark:bg-black/20 border border-gray-700/40 dark:border-[var(--border)] rounded-xl px-3 py-2 text-sm text-[var(--text-primary)] dark:text-[var(--text-primary)] outline-none focus:border-indigo-500"
  value={params.currentAge}
  onChange={(e) => setParams({ ...params, currentAge: Number(e.target.value) })}
  />
@@ -124,7 +124,7 @@ export default function RetirementSimulator({ financialData }) {
  <label className="text-xs text-gray-500 font-bold uppercase tracking-wider block mb-1">Idade Aposento</label>
  <input
  type="number"
- className="w-full bg-gray-800/30 dark:bg-black/20 border border-gray-700/40 dark:border-[var(--border)] rounded-xl px-3 py-2 text-sm text-content-primary dark:text-content-primary outline-none focus:border-indigo-500"
+ className="w-full bg-gray-800/30 dark:bg-black/20 border border-gray-700/40 dark:border-[var(--border)] rounded-xl px-3 py-2 text-sm text-[var(--text-primary)] dark:text-[var(--text-primary)] outline-none focus:border-indigo-500"
  value={params.retiredAge}
  onChange={(e) => setParams({ ...params, retiredAge: Number(e.target.value) })}
  />
@@ -135,7 +135,7 @@ export default function RetirementSimulator({ financialData }) {
  <label className="text-xs text-gray-500 font-bold uppercase tracking-wider block mb-1">Renda Passiva Desejada</label>
  <input
  type="number"
- className="w-full bg-gray-800/30 dark:bg-black/20 border border-gray-700/40 dark:border-[var(--border)] rounded-xl px-3 py-2 text-sm text-content-primary dark:text-content-primary outline-none focus:border-brand-primary"
+ className="w-full bg-gray-800/30 dark:bg-black/20 border border-gray-700/40 dark:border-[var(--border)] rounded-xl px-3 py-2 text-sm text-[var(--text-primary)] dark:text-[var(--text-primary)] outline-none focus:border-brand-primary"
  value={params.desiredRetirementIncome}
  onChange={(e) => setParams({ ...params, desiredRetirementIncome: Number(e.target.value) })}
  />
@@ -156,8 +156,8 @@ export default function RetirementSimulator({ financialData }) {
  </div>
 
  <div className="lg:col-span-2 space-y-6">
- <div className={`\${tw.card} p-5`}>
- <h3 className="font-bold text-content-primary dark:text-content-primary mb-4 flex items-center gap-2">
+ <div className={`\${tw.glass-card} p-5`}>
+ <h3 className="font-bold text-[var(--text-primary)] dark:text-[var(--text-primary)] mb-4 flex items-center gap-2">
  <HeartPulse className="h-5 w-5 text-indigo-500" /> Trajetória de Longevidade
  </h3>
  <div className="h-[300px]">

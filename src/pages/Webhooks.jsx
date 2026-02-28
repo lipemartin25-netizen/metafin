@@ -16,12 +16,12 @@ function WebhookCard({ webhook, onToggle, onDelete }) {
  const eventsDetails = webhook.events.map(eventId => WEBHOOK_EVENTS.find(e => e.id === eventId)).filter(Boolean);
 
  return (
- <div className={`${tw.card} p-5 space-y-4 border ${webhook.active ? 'border-brand-glow/30 shadow-card' : 'border-[var(--border)] opacity-70'}`}>
+ <div className={`${tw.glass-card} p-5 space-y-4 border ${webhook.active ? 'border-brand-glow/30 shadow-glass-card' : 'border-[var(--border)] opacity-70'}`}>
  <div className="flex justify-between items-start gap-4">
  <div className="flex-1 min-w-0">
  <div className="flex items-center gap-2 mb-1">
- <div className={`w-2.5 h-2.5 rounded-full ${webhook.active ? 'bg-brand-primary shadow-card animate-pulse' : 'bg-gray-500'}`} />
- <h3 className="text-lg font-bold text-content-primary truncate">{webhook.name}</h3>
+ <div className={`w-2.5 h-2.5 rounded-full ${webhook.active ? 'bg-brand-primary shadow-glass-card animate-pulse' : 'bg-gray-500'}`} />
+ <h3 className="text-lg font-bold text-[var(--text-primary)] truncate">{webhook.name}</h3>
  </div>
  <p className="text-xs font-mono text-gray-400 truncate bg-black/20 p-1.5 rounded-md inline-block max-w-full">
  {webhook.url}
@@ -148,7 +148,7 @@ export default function Webhooks() {
  <div className="py-8 space-y-8 animate-fade-in pb-24">
  <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
  <div>
- <h1 className="text-3xl font-bold text-content-primary flex items-center gap-3 mb-2">
+ <h1 className="text-3xl font-bold text-[var(--text-primary)] flex items-center gap-3 mb-2">
  <Webhook className="w-8 h-8 text-brand-glow" />
  Webhooks {webhooks.length > 0 && <span className="text-xl text-gray-500 font-normal">({webhooks.length})</span>}
  </h1>
@@ -168,11 +168,11 @@ export default function Webhooks() {
  <RefreshCw className="w-8 h-8 text-brand-glow animate-spin" />
  </div>
  ) : webhooks.length === 0 ? (
- <div className={`\${tw.card} p-10 text-center space-y-4`}>
+ <div className={`\${tw.glass-card} p-10 text-center space-y-4`}>
  <div className="w-16 h-16 rounded-2xl bg-brand-glow/10 flex items-center justify-center mx-auto">
  <Webhook className="w-8 h-8 text-brand-glow" />
  </div>
- <h3 className="text-lg font-bold text-content-primary">Nenhum webhook configurado</h3>
+ <h3 className="text-lg font-bold text-[var(--text-primary)]">Nenhum webhook configurado</h3>
  <p className="text-gray-400 text-sm max-w-md mx-auto leading-relaxed">
  Configure webhooks para receber notificações quando transações forem criadas,
  metas forem atingidas ou limites forem ultrapassados.
@@ -186,7 +186,7 @@ export default function Webhooks() {
  </button>
  </div>
  ) : (
- <div className="grid md:grid-cols-2 gap-4">
+ <div className="grid md:grid-cols-2 gap-4 animate-fade-in">
  {webhooks.map(webhook => (
  <WebhookCard
  key={webhook.id}
@@ -201,14 +201,14 @@ export default function Webhooks() {
  {/* Eventos Suportados */}
  <div className="space-y-4 pt-4">
  <h2 className="text-sm font-bold text-gray-500 uppercase tracking-widest">Eventos Suportados</h2>
- <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+ <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 animate-fade-in">
  {WEBHOOK_EVENTS.map((evt) => (
- <div key={evt.id} className={`\${tw.card} !p-4 flex items-start gap-3 border border-[var(--border)] hover:border-brand-glow/20 transition-all group`}>
+ <div key={evt.id} className={`\${tw.glass-card} !p-4 flex items-start gap-3 border border-[var(--border)] hover:border-brand-glow/20 transition-all group`}>
  <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style={{ backgroundColor: `${evt.color}15` }}>
  <evt.icon className="w-5 h-5" style={{ color: evt.color }} />
  </div>
  <div className="min-w-0">
- <p className="text-sm font-semibold text-content-primary group-hover:text-fuchsia-300 transition-colors">{evt.label}</p>
+ <p className="text-sm font-semibold text-[var(--text-primary)] group-hover:text-fuchsia-300 transition-colors">{evt.label}</p>
  <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">{evt.description}</p>
  <code className="text-[10px] text-brand-glow/60 font-mono mt-1 block">{evt.id}</code>
  </div>
@@ -218,10 +218,10 @@ export default function Webhooks() {
  </div>
 
  {/* Exemplo de Payload */}
- <div className={`\${tw.card} space-y-3`}>
+ <div className={`\${tw.glass-card} space-y-3`}>
  <div className="flex items-center justify-between">
  <h3 className="text-sm font-bold text-gray-400 uppercase tracking-wider">Exemplo de Payload</h3>
- <button onClick={handleCopy} className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-content-primary transition-colors px-2 py-1 rounded-lg hover:bg-gray-800/40/5">
+ <button onClick={handleCopy} className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-[var(--text-primary)] transition-colors px-2 py-1 rounded-lg hover:bg-gray-800/40/5">
  {copied ? <><CheckCircle className="w-3 h-3 text-brand-glow" /> Copiado!</> : <><Copy className="w-3 h-3" /> Copiar</>}
  </button>
  </div>

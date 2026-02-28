@@ -220,7 +220,7 @@ export default function FinancialHealth() {
  <div className="py-8 space-y-8 animate-fade-in pb-24">
  <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
  <div>
- <h1 className="text-3xl font-bold text-content-primary dark:text-content-primary flex items-center gap-2 mb-2">
+ <h1 className="text-3xl font-bold text-[var(--text-primary)] dark:text-[var(--text-primary)] flex items-center gap-2 mb-2">
  <Heart className="w-8 h-8 text-pink-500" />
  Saúde Financeira
  </h1>
@@ -237,10 +237,10 @@ export default function FinancialHealth() {
 
  {/* Badge de status no topo */}
  <div className="relative z-10 px-6 pt-5 pb-0 flex items-center justify-between">
- <span className="text-[10px] font-black uppercase tracking-[0.2em] text-content-primary/30">Score de Saúde</span>
+ <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--text-primary)]/30">Score de Saúde</span>
  <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-gray-800/40/5 border border-[var(--border)]">
  <span className="text-xs">{getScoreIcon(analysis.score)}</span>
- <span className="text-xs font-bold text-content-primary uppercase tracking-wider">{getScoreLabel(analysis.score)}</span>
+ <span className="text-xs font-bold text-[var(--text-primary)] uppercase tracking-wider">{getScoreLabel(analysis.score)}</span>
  </div>
  </div>
 
@@ -270,7 +270,7 @@ export default function FinancialHealth() {
  </svg>
  {/* Número central */}
  <div className="absolute inset-0 flex flex-col items-center justify-center">
- <span className="text-4xl font-black text-content-primary drop-shadow-lg leading-none">{analysis.score}</span>
+ <span className="text-4xl font-black text-[var(--text-primary)] drop-shadow-lg leading-none">{analysis.score}</span>
  <span className="text-[9px] text-gray-500 font-bold uppercase tracking-widest mt-1">/100</span>
  </div>
  </div>
@@ -320,7 +320,7 @@ export default function FinancialHealth() {
  <div className="w-1.5 h-1.5 rounded-full bg-indigo-500" />
  <div className="flex flex-col">
  <span className="text-[10px] text-gray-400 font-bold capitalize">{cat.cat}</span>
- <span className="text-[11px] text-content-primary font-black">{fmt(cat.total)}</span>
+ <span className="text-[11px] text-[var(--text-primary)] font-black">{fmt(cat.total)}</span>
  </div>
  </div>
  ))}
@@ -333,10 +333,10 @@ export default function FinancialHealth() {
 
 
  {/* Divisão: Dicas e Metas - Ajustado Spacing (16px gap) */}
- <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-4">
+ <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-4 animate-fade-in">
  {/* Tips & Recommendations */}
  <div className="space-y-4">
- <h3 className="text-lg font-bold text-content-primary dark:text-content-primary flex items-center gap-2">
+ <h3 className="text-lg font-bold text-[var(--text-primary)] dark:text-[var(--text-primary)] flex items-center gap-2">
  {aiTips.length > 0 ? (
  <><Sparkles className="w-5 h-5 text-brand-glow" /> MetaFin AI Insights</>
  ) : (
@@ -372,15 +372,15 @@ export default function FinancialHealth() {
  </div>
 
  {/* Eco-Finance Gamification Widget */}
- <div className={`\${tw.card} mt-6 p-6 border-l-4 border-l-emerald-500 relative overflow-hidden bg-black/40 group`}>
+ <div className={`\${tw.glass-card} mt-6 p-6 border-l-4 border-l-emerald-500 relative overflow-hidden bg-black/40 group`}>
  <div className="absolute -right-4 -top-4 w-32 h-32 bg-brand-primary/10 rounded-full blur-[40px] group-hover:bg-brand-primary/20 transition-all" />
- <h3 className="text-lg font-black text-content-primary flex items-center gap-2 mb-2 uppercase tracking-widest relative z-10">
+ <h3 className="text-lg font-black text-[var(--text-primary)] flex items-center gap-2 mb-2 uppercase tracking-widest relative z-10">
  <Leaf className="w-5 h-5 text-brand-primary" /> Eco-Finance Tracker
  </h3>
  <div className="flex items-end justify-between relative z-10">
  <div>
  <p className="text-sm text-gray-400 mb-1">Pegada de Carbono (Mensal)</p>
- <p className="text-3xl font-black text-brand-glow drop-shadow-card">
+ <p className="text-3xl font-black text-brand-glow drop-shadow-glass-card">
  {(analysis.totalCO2).toFixed(1)} <span className="text-sm text-brand-primary/60 uppercase">KG CO₂</span>
  </p>
  </div>
@@ -400,10 +400,10 @@ export default function FinancialHealth() {
 
  {/* Metas de Orçamento por Categoria */}
  <div className="space-y-4">
- <h3 className="text-lg font-bold text-content-primary dark:text-content-primary flex items-center gap-2">
+ <h3 className="text-lg font-bold text-[var(--text-primary)] dark:text-[var(--text-primary)] flex items-center gap-2">
  <Shield className="w-5 h-5 text-brand-primary" /> Limites de Gastos (MoM)
  </h3>
- <div className={`\${tw.card} space-y-6 p-6`}>
+ <div className={`\${tw.glass-card} space-y-6 p-6`}>
  <p className="text-sm text-gray-500 dark:text-gray-400">Defina e monitore tetos de gastos inteligentes para suas categorias de alto impacto (Mês-a-Mês).</p>
 
  {analysis.topCategories.map((cat) => {
@@ -411,7 +411,7 @@ export default function FinancialHealth() {
  const hasGoal = currentGoal > 0;
  const pctOfGoal = hasGoal ? Math.min((cat.total / currentGoal) * 100, 100) : 0;
  const isOverBudget = hasGoal && cat.total > currentGoal;
- const barColor = isOverBudget ? 'bg-red-500 shadow-card' : (pctOfGoal > 80 ? 'bg-yellow-500 shadow-card' : 'bg-brand-primary shadow-card');
+ const barColor = isOverBudget ? 'bg-red-500 shadow-glass-card' : (pctOfGoal > 80 ? 'bg-yellow-500 shadow-glass-card' : 'bg-brand-primary shadow-glass-card');
 
  return (
  <div key={cat.cat} className="space-y-3 group bg-gray-800/30/50 dark:bg-gray-800/40/[0.02] p-4 rounded-xl border border-transparent hover:border-brand-primary/20 transition-all">
@@ -420,18 +420,18 @@ export default function FinancialHealth() {
  <div className="w-8 h-8 rounded-lg bg-indigo-500/10 flex items-center justify-center text-indigo-500 font-bold uppercase text-[10px] tracking-wider">
  {cat.cat.substring(0, 2)}
  </div>
- <span className="text-content-primary dark:text-content-primary capitalize font-bold">{cat.cat}</span>
+ <span className="text-[var(--text-primary)] dark:text-[var(--text-primary)] capitalize font-bold">{cat.cat}</span>
  {hasGoal && isOverBudget && <AlertTriangle className="w-4 h-4 text-red-500 animate-pulse" />}
  </div>
  <div className="flex items-center gap-2 bg-gray-800/40 dark:bg-surface-800 p-1 rounded-lg border border-gray-700/40 dark:border-[var(--border)] shadow-lg shadow-black/10">
- <span className={`font-bold px-2 ${isOverBudget ? 'text-red-500' : 'text-content-primary dark:text-content-primary'}`}>
+ <span className={`font-bold px-2 ${isOverBudget ? 'text-red-500' : 'text-[var(--text-primary)] dark:text-[var(--text-primary)]'}`}>
  {fmt(cat.total)}
  </span>
  <div className="text-gray-300 dark:text-gray-600 text-lg font-light">/</div>
  <input
  type="number"
  placeholder="Definir..."
- className="w-24 px-2 py-1.5 text-xs font-bold bg-transparent text-content-primary dark:text-content-primary outline-none text-right focus:text-brand-primary placeholder-gray-400 transition-colors"
+ className="w-24 px-2 py-1.5 text-xs font-bold bg-transparent text-[var(--text-primary)] dark:text-[var(--text-primary)] outline-none text-right focus:text-brand-primary placeholder-gray-400 transition-colors"
  value={currentGoal || ''}
  onChange={(e) => updateBudget(cat.cat, parseFloat(e.target.value))}
  />

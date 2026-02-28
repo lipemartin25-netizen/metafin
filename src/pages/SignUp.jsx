@@ -65,18 +65,18 @@ export default function SignUp() {
 
  if (success) {
  return (
- <div className="min-h-screen bg-surface-primary flex items-center justify-center p-6 text-content-primary font-sans selection:bg-brand-primary/30 antialiased">
+ <div className="min-h-screen bg-[var(--bg-base)] flex items-center justify-center p-6 text-[var(--text-primary)] font-sans selection:bg-brand-primary/30 antialiased">
  <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
  <div className="absolute top-[-10%] right-[-5%] w-[50%] h-[50%] bg-brand-primary/[0.04] blur-[160px] rounded-full" />
  <div className="absolute inset-0 opacity-[0.03] bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]" />
  </div>
 
- <div className={`w-full max-w-md text-center animate-fade-in p-12 ${tw.card} shadow-elevated z-10`}>
+ <div className={`w-full max-w-md text-center animate-fade-in p-12 ${tw.glass-card} shadow-elevated z-10`}>
  <div className="w-20 h-20 bg-brand-primary/10 rounded-full flex items-center justify-center mx-auto mb-10 shadow-inner">
  <Sparkles className="w-10 h-10 text-brand-primary" />
  </div>
  <h2 className="text-3xl font-bold mb-4 tracking-tight">Bem-vindo, {name.split(' ')[0]}!</h2>
- <p className="text-content-secondary mb-10 font-medium text-balance">Configurando seu ambiente de alta performance...</p>
+ <p className="text-[var(--text-secondary)] mb-10 font-medium text-balance">Configurando seu ambiente de alta performance...</p>
  <Loader2 className="w-8 h-8 animate-spin text-brand-primary mx-auto" />
  </div>
  </div>
@@ -84,7 +84,7 @@ export default function SignUp() {
  }
 
  return (
- <div className="min-h-screen bg-surface-primary flex items-center justify-center p-6 relative overflow-hidden text-content-primary font-sans selection:bg-brand-primary/30 antialiased">
+ <div className="min-h-screen bg-[var(--bg-base)] flex items-center justify-center p-6 relative overflow-hidden text-[var(--text-primary)] font-sans selection:bg-brand-primary/30 antialiased">
  {/* Background elements matched with Landing Page */}
  <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
  <div className="absolute top-[-10%] right-[-5%] w-[50%] h-[50%] bg-brand-primary/[0.04] blur-[160px] rounded-full" />
@@ -100,12 +100,12 @@ export default function SignUp() {
  <h1 className="text-2xl font-bold mb-3 tracking-tight uppercase">
  {step === 1 ? 'Cadastre-se' : 'Segurança'}
  </h1>
- <p className="text-content-secondary text-sm font-medium px-4">
+ <p className="text-[var(--text-secondary)] text-sm font-medium px-4">
  {step === 1 ? 'Ponto de partida ideal para a elite.' : 'Criptografia institucional Nexus ativa.'}
  </p>
  </div>
 
- <div className={`p-10 ${tw.card} relative overflow-hidden`}>
+ <div className={`p-10 ${tw.glass-card} relative overflow-hidden`}>
  {/* Interior glow for depth */}
  <div className="absolute -top-24 -right-24 w-48 h-48 bg-brand-primary/[0.08] rounded-full blur-[80px] pointer-events-none" />
 
@@ -126,7 +126,7 @@ export default function SignUp() {
  className="space-y-8 relative z-10"
  >
  <div className="space-y-3">
- <label className="text-[10px] font-black text-content-muted ml-1 uppercase tracking-widest">Nome Completo ou Razão</label>
+ <label className="text-[10px] font-black text-[var(--text-muted)] ml-1 uppercase tracking-widest">Nome Completo ou Razão</label>
  <input
  type="text"
  value={name}
@@ -134,7 +134,7 @@ export default function SignUp() {
  placeholder="ex: João Silva"
  required
  autoFocus
- className="w-full px-6 py-4 rounded-2xl bg-surface-secondary border border-[var(--border)] text-content-primary placeholder-slate-600 focus:outline-none focus:border-brand-primary/50 focus:bg-surface-secondary transition-all font-medium shadow-inner"
+ className="w-full px-6 py-4 rounded-2xl bg-[var(--bg-elevated)] border border-[var(--border)] text-[var(--text-primary)] placeholder-slate-600 focus:outline-none focus:border-brand-primary/50 focus:bg-[var(--bg-elevated)] transition-all font-medium shadow-inner"
  />
  </div>
  <button type="submit" className="w-full py-4 bg-brand-primary hover:bg-brand-glow text-slate-950 font-black rounded-2xl transition-all active:scale-[0.98] shadow-elevated shadow-brand-primary/20 flex items-center justify-center gap-2 group">
@@ -152,18 +152,18 @@ export default function SignUp() {
  >
  <div className="space-y-5">
  <div className="space-y-3">
- <label className="text-[10px] font-black text-content-muted ml-1 uppercase tracking-widest">E-mail Corporativo</label>
+ <label className="text-[10px] font-black text-[var(--text-muted)] ml-1 uppercase tracking-widest">E-mail Corporativo</label>
  <input
  type="email"
  value={email}
  onChange={(e) => setEmail(e.target.value)}
  placeholder="ex: joao@empresa.com"
  required
- className="w-full px-6 py-4 rounded-2xl bg-surface-secondary border border-[var(--border)] text-content-primary placeholder-slate-600 focus:outline-none focus:border-brand-primary/50 focus:bg-surface-secondary transition-all font-medium shadow-inner"
+ className="w-full px-6 py-4 rounded-2xl bg-[var(--bg-elevated)] border border-[var(--border)] text-[var(--text-primary)] placeholder-slate-600 focus:outline-none focus:border-brand-primary/50 focus:bg-[var(--bg-elevated)] transition-all font-medium shadow-inner"
  />
  </div>
  <div className="space-y-3">
- <label className="text-[10px] font-black text-content-muted ml-1 uppercase tracking-widest">Chave de Acesso</label>
+ <label className="text-[10px] font-black text-[var(--text-muted)] ml-1 uppercase tracking-widest">Chave de Acesso</label>
  <div className="relative">
  <input
  type={showPassword ? 'text' : 'password'}
@@ -171,12 +171,12 @@ export default function SignUp() {
  onChange={(e) => setPassword(e.target.value)}
  placeholder="Mínimo 6 caracteres"
  required
- className="w-full pl-6 pr-14 py-4 rounded-2xl bg-surface-secondary border border-[var(--border)] text-content-primary placeholder-slate-600 focus:outline-none focus:border-brand-primary/50 focus:bg-surface-secondary transition-all font-medium shadow-inner"
+ className="w-full pl-6 pr-14 py-4 rounded-2xl bg-[var(--bg-elevated)] border border-[var(--border)] text-[var(--text-primary)] placeholder-slate-600 focus:outline-none focus:border-brand-primary/50 focus:bg-[var(--bg-elevated)] transition-all font-medium shadow-inner"
  />
  <button
  type="button"
  onClick={() => setShowPassword(!showPassword)}
- className="absolute right-5 top-1/2 -translate-y-1/2 text-content-muted hover:text-content-primary transition-colors"
+ className="absolute right-5 top-1/2 -translate-y-1/2 text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors"
  >
  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
  </button>
@@ -188,7 +188,7 @@ export default function SignUp() {
  <button
  type="button"
  onClick={() => setStep(1)}
- className="px-6 py-4 bg-surface-secondary border border-[var(--border)] rounded-2xl text-content-secondary hover:text-content-primary hover:bg-surface-secondary transition-all font-bold"
+ className="px-6 py-4 bg-[var(--bg-elevated)] border border-[var(--border)] rounded-2xl text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-elevated)] transition-all font-bold"
  >
  Voltar
  </button>
@@ -201,14 +201,14 @@ export default function SignUp() {
  </AnimatePresence>
 
  <div className="mt-12 pt-8 border-t border-[var(--border)] text-center relative z-10">
- <div className="flex items-center justify-center gap-2 text-content-muted text-[10px] font-black tracking-[0.2em] uppercase">
+ <div className="flex items-center justify-center gap-2 text-[var(--text-muted)] text-[10px] font-black tracking-[0.2em] uppercase">
  <Lock className="w-4 h-4 text-brand-primary/80" />
  <span>Segurança de Dados NEXUS</span>
  </div>
  </div>
  </div>
 
- <p className="mt-10 text-center text-content-muted text-xs font-bold leading-relaxed">
+ <p className="mt-10 text-center text-[var(--text-muted)] text-xs font-bold leading-relaxed">
  Já possui acesso estratégico? <Link to="/login" className="text-brand-primary hover:text-brand-glow transition-colors ml-1 uppercase tracking-wider">Entrar no Painel</Link>
  </p>
  </div>

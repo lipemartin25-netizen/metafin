@@ -50,7 +50,7 @@ function MsgText({ text }) {
  <div key={i} className={line.startsWith('•') || /^\d+\./.test(line) ? 'ml-1' : ''}>
  {parts.map((p, j) =>
  j % 2 === 1
- ? <strong key={j} className="text-content-primary font-semibold">{p}</strong>
+ ? <strong key={j} className="text-[var(--text-primary)] font-semibold">{p}</strong>
  : <span key={j}>{p}</span>
  )}
  </div>
@@ -163,11 +163,11 @@ export default function AIAssistant() {
  {/* ── Header ── */}
  <div className="flex items-center justify-between mb-4 flex-shrink-0">
  <div className="flex items-center gap-3">
- <div className="w-10 h-10 rounded-xl bg-surface-primary from-violet-500 via-brand-primary to-brand-glow flex items-center justify-center shadow-lg shadow-brand-primary/25">
- <Bot className="w-5 h-5 text-content-primary" />
+ <div className="w-10 h-10 rounded-xl bg-[var(--bg-base)] from-violet-500 via-brand-primary to-brand-glow flex items-center justify-center shadow-lg shadow-brand-primary/25">
+ <Bot className="w-5 h-5 text-[var(--text-primary)]" />
  </div>
  <div>
- <h1 className="text-xl font-bold text-content-primary flex items-center gap-2">
+ <h1 className="text-xl font-bold text-[var(--text-primary)] flex items-center gap-2">
  MetaFin Agent
  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-violet-500/10 text-violet-400 border border-violet-500/20 tracking-wider">
  IA
@@ -182,7 +182,7 @@ export default function AIAssistant() {
  {messages.length > 0 && (
  <button
  onClick={() => setMessages([])}
- className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-gray-500 hover:text-content-primary hover:bg-gray-800/40/5 transition-all text-xs border border-[var(--border)]"
+ className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-gray-500 hover:text-[var(--text-primary)] hover:bg-gray-800/40/5 transition-all text-xs border border-[var(--border)]"
  >
  <RotateCcw size={12} /> Limpar
  </button>
@@ -191,18 +191,18 @@ export default function AIAssistant() {
 
  {/* ── Stats Bar ── */}
  {transactions.length > 0 && (
- <div className="grid grid-cols-3 gap-3 mb-4 flex-shrink-0">
- <div className={`\${tw.card} py-3 px-4 text-center`}>
+ <div className="grid grid-cols-3 gap-3 mb-4 flex-shrink-0 animate-fade-in">
+ <div className={`\${tw.glass-card} py-3 px-4 text-center`}>
  <TrendingUp className="w-4 h-4 text-brand-glow mx-auto mb-1" />
  <p className="text-[10px] text-gray-500 uppercase tracking-wider">Receita total</p>
  <p className="text-sm font-bold text-brand-glow">{fmt(totalIncome)}</p>
  </div>
- <div className={`\${tw.card} py-3 px-4 text-center`}>
+ <div className={`\${tw.glass-card} py-3 px-4 text-center`}>
  <PiggyBank className="w-4 h-4 text-violet-400 mx-auto mb-1" />
  <p className="text-[10px] text-gray-500 uppercase tracking-wider">Poupança</p>
  <p className="text-sm font-bold text-violet-400">{savingsRate.toFixed(0)}%</p>
  </div>
- <div className={`\${tw.card} py-3 px-4 text-center`}>
+ <div className={`\${tw.glass-card} py-3 px-4 text-center`}>
  <Wallet className="w-4 h-4 text-cyan-400 mx-auto mb-1" />
  <p className="text-[10px] text-gray-500 uppercase tracking-wider">Transações</p>
  <p className="text-sm font-bold text-cyan-400">{transactions.length}</p>
@@ -218,12 +218,12 @@ export default function AIAssistant() {
  <div className="p-6 h-full flex flex-col justify-between">
  {/* Welcome message */}
  <div className="flex items-start gap-3 mb-6">
- <div className="w-8 h-8 rounded-xl bg-surface-primary from-violet-500 to-brand-glow flex items-center justify-center flex-shrink-0 shadow-lg shadow-black/10">
- <Bot size={15} className="text-content-primary" />
+ <div className="w-8 h-8 rounded-xl bg-[var(--bg-base)] from-violet-500 to-brand-glow flex items-center justify-center flex-shrink-0 shadow-lg shadow-black/10">
+ <Bot size={15} className="text-[var(--text-primary)]" />
  </div>
- <div className={`\${tw.card} flex-1 py-4 px-5`}>
+ <div className={`\${tw.glass-card} flex-1 py-4 px-5`}>
  <p className="text-gray-200 text-sm leading-relaxed">
- Olá, <span className="text-content-primary font-semibold">{displayName}</span>! 👋{' '}
+ Olá, <span className="text-[var(--text-primary)] font-semibold">{displayName}</span>! 👋{' '}
  Sou o <strong className="text-violet-400">MetaFin Agent</strong> — consulto suas
  transações em tempo real com linguagem natural.
  </p>
@@ -246,7 +246,7 @@ export default function AIAssistant() {
  {/* Suggestion grid */}
  <div>
  <p className="text-xs text-gray-600 mb-3 font-medium uppercase tracking-wider">Consultas rápidas</p>
- <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+ <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 animate-fade-in">
  {SUGGESTIONS.map((s) => (
  <button
  key={s.label}
@@ -254,7 +254,7 @@ export default function AIAssistant() {
  className="flex flex-col items-start gap-1.5 p-3 rounded-xl bg-gray-800/40/[0.03] border border-[var(--border)] hover:bg-violet-500/5 hover:border-violet-500/20 transition-all text-left group"
  >
  <span className="text-xl">{s.icon}</span>
- <span className="text-xs text-gray-400 group-hover:text-content-primary transition-colors font-medium leading-tight">
+ <span className="text-xs text-gray-400 group-hover:text-[var(--text-primary)] transition-colors font-medium leading-tight">
  {s.label}
  </span>
  </button>
@@ -273,8 +273,8 @@ export default function AIAssistant() {
  className={`flex gap-3 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
  >
  {msg.role === 'assistant' && (
- <div className="w-7 h-7 rounded-lg bg-surface-primary from-violet-500 to-brand-glow flex items-center justify-center flex-shrink-0 mt-1 shadow-lg shadow-black/10">
- <Bot size={13} className="text-content-primary" />
+ <div className="w-7 h-7 rounded-lg bg-[var(--bg-base)] from-violet-500 to-brand-glow flex items-center justify-center flex-shrink-0 mt-1 shadow-lg shadow-black/10">
+ <Bot size={13} className="text-[var(--text-primary)]" />
  </div>
  )}
 
@@ -282,7 +282,7 @@ export default function AIAssistant() {
  {msg.tool && <ToolChip tool={msg.tool} />}
 
  <div className={`rounded-2xl px-4 py-3 text-sm ${msg.role === 'user'
- ? 'bg-violet-600/80 text-content-primary rounded-tr-sm border border-violet-500/30'
+ ? 'bg-violet-600/80 text-[var(--text-primary)] rounded-tr-sm border border-violet-500/30'
  : 'bg-gray-800/40/5 border border-[var(--border)] text-gray-200 rounded-tl-sm'
  }`}>
  <MsgText text={msg.text} />
@@ -306,8 +306,8 @@ export default function AIAssistant() {
  {/* Typing indicator */}
  {isTyping && (
  <div className="flex gap-3 items-start">
- <div className="w-7 h-7 rounded-lg bg-surface-primary from-violet-500 to-brand-glow flex items-center justify-center flex-shrink-0">
- <Bot size={13} className="text-content-primary" />
+ <div className="w-7 h-7 rounded-lg bg-[var(--bg-base)] from-violet-500 to-brand-glow flex items-center justify-center flex-shrink-0">
+ <Bot size={13} className="text-[var(--text-primary)]" />
  </div>
  <div className="bg-gray-800/40/5 border border-[var(--border)] rounded-2xl rounded-tl-sm px-4 py-3 flex items-center gap-2">
  {[0, 150, 300].map(d => (
@@ -330,7 +330,7 @@ export default function AIAssistant() {
  <button
  key={s.label}
  onClick={() => sendMessage(s.prompt)}
- className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[var(--border)] text-xs text-gray-400 hover:text-content-primary hover:border-violet-500/30 hover:bg-violet-500/5 transition-all whitespace-nowrap flex-shrink-0"
+ className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[var(--border)] text-xs text-gray-400 hover:text-[var(--text-primary)] hover:border-violet-500/30 hover:bg-violet-500/5 transition-all whitespace-nowrap flex-shrink-0"
  >
  <span>{s.icon}</span>
  <span>{s.label}</span>
@@ -350,12 +350,12 @@ export default function AIAssistant() {
  onChange={(e) => setInput(e.target.value)}
  placeholder='Ex: "Quanto gastei no iFood essa semana?"'
  disabled={isTyping}
- className="flex-1 bg-transparent text-content-primary placeholder-gray-600 text-sm focus:outline-none py-2 disabled:opacity-50"
+ className="flex-1 bg-transparent text-[var(--text-primary)] placeholder-gray-600 text-sm focus:outline-none py-2 disabled:opacity-50"
  />
  <button
  type="submit"
  disabled={!input.trim() || isTyping}
- className="p-2 rounded-xl bg-surface-primary from-violet-500 to-brand-glow text-content-primary hover:opacity-90 transition-all disabled:opacity-30 disabled:cursor-not-allowed shadow-lg shadow-violet-500/20 flex-shrink-0"
+ className="p-2 rounded-xl bg-[var(--bg-base)] from-violet-500 to-brand-glow text-[var(--text-primary)] hover:opacity-90 transition-all disabled:opacity-30 disabled:cursor-not-allowed shadow-lg shadow-violet-500/20 flex-shrink-0"
  >
  <Send size={14} />
  </button>

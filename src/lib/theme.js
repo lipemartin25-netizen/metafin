@@ -1,22 +1,47 @@
-// src/lib/theme.js — CLEAN VERSION
+// src/lib/theme.js
 export const tw = {
- // Cards
- card: 'bg-surface-card border border-[var(--border)] rounded-[16px] shadow-card hover:shadow-card-hover hover:border-[var(--border-hover)] hover:-translate-y-[1px] transition-all duration-200',
+    // === Cards ===
+    card: 'glass-card p-6',
+    cardElevated: 'glass-card-elevated p-6',
+    cardCompact: 'glass-card p-4',
 
- cardElevated: 'bg-surface-card border border-[var(--brand-border)] rounded-[20px] shadow-elevated hover:shadow-elevated-hover hover:border-brand hover:-translate-y-[2px] transition-all duration-250',
+    // === Buttons ===
+    btnPrimary: 'btn-brand',
+    btnSecondary: 'btn-glass',
 
- // Typography
- heading: 'text-content-primary font-bold',
- text: 'text-content-secondary',
- muted: 'text-content-muted text-sm',
+    // === Typography ===
+    heading: 'text-[var(--text-primary)] font-bold tracking-tight',
+    headingLg: 'text-[var(--text-primary)] font-bold tracking-tight text-2xl',
+    text: 'text-[var(--text-secondary)]',
+    muted: 'text-[var(--text-muted)] text-sm',
+    brandText: 'text-[var(--brand)] font-semibold',
 
- // Buttons
- btnPrimary: 'bg-brand text-content-primary rounded-xl px-5 py-2.5 font-semibold hover:opacity-90 hover:-translate-y-[1px] transition-all duration-200',
- btnSecondary: 'bg-surface-secondary text-content-primary border border-[var(--border)] rounded-xl px-5 py-2.5 font-medium hover:border-[var(--border-hover)] transition-all duration-200',
+    // === Layout ===
+    page: 'min-h-screen bg-[var(--bg-base)] p-6 md:p-8',
 
- // Layout
- page: 'min-h-screen bg-surface-primary p-6 md:p-8',
+    // === Inputs ===
+    input: 'input-glass w-full',
 
- // Inputs
- input: 'bg-surface-secondary border border-[var(--border)] rounded-[10px] px-4 py-2.5 text-content-primary focus:border-brand focus:ring-2 focus:ring-brand-subtle outline-none transition-all duration-200',
+    // === Sidebar ===  
+    sidebar: 'sidebar-glass',
+    sidebarItem: 'px-4 py-3 rounded-xl text-[var(--text-secondary)] hover:bg-[var(--brand-soft)] hover:text-[var(--brand)] transition-all duration-200 cursor-pointer',
+    sidebarItemActive: 'sidebar-item-active px-4 py-3',
+
+    // === Navbar ===
+    navbar: 'navbar-glass px-6 py-4',
+
+    // === Badge ===
+    badge: 'badge-brand',
+
+    // === Table ===
+    table: 'table-glass w-full',
+
+    // === Bank Icon ===
+    bankIcon: 'bank-icon',
+
+    // === Divider ===
+    divider: 'divider-glow',
+
+    // === Animation ===
+    fadeIn: 'animate-fade-in',
 };

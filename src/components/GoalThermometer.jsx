@@ -27,7 +27,7 @@ export default function GoalThermometer({ goal }) {
  };
 
  return (
- <div className={`relative rounded-2xl border p-5 \${tw.card} shadow-lg shadow-black/10 hover:shadow-lg transition-all duration-300 group overflow-hidden`}>
+ <div className={`relative rounded-2xl border p-5 \${tw.glass-card} shadow-lg shadow-black/10 hover:shadow-lg transition-all duration-300 group overflow-hidden`}>
 
  {pct >= 100 && (
  <div className="absolute -top-2 -right-2">
@@ -42,7 +42,7 @@ export default function GoalThermometer({ goal }) {
  </span>
  </div>
  <div className="flex-1 min-w-0">
- <h3 className="font-bold text-lg text-content-primary dark:text-content-primary truncate">{goal.name}</h3>
+ <h3 className="font-bold text-lg text-[var(--text-primary)] dark:text-[var(--text-primary)] truncate">{goal.name}</h3>
  <p className="text-xs text-gray-500 dark:text-gray-400 font-medium tracking-wide">
  {goal.monthly_contribution
  ? `${formatCurrency(goal.monthly_contribution)}/mês`
@@ -54,13 +54,13 @@ export default function GoalThermometer({ goal }) {
  {/* Termômetro Visual */}
  <div className="relative h-6 w-full rounded-full bg-gray-800/50/50 dark:bg-gray-800/80 overflow-hidden mb-3 border border-gray-700/50/30 dark:border-gray-700/50 shadow-inner">
  <div
- className={`h-full rounded-full bg-surface-primary ${getColor()} 
+ className={`h-full rounded-full bg-[var(--bg-base)] ${getColor()} 
  transition-all duration-1000 ease-out flex items-center 
- justify-end pr-3 shadow-card`}
+ justify-end pr-3 shadow-glass-card`}
  style={{ width: `${Math.max(pct, 5)}%` }}
  >
  {pct >= 15 && (
- <span className="text-[10px] font-black tracking-widest text-content-primary drop-shadow-lg shadow-black/10">{pct}%</span>
+ <span className="text-[10px] font-black tracking-widest text-[var(--text-primary)] drop-shadow-lg shadow-black/10">{pct}%</span>
  )}
  </div>
  {pct < 15 && (
@@ -79,7 +79,7 @@ export default function GoalThermometer({ goal }) {
  </div>
  <div className="text-right">
  <span className="text-[10px] text-gray-400 uppercase font-bold tracking-widest block mb-0.5">Meta</span>
- <span className="font-black text-content-primary dark:text-content-primary drop-shadow-lg shadow-black/10">
+ <span className="font-black text-[var(--text-primary)] dark:text-[var(--text-primary)] drop-shadow-lg shadow-black/10">
  {formatCurrency(goal.target_amount)}
  </span>
  </div>

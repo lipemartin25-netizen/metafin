@@ -85,11 +85,11 @@ export default function WebhookModal({ isOpen, onClose, onSuccess }) {
  className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 p-4 animate-in fade-in duration-200"
  onClick={(e) => e.target === e.currentTarget && onClose()}
  >
- <div className="bg-surface-primary border border-[var(--border)] rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto shadow-elevated animate-in zoom-in-95 duration-200">
+ <div className="bg-[var(--bg-base)] border border-[var(--border)] rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto shadow-elevated animate-in zoom-in-95 duration-200">
 
  {/* Header */}
  <div className="flex flex-col sm:flex-row sm:items-center justify-between p-6 border-b border-[var(--border)] gap-4">
- <h2 className="text-xl font-bold text-content-primary flex items-center gap-3">
+ <h2 className="text-xl font-bold text-[var(--text-primary)] flex items-center gap-3">
  <div className="p-2 bg-brand-glow/10 rounded-xl">
  <Webhook className="w-5 h-5 text-brand-glow" />
  </div>
@@ -97,7 +97,7 @@ export default function WebhookModal({ isOpen, onClose, onSuccess }) {
  </h2>
  <button
  onClick={onClose}
- className="text-gray-400 hover:text-content-primary transition-colors p-2 hover:bg-gray-800/40/5 rounded-xl self-end sm:self-auto"
+ className="text-gray-400 hover:text-[var(--text-primary)] transition-colors p-2 hover:bg-gray-800/40/5 rounded-xl self-end sm:self-auto"
  title="Fechar (ESC)"
  >
  <X className="w-5 h-5" />
@@ -117,7 +117,7 @@ export default function WebhookModal({ isOpen, onClose, onSuccess }) {
  value={name}
  onChange={(e) => setName(e.target.value)}
  placeholder="Ex: Notificação Discord"
- className="w-full px-4 py-3 bg-black/20 border border-[var(--border)] rounded-xl text-content-primary placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-glow/50 focus:border-brand-glow/50 transition-all font-medium"
+ className="w-full px-4 py-3 bg-black/20 border border-[var(--border)] rounded-xl text-[var(--text-primary)] placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-glow/50 focus:border-brand-glow/50 transition-all font-medium"
  />
  </div>
 
@@ -132,7 +132,7 @@ export default function WebhookModal({ isOpen, onClose, onSuccess }) {
  value={url}
  onChange={(e) => setUrl(e.target.value)}
  placeholder="https://seu-servidor.com/webhook"
- className="w-full px-4 py-3 bg-black/20 border border-[var(--border)] rounded-xl text-content-primary placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-glow/50 focus:border-brand-glow/50 transition-all font-mono text-sm"
+ className="w-full px-4 py-3 bg-black/20 border border-[var(--border)] rounded-xl text-[var(--text-primary)] placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-glow/50 focus:border-brand-glow/50 transition-all font-mono text-sm"
  />
  </div>
 
@@ -156,14 +156,14 @@ export default function WebhookModal({ isOpen, onClose, onSuccess }) {
  ? 'bg-brand-glow border-brand-glow'
  : 'border-gray-500 bg-transparent'
  }`}>
- {selected && <CheckCircle className="w-3.5 h-3.5 text-content-primary" />}
+ {selected && <CheckCircle className="w-3.5 h-3.5 text-[var(--text-primary)]" />}
  </div>
  <div className="flex-1 min-w-0 flex items-start gap-3">
  <div className="p-1.5 rounded-lg flex-shrink-0 mt-0.5" style={{ backgroundColor: `${evt.color}15` }}>
  <evt.icon className="w-4 h-4" style={{ color: evt.color }} />
  </div>
  <div>
- <p className={`text-sm font-bold transition-colors ${selected ? 'text-content-primary' : 'text-gray-300'}`}>{evt.label}</p>
+ <p className={`text-sm font-bold transition-colors ${selected ? 'text-[var(--text-primary)]' : 'text-gray-300'}`}>{evt.label}</p>
  <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">{evt.description}</p>
  </div>
  </div>
@@ -185,7 +185,7 @@ export default function WebhookModal({ isOpen, onClose, onSuccess }) {
  <button
  type="button"
  onClick={copySecret}
- className="px-4 py-3 bg-gray-800/40/5 hover:bg-gray-800/40/10 border border-[var(--border)] rounded-xl text-content-primary text-sm font-semibold transition-colors whitespace-nowrap flex items-center gap-2"
+ className="px-4 py-3 bg-gray-800/40/5 hover:bg-gray-800/40/10 border border-[var(--border)] rounded-xl text-[var(--text-primary)] text-sm font-semibold transition-colors whitespace-nowrap flex items-center gap-2"
  >
  {copied ? <><CheckCircle className="w-4 h-4 text-brand-glow" /> Copiado</> : <><Copy className="w-4 h-4" /> Copiar</>}
  </button>
@@ -208,14 +208,14 @@ export default function WebhookModal({ isOpen, onClose, onSuccess }) {
  <button
  type="button"
  onClick={onClose}
- className="flex-1 px-4 py-3.5 bg-gray-800/40/5 hover:bg-gray-800/40/10 border border-[var(--border)] rounded-xl text-content-primary font-semibold transition-colors"
+ className="flex-1 px-4 py-3.5 bg-gray-800/40/5 hover:bg-gray-800/40/10 border border-[var(--border)] rounded-xl text-[var(--text-primary)] font-semibold transition-colors"
  >
  Cancelar
  </button>
  <button
  type="submit"
  disabled={loading}
- className="flex-1 px-4 py-3.5 bg-brand-glow hover:bg-brand-glow disabled:bg-fuchsia-900/50 disabled:text-content-primary/50 disabled:cursor-not-allowed rounded-xl text-content-primary font-bold transition-colors flex items-center justify-center gap-2 shadow-lg shadow-brand-glow/20"
+ className="flex-1 px-4 py-3.5 bg-brand-glow hover:bg-brand-glow disabled:bg-fuchsia-900/50 disabled:text-[var(--text-primary)]/50 disabled:cursor-not-allowed rounded-xl text-[var(--text-primary)] font-bold transition-colors flex items-center justify-center gap-2 shadow-lg shadow-brand-glow/20"
  >
  {loading ? (
  <><RefreshCw className="w-4 h-4 animate-spin" /> Salvando...</>

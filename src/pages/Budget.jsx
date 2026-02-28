@@ -188,7 +188,7 @@ export default function Budget() {
  <div className="py-6 space-y-6 animate-fade-in pb-20">
  <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
  <div>
- <h1 className="text-2xl font-bold text-content-primary dark:text-content-primary flex items-center gap-2">
+ <h1 className="text-2xl font-bold text-[var(--text-primary)] dark:text-[var(--text-primary)] flex items-center gap-2">
  <PiggyBank className="w-6 h-6 text-pink-500" />
  Orçamento Mensal
  </h1>
@@ -211,16 +211,16 @@ export default function Budget() {
  )}
 
  {/* Summary */}
- <div className="grid sm:grid-cols-3 gap-4">
- <div className={`\${tw.card}`}>
+ <div className="grid sm:grid-cols-3 gap-4 animate-fade-in">
+ <div className={`\${tw.glass-card}`}>
  <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Orçamento Total</p>
- <p className="text-2xl font-bold text-content-primary dark:text-content-primary">{fmt(totalBudget)}</p>
+ <p className="text-2xl font-bold text-[var(--text-primary)] dark:text-[var(--text-primary)]">{fmt(totalBudget)}</p>
  </div>
- <div className={`\${tw.card}`}>
+ <div className={`\${tw.glass-card}`}>
  <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Gasto Este Mês</p>
  <p className="text-2xl font-bold text-red-500">{fmt(totalSpent)}</p>
  </div>
- <div className={`\${tw.card}`}>
+ <div className={`\${tw.glass-card}`}>
  <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Disponível</p>
  <p className={`text-2xl font-bold ${totalBudget - totalSpent >= 0 ? 'text-brand-primary' : 'text-red-500'}`}>{fmt(totalBudget - totalSpent)}</p>
  {totalBudget > 0 && (
@@ -234,10 +234,10 @@ export default function Budget() {
 
  {/* Budget Items */}
  {budgets.length === 0 ? (
- <div className={`\${tw.card} text-center py-12 border-dashed border-2 border-gray-700/40 dark:border-[var(--border)] bg-transparent relative overflow-hidden`}>
- <div className="absolute inset-0 bg-surface-primary from-transparent to-pink-500/5 pointer-events-none" />
+ <div className={`\${tw.glass-card} text-center py-12 border-dashed border-2 border-gray-700/40 dark:border-[var(--border)] bg-transparent relative overflow-hidden`}>
+ <div className="absolute inset-0 bg-[var(--bg-base)] from-transparent to-pink-500/5 pointer-events-none" />
  <PiggyBank className="w-12 h-12 text-pink-500 mx-auto mb-4 opacity-50 relative z-10" />
- <h4 className="text-content-primary dark:text-content-primary font-medium mb-1 relative z-10">Nenhum orçamento definido</h4>
+ <h4 className="text-[var(--text-primary)] dark:text-[var(--text-primary)] font-medium mb-1 relative z-10">Nenhum orçamento definido</h4>
  <p className="text-gray-500 text-sm mb-4 relative z-10">Defina limites de gastos por categoria para controlar suas finanças.</p>
  <button onClick={() => { setForm({ category: availableCategories[0] || '', limit: '' }); setShowAdd(true); }} className="gradient-btn px-6 py-2.5 text-sm rounded-xl relative z-10 flex items-center gap-2 mx-auto">
  <Plus className="w-4 h-4" /> Criar Orçamento
@@ -253,20 +253,20 @@ export default function Budget() {
  const remaining = budget.limit - spent;
 
  return (
- <div key={budget.id} className={`${tw.card} ${over ? 'border-red-500/30 bg-red-500/5' : ''}`}>
+ <div key={budget.id} className={`${tw.glass-card} ${over ? 'border-red-500/30 bg-red-500/5' : ''}`}>
  <div className="flex items-center justify-between mb-3">
  <div className="flex items-center gap-3">
  <div className="w-10 h-10 rounded-xl flex items-center justify-center text-lg" style={{ backgroundColor: `${cat?.color || '#6b7280'}15` }}>
  {cat?.icon || '📦'}
  </div>
  <div>
- <h4 className="font-medium text-content-primary dark:text-content-primary text-sm">{cat?.label || budget.category}</h4>
+ <h4 className="font-medium text-[var(--text-primary)] dark:text-[var(--text-primary)] text-sm">{cat?.label || budget.category}</h4>
  <p className="text-[10px] text-gray-500">Limite: {fmt(budget.limit)}</p>
  </div>
  </div>
  <div className="flex items-center gap-2">
  <div className="text-right">
- <p className={`text-sm font-bold ${over ? 'text-red-500' : 'text-content-primary dark:text-content-primary'}`}>{fmt(spent)}</p>
+ <p className={`text-sm font-bold ${over ? 'text-red-500' : 'text-[var(--text-primary)] dark:text-[var(--text-primary)]'}`}>{fmt(spent)}</p>
  <p className={`text-[10px] ${over ? 'text-red-400' : 'text-gray-500'}`}>
  {over ? (
  <span className="flex items-center gap-0.5"><AlertTriangle className="w-2.5 h-2.5" /> Excedeu {fmt(Math.abs(remaining))}</span>
@@ -301,25 +301,25 @@ export default function Budget() {
  {/* Modal de Adicionar/Editar */}
  {showAdd && (
  <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 ">
- <div className="bg-[#0d1424] border border-[var(--border)] w-full max-w-sm rounded-[24px] overflow-hidden shadow-card animate-slide-up">
+ <div className="bg-[#0d1424] border border-[var(--border)] w-full max-w-sm rounded-[24px] overflow-hidden shadow-glass-card animate-slide-up">
  <div className="p-6 md:p-8">
  <div className="flex items-center justify-between mb-6">
- <h3 className="text-xl font-bold text-content-primary tracking-tight">{editId ? 'Editar Orçamento' : 'Novo Orçamento'}</h3>
- <button onClick={() => setShowAdd(false)} className="p-2 rounded-xl text-content-secondary hover:text-content-primary hover:bg-gray-800/40/10 transition-all"><X className="w-5 h-5" /></button>
+ <h3 className="text-xl font-bold text-[var(--text-primary)] tracking-tight">{editId ? 'Editar Orçamento' : 'Novo Orçamento'}</h3>
+ <button onClick={() => setShowAdd(false)} className="p-2 rounded-xl text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-gray-800/40/10 transition-all"><X className="w-5 h-5" /></button>
  </div>
 
  <form onSubmit={handleSubmit} className="space-y-5">
  <div>
- <label className="block text-sm font-semibold text-content-secondary mb-2">Categoria</label>
+ <label className="block text-sm font-semibold text-[var(--text-secondary)] mb-2">Categoria</label>
  <select
  value={form.category}
  onChange={(e) => setForm({ ...form, category: e.target.value })}
  required
- className="w-full bg-gray-800/40/[0.03] border border-[var(--border)] rounded-xl px-4 py-3.5 text-content-primary focus:border-brand-glow/50 focus:ring-1 focus:ring-brand-glow/50 outline-none transition-all appearance-none"
+ className="w-full bg-gray-800/40/[0.03] border border-[var(--border)] rounded-xl px-4 py-3.5 text-[var(--text-primary)] focus:border-brand-glow/50 focus:ring-1 focus:ring-brand-glow/50 outline-none transition-all appearance-none"
  >
- <option value="" disabled className="bg-[#0d1424] text-content-muted">Selecione uma categoria...</option>
+ <option value="" disabled className="bg-[#0d1424] text-[var(--text-muted)]">Selecione uma categoria...</option>
  {availableCategories.map(c => (
- <option key={c} value={c} className="bg-[#0d1424] text-content-primary">
+ <option key={c} value={c} className="bg-[#0d1424] text-[var(--text-primary)]">
  {categoryConfig[c]?.icon} {categoryConfig[c]?.label || c}
  </option>
  ))}
@@ -327,20 +327,20 @@ export default function Budget() {
  </div>
 
  <div>
- <label className="block text-sm font-semibold text-content-secondary mb-2">Limite (R$)</label>
+ <label className="block text-sm font-semibold text-[var(--text-secondary)] mb-2">Limite (R$)</label>
  <CurrencyInput
  value={form.limit}
  onChange={(e) => setForm({ ...form, limit: e.target.value })}
  required
  placeholder="0,00"
- className="w-full bg-gray-800/40/[0.03] border border-[var(--border)] rounded-xl px-4 py-3.5 text-content-primary placeholder-slate-500 focus:border-brand-glow/50 focus:ring-1 focus:ring-brand-glow/50 outline-none transition-all"
+ className="w-full bg-gray-800/40/[0.03] border border-[var(--border)] rounded-xl px-4 py-3.5 text-[var(--text-primary)] placeholder-slate-500 focus:border-brand-glow/50 focus:ring-1 focus:ring-brand-glow/50 outline-none transition-all"
  />
  </div>
 
  <button
  type="submit"
  disabled={saving}
- className="w-full gradient-btn py-4 rounded-xl font-bold text-content-primary mt-4 flex items-center justify-center gap-2 transition-transform active:scale-[0.98]"
+ className="w-full gradient-btn py-4 rounded-xl font-bold text-[var(--text-primary)] mt-4 flex items-center justify-center gap-2 transition-transform active:scale-[0.98]"
  >
  {saving ? <Loader2 className="w-5 h-5 animate-spin" /> : (editId ? 'Salvar Alterações' : 'Criar Orçamento')}
  </button>

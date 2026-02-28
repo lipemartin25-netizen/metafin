@@ -61,7 +61,7 @@ export default function App() {
  const isAppRoute = location.pathname.startsWith('/app');
 
  return (
- <div className="min-h-screen bg-[#06060a] text-content-primary">
+ <div className="min-h-screen bg-[#06060a] text-[var(--text-primary)]">
  <Suspense fallback={<PageLoader message="Carregando..." />}>
  <Routes>
  {/* Rotas públicas */}

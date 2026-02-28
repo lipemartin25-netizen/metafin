@@ -93,14 +93,14 @@ export default function InvestmentSimulator({ financialData }) {
 
  return (
  <div className="space-y-6">
- <div className="relative overflow-hidden flex flex-col items-center justify-center rounded-[2.5rem] bg-surface-primary from-brand-primary via-teal-600 to-fuchsia-700 p-10 md:p-14 text-content-primary shadow-card border border-[var(--border)] text-center group perspective-1000">
+ <div className="relative overflow-hidden flex flex-col items-center justify-center rounded-[2.5rem] bg-[var(--bg-base)] from-brand-primary via-teal-600 to-fuchsia-700 p-10 md:p-14 text-[var(--text-primary)] shadow-glass-card border border-[var(--border)] text-center group perspective-1000">
  {/* Efeitos 3D Internos */}
  <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+PGRlZnM+PG1hdHRlcm4gaWQ9ImciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTTAgNDBoNDBWMEgweiIgZmlsbD0ibm9uZSIvPjxwYXRoIGQ9Ik0wIDEwaDQwTTAgMjBoNDBNMCAzMGg0ME0xMCAwdjQwTTIwIDB2NDBNMzAgMHY0MCIgc3Ryb2tlPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMDUpIiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZykiLz48L3N2Zz4=')] opacity-30" />
  <div className="absolute -left-20 -top-20 w-80 h-80 bg-gray-800/40/10 rounded-full mix-blend-overlay filter blur-[40px] opacity-60 group-hover:-translate-y-px transition-transform transition-transform duration-1000 ease-out" />
  <div className="absolute top-0 right-0 w-64 h-64 bg-cyan-400/20 rounded-full mix-blend-color-dodge filter blur-[40px] opacity-60 group-hover:-translate-x-10 transition-transform duration-1000 ease-out delay-100" />
 
  <div className="relative z-10 p-5 bg-gray-800/40/10 rounded-[2rem] shadow-inner border border-[var(--border)] mb-6 group-hover:-translate-y-px group-hover:rotate-3 transition-transform duration-500">
- <Coins className="w-16 h-16 text-yellow-300 drop-shadow-card animate-bounce-slow" />
+ <Coins className="w-16 h-16 text-yellow-300 drop-shadow-glass-card animate-bounce-slow" />
  </div>
 
  <h2 className="text-4xl md:text-5xl font-black mb-4 relative z-10 tracking-tight drop-shadow-lg scale-100 group-hover:scale-[1.02] transition-transform duration-500">
@@ -108,19 +108,19 @@ export default function InvestmentSimulator({ financialData }) {
  </h2>
  <p className="text-purple-50 text-base md:text-lg font-medium max-w-2xl relative z-10 leading-relaxed px-4">
  Compare como o seu dinheiro realmente rende na Poupança vs. Tesouros vs. CDBs. <br />
- <strong className="text-content-primary">Imposto de Renda, IOF e taxas B3 da realidade descontados ao vivo.</strong>
+ <strong className="text-[var(--text-primary)]">Imposto de Renda, IOF e taxas B3 da realidade descontados ao vivo.</strong>
  </p>
 
  {/* Laser scan line decorative effect */}
- <div className="absolute inset-x-0 h-1 bg-surface-primary from-transparent via-cyan-300 to-transparent top-0 opacity-0 group-hover:opacity-100 animate-[scan_2s_ease-in-out_infinite] shadow-card" />
+ <div className="absolute inset-x-0 h-1 bg-[var(--bg-base)] from-transparent via-cyan-300 to-transparent top-0 opacity-0 group-hover:opacity-100 animate-[scan_2s_ease-in-out_infinite] shadow-glass-card" />
  </div>
 
  {/* Inputs */}
- <div className={`rounded - 3xl border border - gray - 700 / 40 dark: border - white / 10 \${ tw.card } p - 6 shadow - lg shadow - black / 10`}>
- <h3 className="font-bold mb-6 flex items-center gap-2 text-content-primary dark:text-content-primary">
+ <div className={`rounded - 3xl border border - gray - 700 / 40 dark: border - white / 10 \${ tw.glass-card } p - 6 shadow - lg shadow - black / 10`}>
+ <h3 className="font-bold mb-6 flex items-center gap-2 text-[var(--text-primary)] dark:text-[var(--text-primary)]">
  <DollarSign className="h-5 w-5 text-brand-primary" /> Parâmetros da Simulação
  </h3>
- <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+ <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-fade-in">
  <div>
  <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 
  block mb-2">
@@ -134,7 +134,7 @@ export default function InvestmentSimulator({ financialData }) {
  value={params.initialAmount}
  onChange={e => handleChange('initialAmount', e.target.value)}
  className="w-full rounded-2xl border border-gray-700/40 dark:border-[var(--border)] 
- bg-gray-800/40 dark:bg-black/20 text-content-primary dark:text-content-primary p-3 pl-10 text-sm font-bold shadow-lg shadow-black/10 outline-none
+ bg-gray-800/40 dark:bg-black/20 text-[var(--text-primary)] dark:text-[var(--text-primary)] p-3 pl-10 text-sm font-bold shadow-lg shadow-black/10 outline-none
  focus:ring-2 focus:ring-emerald-500 transition-all"
  />
  </div>
@@ -152,7 +152,7 @@ export default function InvestmentSimulator({ financialData }) {
  value={params.monthlyContribution}
  onChange={e => handleChange('monthlyContribution', e.target.value)}
  className="w-full rounded-2xl border border-gray-700/40 dark:border-[var(--border)] 
- bg-gray-800/40 dark:bg-black/20 text-content-primary dark:text-content-primary p-3 pl-10 text-sm font-bold shadow-lg shadow-black/10 outline-none
+ bg-gray-800/40 dark:bg-black/20 text-[var(--text-primary)] dark:text-[var(--text-primary)] p-3 pl-10 text-sm font-bold shadow-lg shadow-black/10 outline-none
  focus:ring-2 focus:ring-emerald-500 transition-all"
  />
  </div>
@@ -169,7 +169,7 @@ export default function InvestmentSimulator({ financialData }) {
  onClick={() => handleChange('months', opt.value)}
  className={`px - 4 py - 2 rounded - xl text - xs font - bold uppercase tracking - wider
 transition - all border ${params.months === opt.value
- ? 'bg-brand-primary text-content-primary shadow-lg shadow-brand-primary/30 border-brand-primary scale-105'
+ ? 'bg-brand-primary text-[var(--text-primary)] shadow-lg shadow-brand-primary/30 border-brand-primary scale-105'
  : 'bg-gray-800/40 dark:bg-gray-800/40/5 text-gray-600 dark:text-gray-300 border-gray-700/40 dark:border-[var(--border)] hover:border-brand-primary/50 hover:text-brand-primary'
  } `}
  >
@@ -183,8 +183,8 @@ transition - all border ${params.months === opt.value
 
  {/* Banner do melhor investimento */}
  {bestResult && (
- <div className="relative overflow-hidden rounded-3xl bg-surface-primary 
- from-brand-primary to-teal-700 p-8 text-content-primary shadow-elevated shadow-brand-primary/20 group">
+ <div className="relative overflow-hidden rounded-3xl bg-[var(--bg-base)] 
+ from-brand-primary to-teal-700 p-8 text-[var(--text-primary)] shadow-elevated shadow-brand-primary/20 group">
  <Trophy className="absolute -right-8 -top-8 h-48 w-48 opacity-10 group-hover:-translate-y-px transition-transform transition-transform duration-700 ease-out drop-shadow-elevated" />
  <div className="flex items-center gap-3 mb-6 relative z-10">
  <div className="p-3 bg-gray-800/40/20 rounded-2xl shadow-inner">
@@ -195,7 +195,7 @@ transition - all border ${params.months === opt.value
  <p className="text-sm font-medium text-purple-100">{bestResult.name}</p>
  </div>
  </div>
- <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4 relative z-10">
+ <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4 relative z-10 animate-fade-in">
  <div className="bg-black/20 rounded-2xl p-4 border border-[var(--border)]">
  <p className="text-[10px] uppercase font-bold tracking-widest opacity-80 mb-1">Saldo Final</p>
  <p className="text-lg md:text-xl font-black">{formatCurrency(bestResult.netBalance)}</p>
@@ -217,9 +217,9 @@ transition - all border ${params.months === opt.value
  )}
 
  {/* Gráfico comparativo (barras) */}
- <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
- <div className={`rounded - 3xl border border - gray - 700 / 40 dark: border - white / 10 \${ tw.card } p - 6 shadow - lg shadow - black / 10`}>
- <h3 className="font-bold mb-6 flex items-center gap-2 text-content-primary dark:text-content-primary">
+ <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-fade-in">
+ <div className={`rounded - 3xl border border - gray - 700 / 40 dark: border - white / 10 \${ tw.glass-card } p - 6 shadow - lg shadow - black / 10`}>
+ <h3 className="font-bold mb-6 flex items-center gap-2 text-[var(--text-primary)] dark:text-[var(--text-primary)]">
  <TrendingUp className="h-5 w-5 text-brand-primary" /> Lucro Líquido por Investimento
  </h3>
  <div className="h-[350px]">
@@ -265,8 +265,8 @@ transition - all border ${params.months === opt.value
  </div>
 
  {/* Gráfico de evolução (linhas) */}
- <div className={`rounded - 3xl border border - gray - 700 / 40 dark: border - white / 10 \${ tw.card } p - 6 shadow - lg shadow - black / 10`}>
- <h3 className="font-bold mb-6 flex items-center gap-2 text-content-primary dark:text-content-primary">
+ <div className={`rounded - 3xl border border - gray - 700 / 40 dark: border - white / 10 \${ tw.glass-card } p - 6 shadow - lg shadow - black / 10`}>
+ <h3 className="font-bold mb-6 flex items-center gap-2 text-[var(--text-primary)] dark:text-[var(--text-primary)]">
  <Clock className="h-5 w-5 text-blue-500" /> Evolução ao Longo do Tempo
  </h3>
  <div className="h-[350px]">
@@ -320,8 +320,8 @@ transition - all border ${params.months === opt.value
  </div>
 
  {/* Tabela detalhada */}
- <div className={`rounded - 3xl border border - gray - 700 / 40 dark: border - white / 10 \${ tw.card } p - 6 shadow - lg shadow - black / 10 overflow - hidden`}>
- <h3 className="font-bold mb-6 flex items-center gap-2 text-content-primary dark:text-content-primary">
+ <div className={`rounded - 3xl border border - gray - 700 / 40 dark: border - white / 10 \${ tw.glass-card } p - 6 shadow - lg shadow - black / 10 overflow - hidden`}>
+ <h3 className="font-bold mb-6 flex items-center gap-2 text-[var(--text-primary)] dark:text-[var(--text-primary)]">
  <AlertTriangle className="h-5 w-5 text-brand-primary" /> Comparativo Detalhado (Risco vs Retorno)
  </h3>
  <div className="overflow-x-auto custom-scrollbar pb-2">
@@ -343,7 +343,7 @@ transition - all border ${params.months === opt.value
  <tr key={r.type}
  className={`border - b border - gray - 100 dark: border - white / 5 transition - colors hover: bg - gray - 800 / 30 / 50 dark: hover: bg - gray - 800 / 40 / [0.02]
  ${i === 0 ? 'bg-purple-50/50 dark:bg-brand-primary/10' : ''} `}>
- <td className="py-4 px-3 dark:text-content-primary font-bold flex items-center gap-2 whitespace-nowrap">
+ <td className="py-4 px-3 dark:text-[var(--text-primary)] font-bold flex items-center gap-2 whitespace-nowrap">
  <span className="text-xl">{r.icon}</span> {r.name}
  {i === 0 && <span className="text-xs px-2 py-0.5 rounded-full bg-purple-100 text-brand-dark dark:bg-brand-primary/30 dark:text-purple-300 ml-2">🏆 #1</span>}
  </td>
@@ -356,7 +356,7 @@ transition - all border ${params.months === opt.value
  <td className="text-right py-4 px-3 text-red-500 font-bold bg-red-50/30 dark:bg-red-500/5 whitespace-nowrap">
  -{formatCurrency(r.totalTaxes)}
  </td>
- <td className="text-right py-4 px-3 font-black dark:text-content-primary whitespace-nowrap">
+ <td className="text-right py-4 px-3 font-black dark:text-[var(--text-primary)] whitespace-nowrap">
  {formatCurrency(r.netBalance)}
  </td>
  <td className="text-right py-4 px-3 font-black text-brand-primary dark:text-brand-glow bg-purple-50/30 dark:bg-brand-primary/5 whitespace-nowrap">

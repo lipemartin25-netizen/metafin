@@ -63,17 +63,17 @@ export default function Sidebar() {
  <>
  {/* Sidebar Desktop */}
  <aside
- className={`hidden md:flex flex-col fixed top-0 left-0 h-screen z-40 transition-all duration-300 border-r border-brand-primary/10 shadow-card bg-surface-1/80 backdrop-blur-[20px] ${collapsed ? 'w-20' : 'w-64'}`}
+ className={`hidden md:flex flex-col fixed top-0 left-0 h-screen z-40 transition-all duration-300 border-r border-brand-primary/10 shadow-glass-card bg-surface-1/80 backdrop-blur-[20px] ${collapsed ? 'w-20' : 'w-64'}`}
  >
  {/* Header / Logo */}
  <div className="flex items-center justify-between px-5 h-16 border-b border-[var(--border)]">
  <NavLink to="/app" className="flex items-center gap-3">
- <div className="w-9 h-9 bg-surface-primary from-brand-primary to-brand-glow rounded-xl flex items-center justify-center shadow-lg shadow-brand-primary/20">
- <TrendingUp className="w-5 h-5 text-content-primary" />
+ <div className="w-9 h-9 bg-[var(--bg-base)] from-brand-primary to-brand-glow rounded-xl flex items-center justify-center shadow-lg shadow-brand-primary/20">
+ <TrendingUp className="w-5 h-5 text-[var(--text-primary)]" />
  </div>
  {!collapsed && (
  <div className="flex flex-col">
- <span className="text-base font-bold bg-surface-primary from-brand-glow to-brand-glow bg-clip-text text-transparent">
+ <span className="text-base font-bold bg-[var(--bg-base)] from-brand-glow to-brand-glow bg-clip-text text-transparent">
  Meta
  </span>
  <span className="text-[10px] text-gray-500 -mt-0.5 tracking-wider uppercase">
@@ -84,7 +84,7 @@ export default function Sidebar() {
  </NavLink>
  <button
  onClick={() => setCollapsed(!collapsed)}
- className="p-1.5 rounded-lg text-gray-500 hover:text-content-primary hover:bg-gray-800/40/5 transition-all"
+ className="p-1.5 rounded-lg text-gray-500 hover:text-[var(--text-primary)] hover:bg-gray-800/40/5 transition-all"
  >
  <ChevronLeft className={`w-4 h-4 transition-transform ${collapsed ? 'rotate-180' : ''}`} />
  </button>
@@ -94,14 +94,14 @@ export default function Sidebar() {
  {!collapsed && (
  <div className="px-4 pt-4 pb-2">
  {isPro ? (
- <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-surface-primary from-brand-primary/10 to-brand-glow/10 border border-brand-primary/20">
+ <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-[var(--bg-base)] from-brand-primary/10 to-brand-glow/10 border border-brand-primary/20">
  <Crown className="w-4 h-4 text-brand-glow" />
  <span className="text-xs font-semibold text-brand-glow">Plano Pro Ativo</span>
  </div>
  ) : (
  <Link
  to="/app/upgrade"
- className="flex items-center gap-2 px-3 py-2 rounded-xl bg-surface-primary from-brand-primary to-brand-glow text-content-primary text-xs font-bold hover:shadow-lg hover:shadow-brand-primary/25 transition-all"
+ className="flex items-center gap-2 px-3 py-2 rounded-xl bg-[var(--bg-base)] from-brand-primary to-brand-glow text-[var(--text-primary)] text-xs font-bold hover:shadow-lg hover:shadow-brand-primary/25 transition-all"
  >
  <Sparkles className="w-3.5 h-3.5" />
  Desbloquear Pro
@@ -122,8 +122,8 @@ export default function Sidebar() {
  aria-current={({ isActive }) => (isActive ? 'page' : undefined)}
  className={({ isActive }) =>
  `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all group ${isActive
- ? 'bg-surface-primary from-brand-primary/15 to-brand-glow/10 text-brand-glow border border-brand-primary/20 shadow-lg shadow-black/10 shadow-brand-primary/5'
- : 'text-gray-400 hover:text-content-primary hover:bg-gray-800/40/[0.04] border border-transparent'
+ ? 'bg-[var(--bg-base)] from-brand-primary/15 to-brand-glow/10 text-brand-glow border border-brand-primary/20 shadow-lg shadow-black/10 shadow-brand-primary/5'
+ : 'text-gray-400 hover:text-[var(--text-primary)] hover:bg-gray-800/40/[0.04] border border-transparent'
  } ${collapsed ? 'justify-center' : ''}`
  }
  >
@@ -137,11 +137,11 @@ export default function Sidebar() {
  <div className="border-t border-[var(--border)] p-4">
  {!collapsed ? (
  <div className="flex items-center gap-3">
- <div className="w-9 h-9 rounded-xl bg-surface-primary from-gray-700 to-gray-800 flex items-center justify-center text-content-primary text-sm font-bold uppercase border border-[var(--border)]">
+ <div className="w-9 h-9 rounded-xl bg-[var(--bg-base)] from-gray-700 to-gray-800 flex items-center justify-center text-[var(--text-primary)] text-sm font-bold uppercase border border-[var(--border)]">
  {displayName.charAt(0)}
  </div>
  <div className="flex-1 min-w-0">
- <p className="text-sm font-medium text-content-primary truncate">{displayName}</p>
+ <p className="text-sm font-medium text-[var(--text-primary)] truncate">{displayName}</p>
  <p className="text-[11px] text-gray-500 truncate">{displayEmail}</p>
  </div>
  <button
@@ -205,7 +205,7 @@ function MobileNav({ navItems, handleSignOut }) {
  className={({ isActive }) =>
  `flex flex-col items-center justify-center min-w-[64px] h-[52px] gap-1 rounded-2xl transition-all ${isActive
  ? 'text-brand-glow bg-brand-primary/10'
- : 'text-gray-500 hover:text-content-primary'
+ : 'text-gray-500 hover:text-[var(--text-primary)]'
  }`
  }
  >
@@ -229,13 +229,13 @@ function MobileNav({ navItems, handleSignOut }) {
  {isMenuOpen && (
  <div className="md:hidden fixed inset-0 z-[60] animate-fade-in flex flex-col justify-end">
  <div className="absolute inset-0 bg-black/80 " onClick={() => setIsMenuOpen(false)} />
- <div className="relative w-full bg-surface-primary rounded-t-[2.5rem] border-t border-[var(--border)] shadow-card flex flex-col max-h-[92vh] animate-slide-up overflow-hidden">
+ <div className="relative w-full bg-[var(--bg-base)] rounded-t-[2.5rem] border-t border-[var(--border)] shadow-glass-card flex flex-col max-h-[92vh] animate-slide-up overflow-hidden">
  {/* Puxador para o menu */}
  <div className="w-12 h-1.5 bg-gray-800/40/20 rounded-full mx-auto mt-4 flex-shrink-0" />
 
  <div className="p-6 border-b border-[var(--border)] flex items-center justify-between flex-shrink-0">
  <div>
- <h2 className="text-xl font-bold text-content-primary">Ecossistema</h2>
+ <h2 className="text-xl font-bold text-[var(--text-primary)]">Ecossistema</h2>
  <p className="text-[10px] text-gray-500 uppercase font-black tracking-widest mt-1">Acesso a todos os módulos</p>
  </div>
  <button onClick={() => setIsMenuOpen(false)} className="p-2.5 bg-gray-800/40/5 hover:bg-gray-800/40/10 rounded-2xl text-gray-400 transition-colors">
@@ -248,11 +248,11 @@ function MobileNav({ navItems, handleSignOut }) {
  {menuCategories.map((cat, idx) => (
  <div key={idx} className="space-y-4">
  <div className="flex items-center gap-3">
- <div className="h-px flex-1 bg-surface-primary from-white/10 to-transparent" />
+ <div className="h-px flex-1 bg-[var(--bg-base)] from-white/10 to-transparent" />
  <p className="text-[10px] font-black text-gray-500 uppercase tracking-[0.2em]">{cat.title}</p>
- <div className="h-px flex-1 bg-surface-primary from-white/10 to-transparent" />
+ <div className="h-px flex-1 bg-[var(--bg-base)] from-white/10 to-transparent" />
  </div>
- <div className="grid grid-cols-2 gap-3">
+ <div className="grid grid-cols-2 gap-3 animate-fade-in">
  {cat.items.map((item) => (
  <NavLink
  key={item.to}
@@ -260,7 +260,7 @@ function MobileNav({ navItems, handleSignOut }) {
  onClick={() => setIsMenuOpen(false)}
  className={({ isActive }) =>
  `flex flex-col items-center justify-center p-4 rounded-[2rem] border transition-all duration-300 group ${isActive
- ? 'bg-brand-primary/10 border-brand-primary/30 text-brand-glow shadow-card'
+ ? 'bg-brand-primary/10 border-brand-primary/30 text-brand-glow shadow-glass-card'
  : 'bg-gray-800/40/[0.03] border-[var(--border)] text-gray-400 hover:bg-gray-800/40/[0.08] hover:border-[var(--border)]'
  }`
  }
@@ -289,7 +289,7 @@ function MobileNav({ navItems, handleSignOut }) {
  </div>
 
  {/* Efeito de fade no fundo do scroll */}
- <div className="absolute bottom-0 left-0 right-0 h-20 bg-surface-primary from-[#0f172a] to-transparent pointer-events-none z-10" />
+ <div className="absolute bottom-0 left-0 right-0 h-20 bg-[var(--bg-base)] from-[#0f172a] to-transparent pointer-events-none z-10" />
  </div>
  </div>
  )}

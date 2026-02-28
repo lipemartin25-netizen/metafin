@@ -20,16 +20,16 @@ export default function TransactionList() {
  <div className="rounded-2xl bg-[#0d0d15] border border-[var(--border)] p-6 group">
  <div className="flex items-center justify-between mb-5">
  <div>
- <h3 className="text-content-primary font-semibold flex items-center gap-2">
+ <h3 className="text-[var(--text-primary)] font-semibold flex items-center gap-2">
  Transações Recentes
  <button
  onClick={() => toggleVisibility()}
  className="p-1 rounded-lg bg-gray-800/40/5 opacity-0 group-hover:opacity-100 transition-all hover:bg-gray-800/40/10"
  >
- {isVisible ? <EyeOff size={12} className="text-content-primary/40" /> : <Eye size={12} className="text-content-primary/40" />}
+ {isVisible ? <EyeOff size={12} className="text-[var(--text-primary)]/40" /> : <Eye size={12} className="text-[var(--text-primary)]/40" />}
  </button>
  </h3>
- <p className="text-content-primary/30 text-xs mt-0.5">Fevereiro 2026</p>
+ <p className="text-[var(--text-primary)]/30 text-xs mt-0.5">Fevereiro 2026</p>
  </div>
  <button
  onClick={() => navigate('/app/transactions')}
@@ -50,12 +50,12 @@ export default function TransactionList() {
  </div>
 
  <div className="flex-1 min-w-0">
- <p className="text-content-primary/80 text-sm font-medium group-hover/item:text-content-primary transition-colors truncate">{label}</p>
- <p className="text-content-primary/30 text-xs">{category}</p>
+ <p className="text-[var(--text-primary)]/80 text-sm font-medium group-hover/item:text-[var(--text-primary)] transition-colors truncate">{label}</p>
+ <p className="text-[var(--text-primary)]/30 text-xs">{category}</p>
  </div>
 
  <div className="text-right flex-shrink-0">
- <p className={`text-sm font-semibold ${amount > 0 ? "text-brand-glow" : "text-content-primary/70"}`}>
+ <p className={`text-sm font-semibold ${amount > 0 ? "text-brand-glow" : "text-[var(--text-primary)]/70"}`}>
  {isVisible ? (
  <>
  {amount > 0 ? "+" : ""}
@@ -63,7 +63,7 @@ export default function TransactionList() {
  </>
  ) : "R$ ••••"}
  </p>
- <p className="text-content-primary/25 text-xs">{date}</p>
+ <p className="text-[var(--text-primary)]/25 text-xs">{date}</p>
  </div>
  </div>
  ))}

@@ -192,7 +192,7 @@ export default function BankAccounts() {
  <div>
  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
  <div>
- <h2 className="text-2xl font-bold text-content-primary dark:text-content-primary flex items-center gap-2">
+ <h2 className="text-2xl font-bold text-[var(--text-primary)] dark:text-[var(--text-primary)] flex items-center gap-2">
  <Banknote className="text-brand-primary dark:text-brand-glow" /> Instituições Financeiras
  </h2>
  <p className="text-gray-500 dark:text-gray-400 text-sm">Gerencie suas contas bancárias e conexões Open Finance.</p>
@@ -223,7 +223,7 @@ export default function BankAccounts() {
  )}
  </div>
 
- <div className={`\${tw.card} bg-surface-primary from-gray-900 to-gray-800 border-brand-primary/20`}>
+ <div className={`\${tw.glass-card} bg-[var(--bg-base)] from-gray-900 to-gray-800 border-brand-primary/20`}>
  <div className="flex items-center justify-between">
  <div>
  <p className="text-sm text-gray-400">Saldo Integrado Estimado</p>
@@ -240,7 +240,7 @@ export default function BankAccounts() {
  </div>
 
  <div>
- <h3 className="text-lg font-semibold text-content-primary mb-3 flex items-center gap-2">
+ <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-3 flex items-center gap-2">
  Minhas Contas <span className="bg-gray-800/40/10 text-xs px-2 py-0.5 rounded-full text-gray-300">{accounts?.length || 0}</span>
  </h3>
 
@@ -250,7 +250,7 @@ export default function BankAccounts() {
  <p className="text-gray-500 text-sm animate-pulse">Sincronizando suas contas...</p>
  </div>
  ) : (accounts?.length || 0) === 0 ? (
- <div className={`\${tw.card} text-center py-8 border-dashed border-2 border-[var(--border)] bg-transparent`}>
+ <div className={`\${tw.glass-card} text-center py-8 border-dashed border-2 border-[var(--border)] bg-transparent`}>
  <div className="w-12 h-12 rounded-full bg-gray-800/40/5 mx-auto flex items-center justify-center mb-3">
  <Banknote className="w-6 h-6 text-gray-500" />
  </div>
@@ -263,7 +263,7 @@ export default function BankAccounts() {
  </button>
  </div>
  ) : (
- <div className="grid sm:grid-cols-2 gap-4">
+ <div className="grid sm:grid-cols-2 gap-4 animate-fade-in">
  {accounts.map(bank => {
  const txData = accountTransactions[bank.id];
  return (
@@ -271,7 +271,7 @@ export default function BankAccounts() {
  <div className="flex items-center justify-between">
  <div className="flex items-center gap-3">
  <div className="relative">
- <div className="w-10 h-10 rounded-xl flex items-center justify-center text-content-primary font-bold text-lg shadow-lg" style={{ backgroundColor: bank.color || '#10b981', color: bank.textColor || '#fff' }}>
+ <div className="w-10 h-10 rounded-xl flex items-center justify-center text-[var(--text-primary)] font-bold text-lg shadow-lg" style={{ backgroundColor: bank.color || '#10b981', color: bank.textColor || '#fff' }}>
  {bank.logo || bank.bank_name?.charAt(0) || 'B'}
  </div>
  {/* Source badge */}
@@ -281,7 +281,7 @@ export default function BankAccounts() {
  </div>
  <div>
  <div className="flex items-center gap-2">
- <h4 className="font-semibold text-content-primary">{bank.display_name || bank.name}</h4>
+ <h4 className="font-semibold text-[var(--text-primary)]">{bank.display_name || bank.name}</h4>
  {/* Sync status badge */}
  {syncing === bank.id ? (
  <span className="flex items-center gap-1 text-[9px] text-yellow-400 bg-yellow-500/10 px-1.5 py-0.5 rounded-full font-bold">🟡 Sincronizando</span>
@@ -303,7 +303,7 @@ export default function BankAccounts() {
  <div className="flex items-center gap-1">
  <button
  onClick={() => handleSync(bank)}
- className={`p-2 rounded-lg text-gray-400 hover:text-content-primary hover:bg-gray-800/40/10 transition-all ${syncing === bank.id ? 'animate-spin text-brand-glow' : ''}`}
+ className={`p-2 rounded-lg text-gray-400 hover:text-[var(--text-primary)] hover:bg-gray-800/40/10 transition-all ${syncing === bank.id ? 'animate-spin text-brand-glow' : ''}`}
  title="Sincronizar"
  >
  <RefreshCw className="w-4 h-4" />
@@ -321,7 +321,7 @@ export default function BankAccounts() {
  {/* Resumo de Atividade do Mês */}
  {txData && txData.count > 0 && (
  <div className="mt-4 pt-3 border-t border-[var(--border)] space-y-3">
- <div className="grid grid-cols-3 gap-2">
+ <div className="grid grid-cols-3 gap-2 animate-fade-in">
  <div className="bg-brand-primary/10 rounded-xl p-2.5 text-center">
  <p className="text-[9px] text-brand-glow/70 uppercase font-bold tracking-wider">Entradas</p>
  <p className="text-sm font-bold text-brand-glow flex items-center justify-center gap-1">
@@ -338,7 +338,7 @@ export default function BankAccounts() {
  </div>
  <div className="bg-gray-800/40/5 rounded-xl p-2.5 text-center">
  <p className="text-[9px] text-gray-400/70 uppercase font-bold tracking-wider">Moviment.</p>
- <p className="text-sm font-bold text-content-primary">{txData.count}</p>
+ <p className="text-sm font-bold text-[var(--text-primary)]">{txData.count}</p>
  </div>
  </div>
 
@@ -372,18 +372,18 @@ export default function BankAccounts() {
  </div>
 
  <div id="new-connection">
- <h3 className="text-lg font-semibold text-content-primary mb-3">Conectar Nova Instituição</h3>
- <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+ <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-3">Conectar Nova Instituição</h3>
+ <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 animate-fade-in">
  {banksData.filter(b => !accounts?.find(cb => cb.bank_id === b.id || cb.id === b.id)).map(bank => (
  <button
  key={bank.id}
  onClick={() => handleConnectClick(bank)}
  className={`${tw.bankCard} hover:bg-gray-800/40/5 transition-all p-4 flex flex-col items-center gap-3 text-center border hover:border-brand-primary/30 group`}
  >
- <div className="w-12 h-12 bank-icon-container flex items-center justify-center text-content-primary font-bold text-xl transition-transform group-hover:-translate-y-px transition-transform" style={{ backgroundColor: bank.color, color: bank.textColor }}>
+ <div className="w-12 h-12 bank-icon-container flex items-center justify-center text-[var(--text-primary)] font-bold text-xl transition-transform group-hover:-translate-y-px transition-transform" style={{ backgroundColor: bank.color, color: bank.textColor }}>
  {bank.logo}
  </div>
- <span className="text-sm font-medium text-gray-300 group-hover:text-content-primary">{bank.name}</span>
+ <span className="text-sm font-medium text-gray-300 group-hover:text-[var(--text-primary)]">{bank.name}</span>
  </button>
  ))}
  </div>
@@ -391,14 +391,14 @@ export default function BankAccounts() {
 
  {showConnectModal && selectedBank && (
  <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 animate-fade-in">
- <div className={`\${tw.card} w-full max-w-md p-0 overflow-hidden animate-slide-up relative`}>
- <button onClick={() => setShowConnectModal(false)} className="absolute top-4 right-4 text-gray-500 hover:text-content-primary"><X className="w-5 h-5" /></button>
+ <div className={`\${tw.glass-card} w-full max-w-md p-0 overflow-hidden animate-slide-up relative`}>
+ <button onClick={() => setShowConnectModal(false)} className="absolute top-4 right-4 text-gray-500 hover:text-[var(--text-primary)]"><X className="w-5 h-5" /></button>
 
  <div className="bg-gray-800/40/5 p-6 text-center border-b border-[var(--border)]">
- <div className="w-16 h-16 bank-icon-container mx-auto flex items-center justify-center text-content-primary font-bold text-3xl mb-4" style={{ backgroundColor: selectedBank.color, color: selectedBank.textColor }}>
+ <div className="w-16 h-16 bank-icon-container mx-auto flex items-center justify-center text-[var(--text-primary)] font-bold text-3xl mb-4" style={{ backgroundColor: selectedBank.color, color: selectedBank.textColor }}>
  {selectedBank.logo}
  </div>
- <h2 className="text-xl font-bold text-content-primary">Conectar {selectedBank.name}</h2>
+ <h2 className="text-xl font-bold text-[var(--text-primary)]">Conectar {selectedBank.name}</h2>
  <p className="text-sm text-gray-400 mt-1">Ambiente seguro Open Finance</p>
  </div>
 
@@ -415,7 +415,7 @@ export default function BankAccounts() {
  <Plug className="w-6 h-6 text-brand-glow" />
  </div>
  <div>
- <p className="text-sm font-bold text-content-primary">Conectar via Open Finance</p>
+ <p className="text-sm font-bold text-[var(--text-primary)]">Conectar via Open Finance</p>
  <p className="text-[11px] text-gray-400 mt-0.5">Sincroniza automaticamente via Pluggy. Seus dados em tempo real.</p>
  </div>
  <span className="ml-auto bg-brand-primary/30 text-purple-300 text-[9px] font-bold px-2 py-1 rounded-lg flex-shrink-0">RECOMENDADO</span>
@@ -429,7 +429,7 @@ export default function BankAccounts() {
  <FileText className="w-6 h-6 text-gray-400" />
  </div>
  <div>
- <p className="text-sm font-bold text-content-primary">Cadastro Manual</p>
+ <p className="text-sm font-bold text-[var(--text-primary)]">Cadastro Manual</p>
  <p className="text-[11px] text-gray-400 mt-0.5">Adicione seus dados manualmente ou importe um extrato.</p>
  </div>
  </button>
@@ -438,14 +438,14 @@ export default function BankAccounts() {
 
  {connectingState === 'consenting' && (
  <div className="space-y-4">
- <div className="grid grid-cols-2 gap-3">
+ <div className="grid grid-cols-2 gap-3 animate-fade-in">
  <div className="col-span-2">
  <label className="text-[10px] text-gray-500 uppercase font-bold ml-1">Apelido da Conta</label>
  <input
  type="text"
  value={customNickname}
  onChange={(e) => setCustomNickname(e.target.value)}
- className="w-full bg-gray-800/40/5 border border-[var(--border)] rounded-xl px-4 py-2 text-content-primary text-sm focus:border-brand-primary/50 outline-none mt-1"
+ className="w-full bg-gray-800/40/5 border border-[var(--border)] rounded-xl px-4 py-2 text-[var(--text-primary)] text-sm focus:border-brand-primary/50 outline-none mt-1"
  placeholder="Ex: Minha Conta Nubank"
  />
  </div>
@@ -455,7 +455,7 @@ export default function BankAccounts() {
  type="text"
  value={agency}
  onChange={(e) => setAgency(e.target.value)}
- className="w-full bg-gray-800/40/5 border border-[var(--border)] rounded-xl px-4 py-2 text-content-primary text-sm focus:border-brand-primary/50 outline-none mt-1"
+ className="w-full bg-gray-800/40/5 border border-[var(--border)] rounded-xl px-4 py-2 text-[var(--text-primary)] text-sm focus:border-brand-primary/50 outline-none mt-1"
  placeholder="0001"
  />
  </div>
@@ -465,7 +465,7 @@ export default function BankAccounts() {
  type="text"
  value={accountNum}
  onChange={(e) => setAccountNum(e.target.value)}
- className="w-full bg-gray-800/40/5 border border-[var(--border)] rounded-xl px-4 py-2 text-content-primary text-sm focus:border-brand-primary/50 outline-none mt-1"
+ className="w-full bg-gray-800/40/5 border border-[var(--border)] rounded-xl px-4 py-2 text-[var(--text-primary)] text-sm focus:border-brand-primary/50 outline-none mt-1"
  placeholder="12345-6"
  />
  </div>
@@ -475,7 +475,7 @@ export default function BankAccounts() {
  type="text"
  value={customBalance}
  onChange={(e) => setCustomBalance(e.target.value)}
- className="w-full bg-gray-800/40/5 border border-[var(--border)] rounded-xl px-4 py-2 text-content-primary text-sm focus:border-brand-primary/50 outline-none mt-1"
+ className="w-full bg-gray-800/40/5 border border-[var(--border)] rounded-xl px-4 py-2 text-[var(--text-primary)] text-sm focus:border-brand-primary/50 outline-none mt-1"
  placeholder="0,00"
  />
  </div>
@@ -483,7 +483,7 @@ export default function BankAccounts() {
 
  <div className="space-y-2">
  <label className="text-[10px] text-gray-500 uppercase font-bold ml-1">Fonte de Dados</label>
- <div className="grid grid-cols-3 gap-2">
+ <div className="grid grid-cols-3 gap-2 animate-fade-in">
  <button
  onClick={() => setDataSource('empty')}
  className={`py-2 text-[10px] font-bold rounded-lg border transition-all ${dataSource === 'empty' ? 'bg-brand-primary/20 border-brand-primary/50 text-brand-glow' : 'bg-gray-800/40/5 border-[var(--border)] text-gray-500'}`}
@@ -539,7 +539,7 @@ export default function BankAccounts() {
  {connectingState === 'syncing' && (
  <div className="text-center py-6">
  <RefreshCw className="w-10 h-10 text-brand-glow animate-spin mx-auto mb-4" />
- <p className="text-content-primary font-medium">Sincronizando transações...</p>
+ <p className="text-[var(--text-primary)] font-medium">Sincronizando transações...</p>
  <p className="text-sm text-gray-500 mt-2">Isso pode levar alguns segundos.</p>
  </div>
  )}
@@ -549,7 +549,7 @@ export default function BankAccounts() {
  <div className="w-16 h-16 bg-brand-primary/20 rounded-full flex items-center justify-center mx-auto mb-4">
  <CheckCircle className="w-8 h-8 text-brand-glow" />
  </div>
- <h3 className="text-xl font-bold text-content-primary mb-2">Conectado com Sucesso!</h3>
+ <h3 className="text-xl font-bold text-[var(--text-primary)] mb-2">Conectado com Sucesso!</h3>
  <p className="text-sm text-gray-400">Suas transações de {customNickname} foram importadas.</p>
  </div>
  )}
@@ -561,13 +561,13 @@ export default function BankAccounts() {
  {/* Delete Confirmation Modal */}
  {deleteTarget && (
  <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 animate-fade-in" onClick={() => !deleting && setDeleteTarget(null)}>
- <div className={`\${tw.card} w-full max-w-sm p-6 animate-slide-up text-center`} onClick={(e) => e.stopPropagation()}>
+ <div className={`\${tw.glass-card} w-full max-w-sm p-6 animate-slide-up text-center`} onClick={(e) => e.stopPropagation()}>
  <div className="w-14 h-14 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-4 ring-4 ring-red-500/5">
  <AlertTriangle className="w-7 h-7 text-red-400" />
  </div>
- <h3 className="text-lg font-bold text-content-primary mb-2">Remover Conta</h3>
+ <h3 className="text-lg font-bold text-[var(--text-primary)] mb-2">Remover Conta</h3>
  <p className="text-sm text-gray-400 mb-1">
- Tem certeza que deseja remover <strong className="text-content-primary">{deleteTarget.display_name || deleteTarget.name}</strong>?
+ Tem certeza que deseja remover <strong className="text-[var(--text-primary)]">{deleteTarget.display_name || deleteTarget.name}</strong>?
  </p>
  <p className="text-xs text-gray-500 mb-6">
  Todas as transações vinculadas serão desassociadas. A sincronização será interrompida.
@@ -596,8 +596,8 @@ export default function BankAccounts() {
  {/* Toast Notification */}
  {toast && (
  <div className={`fixed bottom-6 left-1/2 -translate-x-1/2 z-[60] px-5 py-3 rounded-xl text-sm font-medium shadow-elevated animate-slide-up flex items-center gap-2 ${toast.type === 'success'
- ? 'bg-brand-primary/90 text-content-primary border border-brand-glow/30'
- : 'bg-red-500/90 text-content-primary border border-red-400/30'
+ ? 'bg-brand-primary/90 text-[var(--text-primary)] border border-brand-glow/30'
+ : 'bg-red-500/90 text-[var(--text-primary)] border border-red-400/30'
  }`}>
  {toast.type === 'success' ? <CheckCircle className="w-4 h-4" /> : <X className="w-4 h-4" />}
  {toast.message}

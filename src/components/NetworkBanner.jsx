@@ -13,8 +13,8 @@ export function NetworkBanner() {
  <div
  role="alert"
  className={`fixed top-0 left-0 right-0 z-[100] animate-slide-down flex items-center justify-center gap-3 py-2 px-4 shadow-lg transition-colors border-b ${!isOnline
- ? 'bg-red-600 text-content-primary border-red-700'
- : 'bg-amber-500 text-content-primary border-amber-600'
+ ? 'bg-red-600 text-[var(--text-primary)] border-red-700'
+ : 'bg-amber-500 text-[var(--text-primary)] border-amber-600'
  }`}
  >
  {!isOnline ? (

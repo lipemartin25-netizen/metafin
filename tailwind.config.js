@@ -10,28 +10,18 @@ module.exports = {
             colors: {
                 brand: 'var(--brand)',
                 'brand-light': 'var(--brand-light)',
-                'brand-subtle': 'var(--brand-subtle)',
+                'brand-subtle': 'var(--brand-soft)',
                 surface: {
-                    primary: 'var(--bg-primary)',
-                    secondary: 'var(--bg-secondary)',
-                    card: 'var(--bg-card)',
+                    primary: 'var(--bg-base)',
+                    secondary: 'var(--bg-elevated)',
+                    card: 'var(--bg-glass)',
                 },
                 content: {
                     primary: 'var(--text-primary)',
                     secondary: 'var(--text-secondary)',
                     muted: 'var(--text-muted)',
                 },
-            },
-            borderRadius: {
-                'card': '16px',
-                'card-lg': '20px',
-            },
-            boxShadow: {
-                'card': 'var(--shadow-sm)',
-                'card-hover': 'var(--shadow-md)',
-                'elevated': 'var(--shadow-md)',
-                'elevated-hover': 'var(--shadow-hover)',
-            },
+            }
         },
     },
     plugins: [],

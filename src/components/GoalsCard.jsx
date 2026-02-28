@@ -18,14 +18,14 @@ export default function GoalsCard() {
  <div className="flex items-center justify-between mb-6">
  <div className="flex items-center gap-2">
  <Target size={18} className="text-violet-400" />
- <h3 className="text-content-primary font-bold text-sm uppercase tracking-wider">Metas</h3>
+ <h3 className="text-[var(--text-primary)] font-bold text-sm uppercase tracking-wider">Metas</h3>
  </div>
  <div className="flex items-center gap-3">
  <button
  onClick={() => toggleVisibility()}
  className="p-1.5 rounded-lg bg-gray-800/40/5 opacity-0 group-hover:opacity-100 transition-all hover:bg-gray-800/40/10"
  >
- {isVisible ? <EyeOff size={14} className="text-content-primary/40" /> : <Eye size={14} className="text-content-primary/40" />}
+ {isVisible ? <EyeOff size={14} className="text-[var(--text-primary)]/40" /> : <Eye size={14} className="text-[var(--text-primary)]/40" />}
  </button>
  <button
  onClick={() => navigate('/app/goals')}
@@ -42,8 +42,8 @@ export default function GoalsCard() {
  return (
  <div key={label} className="relative">
  <div className="flex justify-between text-[10px] mb-2 font-bold uppercase tracking-wider">
- <span className="text-content-primary/70">{label}</span>
- <span className="text-content-primary/40">{pct}%</span>
+ <span className="text-[var(--text-primary)]/70">{label}</span>
+ <span className="text-[var(--text-primary)]/40">{pct}%</span>
  </div>
  <div className="h-2 bg-gray-800/40/5 rounded-full overflow-hidden p-[1px] border border-[var(--border)]">
  <div
@@ -52,10 +52,10 @@ export default function GoalsCard() {
  />
  </div>
  <div className="flex justify-between text-[10px] mt-2 font-mono">
- <span className="text-content-primary/30">
+ <span className="text-[var(--text-primary)]/30">
  {isVisible ? current.toLocaleString("pt-BR", { style: "currency", currency: "BRL" }) : "R$ ••••"}
  </span>
- <span className="text-content-primary/10">
+ <span className="text-[var(--text-primary)]/10">
  {isVisible ? target.toLocaleString("pt-BR", { style: "currency", currency: "BRL" }) : "R$ ••••"}
  </span>
  </div>

@@ -135,11 +135,11 @@ export default function Investments() {
  {/* ── Header sem botão Pluggy solto ── */}
  <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
  <div>
- <h1 className="text-2xl font-bold text-content-primary flex items-center gap-2">
+ <h1 className="text-2xl font-bold text-[var(--text-primary)] flex items-center gap-2">
  <Briefcase className="w-6 h-6 text-brand-glow" />
  Investimentos
  </h1>
- <p className="text-content-secondary text-sm mt-1">
+ <p className="text-[var(--text-secondary)] text-sm mt-1">
  Patrimônio consolidado via Open Finance · dados B3 integrados
  </p>
  </div>
@@ -169,18 +169,18 @@ export default function Investments() {
  <ShieldCheck className="w-5 h-5 text-brand-glow flex-shrink-0" />
  <div>
  <p className="text-xs font-semibold text-brand-glow">Conexão segura via Open Finance</p>
- <p className="text-[10px] text-content-secondary">Dados criptografados end-to-end · regulado pelo Banco Central do Brasil</p>
+ <p className="text-[10px] text-[var(--text-secondary)]">Dados criptografados end-to-end · regulado pelo Banco Central do Brasil</p>
  </div>
  </div>
 
  {/* Portfolio Summary */}
- <div className="grid md:grid-cols-3 gap-6">
- <div className={`\${tw.card} col-span-2 relative overflow-hidden`}>
+ <div className="grid md:grid-cols-3 gap-6 animate-fade-in">
+ <div className={`\${tw.glass-card} col-span-2 relative overflow-hidden`}>
  <div className="absolute top-0 right-0 p-4 opacity-5">
  <Building2 className="w-32 h-32 text-brand-primary" />
  </div>
- <p className="text-sm text-content-secondary font-medium">Patrimônio Total</p>
- <h2 className="text-4xl font-bold text-content-primary mt-2">{fmt(portfolio.total)}</h2>
+ <p className="text-sm text-[var(--text-secondary)] font-medium">Patrimônio Total</p>
+ <h2 className="text-4xl font-bold text-[var(--text-primary)] mt-2">{fmt(portfolio.total)}</h2>
  {portfolio.total > 0 && (
  <div className="mt-4 flex items-center gap-2 text-sm">
  <span className="bg-brand-primary/10 text-brand-glow px-2 py-1 rounded-lg flex items-center gap-1 font-medium">
@@ -189,12 +189,12 @@ export default function Investments() {
  </div>
  )}
  {portfolio.total === 0 && (
- <p className="text-content-muted text-sm mt-3">Conecte uma corretora abaixo para ver seu patrimônio.</p>
+ <p className="text-[var(--text-muted)] text-sm mt-3">Conecte uma corretora abaixo para ver seu patrimônio.</p>
  )}
  </div>
 
- <div className={`\${tw.card} flex flex-col justify-center items-center relative`}>
- <h3 className="text-sm font-semibold text-content-secondary absolute top-4 left-4">Alocação</h3>
+ <div className={`\${tw.glass-card} flex flex-col justify-center items-center relative`}>
+ <h3 className="text-sm font-semibold text-[var(--text-secondary)] absolute top-4 left-4">Alocação</h3>
  {portfolio.total > 0 ? (
  <div className="w-full h-[160px]">
  <ResponsiveContainer width="100%" height="100%">
@@ -209,7 +209,7 @@ export default function Investments() {
  </ResponsiveContainer>
  </div>
  ) : (
- <div className="text-center text-content-muted text-xs py-8 px-4">
+ <div className="text-center text-[var(--text-muted)] text-xs py-8 px-4">
  Sem dados de alocação ainda
  </div>
  )}
@@ -218,24 +218,24 @@ export default function Investments() {
 
  {/* Evolution Chart — só exibe se tiver dados */}
  {evolutionData.length > 0 && (
- <div className={`\${tw.card} p-6`}>
+ <div className={`\${tw.glass-card} p-6`}>
  <div className="flex items-center justify-between mb-6">
  <div>
- <h3 className="text-lg font-semibold text-content-primary">Evolução do Patrimônio</h3>
- <p className="text-xs text-content-secondary">Comparado ao Ibovespa e CDI</p>
+ <h3 className="text-lg font-semibold text-[var(--text-primary)]">Evolução do Patrimônio</h3>
+ <p className="text-xs text-[var(--text-secondary)]">Comparado ao Ibovespa e CDI</p>
  </div>
  <div className="flex gap-4">
  <div className="flex items-center gap-1.5">
  <div className="w-2.5 h-2.5 rounded-full bg-brand-primary" />
- <span className="text-[10px] text-content-secondary font-bold uppercase">Carteira</span>
+ <span className="text-[10px] text-[var(--text-secondary)] font-bold uppercase">Carteira</span>
  </div>
  <div className="flex items-center gap-1.5">
  <div className="w-2.5 h-2.5 rounded-full bg-blue-500" />
- <span className="text-[10px] text-content-secondary font-bold uppercase">Ibov</span>
+ <span className="text-[10px] text-[var(--text-secondary)] font-bold uppercase">Ibov</span>
  </div>
  <div className="flex items-center gap-1.5">
  <div className="w-2.5 h-2.5 rounded-full bg-orange-500" />
- <span className="text-[10px] text-content-secondary font-bold uppercase">CDI</span>
+ <span className="text-[10px] text-[var(--text-secondary)] font-bold uppercase">CDI</span>
  </div>
  </div>
  </div>
@@ -258,33 +258,33 @@ export default function Investments() {
 
  {/* Minhas Carteiras */}
  <div>
- <h3 className="text-lg font-semibold text-content-primary mb-4 flex items-center gap-2">
+ <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-4 flex items-center gap-2">
  Minhas Carteiras
- <span className="bg-gray-800/40/10 text-xs px-2 py-0.5 rounded-full text-content-secondary">{connectedBrokers.length}</span>
+ <span className="bg-gray-800/40/10 text-xs px-2 py-0.5 rounded-full text-[var(--text-secondary)]">{connectedBrokers.length}</span>
  </h3>
 
  {connectedBrokers.length === 0 ? (
- <div className={`\${tw.card} text-center py-12 border-dashed border-2 border-[var(--border)]`}>
+ <div className={`\${tw.glass-card} text-center py-12 border-dashed border-2 border-[var(--border)]`}>
  <div className="w-16 h-16 rounded-full bg-brand-primary/10 mx-auto flex items-center justify-center mb-4">
  <Plug className="w-8 h-8 text-brand-glow" />
  </div>
- <h4 className="text-content-primary font-medium mb-1">Nenhuma corretora conectada</h4>
- <p className="text-content-secondary text-sm mb-6 max-w-sm mx-auto">
- Selecione uma corretora abaixo para conectar via <strong className="text-content-primary">Pluggy Open Finance</strong>.
+ <h4 className="text-[var(--text-primary)] font-medium mb-1">Nenhuma corretora conectada</h4>
+ <p className="text-[var(--text-secondary)] text-sm mb-6 max-w-sm mx-auto">
+ Selecione uma corretora abaixo para conectar via <strong className="text-[var(--text-primary)]">Pluggy Open Finance</strong>.
  </p>
  </div>
  ) : (
- <div className="grid gap-4">
+ <div className="grid gap-4 animate-fade-in">
  {connectedBrokers.map(broker => (
- <div key={broker.id} className={`\${tw.card}`}>
+ <div key={broker.id} className={`\${tw.glass-card}`}>
  <div className="flex items-center justify-between mb-4 border-b border-[var(--border)] pb-4">
  <div className="flex items-center gap-3">
- <div className="w-10 h-10 rounded-xl flex items-center justify-center font-bold shadow-lg text-content-primary" style={{ backgroundColor: broker.color || '#6b7280' }}>
+ <div className="w-10 h-10 rounded-xl flex items-center justify-center font-bold shadow-lg text-[var(--text-primary)]" style={{ backgroundColor: broker.color || '#6b7280' }}>
  {broker.logo || broker.name?.[0]}
  </div>
  <div>
- <h4 className="font-bold text-content-primary">{broker.name}</h4>
- <p className="text-xs text-content-secondary">
+ <h4 className="font-bold text-[var(--text-primary)]">{broker.name}</h4>
+ <p className="text-xs text-[var(--text-secondary)]">
  Conectado em {new Date(broker.connectedAt).toLocaleDateString('pt-BR')}
  <span className="ml-1 text-brand-glow">· via Pluggy</span>
  </p>
@@ -292,7 +292,7 @@ export default function Investments() {
  </div>
  <div className="flex items-center gap-3">
  <div className="text-right">
- <p className="text-xs text-content-secondary">Total</p>
+ <p className="text-xs text-[var(--text-secondary)]">Total</p>
  <p className="text-xl font-bold text-brand-glow">{fmt(broker.totalValue || 0)}</p>
  </div>
  <button onClick={() => handleDisconnectBroker(broker.id)} className="p-2 rounded-lg text-red-400/50 hover:text-red-400 hover:bg-red-500/10 transition-all" title="Excluir carteira">
@@ -305,17 +305,17 @@ export default function Investments() {
  {broker.assets.map((asset, idx) => (
  <div key={idx} className="flex items-center justify-between p-2 hover:bg-gray-800/40/5 rounded-lg transition-colors">
  <div className="flex items-center gap-3">
- <div className="w-8 h-8 rounded-lg bg-gray-800/40/5 flex items-center justify-center text-xs font-bold text-content-secondary border border-[var(--border)]">
+ <div className="w-8 h-8 rounded-lg bg-gray-800/40/5 flex items-center justify-center text-xs font-bold text-[var(--text-secondary)] border border-[var(--border)]">
  {asset.symbol?.substring(0, 4) || '---'}
  </div>
  <div>
- <p className="text-sm font-medium text-content-primary">{asset.name}</p>
- <p className="text-xs text-content-secondary">{asset.type}{asset.quantity ? ` · ${asset.quantity} un.` : ''}</p>
+ <p className="text-sm font-medium text-[var(--text-primary)]">{asset.name}</p>
+ <p className="text-xs text-[var(--text-secondary)]">{asset.type}{asset.quantity ? ` · ${asset.quantity} un.` : ''}</p>
  </div>
  </div>
  <div className="text-right">
- <p className="text-sm font-medium text-content-primary">{fmt((asset.price || 0) * (asset.quantity || 1))}</p>
- {asset.price && <p className="text-xs text-content-secondary">{fmt(asset.price)}/un</p>}
+ <p className="text-sm font-medium text-[var(--text-primary)]">{fmt((asset.price || 0) * (asset.quantity || 1))}</p>
+ {asset.price && <p className="text-xs text-[var(--text-secondary)]">{fmt(asset.price)}/un</p>}
  </div>
  </div>
  ))}
@@ -329,12 +329,12 @@ export default function Investments() {
 
  {/* Conectar Corretora — Grid com Pluggy embutido */}
  <div id="connect-broker">
- <h3 className="text-lg font-semibold text-content-primary mb-4">Conectar Corretora</h3>
- <p className="text-xs text-content-secondary mb-3 flex items-center gap-1">
+ <h3 className="text-lg font-semibold text-[var(--text-primary)] mb-4">Conectar Corretora</h3>
+ <p className="text-xs text-[var(--text-secondary)] mb-3 flex items-center gap-1">
  <CheckCircle className="w-3 h-3 text-brand-glow" />
  Clique em qualquer instituição para conectar via Pluggy Open Finance:
  </p>
- <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2">
+ <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2 animate-fade-in">
  {availableBrokers.filter(b => b.id !== 'openfinance').map(broker => (
  <button
  key={broker.id}
@@ -342,36 +342,36 @@ export default function Investments() {
  className="p-3 rounded-xl bg-gray-800/40/5 hover:bg-gray-800/40/10 border border-[var(--border)] hover:border-brand-primary/30 transition-all flex flex-col items-center gap-2 text-center group"
  title={`Conectar ${broker.name}`}
  >
- <div className="w-10 h-10 rounded-lg flex items-center justify-center text-content-primary font-bold text-sm shadow group-hover:-translate-y-px transition-transform transition-transform" style={{ backgroundColor: broker.color, color: broker.textColor }}>
+ <div className="w-10 h-10 rounded-lg flex items-center justify-center text-[var(--text-primary)] font-bold text-sm shadow group-hover:-translate-y-px transition-transform transition-transform" style={{ backgroundColor: broker.color, color: broker.textColor }}>
  {broker.logo}
  </div>
- <span className="text-[10px] font-medium text-content-secondary group-hover:text-content-primary truncate w-full leading-tight">{broker.name}</span>
+ <span className="text-[10px] font-medium text-[var(--text-secondary)] group-hover:text-[var(--text-primary)] truncate w-full leading-tight">{broker.name}</span>
  </button>
  ))}
  </div>
 
  {/* Cards info: B3 + Segurança */}
- <div className="grid sm:grid-cols-2 gap-4 mt-6">
+ <div className="grid sm:grid-cols-2 gap-4 mt-6 animate-fade-in">
  <button
  onClick={() => setShowB3Modal(true)}
- className={`\${tw.card} p-4 flex items-center gap-4 bg-surface-primary from-yellow-500/5 to-transparent border-yellow-500/20 hover:border-yellow-500/50 transition-all group text-left`}
+ className={`\${tw.glass-card} p-4 flex items-center gap-4 bg-[var(--bg-base)] from-yellow-500/5 to-transparent border-yellow-500/20 hover:border-yellow-500/50 transition-all group text-left`}
  >
- <div className="w-12 h-12 rounded-xl bg-yellow-500 text-content-primary flex items-center justify-center font-bold text-xl shadow-lg shadow-yellow-500/20 group-hover:-translate-y-px transition-transform transition-transform">B3</div>
+ <div className="w-12 h-12 rounded-xl bg-yellow-500 text-[var(--text-primary)] flex items-center justify-center font-bold text-xl shadow-lg shadow-yellow-500/20 group-hover:-translate-y-px transition-transform transition-transform">B3</div>
  <div className="flex-1">
- <h4 className="font-bold text-content-primary text-sm flex items-center gap-1">
+ <h4 className="font-bold text-[var(--text-primary)] text-sm flex items-center gap-1">
  Histórico B3 <BarChart3 className="w-3 h-3 text-yellow-400" />
  </h4>
- <p className="text-[10px] text-content-secondary mt-0.5">Veja o desempenho histórico do Ibovespa e CDI integrados ao app.</p>
+ <p className="text-[10px] text-[var(--text-secondary)] mt-0.5">Veja o desempenho histórico do Ibovespa e CDI integrados ao app.</p>
  </div>
  </button>
 
- <div className={`\${tw.card} p-4 flex items-center gap-4 bg-surface-primary from-brand-primary/5 to-transparent border-brand-primary/20`}>
- <div className="w-12 h-12 rounded-xl bg-brand-primary text-content-primary flex items-center justify-center shadow-lg">
+ <div className={`\${tw.glass-card} p-4 flex items-center gap-4 bg-[var(--bg-base)] from-brand-primary/5 to-transparent border-brand-primary/20`}>
+ <div className="w-12 h-12 rounded-xl bg-brand-primary text-[var(--text-primary)] flex items-center justify-center shadow-lg">
  <ShieldCheck className="w-6 h-6" />
  </div>
  <div className="flex-1">
- <h4 className="font-bold text-content-primary text-sm">Segurança</h4>
- <p className="text-[10px] text-content-secondary mt-0.5">
+ <h4 className="font-bold text-[var(--text-primary)] text-sm">Segurança</h4>
+ <p className="text-[10px] text-[var(--text-secondary)] mt-0.5">
  API keys protegidas server-side. Conexão E2E. Dados trafegam entre sua instituição e o Pluggy (BCB).
  </p>
  </div>
@@ -382,30 +382,30 @@ export default function Investments() {
  {/* ══════════ MODAL B3 HISTÓRICO ══════════ */}
  {showB3Modal && (
  <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/90 animate-fade-in">
- <div className="bg-[#0d1424] border border-[var(--border)] w-full max-w-2xl rounded-3xl shadow-card animate-slide-up overflow-hidden">
+ <div className="bg-[#0d1424] border border-[var(--border)] w-full max-w-2xl rounded-3xl shadow-glass-card animate-slide-up overflow-hidden">
  {/* Header */}
  <div className="flex items-center justify-between p-6 border-b border-[var(--border)]">
  <div className="flex items-center gap-3">
- <div className="w-10 h-10 rounded-xl bg-yellow-500 text-content-primary flex items-center justify-center font-bold text-lg">B3</div>
+ <div className="w-10 h-10 rounded-xl bg-yellow-500 text-[var(--text-primary)] flex items-center justify-center font-bold text-lg">B3</div>
  <div>
- <h2 className="text-lg font-bold text-content-primary">Histórico B3 — Ibovespa & CDI</h2>
- <p className="text-xs text-content-secondary">Dados de referência · Jan/2024 a Fev/2025</p>
+ <h2 className="text-lg font-bold text-[var(--text-primary)]">Histórico B3 — Ibovespa & CDI</h2>
+ <p className="text-xs text-[var(--text-secondary)]">Dados de referência · Jan/2024 a Fev/2025</p>
  </div>
  </div>
- <button onClick={() => setShowB3Modal(false)} className="p-2 rounded-lg text-content-muted hover:text-content-primary hover:bg-gray-800/40/10 transition-all">
+ <button onClick={() => setShowB3Modal(false)} className="p-2 rounded-lg text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-gray-800/40/10 transition-all">
  <X className="w-5 h-5" />
  </button>
  </div>
 
  {/* Stats */}
- <div className="grid grid-cols-3 gap-4 p-6 border-b border-[var(--border)]">
+ <div className="grid grid-cols-3 gap-4 p-6 border-b border-[var(--border)] animate-fade-in">
  <div className="text-center">
- <p className="text-[10px] text-content-muted uppercase font-bold tracking-wider mb-1">IBOV Atual</p>
- <p className="text-2xl font-bold text-content-primary">{b3Stats.lastIbov.toLocaleString('pt-BR')}</p>
- <p className="text-xs text-content-secondary">{b3Stats.lastMonth}</p>
+ <p className="text-[10px] text-[var(--text-muted)] uppercase font-bold tracking-wider mb-1">IBOV Atual</p>
+ <p className="text-2xl font-bold text-[var(--text-primary)]">{b3Stats.lastIbov.toLocaleString('pt-BR')}</p>
+ <p className="text-xs text-[var(--text-secondary)]">{b3Stats.lastMonth}</p>
  </div>
  <div className="text-center">
- <p className="text-[10px] text-content-muted uppercase font-bold tracking-wider mb-1">Var. 12m</p>
+ <p className="text-[10px] text-[var(--text-muted)] uppercase font-bold tracking-wider mb-1">Var. 12m</p>
  <p className={`text-2xl font-bold ${b3Stats.ibovVar >= 0 ? 'text-brand-glow' : 'text-rose-400'}`}>
  {b3Stats.ibovVar >= 0 ? '+' : ''}{b3Stats.ibovVar.toFixed(1)}%
  </p>
@@ -413,13 +413,13 @@ export default function Investments() {
  {b3Stats.ibovVar >= 0
  ? <TrendingUp className="w-3 h-3 text-brand-glow" />
  : <TrendingDown className="w-3 h-3 text-rose-400" />}
- <p className="text-xs text-content-secondary">Ibovespa</p>
+ <p className="text-xs text-[var(--text-secondary)]">Ibovespa</p>
  </div>
  </div>
  <div className="text-center">
- <p className="text-[10px] text-content-muted uppercase font-bold tracking-wider mb-1">CDI 2024</p>
+ <p className="text-[10px] text-[var(--text-muted)] uppercase font-bold tracking-wider mb-1">CDI 2024</p>
  <p className="text-2xl font-bold text-orange-400">+{b3Stats.cdiTotal.toFixed(2)}%</p>
- <p className="text-xs text-content-secondary">acumulado</p>
+ <p className="text-xs text-[var(--text-secondary)]">acumulado</p>
  </div>
  </div>
 
@@ -428,11 +428,11 @@ export default function Investments() {
  <div className="flex items-center gap-4 mb-4">
  <div className="flex items-center gap-1.5">
  <div className="w-2.5 h-2.5 rounded-full bg-yellow-500" />
- <span className="text-[10px] text-content-secondary font-bold uppercase">Ibovespa</span>
+ <span className="text-[10px] text-[var(--text-secondary)] font-bold uppercase">Ibovespa</span>
  </div>
  <div className="flex items-center gap-1.5">
  <div className="w-2.5 h-2.5 rounded-full bg-orange-400" />
- <span className="text-[10px] text-content-secondary font-bold uppercase">CDI Acum. (%)</span>
+ <span className="text-[10px] text-[var(--text-secondary)] font-bold uppercase">CDI Acum. (%)</span>
  </div>
  </div>
  <div className="h-[200px]">
@@ -456,7 +456,7 @@ export default function Investments() {
  </ResponsiveContainer>
  </div>
  <div className="mt-4 flex items-center justify-between">
- <p className="text-[10px] text-content-muted">
+ <p className="text-[10px] text-[var(--text-muted)]">
  Fonte: B3 / Banco Central · dados aproximados para referência
  </p>
  <a
@@ -476,17 +476,17 @@ export default function Investments() {
  {/* Modal de seleção de corretora */}
  {showConnectModal && selectedBroker && (
  <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/90 animate-fade-in">
- <div className="bg-[#0d1424] border border-[var(--border)] w-full max-w-sm rounded-3xl overflow-hidden animate-slide-up shadow-card relative">
- <button onClick={() => setShowConnectModal(false)} className="absolute top-4 right-4 text-content-muted hover:text-content-primary p-1.5 rounded-lg hover:bg-gray-800/40/10 transition-all">
+ <div className="bg-[#0d1424] border border-[var(--border)] w-full max-w-sm rounded-3xl overflow-hidden animate-slide-up shadow-glass-card relative">
+ <button onClick={() => setShowConnectModal(false)} className="absolute top-4 right-4 text-[var(--text-muted)] hover:text-[var(--text-primary)] p-1.5 rounded-lg hover:bg-gray-800/40/10 transition-all">
  <X className="w-5 h-5" />
  </button>
  <div className="p-6 text-center border-b border-[var(--border)] bg-gray-800/40/5">
- <div className="w-16 h-16 rounded-2xl mx-auto flex items-center justify-center text-content-primary font-bold text-3xl shadow-lg mb-4"
+ <div className="w-16 h-16 rounded-2xl mx-auto flex items-center justify-center text-[var(--text-primary)] font-bold text-3xl shadow-lg mb-4"
  style={{ backgroundColor: selectedBroker.color, color: selectedBroker.textColor }}>
  {selectedBroker.logo}
  </div>
- <h2 className="text-xl font-bold text-content-primary">Conectar {selectedBroker.name}</h2>
- <p className="text-xs text-content-secondary mt-1">Escolha como deseja sincronizar</p>
+ <h2 className="text-xl font-bold text-[var(--text-primary)]">Conectar {selectedBroker.name}</h2>
+ <p className="text-xs text-[var(--text-secondary)] mt-1">Escolha como deseja sincronizar</p>
  </div>
  <div className="p-6 space-y-3">
  <button
@@ -498,8 +498,8 @@ export default function Investments() {
  {pluggyConnecting ? <RefreshCw className="w-5 h-5 text-violet-400 animate-spin" /> : <Plug className="w-5 h-5 text-violet-400" />}
  </div>
  <div>
- <p className="text-sm font-bold text-content-primary">Via Open Finance (Pluggy)</p>
- <p className="text-[10px] text-content-secondary">Sincronização automática · regulado pelo BCB</p>
+ <p className="text-sm font-bold text-[var(--text-primary)]">Via Open Finance (Pluggy)</p>
+ <p className="text-[10px] text-[var(--text-secondary)]">Sincronização automática · regulado pelo BCB</p>
  </div>
  </button>
  <button
@@ -507,11 +507,11 @@ export default function Investments() {
  className="w-full flex items-center gap-4 p-4 rounded-xl bg-gray-800/40/5 border border-[var(--border)] hover:bg-gray-800/40/10 transition-all text-left"
  >
  <div className="w-10 h-10 rounded-lg bg-gray-800/40/10 flex items-center justify-center">
- <Briefcase className="w-5 h-5 text-content-secondary" />
+ <Briefcase className="w-5 h-5 text-[var(--text-secondary)]" />
  </div>
  <div>
- <p className="text-sm font-bold text-content-primary">Cadastro Manual</p>
- <p className="text-[10px] text-content-secondary">Inserir ativos manualmente</p>
+ <p className="text-sm font-bold text-[var(--text-primary)]">Cadastro Manual</p>
+ <p className="text-[10px] text-[var(--text-secondary)]">Inserir ativos manualmente</p>
  </div>
  </button>
  </div>

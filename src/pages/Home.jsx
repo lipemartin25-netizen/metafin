@@ -86,7 +86,7 @@ export default function Home() {
  ];
 
  return (
- <div className="min-h-screen bg-surface-primary text-content-primary overflow-x-hidden selection:bg-brand-primary/30 font-sans antialiased">
+ <div className="min-h-screen bg-[var(--bg-base)] text-[var(--text-primary)] overflow-x-hidden selection:bg-brand-primary/30 font-sans antialiased">
  {/* Background */}
  <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
  <div className="absolute top-[-10%] right-[-5%] w-[50%] h-[50%] bg-brand-primary/[0.03] blur-[160px] rounded-full" />
@@ -95,7 +95,7 @@ export default function Home() {
  </div>
 
  {/* Header */}
- <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled ? 'bg-surface-secondary border-b border-[var(--border)] py-4 shadow-elevated' : 'bg-transparent py-8'}`}>
+ <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled ? 'bg-[var(--bg-elevated)] border-b border-[var(--border)] py-4 shadow-elevated' : 'bg-transparent py-8'}`}>
  <nav className="max-w-7xl mx-auto px-6 flex items-center justify-between">
  <Link to="/" className="flex items-center gap-2">
  <MetaFinLogo className="h-8 w-auto" />
@@ -104,14 +104,14 @@ export default function Home() {
  <div className="hidden lg:flex items-center gap-10">
  {['Tecnologia', 'Funcionalidades', 'Segurança', 'Planos'].map((item) => (
  <a key={item} href={`#${item.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")}`}
- className="text-[14px] font-semibold tracking-tight text-content-secondary hover:text-content-primary transition-colors">
+ className="text-[14px] font-semibold tracking-tight text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors">
  {item}
  </a>
  ))}
  </div>
 
  <div className="hidden lg:flex items-center gap-6">
- <Link to="/login" className="text-[14px] font-bold text-content-secondary hover:text-content-primary transition-colors">
+ <Link to="/login" className="text-[14px] font-bold text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors">
  Entrar
  </Link>
  <Link to="/signup" className="px-6 py-2.5 bg-brand-primary hover:bg-brand-glow text-slate-950 text-[13px] font-extrabold rounded-xl transition-all shadow-elevated shadow-brand-primary/10 active:scale-95">
@@ -122,7 +122,7 @@ export default function Home() {
  {/* Mobile Toggle */}
  <button
  onClick={() => setIsMenuOpen(!isMenuOpen)}
- className="lg:hidden p-2 text-content-secondary hover:text-content-primary transition-colors relative z-50 rounded-xl hover:bg-gray-800/40/5 active:bg-gray-800/40/10"
+ className="lg:hidden p-2 text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors relative z-50 rounded-xl hover:bg-gray-800/40/5 active:bg-gray-800/40/10"
  id="mobile-menu-toggle"
  aria-label="Abrir menu de navegação"
  >
@@ -145,7 +145,7 @@ export default function Home() {
  key={item}
  href={`#${item.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")}`}
  onClick={() => setIsMenuOpen(false)}
- className="text-2xl font-bold text-content-primary tracking-tight"
+ className="text-2xl font-bold text-[var(--text-primary)] tracking-tight"
  >
  {item}
  </a>
@@ -154,7 +154,7 @@ export default function Home() {
  <Link
  to="/login"
  onClick={() => setIsMenuOpen(false)}
- className="text-xl font-bold text-content-secondary"
+ className="text-xl font-bold text-[var(--text-secondary)]"
  >
  Entrar
  </Link>
@@ -179,7 +179,7 @@ export default function Home() {
  <motion.div
  initial={{ opacity: 0, scale: 0.98 }}
  animate={{ opacity: 1, scale: 1 }}
- className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-surface-secondary border border-[var(--border)] text-brand-glow text-[11px] font-bold uppercase tracking-widest mb-12 shadow-inner"
+ className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-[var(--bg-elevated)] border border-[var(--border)] text-brand-glow text-[11px] font-bold uppercase tracking-widest mb-12 shadow-inner"
  >
  <Shield className="w-4 h-4" />
  <span>Infraestrutura Nexus IA Certificada</span>
@@ -188,7 +188,7 @@ export default function Home() {
  <motion.h1
  initial={{ opacity: 0, y: 15 }}
  animate={{ opacity: 1, y: 0 }}
- className="text-6xl md:text-[5.5rem] font-extrabold tracking-tight leading-[1.05] text-content-primary mb-10 text-balance"
+ className="text-6xl md:text-[5.5rem] font-extrabold tracking-tight leading-[1.05] text-[var(--text-primary)] mb-10 text-balance"
  >
  O futuro da gestão <br />
  <span className="text-brand-primary/90">patrimonial é aqui.</span>
@@ -198,7 +198,7 @@ export default function Home() {
  initial={{ opacity: 0, y: 15 }}
  animate={{ opacity: 1, y: 0 }}
  transition={{ delay: 0.1 }}
- className="text-xl md:text-2xl text-content-secondary max-w-3xl mx-auto leading-relaxed mb-16 font-medium text-balance"
+ className="text-xl md:text-2xl text-[var(--text-secondary)] max-w-3xl mx-auto leading-relaxed mb-16 font-medium text-balance"
  >
  Poderosa convergência de Open Finance e Inteligência Artificial para
  quem exige clareza absoluta e controle refinado sobre o capital.
@@ -214,7 +214,7 @@ export default function Home() {
  Iniciar Agora
  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
  </Link>
- <a href="#planos" className="px-10 py-5 bg-surface-secondary hover:bg-surface-secondary border border-[var(--border)] text-content-primary font-bold rounded-2xl transition-all shadow-lg active:scale-95">
+ <a href="#planos" className="px-10 py-5 bg-[var(--bg-elevated)] hover:bg-[var(--bg-elevated)] border border-[var(--border)] text-[var(--text-primary)] font-bold rounded-2xl transition-all shadow-lg active:scale-95">
  Comparar Planos
  </a>
  </motion.div>
@@ -222,9 +222,9 @@ export default function Home() {
  </section>
 
  {/* Metrics */}
- <section id="tecnologia" className="py-24 border-y border-[var(--border)] bg-surface-secondary relative z-10">
+ <section id="tecnologia" className="py-24 border-y border-[var(--border)] bg-[var(--bg-elevated)] relative z-10">
  <div className="max-w-7xl mx-auto px-6">
- <div className="grid grid-cols-2 md:grid-cols-4 gap-12 text-center">
+ <div className="grid grid-cols-2 md:grid-cols-4 gap-12 text-center animate-fade-in">
  {[
  { val: "100k+", label: "Gestores Ativos" },
  { val: "R$ 4.2B", label: "Capital Monitorado" },
@@ -232,8 +232,8 @@ export default function Home() {
  { val: "v4.2", label: "NEXUS IA CORE" }
  ].map((stat, i) => (
  <div key={i} className="space-y-2">
- <p className="text-4xl font-bold text-content-primary tracking-tight">{stat.val}</p>
- <p className="text-[12px] font-bold uppercase tracking-widest text-content-muted">{stat.label}</p>
+ <p className="text-4xl font-bold text-[var(--text-primary)] tracking-tight">{stat.val}</p>
+ <p className="text-[12px] font-bold uppercase tracking-widest text-[var(--text-muted)]">{stat.label}</p>
  </div>
  ))}
  </div>
@@ -243,7 +243,7 @@ export default function Home() {
  {/* Features */}
  <section id="funcionalidades" className="py-32 px-6 relative z-10">
  <div className="max-w-7xl mx-auto">
- <div className="grid md:grid-cols-3 gap-8">
+ <div className="grid md:grid-cols-3 gap-8 animate-fade-in">
  {[
  {
  icon: <BarChart3 className="w-8 h-8 text-brand-primary" />,
@@ -261,12 +261,12 @@ export default function Home() {
  desc: "Conformidade total com as regulamentações BACEN e LGPD para uma proteção de dados em nível de estado-da-arte."
  }
  ].map((feature, i) => (
- <div key={i} className={`p-10 ${tw.card} transition-all duration-500 group`}>
- <div className="w-16 h-16 rounded-2xl bg-surface-secondary flex items-center justify-center mb-8 border border-[var(--border)] group-hover:bg-brand-primary/10 group-hover:border-brand-glow/20 transition-all duration-500">
+ <div key={i} className={`p-10 ${tw.glass-card} transition-all duration-500 group`}>
+ <div className="w-16 h-16 rounded-2xl bg-[var(--bg-elevated)] flex items-center justify-center mb-8 border border-[var(--border)] group-hover:bg-brand-primary/10 group-hover:border-brand-glow/20 transition-all duration-500">
  {feature.icon}
  </div>
- <h3 className="text-xl font-bold mb-4 text-content-primary uppercase tracking-tight">{feature.title}</h3>
- <p className="text-content-secondary leading-relaxed text-[15px] font-medium group-hover:text-content-secondary transition-colors">{feature.desc}</p>
+ <h3 className="text-xl font-bold mb-4 text-[var(--text-primary)] uppercase tracking-tight">{feature.title}</h3>
+ <p className="text-[var(--text-secondary)] leading-relaxed text-[15px] font-medium group-hover:text-[var(--text-secondary)] transition-colors">{feature.desc}</p>
  </div>
  ))}
  </div>
@@ -277,13 +277,13 @@ export default function Home() {
  <section id="planos" className="py-32 px-6 relative z-10">
  <div className="max-w-7xl mx-auto">
  <div className="text-center mb-24 space-y-4">
- <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight text-content-primary mb-2">Gestão sem fronteiras.</h2>
- <p className="text-content-secondary text-lg md:text-xl font-medium">Arquitetado para todas as fases da sua vida financeira.</p>
+ <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight text-[var(--text-primary)] mb-2">Gestão sem fronteiras.</h2>
+ <p className="text-[var(--text-secondary)] text-lg md:text-xl font-medium">Arquitetado para todas as fases da sua vida financeira.</p>
  </div>
 
- <div className="grid lg:grid-cols-3 gap-8">
+ <div className="grid lg:grid-cols-3 gap-8 animate-fade-in">
  {plans.map((plan, i) => (
- <div key={i} className={`p-10 ${tw.card} transition-all duration-500 flex flex-col relative ${plan.popular ? 'border-brand-primary/40 ring-1 ring-emerald-500/20 scale-105 z-10' : ''}`}>
+ <div key={i} className={`p-10 ${tw.glass-card} transition-all duration-500 flex flex-col relative ${plan.popular ? 'border-brand-primary/40 ring-1 ring-emerald-500/20 scale-105 z-10' : ''}`}>
  {plan.popular && (
  <div className="absolute top-10 right-10">
  <span className="bg-brand-primary text-slate-950 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.1em]">
@@ -293,13 +293,13 @@ export default function Home() {
  )}
 
  <div className="mb-8">
- <h3 className="text-2xl font-bold text-content-primary mb-3 uppercase tracking-tight">{plan.name}</h3>
- <p className="text-content-secondary text-sm font-medium leading-relaxed min-h-[48px]">{plan.desc}</p>
+ <h3 className="text-2xl font-bold text-[var(--text-primary)] mb-3 uppercase tracking-tight">{plan.name}</h3>
+ <p className="text-[var(--text-secondary)] text-sm font-medium leading-relaxed min-h-[48px]">{plan.desc}</p>
  </div>
 
  <div className="mb-10 flex items-baseline gap-2">
- <span className="text-5xl font-extrabold text-content-primary">{plan.price}</span>
- <span className="text-content-secondary font-bold">{plan.period}</span>
+ <span className="text-5xl font-extrabold text-[var(--text-primary)]">{plan.price}</span>
+ <span className="text-[var(--text-secondary)] font-bold">{plan.period}</span>
  </div>
 
  <div className="space-y-4 mb-14 flex-1">
@@ -311,7 +311,7 @@ export default function Home() {
  ))}
  </div>
 
- <Link to="/signup" className={plan.variant === 'primary' ? 'btn-clean-primary w-full shadow-brand-primary/10' : 'px-8 py-4 bg-surface-secondary hover:bg-surface-secondary text-content-primary font-bold rounded-2xl text-center transition-all border border-[var(--border)]'}>
+ <Link to="/signup" className={plan.variant === 'primary' ? 'btn-clean-primary w-full shadow-brand-primary/10' : 'px-8 py-4 bg-[var(--bg-elevated)] hover:bg-[var(--bg-elevated)] text-[var(--text-primary)] font-bold rounded-2xl text-center transition-all border border-[var(--border)]'}>
  {plan.buttonText}
  </Link>
  </div>
@@ -325,14 +325,14 @@ export default function Home() {
  <div className="max-w-7xl mx-auto grid md:grid-cols-4 gap-20 mb-24">
  <div className="md:col-span-1 space-y-8">
  <MetaFinLogo className="h-7 w-auto" />
- <p className="text-content-secondary text-sm leading-relaxed font-medium pr-10">
+ <p className="text-[var(--text-secondary)] text-sm leading-relaxed font-medium pr-10">
  Alta performance em tecnologia financeira integrada.
  Sua segurança e transparência em primeiro nível global.
  </p>
  <div className="flex gap-4">
  {[Smartphone, Shield, Globe, Activity].map((Icon, i) => (
- <div key={i} className="p-3.5 rounded-2xl bg-surface-secondary border border-[var(--border)] hover:border-brand-primary/30 transition-all cursor-pointer">
- <Icon className="w-4 h-4 text-content-secondary" />
+ <div key={i} className="p-3.5 rounded-2xl bg-[var(--bg-elevated)] border border-[var(--border)] hover:border-brand-primary/30 transition-all cursor-pointer">
+ <Icon className="w-4 h-4 text-[var(--text-secondary)]" />
  </div>
  ))}
  </div>
@@ -368,11 +368,11 @@ export default function Home() {
  }
  ].map((col, i) => (
  <div key={i}>
- <h4 className="text-content-primary font-bold text-[13px] mb-8 uppercase tracking-[0.15em]">{col.title}</h4>
+ <h4 className="text-[var(--text-primary)] font-bold text-[13px] mb-8 uppercase tracking-[0.15em]">{col.title}</h4>
  <ul className="space-y-4">
  {col.links.map((link, idx) => (
  <li key={idx}>
- <Link to={link.h} className="text-content-secondary hover:text-content-primary transition-colors text-[14px] font-semibold">{link.n}</Link>
+ <Link to={link.h} className="text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors text-[14px] font-semibold">{link.n}</Link>
  </li>
  ))}
  </ul>
@@ -381,11 +381,11 @@ export default function Home() {
  </div>
 
  <div className="max-w-7xl mx-auto pt-10 border-t border-[var(--border)] flex flex-col md:flex-row justify-between items-center gap-6">
- <p className="text-[11px] font-bold text-content-secondary tracking-[0.1em]">
+ <p className="text-[11px] font-bold text-[var(--text-secondary)] tracking-[0.1em]">
  © {new Date().getFullYear()} METAFIN GLOBAL OPERATIONS. TODOS OS DIREITOS RESERVADOS.
  </p>
  <div className="flex items-center gap-8">
- <span className="text-[11px] font-bold text-content-secondary flex items-center gap-2 uppercase tracking-widest bg-surface-secondary px-4 py-1.5 rounded-full border border-[var(--border)]">
+ <span className="text-[11px] font-bold text-[var(--text-secondary)] flex items-center gap-2 uppercase tracking-widest bg-[var(--bg-elevated)] px-4 py-1.5 rounded-full border border-[var(--border)]">
  <Lock className="w-3.5 h-3.5 text-brand-primary/80" /> 256-bit AES SECURE PROTOCOL
  </span>
  </div>

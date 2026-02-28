@@ -164,7 +164,7 @@ export default function XRayDiagnosis({ onComplete, onClose }) {
  <div className="relative w-full max-w-2xl bg-gray-800/40 dark:bg-surface-900 border border-gray-700/40 dark:border-[var(--border)] rounded-3xl shadow-elevated overflow-hidden flex flex-col">
  {/* Close Button if applicable */}
  {onClose && (
- <button onClick={() => onClose(null)} className="absolute top-6 right-6 z-20 p-2 bg-gray-800/40 dark:bg-gray-800/40/5 rounded-full text-gray-400 hover:text-content-primary dark:hover:text-content-primary transition-colors">
+ <button onClick={() => onClose(null)} className="absolute top-6 right-6 z-20 p-2 bg-gray-800/40 dark:bg-gray-800/40/5 rounded-full text-gray-400 hover:text-[var(--text-primary)] dark:hover:text-[var(--text-primary)] transition-colors">
  <X className="w-5 h-5" />
  </button>
  )}
@@ -181,7 +181,7 @@ export default function XRayDiagnosis({ onComplete, onClose }) {
 
  <div className="flex-1 p-8 md:p-12 overflow-y-auto">
  {loading ? (
- <div className="flex flex-col items-center justify-center h-full py-20 text-center animate-fade-in text-content-primary dark:text-content-primary">
+ <div className="flex flex-col items-center justify-center h-full py-20 text-center animate-fade-in text-[var(--text-primary)] dark:text-[var(--text-primary)]">
  <div className="relative mb-8">
  <div className="absolute inset-0 bg-brand-500/20 rounded-full blur-xl animate-pulse" />
  <Activity className="w-16 h-16 text-brand-500 animate-[bounce_2s_infinite]" />
@@ -201,7 +201,7 @@ export default function XRayDiagnosis({ onComplete, onClose }) {
  <circle cx="96" cy="96" r="88" stroke="currentColor" strokeWidth="12" fill="transparent" strokeDasharray="552.92" strokeDashoffset={552.92 - (552.92 * result.score) / 100} className={`${result.color} transition-all duration-1500 ease-out`} />
  </svg>
  <div className="flex flex-col items-center justify-center z-10">
- <span className="text-5xl font-black text-content-primary dark:text-content-primary tracking-tight">{result.score}</span>
+ <span className="text-5xl font-black text-[var(--text-primary)] dark:text-[var(--text-primary)] tracking-tight">{result.score}</span>
  <span className={`text-[10px] font-black uppercase tracking-widest mt-1 ${result.color} px-2 py-1 bg-${result.color.split('-')[1]}-500/10 rounded-lg`}>
  {result.status}
  </span>
@@ -209,21 +209,21 @@ export default function XRayDiagnosis({ onComplete, onClose }) {
  </div>
  </div>
 
- <h2 className="text-2xl font-bold text-content-primary dark:text-content-primary mb-4">Seu Diagnóstico Financeiro</h2>
+ <h2 className="text-2xl font-bold text-[var(--text-primary)] dark:text-[var(--text-primary)] mb-4">Seu Diagnóstico Financeiro</h2>
  <div className="p-6 rounded-2xl bg-gray-800/30 dark:bg-gray-800/40/[0.03] border border-gray-700/40 dark:border-[var(--border)] mb-8 max-w-lg mx-auto text-left shadow-inner">
  <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-sm font-medium">
  {result.tip}
  </p>
  </div>
 
- <button onClick={finishDiagnosis} className="mx-auto flex items-center justify-center gap-2 gradient-btn w-full max-w-md py-4 rounded-xl text-content-primary font-bold shadow-lg shadow-brand-500/30">
+ <button onClick={finishDiagnosis} className="mx-auto flex items-center justify-center gap-2 gradient-btn w-full max-w-md py-4 rounded-xl text-[var(--text-primary)] font-bold shadow-lg shadow-brand-500/30">
  Ir para o Dashboard <ArrowRight className="w-5 h-5" />
  </button>
  </div>
  ) : (
  <div className="flex flex-col h-full py-8 text-center animate-fade-in">
  <div className="flex justify-center mb-6">{QUESTIONS[step].icon}</div>
- <h2 className="text-2xl md:text-3xl font-black text-content-primary dark:text-content-primary mb-3 tracking-tight">
+ <h2 className="text-2xl md:text-3xl font-black text-[var(--text-primary)] dark:text-[var(--text-primary)] mb-3 tracking-tight">
  {QUESTIONS[step].title}
  </h2>
  <p className="text-gray-500 dark:text-gray-400 mb-10 max-w-lg mx-auto text-sm md:text-base">
@@ -237,7 +237,7 @@ export default function XRayDiagnosis({ onComplete, onClose }) {
  value={answers[QUESTIONS[step].key] || ''}
  onChange={(e) => handleChange(e.target.value)}
  placeholder="0,00"
- className="w-full bg-gray-800/30 dark:bg-black/20 border-2 border-gray-700/40 dark:border-[var(--border)] rounded-2xl py-5 pl-14 pr-6 text-2xl md:text-3xl font-black text-content-primary dark:text-content-primary focus:outline-none focus:border-brand-500 focus:ring-4 focus:ring-brand-500/20 transition-all shadow-inner"
+ className="w-full bg-gray-800/30 dark:bg-black/20 border-2 border-gray-700/40 dark:border-[var(--border)] rounded-2xl py-5 pl-14 pr-6 text-2xl md:text-3xl font-black text-[var(--text-primary)] dark:text-[var(--text-primary)] focus:outline-none focus:border-brand-500 focus:ring-4 focus:ring-brand-500/20 transition-all shadow-inner"
  autoFocus
  onKeyDown={(e) => e.key === 'Enter' && handleNext()}
  />
@@ -250,7 +250,7 @@ export default function XRayDiagnosis({ onComplete, onClose }) {
  {!result && !loading && (
  <div className="p-6 border-t border-gray-100 dark:border-[var(--border)] flex justify-between items-center bg-gray-800/30/50 dark:bg-gray-800/40/[0.02]">
  {step > 0 ? (
- <button onClick={handleBack} className="px-6 py-3 rounded-xl font-semibold text-gray-500 hover:text-content-primary dark:hover:text-content-primary hover:bg-gray-800/40 dark:hover:bg-gray-800/40/10 transition-colors">
+ <button onClick={handleBack} className="px-6 py-3 rounded-xl font-semibold text-gray-500 hover:text-[var(--text-primary)] dark:hover:text-[var(--text-primary)] hover:bg-gray-800/40 dark:hover:bg-gray-800/40/10 transition-colors">
  Voltar
  </button>
  ) : (

@@ -68,11 +68,11 @@ export default function FIRESimulator({ financialData }) {
  <div className="space-y-6">
  {/* Inputs */}
  <div className={`rounded-2xl border border-gray-700/40 dark:border-[var(--border)] 
- bg-gray-800/30/50 dark:bg-black/20 p-6 \${tw.card}`}>
- <h3 className="font-bold mb-4 flex items-center gap-2 text-content-primary dark:text-content-primary">
+ bg-gray-800/30/50 dark:bg-black/20 p-6 \${tw.glass-card}`}>
+ <h3 className="font-bold mb-4 flex items-center gap-2 text-[var(--text-primary)] dark:text-[var(--text-primary)]">
  <DollarSign className="h-5 w-5 text-orange-500" /> Seus Dados Financeiros
  </h3>
- <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+ <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 animate-fade-in">
  {[
  { key: 'monthlyIncome', label: 'Renda Mensal', icon: '💰', prefix: 'R$' },
  { key: 'monthlyExpenses', label: 'Despesas Mensais', icon: '💸', prefix: 'R$' },
@@ -96,7 +96,7 @@ export default function FIRESimulator({ financialData }) {
  value={params[field.key]}
  onChange={(e) => handleChange(field.key, e.target.value)}
  className={`w-full rounded-xl border border-gray-700/40 dark:border-[var(--border)] 
- bg-gray-800/40 dark:bg-gray-900/50 text-content-primary dark:text-content-primary p-2.5 text-sm font-bold outline-none
+ bg-gray-800/40 dark:bg-gray-900/50 text-[var(--text-primary)] dark:text-[var(--text-primary)] p-2.5 text-sm font-bold outline-none
  focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all shadow-lg shadow-black/10
  ${field.prefix ? 'pl-9' : ''} ${field.suffix ? 'pr-8' : ''}`}
  />
@@ -111,10 +111,10 @@ export default function FIRESimulator({ financialData }) {
  </div>
 
  {/* Hero Card - Resultado Principal 3D Premium */}
- <div className="relative overflow-hidden rounded-[2.5rem] bg-surface-primary 
- from-orange-500 via-red-500 to-pink-600 p-8 md:p-12 text-content-primary shadow-card group border border-[var(--border)] perspective-1000">
+ <div className="relative overflow-hidden rounded-[2.5rem] bg-[var(--bg-base)] 
+ from-orange-500 via-red-500 to-pink-600 p-8 md:p-12 text-[var(--text-primary)] shadow-glass-card group border border-[var(--border)] perspective-1000">
  {/* Efeitos 3D Internos */}
- <div className="absolute inset-x-0 -bottom-20 h-64 bg-surface-primary from-black/40 to-transparent" />
+ <div className="absolute inset-x-0 -bottom-20 h-64 bg-[var(--bg-base)] from-black/40 to-transparent" />
  <div className="absolute -right-20 -top-20 w-80 h-80 bg-gray-800/40/10 rounded-full mix-blend-overlay filter blur-[40px] opacity-60 group-hover:-translate-y-px transition-transform transition-transform duration-1000 ease-out" />
  <div className="absolute top-10 left-10 w-40 h-40 bg-yellow-400/20 rounded-full mix-blend-color-dodge filter blur-[40px] opacity-60 group-hover:-translate-y-px transition-transform duration-1000 ease-out delay-100" />
  <Flame className="absolute -right-8 top-0 h-64 w-64 opacity-20 filter blur-2xl group-hover:hidden transition-all duration-1000" />
@@ -126,27 +126,27 @@ export default function FIRESimulator({ financialData }) {
  Sua Independência Financeira
  </h2>
 
- <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-10 relative z-10">
+ <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-10 relative z-10 animate-fade-in">
  <div className="bg-gray-800/40/10 rounded-3xl p-5 border border-[var(--border)] shadow-inner group-hover:-translate-y-px transition-transform duration-300">
  <p className="text-[10px] uppercase font-black tracking-[0.2em] opacity-80 mb-2">Meta FIRE</p>
- <p className="text-xl md:text-3xl font-black drop-shadow-card tracking-tight">
+ <p className="text-xl md:text-3xl font-black drop-shadow-glass-card tracking-tight">
  {formatCurrency(result.fireNumber)}
  </p>
  </div>
  <div className="bg-gray-800/40/10 rounded-3xl p-5 border border-[var(--border)] shadow-inner group-hover:-translate-y-px transition-transform duration-300 delay-75">
  <p className="text-[10px] uppercase font-black tracking-[0.2em] opacity-80 mb-2">Progresso</p>
- <p className="text-xl md:text-3xl font-black drop-shadow-card tracking-tight">{result.progress}%</p>
+ <p className="text-xl md:text-3xl font-black drop-shadow-glass-card tracking-tight">{result.progress}%</p>
  </div>
  <div className="bg-gray-800/40/10 rounded-3xl p-5 border border-[var(--border)] shadow-inner group-hover:-translate-y-px transition-transform duration-300 delay-100">
  <p className="text-[10px] uppercase font-black tracking-[0.2em] opacity-80 mb-2">Tempo Restante</p>
- <p className="text-xl md:text-3xl font-black drop-shadow-card tracking-tight">
- {result.totalYears}a <span className="text-lg md:text-xl text-content-primary/80">{result.totalMonthsRemainder}m</span>
+ <p className="text-xl md:text-3xl font-black drop-shadow-glass-card tracking-tight">
+ {result.totalYears}a <span className="text-lg md:text-xl text-[var(--text-primary)]/80">{result.totalMonthsRemainder}m</span>
  </p>
  </div>
  <div className="bg-gray-800/40/10 rounded-3xl p-5 border border-[var(--border)] shadow-inner group-hover:-translate-y-px transition-transform duration-300 delay-150 relative overflow-hidden">
- <div className="absolute inset-0 bg-surface-primary from-yellow-400/20 to-transparent mix-blend-overlay" />
+ <div className="absolute inset-0 bg-[var(--bg-base)] from-yellow-400/20 to-transparent mix-blend-overlay" />
  <p className="text-[10px] uppercase font-black tracking-[0.2em] opacity-80 mb-2 relative z-10">Previsão Realidade</p>
- <p className="text-lg md:text-2xl font-black drop-shadow-card capitalize truncate relative z-10">
+ <p className="text-lg md:text-2xl font-black drop-shadow-glass-card capitalize truncate relative z-10">
  {result.targetDateFormatted}
  </p>
  </div>
@@ -154,36 +154,36 @@ export default function FIRESimulator({ financialData }) {
 
  {/* Barra de progresso Master */}
  <div className="mb-6 relative z-10">
- <div className="flex justify-between text-[11px] font-black opacity-90 mb-3 uppercase tracking-widest text-content-primary/90">
- <span>Hoje: <span className="text-content-primary">{formatCurrency(result.currentInvestments)}</span></span>
- <span>Meta FIRE: <span className="text-content-primary">{formatCurrency(result.fireNumber)}</span></span>
+ <div className="flex justify-between text-[11px] font-black opacity-90 mb-3 uppercase tracking-widest text-[var(--text-primary)]/90">
+ <span>Hoje: <span className="text-[var(--text-primary)]">{formatCurrency(result.currentInvestments)}</span></span>
+ <span>Meta FIRE: <span className="text-[var(--text-primary)]">{formatCurrency(result.fireNumber)}</span></span>
  </div>
  <div className="h-6 w-full rounded-full bg-black/40 overflow-hidden shadow-inner border border-[var(--border)] relative p-1">
  <div
- className="h-full rounded-full bg-surface-primary from-yellow-400 via-orange-300 to-white transition-all duration-1000 ease-out relative shadow-card"
+ className="h-full rounded-full bg-[var(--bg-base)] from-yellow-400 via-orange-300 to-white transition-all duration-1000 ease-out relative shadow-glass-card"
  style={{ width: `${Math.min(result.progress, 100)}%` }}
  >
  {/* Reflexo animado simulando vidro */}
- <div className="absolute inset-0 bg-surface-primary from-white/40 to-transparent rounded-full" />
- <div className="absolute top-0 right-0 bottom-0 w-12 bg-surface-primary from-transparent via-white/80 to-transparent rounded-full animate-[wiggle_2s_ease-in-out_infinite]" />
+ <div className="absolute inset-0 bg-[var(--bg-base)] from-white/40 to-transparent rounded-full" />
+ <div className="absolute top-0 right-0 bottom-0 w-12 bg-[var(--bg-base)] from-transparent via-white/80 to-transparent rounded-full animate-[wiggle_2s_ease-in-out_infinite]" />
  </div>
  </div>
  </div>
 
  {/* Renda Passiva */}
- <div className="mt-8 flex items-center gap-4 text-sm font-medium bg-black/20 p-5 rounded-2xl border border-[var(--border)] shadow-card relative z-10 transform-gpu hover:scale-[1.01] transition-transform">
- <div className="p-3 bg-surface-primary from-yellow-400 to-orange-500 rounded-xl shadow-lg border border-[var(--border)]">
- <DollarSign className="h-6 w-6 text-content-primary drop-shadow-lg shadow-black/10" />
+ <div className="mt-8 flex items-center gap-4 text-sm font-medium bg-black/20 p-5 rounded-2xl border border-[var(--border)] shadow-glass-card relative z-10 transform-gpu hover:scale-[1.01] transition-transform">
+ <div className="p-3 bg-[var(--bg-base)] from-yellow-400 to-orange-500 rounded-xl shadow-lg border border-[var(--border)]">
+ <DollarSign className="h-6 w-6 text-[var(--text-primary)] drop-shadow-lg shadow-black/10" />
  </div>
  <span className="leading-relaxed text-indigo-50/90 text-left text-base">
- Sua renda passiva perpétua será: <strong className="text-xl mx-1 text-content-primary drop-shadow-lg shadow-black/10">{formatCurrency(result.summary.passive_income_monthly)}/mês</strong>. Isso cobrirá exatamente {result.summary.years_of_freedom} anos de suas atuais despesas se você nunca mais trabalhar na vida!
+ Sua renda passiva perpétua será: <strong className="text-xl mx-1 text-[var(--text-primary)] drop-shadow-lg shadow-black/10">{formatCurrency(result.summary.passive_income_monthly)}/mês</strong>. Isso cobrirá exatamente {result.summary.years_of_freedom} anos de suas atuais despesas se você nunca mais trabalhar na vida!
  </span>
  </div>
  </div>
 
  {/* Gráfico de Projeção */}
- <div className={`rounded-3xl border border-gray-700/40 dark:border-[var(--border)] \${tw.card} p-6 shadow-lg shadow-black/10`}>
- <h3 className="font-bold mb-6 flex items-center gap-2 text-content-primary dark:text-content-primary">
+ <div className={`rounded-3xl border border-gray-700/40 dark:border-[var(--border)] \${tw.glass-card} p-6 shadow-lg shadow-black/10`}>
+ <h3 className="font-bold mb-6 flex items-center gap-2 text-[var(--text-primary)] dark:text-[var(--text-primary)]">
  <TrendingUp className="h-5 w-5 text-orange-500" /> Projeção Patrimonial
  </h3>
  <ResponsiveContainer width="100%" height={400}>
@@ -262,10 +262,10 @@ export default function FIRESimulator({ financialData }) {
  </ResponsiveContainer>
  </div>
 
- <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+ <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-fade-in">
  {/* Cenários */}
- <div className={`rounded-3xl border border-gray-700/40 dark:border-[var(--border)] \${tw.card} p-6 shadow-lg shadow-black/10`}>
- <h3 className="font-bold mb-4 flex items-center gap-2 text-content-primary dark:text-content-primary">
+ <div className={`rounded-3xl border border-gray-700/40 dark:border-[var(--border)] \${tw.glass-card} p-6 shadow-lg shadow-black/10`}>
+ <h3 className="font-bold mb-4 flex items-center gap-2 text-[var(--text-primary)] dark:text-[var(--text-primary)]">
  <Target className="h-5 w-5 text-blue-500" /> Cenários Estressados (a.a.)
  </h3>
  <div className="flex flex-col gap-3">
@@ -279,7 +279,7 @@ export default function FIRESimulator({ financialData }) {
  <div className="flex items-center gap-3">
  <div className="w-10 h-10 rounded-full flex items-center justify-center text-xl bg-gray-800/40 dark:bg-gray-800/40/5 group-hover:-translate-y-px transition-transform transition-transform">{scenario.emoji}</div>
  <div>
- <span className="font-bold text-content-primary dark:text-content-primary block">{scenario.name} <span className="text-xs font-normal text-gray-400">({Math.round(scenario.rate * 100)}%)</span></span>
+ <span className="font-bold text-[var(--text-primary)] dark:text-[var(--text-primary)] block">{scenario.name} <span className="text-xs font-normal text-gray-400">({Math.round(scenario.rate * 100)}%)</span></span>
  {scenario.reachable && (
  <span className="text-xs font-bold uppercase tracking-widest text-gray-500">
  {scenario.targetDateFormatted}
@@ -301,8 +301,8 @@ export default function FIRESimulator({ financialData }) {
  </div>
 
  {/* Milestones */}
- <div className={`rounded-3xl border border-gray-700/40 dark:border-[var(--border)] \${tw.card} p-6 shadow-lg shadow-black/10`}>
- <h3 className="font-bold mb-4 flex items-center gap-2 text-content-primary dark:text-content-primary">
+ <div className={`rounded-3xl border border-gray-700/40 dark:border-[var(--border)] \${tw.glass-card} p-6 shadow-lg shadow-black/10`}>
+ <h3 className="font-bold mb-4 flex items-center gap-2 text-[var(--text-primary)] dark:text-[var(--text-primary)]">
  <Calendar className="h-5 w-5 text-brand-primary" /> Marcos do Caminho
  </h3>
  <div className="space-y-3">
@@ -313,13 +313,13 @@ export default function FIRESimulator({ financialData }) {
  <div className="flex items-center gap-4">
  <div className={`w-11 h-11 rounded-full flex items-center 
  justify-center text-sm font-black shadow-inner ${result.progress >= milestone.percentage
- ? 'bg-surface-primary from-brand-glow to-green-600 text-content-primary shadow-brand-primary/30'
+ ? 'bg-[var(--bg-base)] from-brand-glow to-green-600 text-[var(--text-primary)] shadow-brand-primary/30'
  : 'bg-gray-800/40 dark:bg-gray-800 text-gray-400 border border-gray-700/40 dark:border-gray-700'
  }`}>
  {milestone.percentage}%
  </div>
  <div>
- <p className="font-bold text-content-primary dark:text-content-primary">
+ <p className="font-bold text-[var(--text-primary)] dark:text-[var(--text-primary)]">
  {formatCurrency(milestone.targetBalance)}
  </p>
  <p className="text-[10px] uppercase font-bold tracking-widest text-gray-500">
@@ -337,11 +337,11 @@ export default function FIRESimulator({ financialData }) {
  </div>
 
  {/* Impacto de poupar mais */}
- <div className={`rounded-3xl border border-gray-700/40 dark:border-[var(--border)] \${tw.card} p-6 shadow-lg shadow-black/10`}>
- <h3 className="font-bold mb-6 flex items-center gap-2 text-content-primary dark:text-content-primary">
+ <div className={`rounded-3xl border border-gray-700/40 dark:border-[var(--border)] \${tw.glass-card} p-6 shadow-lg shadow-black/10`}>
+ <h3 className="font-bold mb-6 flex items-center gap-2 text-[var(--text-primary)] dark:text-[var(--text-primary)]">
  <Zap className="h-5 w-5 text-yellow-500" /> Turbo FIRE: E se Você Poupasse Mais?
  </h3>
- <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+ <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 animate-fade-in">
  {result.impactAnalysis.map(impact => (
  <div
  key={impact.extraPercentage}
@@ -357,7 +357,7 @@ export default function FIRESimulator({ financialData }) {
  Renda Extra
  </span>
  </div>
- <span className="font-black text-content-primary dark:text-content-primary text-lg">
+ <span className="font-black text-[var(--text-primary)] dark:text-[var(--text-primary)] text-lg">
  +{formatCurrency(impact.extraAmount)}
  </span>
  </div>

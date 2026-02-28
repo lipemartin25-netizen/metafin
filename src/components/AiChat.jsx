@@ -149,7 +149,7 @@ export default function AiChat() {
  {/* FAB Button (Locked) */}
  <button
  onClick={() => setIsOpen(true)}
- className="fixed bottom-6 right-6 z-40 w-14 h-14 rounded-full bg-surface-primary from-gray-700 to-gray-800 shadow-lg flex items-center justify-center hover:-translate-y-px transition-transform transition-transform border border-[var(--border)]"
+ className="fixed bottom-6 right-6 z-40 w-14 h-14 rounded-full bg-[var(--bg-base)] from-gray-700 to-gray-800 shadow-lg flex items-center justify-center hover:-translate-y-px transition-transform transition-transform border border-[var(--border)]"
  aria-label="Abrir chat IA (bloqueado)"
  >
  <Lock className="w-6 h-6 text-gray-400" />
@@ -161,12 +161,12 @@ export default function AiChat() {
  onClick={() => setIsOpen(false)}
  >
  <div
- className={`\${tw.card} w-full max-w-md text-center animate-slide-up relative overflow-hidden bg-gray-900 border-brand-primary/30`}
+ className={`\${tw.glass-card} w-full max-w-md text-center animate-slide-up relative overflow-hidden bg-gray-900 border-brand-primary/30`}
  onClick={(e) => e.stopPropagation()}
  >
  <button
  onClick={() => setIsOpen(false)}
- className="absolute top-4 right-4 text-gray-500 hover:text-content-primary"
+ className="absolute top-4 right-4 text-gray-500 hover:text-[var(--text-primary)]"
  aria-label="Fechar"
  >
  <X className="w-5 h-5" />
@@ -176,15 +176,15 @@ export default function AiChat() {
  <Sparkles className="w-10 h-10 text-brand-glow animate-pulse" />
  </div>
 
- <h2 className="text-2xl font-bold text-content-primary mb-2">
+ <h2 className="text-2xl font-bold text-[var(--text-primary)] mb-2">
  Inteligência Financeira <span className="text-brand-glow">Pro</span>
  </h2>
 
  <p className="text-gray-400 text-sm mb-8 leading-relaxed px-4">
- Acesse <strong className="text-content-primary">7 modelos de IA</strong> para análises profundas do seu dinheiro.
+ Acesse <strong className="text-[var(--text-primary)]">7 modelos de IA</strong> para análises profundas do seu dinheiro.
  </p>
 
- <div className="grid grid-cols-2 gap-2 mb-8 text-left text-xs text-gray-300 px-4">
+ <div className="grid grid-cols-2 gap-2 mb-8 text-left text-xs text-gray-300 px-4 animate-fade-in">
  <div className="flex items-center gap-2"><Check className="w-4 h-4 text-brand-glow" /> GPT-4o & Gemini Pro</div>
  <div className="flex items-center gap-2"><Check className="w-4 h-4 text-brand-glow" /> Categorização Auto</div>
  <div className="flex items-center gap-2"><Check className="w-4 h-4 text-brand-glow" /> DeepSeek & Claude 3.5</div>
@@ -197,7 +197,7 @@ export default function AiChat() {
  </button>
  <button
  onClick={() => setIsOpen(false)}
- className="text-xs text-gray-500 hover:text-content-primary transition-colors"
+ className="text-xs text-gray-500 hover:text-[var(--text-primary)] transition-colors"
  >
  Continuar no plano Gratuito
  </button>
@@ -216,10 +216,10 @@ export default function AiChat() {
  {!isOpen && (
  <button
  onClick={() => setIsOpen(true)}
- className="fixed bottom-6 right-6 z-40 w-14 h-14 rounded-full bg-surface-primary from-brand-primary to-brand-glow shadow-lg shadow-brand-primary/25 flex items-center justify-center hover:-translate-y-px transition-transform transition-transform group"
+ className="fixed bottom-6 right-6 z-40 w-14 h-14 rounded-full bg-[var(--bg-base)] from-brand-primary to-brand-glow shadow-lg shadow-brand-primary/25 flex items-center justify-center hover:-translate-y-px transition-transform transition-transform group"
  aria-label="Abrir chat IA"
  >
- <Sparkles className="w-6 h-6 text-content-primary group-hover:rotate-12 transition-transform" />
+ <Sparkles className="w-6 h-6 text-[var(--text-primary)] group-hover:rotate-12 transition-transform" />
  </button>
  )}
 
@@ -234,14 +234,14 @@ export default function AiChat() {
  <Bot className="w-4 h-4 text-brand-glow" />
  </div>
  <div>
- <span className="font-semibold text-content-primary text-sm block">MetaFin AI</span>
+ <span className="font-semibold text-[var(--text-primary)] text-sm block">MetaFin AI</span>
  <span className="text-[10px] text-brand-glow font-medium tracking-wide bg-brand-primary/10 px-1.5 py-0.5 rounded uppercase">PRO ATIVO</span>
  </div>
  </div>
  <div className="flex items-center gap-1">
  <button
  onClick={handleClear}
- className="p-1.5 rounded-lg text-gray-500 hover:text-content-primary hover:bg-gray-800/40/10 transition-all"
+ className="p-1.5 rounded-lg text-gray-500 hover:text-[var(--text-primary)] hover:bg-gray-800/40/10 transition-all"
  title="Limpar conversa"
  aria-label="Limpar conversa"
  >
@@ -249,7 +249,7 @@ export default function AiChat() {
  </button>
  <button
  onClick={() => setIsOpen(false)}
- className="p-1.5 rounded-lg text-gray-500 hover:text-content-primary hover:bg-gray-800/40/10 transition-all"
+ className="p-1.5 rounded-lg text-gray-500 hover:text-[var(--text-primary)] hover:bg-gray-800/40/10 transition-all"
  aria-label="Fechar chat"
  >
  <X className="w-4 h-4" />
@@ -261,7 +261,7 @@ export default function AiChat() {
  <div className="px-4 py-2 border-b border-[var(--border)] bg-black/20">
  <button
  onClick={() => setShowModelPicker(!showModelPicker)}
- className="flex items-center gap-2 text-xs text-gray-300 hover:text-content-primary transition-colors w-full bg-gray-800/40/5 hover:bg-gray-800/40/10 p-2 rounded-lg border border-[var(--border)]"
+ className="flex items-center gap-2 text-xs text-gray-300 hover:text-[var(--text-primary)] transition-colors w-full bg-gray-800/40/5 hover:bg-gray-800/40/10 p-2 rounded-lg border border-[var(--border)]"
  aria-expanded={showModelPicker}
  >
  <span className="text-base">{currentModel?.icon}</span>
@@ -290,7 +290,7 @@ export default function AiChat() {
  className={`flex items-center gap-3 w-full px-3 py-2 rounded-xl text-xs transition-all ${isActive
  ? 'bg-brand-primary/10 text-brand-glow border border-brand-primary/20'
  : isAvailable
- ? 'text-gray-400 hover:bg-gray-800/40/5 hover:text-content-primary border border-transparent'
+ ? 'text-gray-400 hover:bg-gray-800/40/5 hover:text-[var(--text-primary)] border border-transparent'
  : 'opacity-40 cursor-not-allowed text-gray-600'
  }`}
  >
@@ -314,23 +314,23 @@ export default function AiChat() {
  </div>
 
  {/* Messages */}
- <div id="main-content" className="flex-1 overflow-y-auto px-4 py-4 space-y-6 no-scrollbar bg-surface-primary from-[#0a0a0a] to-[#050505]">
+ <div id="main-content" className="flex-1 overflow-y-auto px-4 py-4 space-y-6 no-scrollbar bg-[var(--bg-base)] from-[#0a0a0a] to-[#050505]">
  {/* Empty State */}
  {messages.length === 0 && (
  <div className="text-center py-10 px-4">
- <div className="w-16 h-16 bg-surface-primary from-brand-primary/20 to-brand-glow/20 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-brand-primary/10 border border-brand-primary/10">
+ <div className="w-16 h-16 bg-[var(--bg-base)] from-brand-primary/20 to-brand-glow/20 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-brand-primary/10 border border-brand-primary/10">
  <Sparkles className="w-8 h-8 text-brand-glow" />
  </div>
- <h3 className="text-content-primary font-semibold mb-2">Olá! Vamos analisar suas finanças?</h3>
+ <h3 className="text-[var(--text-primary)] font-semibold mb-2">Olá! Vamos analisar suas finanças?</h3>
  <p className="text-gray-500 text-[11px] mb-8 max-w-[260px] mx-auto leading-relaxed">
  Posso categorizar gastos, sugerir onde economizar ou criar um plano de orçamento personalizado.
  </p>
- <div className="grid grid-cols-1 gap-2.5">
+ <div className="grid grid-cols-1 gap-2.5 animate-fade-in">
  {Object.entries(AI_ACTIONS).slice(0, 4).map(([key, action]) => (
  <button
  key={key}
  onClick={() => handleSend(action.prompt)}
- className="p-3 rounded-xl bg-gray-800/40/[0.03] border border-[var(--border)] text-xs text-gray-300 hover:bg-gray-800/40/[0.08] hover:text-content-primary hover:border-brand-primary/30 transition-all text-left flex items-center gap-3 group"
+ className="p-3 rounded-xl bg-gray-800/40/[0.03] border border-[var(--border)] text-xs text-gray-300 hover:bg-gray-800/40/[0.08] hover:text-[var(--text-primary)] hover:border-brand-primary/30 transition-all text-left flex items-center gap-3 group"
  >
  <span className="text-lg opacity-70 group-hover:opacity-100 transition-opacity">{action.label.split(' ')[0]}</span>
  <span className="font-medium">{action.label.split(' ').slice(1).join(' ')}</span>
@@ -354,7 +354,7 @@ export default function AiChat() {
 
  <div
  className={`rounded-2xl px-4 py-3 text-sm leading-relaxed shadow-lg shadow-black/10 ${msg.role === 'user'
- ? 'bg-brand-primary text-content-primary rounded-tr-sm'
+ ? 'bg-brand-primary text-[var(--text-primary)] rounded-tr-sm'
  : msg.isError
  ? 'bg-red-500/10 text-red-300 border border-red-500/20 rounded-tl-sm'
  : 'bg-gray-800/40/5 text-gray-200 border border-[var(--border)] rounded-tl-sm'
@@ -422,7 +422,7 @@ export default function AiChat() {
  <button
  key={key}
  onClick={() => handleSend(action.prompt)}
- className="shrink-0 px-3 py-1.5 rounded-full bg-gray-800/40/5 border border-[var(--border)] text-[10px] text-gray-400 hover:text-content-primary hover:bg-gray-800/40/10 hover:border-brand-primary/30 transition-all whitespace-nowrap"
+ className="shrink-0 px-3 py-1.5 rounded-full bg-gray-800/40/5 border border-[var(--border)] text-[10px] text-gray-400 hover:text-[var(--text-primary)] hover:bg-gray-800/40/10 hover:border-brand-primary/30 transition-all whitespace-nowrap"
  >
  {action.label}
  </button>
@@ -448,12 +448,12 @@ export default function AiChat() {
  onChange={(e) => setInput(e.target.value)}
  placeholder="Pergunte sobre seu dinheiro..."
  disabled={loading}
- className="flex-1 px-3 py-2 bg-transparent text-content-primary placeholder-gray-600 text-sm focus:outline-none disabled:opacity-50"
+ className="flex-1 px-3 py-2 bg-transparent text-[var(--text-primary)] placeholder-gray-600 text-sm focus:outline-none disabled:opacity-50"
  />
  <button
  type="submit"
  disabled={loading || !input.trim()}
- className="p-2.5 rounded-xl bg-brand-primary text-content-primary hover:bg-brand-primary transition-all disabled:opacity-30 disabled:cursor-not-allowed shadow-lg shadow-brand-primary/20"
+ className="p-2.5 rounded-xl bg-brand-primary text-[var(--text-primary)] hover:bg-brand-primary transition-all disabled:opacity-30 disabled:cursor-not-allowed shadow-lg shadow-brand-primary/20"
  aria-label="Enviar mensagem"
  >
  {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}

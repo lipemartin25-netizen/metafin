@@ -17,12 +17,12 @@ const CustomTooltip = ({ active, payload, label }) => {
  if (active && payload && payload.length) {
  return (
  <div className="bg-[#1a1a2e] border border-[var(--border)] rounded-xl p-3 shadow-elevated text-xs">
- <p className="text-content-primary/50 mb-2 font-medium">{label}</p>
+ <p className="text-[var(--text-primary)]/50 mb-2 font-medium">{label}</p>
  {payload.map((p) => (
  <div key={p.name} className="flex items-center gap-2 mb-1">
  <div className="w-2 h-2 rounded-full" style={{ backgroundColor: p.color }} />
- <span className="text-content-primary/60 capitalize">{p.name === "receitas" ? "Receitas" : "Despesas"}:</span>
- <span className="text-content-primary font-semibold">
+ <span className="text-[var(--text-primary)]/60 capitalize">{p.name === "receitas" ? "Receitas" : "Despesas"}:</span>
+ <span className="text-[var(--text-primary)] font-semibold">
  {p.value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}
  </span>
  </div>
@@ -38,8 +38,8 @@ export default function SpendingChart() {
  <div className="rounded-2xl bg-[#0d0d15] border border-[var(--border)] p-6">
  <div className="flex items-center justify-between mb-6">
  <div>
- <h3 className="text-content-primary font-semibold">Fluxo de Caixa</h3>
- <p className="text-content-primary/30 text-xs mt-0.5">Últimos 7 meses</p>
+ <h3 className="text-[var(--text-primary)] font-semibold">Fluxo de Caixa</h3>
+ <p className="text-[var(--text-primary)]/30 text-xs mt-0.5">Últimos 7 meses</p>
  </div>
  <div className="flex gap-2">
  {["7M", "6M", "1A"].map((p, i) => (
@@ -47,7 +47,7 @@ export default function SpendingChart() {
  key={p}
  className={`text-xs px-3 py-1.5 rounded-lg transition-colors ${i === 0
  ? "bg-violet-500/20 text-violet-400 border border-violet-500/20"
- : "text-content-primary/30 hover:text-content-primary/60"
+ : "text-[var(--text-primary)]/30 hover:text-[var(--text-primary)]/60"
  }`}
  >
  {p}

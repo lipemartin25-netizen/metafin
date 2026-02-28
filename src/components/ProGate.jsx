@@ -28,16 +28,16 @@ export default function ProGate({ feature, children, fallback, className = '' })
 
  {/* Overlay */}
  <div className="absolute inset-0 z-10 flex items-center justify-center rounded-2xl bg-gray-950/20 backdrop-blur-[2px]">
- <div className={`\${tw.card} bg-gray-900/90 border border-brand-primary/20 p-6 max-w-xs text-center shadow-elevated relative overflow-hidden`}>
+ <div className={`\${tw.glass-card} bg-gray-900/90 border border-brand-primary/20 p-6 max-w-xs text-center shadow-elevated relative overflow-hidden`}>
  {/* Efeito de brilho no fundo */}
- <div className="absolute top-0 left-0 w-full h-1 bg-surface-primary from-transparent via-emerald-500 to-transparent opacity-50"></div>
+ <div className="absolute top-0 left-0 w-full h-1 bg-[var(--bg-base)] from-transparent via-emerald-500 to-transparent opacity-50"></div>
 
  <div className="w-12 h-12 rounded-full bg-brand-primary/10 flex items-center justify-center mx-auto mb-3 border border-brand-primary/20 shadow-lg shadow-brand-primary/10">
  <Lock className="w-5 h-5 text-brand-glow" />
  </div>
 
- <h3 className="text-content-primary font-bold text-lg mb-1 flex items-center justify-center gap-2">
- Recurso Pro <span className="text-[10px] bg-brand-primary text-content-primary px-1.5 py-0.5 rounded font-bold uppercase tracking-wider">PRO</span>
+ <h3 className="text-[var(--text-primary)] font-bold text-lg mb-1 flex items-center justify-center gap-2">
+ Recurso Pro <span className="text-[10px] bg-brand-primary text-[var(--text-primary)] px-1.5 py-0.5 rounded font-bold uppercase tracking-wider">PRO</span>
  </h3>
 
  <p className="text-gray-400 text-xs mb-5 leading-relaxed">

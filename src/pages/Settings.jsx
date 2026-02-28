@@ -82,8 +82,8 @@ export default function Settings() {
 
  return (
  <div className="py-8 space-y-6 animate-fade-in pb-24 max-w-5xl mx-auto">
- <h1 className="text-3xl font-bold text-content-primary mb-2">Configurações</h1>
- <p className="text-content-secondary mb-8">Gerencie suas preferências e segurança da conta</p>
+ <h1 className="text-3xl font-bold text-[var(--text-primary)] mb-2">Configurações</h1>
+ <p className="text-[var(--text-secondary)] mb-8">Gerencie suas preferências e segurança da conta</p>
 
  {/* Toast */}
  {message && (
@@ -95,7 +95,7 @@ export default function Settings() {
  </div>
  )}
 
- <div className="grid md:grid-cols-[240px_1fr] gap-8">
+ <div className="grid md:grid-cols-[240px_1fr] gap-8 animate-fade-in">
  {/* Sidebar Nav */}
  <div className="space-y-2">
  {SECTIONS.map((section) => (
@@ -104,44 +104,44 @@ export default function Settings() {
  onClick={() => setActiveTab(section.id)}
  className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 text-left ${activeTab === section.id
  ? 'bg-violet-500/10 text-violet-300 border border-violet-500/20'
- : 'text-content-secondary hover:bg-gray-800/40/5 hover:text-slate-200 border border-transparent'}`}
+ : 'text-[var(--text-secondary)] hover:bg-gray-800/40/5 hover:text-slate-200 border border-transparent'}`}
  >
- <section.icon className={`w-5 h-5 ${activeTab === section.id ? 'text-violet-400' : 'text-content-muted'}`} />
+ <section.icon className={`w-5 h-5 ${activeTab === section.id ? 'text-violet-400' : 'text-[var(--text-muted)]'}`} />
  {section.label}
  </button>
  ))}
  </div>
 
  {/* Content */}
- <div className={`\${tw.card} min-h-[500px] p-8`}>
+ <div className={`\${tw.glass-card} min-h-[500px] p-8`}>
 
  {/* PREFERENCES */}
  {activeTab === 'preferences' && (
  <div className="space-y-8 animate-fade-in">
- <h2 className="text-xl font-bold text-content-primary mb-6 flex items-center gap-2">
+ <h2 className="text-xl font-bold text-[var(--text-primary)] mb-6 flex items-center gap-2">
  <Globe className="w-5 h-5 text-violet-400" /> Aparência e Idioma
  </h2>
  <div className="space-y-4">
  {/* Theme Toggle */}
  <div className="flex items-center justify-between p-4 rounded-xl bg-gray-800/40/5 border border-[var(--border)]">
  <div>
- <p className="font-medium text-content-primary">Tema do App</p>
- <p className="text-sm text-content-secondary mt-0.5">Escolha entre tema escuro ou claro</p>
+ <p className="font-medium text-[var(--text-primary)]">Tema do App</p>
+ <p className="text-sm text-[var(--text-secondary)] mt-0.5">Escolha entre tema escuro ou claro</p>
  </div>
  <div className="flex bg-gray-800/40/5 rounded-xl p-1 border border-[var(--border)] gap-1">
  <button
  onClick={() => handleThemeToggle('light')}
  className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${theme === 'light'
  ? 'bg-gray-800/40 text-slate-900 shadow-lg'
- : 'text-content-secondary hover:text-slate-200'}`}
+ : 'text-[var(--text-secondary)] hover:text-slate-200'}`}
  >
  <Sun className="w-4 h-4" /> Claro
  </button>
  <button
  onClick={() => handleThemeToggle('dark')}
  className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${theme === 'dark'
- ? 'bg-violet-600 text-content-primary shadow-lg shadow-violet-500/20'
- : 'text-content-secondary hover:text-slate-200'}`}
+ ? 'bg-violet-600 text-[var(--text-primary)] shadow-lg shadow-violet-500/20'
+ : 'text-[var(--text-secondary)] hover:text-slate-200'}`}
  >
  <Moon className="w-4 h-4" /> Escuro
  </button>
@@ -151,13 +151,13 @@ export default function Settings() {
  {/* Currency */}
  <div className="flex items-center justify-between p-4 rounded-xl bg-gray-800/40/5 border border-[var(--border)]">
  <div>
- <p className="font-medium text-content-primary">Moeda Principal</p>
- <p className="text-sm text-content-secondary mt-0.5">Moeda usada para exibir valores</p>
+ <p className="font-medium text-[var(--text-primary)]">Moeda Principal</p>
+ <p className="text-sm text-[var(--text-secondary)] mt-0.5">Moeda usada para exibir valores</p>
  </div>
  <select
  value={currency}
  onChange={handleCurrencyChange}
- className="bg-gray-800/40/10 text-content-primary border border-[var(--border)] rounded-xl px-4 py-2 outline-none focus:border-violet-500 cursor-pointer text-sm"
+ className="bg-gray-800/40/10 text-[var(--text-primary)] border border-[var(--border)] rounded-xl px-4 py-2 outline-none focus:border-violet-500 cursor-pointer text-sm"
  >
  <option value="BRL" className="bg-[#0d1424]">BRL (R$)</option>
  <option value="USD" className="bg-[#0d1424]">USD ($)</option>
@@ -171,7 +171,7 @@ export default function Settings() {
  {/* SECURITY */}
  {activeTab === 'security' && (
  <div className="space-y-8 animate-fade-in">
- <h2 className="text-xl font-bold text-content-primary mb-6 flex items-center gap-2">
+ <h2 className="text-xl font-bold text-[var(--text-primary)] mb-6 flex items-center gap-2">
  <Shield className="w-5 h-5 text-violet-400" /> Segurança da Conta
  </h2>
  <div className="space-y-4 mb-8">
@@ -181,8 +181,8 @@ export default function Settings() {
  <Mail className="w-5 h-5 text-blue-400" />
  </div>
  <div>
- <p className="font-medium text-content-primary">Endereço de E-mail</p>
- <p className="text-sm text-content-secondary">{user?.email || 'não informado'}</p>
+ <p className="font-medium text-[var(--text-primary)]">Endereço de E-mail</p>
+ <p className="text-sm text-[var(--text-secondary)]">{user?.email || 'não informado'}</p>
  </div>
  </div>
  <button className="text-sm text-violet-400 font-medium hover:text-violet-300 hover:underline transition-colors">
@@ -195,8 +195,8 @@ export default function Settings() {
  <Key className="w-5 h-5 text-orange-400" />
  </div>
  <div>
- <p className="font-medium text-content-primary">Senha de Acesso</p>
- <p className="text-sm text-content-secondary">••••••••••••</p>
+ <p className="font-medium text-[var(--text-primary)]">Senha de Acesso</p>
+ <p className="text-sm text-[var(--text-secondary)]">••••••••••••</p>
  </div>
  </div>
  <button onClick={handlePasswordReset} className="text-sm text-violet-400 font-medium hover:text-violet-300 hover:underline transition-colors">
@@ -207,26 +207,26 @@ export default function Settings() {
 
  {/* ✅ Dispositivos com state real e lixeira funcional */}
  <div>
- <h3 className="text-sm font-semibold text-content-secondary uppercase tracking-wider mb-4">
+ <h3 className="text-sm font-semibold text-[var(--text-secondary)] uppercase tracking-wider mb-4">
  Dispositivos Conectados
  </h3>
  <div className="space-y-3">
  {devices.map((device) => (
  <div key={device.id} className="flex items-center justify-between p-4 rounded-xl bg-gray-800/40/5 hover:bg-gray-800/40/[0.07] border border-[var(--border)] transition-colors group">
  <div className="flex items-center gap-4">
- <div className={`w-10 h-10 rounded-full flex items-center justify-center ${device.current ? 'bg-violet-500/10 text-violet-400' : 'bg-gray-800/40/5 text-content-secondary'}`}>
+ <div className={`w-10 h-10 rounded-full flex items-center justify-center ${device.current ? 'bg-violet-500/10 text-violet-400' : 'bg-gray-800/40/5 text-[var(--text-secondary)]'}`}>
  <device.icon className="w-5 h-5" />
  </div>
  <div>
  <div className="flex items-center gap-2">
- <p className="font-medium text-content-primary text-sm">{device.name}</p>
+ <p className="font-medium text-[var(--text-primary)] text-sm">{device.name}</p>
  {device.current && (
  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-violet-500/20 text-violet-400 border border-violet-500/20">
  Este dispositivo
  </span>
  )}
  </div>
- <p className="text-xs text-content-muted mt-0.5">
+ <p className="text-xs text-[var(--text-muted)] mt-0.5">
  {device.current ? '🟢 Ativo agora' : `Último acesso: ${device.lastActive}`}
  </p>
  </div>
@@ -234,7 +234,7 @@ export default function Settings() {
  {!device.current && (
  <button
  onClick={() => handleRemoveDevice(device.id, device.name)}
- className="p-2 rounded-lg text-content-muted hover:text-red-400 hover:bg-red-500/10 transition-all opacity-60 group-hover:opacity-100"
+ className="p-2 rounded-lg text-[var(--text-muted)] hover:text-red-400 hover:bg-red-500/10 transition-all opacity-60 group-hover:opacity-100"
  title="Desconectar dispositivo"
  >
  <Trash2 className="w-4 h-4" />
@@ -243,7 +243,7 @@ export default function Settings() {
  </div>
  ))}
  {devices.filter(d => !d.current).length === 0 && (
- <p className="text-sm text-content-muted text-center py-4">Nenhum outro dispositivo conectado.</p>
+ <p className="text-sm text-[var(--text-muted)] text-center py-4">Nenhum outro dispositivo conectado.</p>
  )}
  </div>
  </div>
@@ -253,7 +253,7 @@ export default function Settings() {
  {/* NOTIFICATIONS */}
  {activeTab === 'notifications' && (
  <div className="space-y-8 animate-fade-in">
- <h2 className="text-xl font-bold text-content-primary mb-6 flex items-center gap-2">
+ <h2 className="text-xl font-bold text-[var(--text-primary)] mb-6 flex items-center gap-2">
  <Bell className="w-5 h-5 text-violet-400" /> Preferências de Notificação
  </h2>
  <div className="space-y-4">
@@ -264,8 +264,8 @@ export default function Settings() {
  ].map((item) => (
  <div key={item.key} className="flex items-start justify-between p-4 rounded-xl bg-gray-800/40/5 border border-[var(--border)] hover:bg-gray-800/40/[0.07] transition-colors">
  <div className="pr-4">
- <p className="font-medium text-content-primary mb-1">{item.title}</p>
- <p className="text-sm text-content-secondary leading-relaxed">{item.desc}</p>
+ <p className="font-medium text-[var(--text-primary)] mb-1">{item.title}</p>
+ <p className="text-sm text-[var(--text-secondary)] leading-relaxed">{item.desc}</p>
  </div>
  <label className="relative inline-flex items-center cursor-pointer mt-1 shrink-0">
  <input type="checkbox" className="sr-only peer" checked={emailAlerts[item.key]} onChange={() => handleNotificationToggle(item.key)} />
@@ -287,18 +287,18 @@ export default function Settings() {
  {/* TUTORIAL */}
  {activeTab === 'tutorial' && (
  <div className="space-y-6 animate-fade-in">
- <h2 className="text-xl font-bold text-content-primary mb-6 flex items-center gap-2">
+ <h2 className="text-xl font-bold text-[var(--text-primary)] mb-6 flex items-center gap-2">
  <HelpCircle className="w-5 h-5 text-violet-400" /> Como Usar o MetaFin
  </h2>
- <div className={`\${tw.card} p-5 border-l-4 border-l-violet-500`}>
- <h3 className="text-base font-bold text-content-primary mb-2">Visão Geral</h3>
- <p className="text-sm text-content-secondary leading-relaxed">O MetaFin é o seu copiloto inteligente para gerenciar suas finanças. Monitore transações, crie planos de orçamento, acompanhe seu patrimônio líquido e use IA avançada para analisar sua saúde financeira de maneira automática.</p>
+ <div className={`\${tw.glass-card} p-5 border-l-4 border-l-violet-500`}>
+ <h3 className="text-base font-bold text-[var(--text-primary)] mb-2">Visão Geral</h3>
+ <p className="text-sm text-[var(--text-secondary)] leading-relaxed">O MetaFin é o seu copiloto inteligente para gerenciar suas finanças. Monitore transações, crie planos de orçamento, acompanhe seu patrimônio líquido e use IA avançada para analisar sua saúde financeira de maneira automática.</p>
  </div>
- <div className={`\${tw.card} p-5`}>
- <h3 className="text-base font-bold text-content-primary mb-4 flex items-center gap-2">
+ <div className={`\${tw.glass-card} p-5`}>
+ <h3 className="text-base font-bold text-[var(--text-primary)] mb-4 flex items-center gap-2">
  <FileSpreadsheet className="w-5 h-5 text-brand-glow" /> Importando Documentos
  </h3>
- <ol className="text-sm text-content-secondary space-y-2 pl-4 list-decimal">
+ <ol className="text-sm text-[var(--text-secondary)] space-y-2 pl-4 list-decimal">
  <li>Vá até a aba <strong className="text-slate-200">Transações</strong> no menu lateral.</li>
  <li>Clique em <strong className="text-slate-200">Importar Arquivo</strong> (Smart Import Multi-Formato).</li>
  <li>Selecione arquivos CSV, Excel ou outros suportados.</li>
@@ -306,22 +306,22 @@ export default function Settings() {
  <li>Certifique-se que os arquivos possuam colunas: <code className="bg-gray-800/40/5 px-1 rounded">data</code>, <code className="bg-gray-800/40/5 px-1 rounded">valor</code>, <code className="bg-gray-800/40/5 px-1 rounded">descricao</code>.</li>
  </ol>
  </div>
- <div className={`\${tw.card} p-5 bg-brand-glow/5 border border-brand-glow/10`}>
- <h3 className="text-base font-bold text-content-primary mb-4 flex items-center gap-2">
+ <div className={`\${tw.glass-card} p-5 bg-brand-glow/5 border border-brand-glow/10`}>
+ <h3 className="text-base font-bold text-[var(--text-primary)] mb-4 flex items-center gap-2">
  <Zap className="w-5 h-5 text-brand-glow" /> Conectando Webhooks e Automações
  </h3>
- <p className="text-sm text-content-secondary leading-relaxed mb-3">Integre o MetaFin com <strong className="text-slate-200">Zapier, Make, n8n</strong> para receber transações automaticamente (ex: MercadoPago, Stripe).</p>
- <ol className="text-sm text-content-secondary space-y-2 pl-4 list-decimal">
+ <p className="text-sm text-[var(--text-secondary)] leading-relaxed mb-3">Integre o MetaFin com <strong className="text-slate-200">Zapier, Make, n8n</strong> para receber transações automaticamente (ex: MercadoPago, Stripe).</p>
+ <ol className="text-sm text-[var(--text-secondary)] space-y-2 pl-4 list-decimal">
  <li>Vá em <strong className="text-slate-200">Webhooks</strong> no menu (ícone <code className="bg-gray-800/40/5 px-1 rounded">&lt;/&gt;</code>).</li>
  <li>Clique em <strong className="text-slate-200">Gerar API Key</strong>.</li>
  <li>Copie a chave e configure na sua plataforma de automação preferida via <code className="bg-gray-800/40/5 px-1 rounded">POST</code>.</li>
  </ol>
  </div>
- <div className={`\${tw.card} p-5`}>
- <h3 className="text-base font-bold text-content-primary mb-3 flex items-center gap-2">
+ <div className={`\${tw.glass-card} p-5`}>
+ <h3 className="text-base font-bold text-[var(--text-primary)] mb-3 flex items-center gap-2">
  <Globe className="w-5 h-5 text-blue-400" /> Consultor IA
  </h3>
- <p className="text-sm text-content-secondary leading-relaxed">A IA tem acesso às suas transações, metas e orçamentos para fornecer insights precisos. Experimente: <em className="text-content-secondary">&quot;A IA detecta algum padrão onde posso economizar?&quot;</em></p>
+ <p className="text-sm text-[var(--text-secondary)] leading-relaxed">A IA tem acesso às suas transações, metas e orçamentos para fornecer insights precisos. Experimente: <em className="text-[var(--text-secondary)]">&quot;A IA detecta algum padrão onde posso economizar?&quot;</em></p>
  </div>
  </div>
  )}

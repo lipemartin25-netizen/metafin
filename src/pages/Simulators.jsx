@@ -125,17 +125,17 @@ export default function Simulators({ financialData }) {
  <button
  onClick={() => setActiveSimulator(null)}
  className="p-2 rounded-xl bg-gray-800/40 dark:bg-gray-800 text-gray-500 
- hover:text-gray-100 dark:text-gray-400 dark:hover:text-content-primary 
+ hover:text-gray-100 dark:text-gray-400 dark:hover:text-[var(--text-primary)] 
  transition-colors"
  title="Voltar aos Simuladores"
  >
  ←
  </button>
- <div className={`p-3 rounded-xl bg-surface-primary ${sim.color}`}>
- <sim.icon className="h-6 w-6 text-content-primary" />
+ <div className={`p-3 rounded-xl bg-[var(--bg-base)] ${sim.color}`}>
+ <sim.icon className="h-6 w-6 text-[var(--text-primary)]" />
  </div>
  <div>
- <h1 className="text-2xl font-bold dark:text-content-primary">{sim.name}</h1>
+ <h1 className="text-2xl font-bold dark:text-[var(--text-primary)]">{sim.name}</h1>
  <p className="text-sm text-gray-500 dark:text-gray-400">{sim.subtitle}</p>
  </div>
  </div>
@@ -159,10 +159,10 @@ export default function Simulators({ financialData }) {
 
  {/* Hero Section 3D Premium */}
  <div className="relative z-10 mb-12">
- <div className="relative overflow-hidden rounded-[2.5rem] bg-surface-primary from-gray-900 via-indigo-950 to-black p-8 md:p-12 text-content-primary shadow-card border border-[var(--border)] group">
- {/* Floating Orbs inside card */}
- <div className="absolute -right-20 -top-20 w-64 h-64 bg-surface-primary from-indigo-500 to-brand-primary rounded-full mix-blend-screen filter blur-[40px] opacity-40 group-hover:-translate-y-px transition-transform transition-transform duration-1000" />
- <div className="absolute -left-20 -bottom-20 w-80 h-80 bg-surface-primary from-blue-600 to-emerald-500 rounded-full mix-blend-screen filter blur-[60px] opacity-30 group-hover:-translate-y-px transition-transform transition-transform duration-1000 delay-100" />
+ <div className="relative overflow-hidden rounded-[2.5rem] bg-[var(--bg-base)] from-gray-900 via-indigo-950 to-black p-8 md:p-12 text-[var(--text-primary)] shadow-glass-card border border-[var(--border)] group">
+ {/* Floating Orbs inside glass-card */}
+ <div className="absolute -right-20 -top-20 w-64 h-64 bg-[var(--bg-base)] from-indigo-500 to-brand-primary rounded-full mix-blend-screen filter blur-[40px] opacity-40 group-hover:-translate-y-px transition-transform transition-transform duration-1000" />
+ <div className="absolute -left-20 -bottom-20 w-80 h-80 bg-[var(--bg-base)] from-blue-600 to-emerald-500 rounded-full mix-blend-screen filter blur-[60px] opacity-30 group-hover:-translate-y-px transition-transform transition-transform duration-1000 delay-100" />
 
  <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+PGRlZnM+PG1hdHRlcm4gaWQ9ImciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTTAgNDBoNDBWMEgweiIgZmlsbD0ibm9uZSIvPjxwYXRoIGQ9Ik0wIDEwaDQwTTAgMjBoNDBNMCAzMGg0ME0xMCAwdjQwTTIwIDB2NDBNMzAgMHY0MCIgc3Ryb2tlPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMDUpIiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZykiLz48L3N2Zz4=')] opacity-20" />
 
@@ -171,7 +171,7 @@ export default function Simulators({ financialData }) {
  <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gray-800/40/10 border border-[var(--border)] text-xs font-bold uppercase tracking-widest text-indigo-300 mb-6 shadow-inner">
  <Sparkles className="h-4 w-4 text-yellow-300 animate-pulse" /> Nexus Wealth Lab
  </div>
- <h1 className="text-4xl md:text-5xl lg:text-6xl font-black mb-6 tracking-tight leading-tight text-transparent bg-clip-text bg-surface-primary from-white via-indigo-100 to-purple-200">
+ <h1 className="text-4xl md:text-5xl lg:text-6xl font-black mb-6 tracking-tight leading-tight text-transparent bg-clip-text bg-[var(--bg-base)] from-white via-indigo-100 to-purple-200">
  Laboratório Mestre de Wealth
  </h1>
  <p className="text-indigo-100/80 text-lg md:text-xl font-medium max-w-2xl leading-relaxed">
@@ -182,10 +182,10 @@ export default function Simulators({ financialData }) {
 
  {/* 3D Visual Decorative Element for desktop */}
  <div className="hidden lg:flex relative w-72 h-72 items-center justify-center">
- <div className="absolute inset-x-8 inset-y-8 bg-surface-primary from-indigo-500/30 to-brand-primary/30 rounded-3xl animate-[spin_10s_linear_infinite] border border-[var(--border)] " />
- <div className="absolute inset-x-12 inset-y-12 bg-surface-primary from-blue-500/30 to-emerald-500/30 rounded-full animate-[spin_15s_linear_infinite_reverse] border border-[var(--border)] " />
- <div className="relative w-32 h-32 bg-surface-primary from-white/10 to-transparent rounded-2xl flex items-center justify-center border border-[var(--border)] shadow-card transform hover:-translate-y-px transition-transform transition-transform duration-500 hover:-rotate-12 cursor-pointer z-20">
- <Target className="w-16 h-16 text-content-primary drop-shadow-card" />
+ <div className="absolute inset-x-8 inset-y-8 bg-[var(--bg-base)] from-indigo-500/30 to-brand-primary/30 rounded-3xl animate-[spin_10s_linear_infinite] border border-[var(--border)] " />
+ <div className="absolute inset-x-12 inset-y-12 bg-[var(--bg-base)] from-blue-500/30 to-emerald-500/30 rounded-full animate-[spin_15s_linear_infinite_reverse] border border-[var(--border)] " />
+ <div className="relative w-32 h-32 bg-[var(--bg-base)] from-white/10 to-transparent rounded-2xl flex items-center justify-center border border-[var(--border)] shadow-glass-card transform hover:-translate-y-px transition-transform transition-transform duration-500 hover:-rotate-12 cursor-pointer z-20">
+ <Target className="w-16 h-16 text-[var(--text-primary)] drop-shadow-glass-card" />
  </div>
  </div>
  </div>
@@ -198,21 +198,21 @@ export default function Simulators({ financialData }) {
  <button
  key={sim.id}
  onClick={() => setActiveSimulator(sim.id)}
- className={`group relative overflow-hidden rounded-[1.5rem] ${tw.card} border-none
+ className={`group relative overflow-hidden rounded-[1.5rem] ${tw.glass-card} border-none
  ${sim.bgLight} ${sim.bgDark}
  p-4 text-left transition-all duration-500 ease-out transform-gpu
- hover:shadow-card dark:hover:shadow-card
+ hover:shadow-glass-card dark:hover:shadow-glass-card
  hover:-translate-y-px`}
  >
  {/* 3D Glossy Light Reflection */}
- <div className="absolute inset-0 bg-surface-primary from-white/30 to-transparent dark:from-white/5 dark:to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+ <div className="absolute inset-0 bg-[var(--bg-base)] from-white/30 to-transparent dark:from-white/5 dark:to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
- <div className={`inline-flex p-2.5 rounded-xl bg-surface-primary 
+ <div className={`inline-flex p-2.5 rounded-xl bg-[var(--bg-base)] 
  ${sim.color} shadow-lg mb-3 relative z-10 transition-transform duration-500 group-hover:-translate-y-px transition-transform`}>
- <sim.icon className="h-4 w-4 text-content-primary drop-shadow-lg shadow-black/10" />
+ <sim.icon className="h-4 w-4 text-[var(--text-primary)] drop-shadow-lg shadow-black/10" />
  </div>
 
- <h3 className="text-base font-black text-content-primary dark:text-content-primary mb-1 relative z-10 transition-transform duration-300 group-hover:translate-x-0.5 tracking-tight leading-tight">
+ <h3 className="text-base font-black text-[var(--text-primary)] dark:text-[var(--text-primary)] mb-1 relative z-10 transition-transform duration-300 group-hover:translate-x-0.5 tracking-tight leading-tight">
  {sim.name}
  </h3>
  <p className="text-[10px] text-gray-500 dark:text-gray-400 mb-4 relative z-10 font-bold uppercase tracking-wider transition-transform duration-300 delay-75 group-hover:translate-x-0.5">

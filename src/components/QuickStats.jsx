@@ -106,20 +106,20 @@ export default function QuickStats() {
  }, [transactions]);
 
  return (
- <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+ <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 animate-fade-in">
  {stats.map(({ label, _amount, value, change, up, hasData, icon: Icon, color, iconColor, chartColor, border, trend }) => (
  <div
  key={label}
- className={`rounded-2xl bg-surface-primary ${color} border ${border} p-5 hover:scale-[1.02] transition-all duration-300 cursor-default group overflow-hidden relative`}
+ className={`rounded-2xl bg-[var(--bg-base)] ${color} border ${border} p-5 hover:scale-[1.02] transition-all duration-300 cursor-default group overflow-hidden relative`}
  >
  <div className="flex items-center justify-between mb-3 relative z-10">
- <p className="text-content-primary/40 text-[10px] font-bold uppercase tracking-wider">{label}</p>
+ <p className="text-[var(--text-primary)]/40 text-[10px] font-bold uppercase tracking-wider">{label}</p>
  <div className="flex items-center gap-2">
  <button
  onClick={(e) => { e.stopPropagation(); toggleVisibility(); }}
  className="p-1.5 rounded-lg bg-gray-800/40/5 opacity-0 group-hover:opacity-100 transition-all hover:bg-gray-800/40/10"
  >
- {isVisible ? <EyeOff size={12} className="text-content-primary/40" /> : <Eye size={12} className="text-content-primary/40" />}
+ {isVisible ? <EyeOff size={12} className="text-[var(--text-primary)]/40" /> : <Eye size={12} className="text-[var(--text-primary)]/40" />}
  </button>
  <Icon size={16} className={iconColor} />
  </div>
@@ -128,7 +128,7 @@ export default function QuickStats() {
  <div className="relative z-10">
  {hasData ? (
  <>
- <p className="text-content-primary text-2xl font-bold tracking-tight">
+ <p className="text-[var(--text-primary)] text-2xl font-bold tracking-tight">
  {isVisible ? value : "R$ ••••"}
  </p>
  <p className={`text-[11px] mt-1 font-semibold ${up ? "text-brand-glow" : "text-red-400"}`}>
@@ -137,8 +137,8 @@ export default function QuickStats() {
  </>
  ) : (
  <>
- <p className="text-content-primary/25 text-2xl font-bold select-none tracking-tight">R$ —</p>
- <p className="text-[10px] mt-1 font-medium text-content-primary/20 uppercase">Sem dados</p>
+ <p className="text-[var(--text-primary)]/25 text-2xl font-bold select-none tracking-tight">R$ —</p>
+ <p className="text-[10px] mt-1 font-medium text-[var(--text-primary)]/20 uppercase">Sem dados</p>
  </>
  )}
  </div>

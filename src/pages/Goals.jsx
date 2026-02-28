@@ -146,7 +146,7 @@ export default function Goals() {
 
  return (
  <div className="py-6 space-y-6 animate-fade-in pb-20">
- <div className="relative overflow-hidden flex flex-col sm:flex-row items-center justify-between rounded-[2.5rem] bg-surface-primary from-brand-600 via-teal-600 to-fuchsia-700 p-8 md:p-10 text-content-primary shadow-card border border-[var(--border)] group perspective-1000">
+ <div className="relative overflow-hidden flex flex-col sm:flex-row items-center justify-between rounded-[2.5rem] bg-[var(--bg-base)] from-brand-600 via-teal-600 to-fuchsia-700 p-8 md:p-10 text-[var(--text-primary)] shadow-glass-card border border-[var(--border)] group perspective-1000">
  {/* Efeitos 3D Internos */}
  <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+PGRlZnM+PG1hdHRlcm4gaWQ9ImciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTTAgNDBoNDBWMEgweiIgZmlsbD0ibm9uZSIvPjxwYXRoIGQ9Ik0wIDEwaDQwTTAgMjBoNDBNMCAzMGg0ME0xMCAwdjQwTTIwIDB2NDBNMzAgMHY0MCIgc3Ryb2tlPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMDUpIiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZykiLz48L3N2Zz4=')] opacity-30" />
  <div className="absolute -left-20 -top-20 w-80 h-80 bg-gray-800/40/10 rounded-full mix-blend-overlay filter blur-[40px] opacity-60 group-hover:-translate-y-px transition-transform transition-transform duration-1000 ease-out" />
@@ -154,14 +154,14 @@ export default function Goals() {
 
  <div className="relative z-10 flex-1 flex gap-5 items-center">
  <div className="p-4 bg-gray-800/40/10 rounded-2xl shadow-inner border border-[var(--border)] group-hover:-translate-y-px group-hover:rotate-6 transition-transform duration-500">
- <Target className="w-12 h-12 text-yellow-300 drop-shadow-card" />
+ <Target className="w-12 h-12 text-yellow-300 drop-shadow-glass-card" />
  </div>
  <div>
  <h1 className="text-3xl md:text-4xl font-black mb-2 tracking-tight drop-shadow-lg flex items-center gap-2">
  Planejador de Metas
  </h1>
  <p className="text-brand-50 text-sm md:text-base font-medium max-w-xl leading-relaxed ">
- Use o modelo de <strong className="text-content-primary drop-shadow-lg shadow-black/10">Goal-Based Wealth</strong> e alinhe aportes aos seus grandes sonhos.
+ Use o modelo de <strong className="text-[var(--text-primary)] drop-shadow-lg shadow-black/10">Goal-Based Wealth</strong> e alinhe aportes aos seus grandes sonhos.
  </p>
  </div>
  </div>
@@ -177,21 +177,21 @@ export default function Goals() {
 
  {/* Summary Block */}
  <div className="flex flex-wrap gap-4 items-stretch">
- <div className={`\${tw.card} flex-1 min-w-[140px] relative overflow-hidden p-5 flex flex-col justify-center`}>
+ <div className={`\${tw.glass-card} flex-1 min-w-[140px] relative overflow-hidden p-5 flex flex-col justify-center`}>
  <p className="text-[10px] text-gray-500 dark:text-gray-400 font-black uppercase tracking-[0.15em] mb-1">Total em Metas</p>
  <p className="text-2xl md:text-3xl font-black text-brand-600 dark:text-brand-400 drop-shadow-lg shadow-black/10">{fmt(totalSaved)}</p>
  </div>
- <div className={`\${tw.card} flex-1 min-w-[140px] relative p-5 flex flex-col justify-center`}>
+ <div className={`\${tw.glass-card} flex-1 min-w-[140px] relative p-5 flex flex-col justify-center`}>
  <p className="text-[10px] text-gray-500 dark:text-gray-400 font-black uppercase tracking-[0.15em] mb-1">Atingimento Alvo</p>
- <p className="text-2xl md:text-3xl font-black text-content-primary dark:text-content-primary drop-shadow-lg shadow-black/10">{fmt(totalTarget)}</p>
+ <p className="text-2xl md:text-3xl font-black text-[var(--text-primary)] dark:text-[var(--text-primary)] drop-shadow-lg shadow-black/10">{fmt(totalTarget)}</p>
  </div>
- <div className={`\${tw.card} flex-1 min-w-[140px] relative p-5 flex flex-col justify-center`}>
+ <div className={`\${tw.glass-card} flex-1 min-w-[140px] relative p-5 flex flex-col justify-center`}>
  <p className="flex justify-between text-[10px] text-gray-500 dark:text-gray-400 font-black uppercase tracking-[0.15em] mb-2">
  <span>Eficiência</span>
  <span className="text-blue-500">{totalTarget > 0 ? Math.round((totalSaved / totalTarget) * 100) : 0}%</span>
  </p>
  <div className="mt-1 h-2.5 bg-gray-800/40 dark:bg-black/20 rounded-full overflow-hidden shadow-inner border border-gray-700/40 dark:border-[var(--border)]">
- <div className="h-full bg-surface-primary from-blue-500 to-emerald-500 rounded-full transition-all duration-1000 shadow-card" style={{ width: `${totalTarget > 0 ? Math.min((totalSaved / totalTarget) * 100, 100) : 0}%` }} />
+ <div className="h-full bg-[var(--bg-base)] from-blue-500 to-emerald-500 rounded-full transition-all duration-1000 shadow-glass-card" style={{ width: `${totalTarget > 0 ? Math.min((totalSaved / totalTarget) * 100, 100) : 0}%` }} />
  </div>
  </div>
  </div>
@@ -203,14 +203,14 @@ export default function Goals() {
  <p className="text-sm font-medium animate-pulse text-gray-500">Calculando trajetórias...</p>
  </div>
  ) : goals.length === 0 ? (
- <div className={`\${tw.card} text-center py-16 border-dashed border-2 border-gray-700/40 dark:border-[var(--border)] bg-transparent hover:bg-gray-800/40/5 transition-colors cursor-pointer group`} onClick={() => setShowAdd(true)}>
+ <div className={`\${tw.glass-card} text-center py-16 border-dashed border-2 border-gray-700/40 dark:border-[var(--border)] bg-transparent hover:bg-gray-800/40/5 transition-colors cursor-pointer group`} onClick={() => setShowAdd(true)}>
  <Target className="w-16 h-16 text-brand-500/50 mx-auto mb-4 group-hover:-translate-y-px transition-transform group-hover:text-brand-500 transition-all" />
- <h4 className="text-lg text-content-primary dark:text-content-primary font-bold mb-2">Seu portfólio de metas está vazio</h4>
+ <h4 className="text-lg text-[var(--text-primary)] dark:text-[var(--text-primary)] font-bold mb-2">Seu portfólio de metas está vazio</h4>
  <p className="text-gray-500 text-sm mb-6 max-w-sm mx-auto">Use a inteligência baseada em objetivos para focar nas grandes faturas: viagens, carros, casas, ou sua liberdade.</p>
  <button onClick={(e) => { e.stopPropagation(); setShowAdd(true); }} className="gradient-btn px-6 py-2.5 text-sm font-bold shadow-lg shadow-brand-500/30">Criar Primeira Meta</button>
  </div>
  ) : (
- <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+ <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in">
  {goals.map(goal => (
  <div key={goal.id} className="flex flex-col gap-3 group">
  <GoalThermometer goal={{
@@ -241,15 +241,15 @@ export default function Goals() {
 
  {showAdd && (
  <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 animate-fade-in">
- <form onSubmit={handleSubmit} className={`\${tw.card} w-full max-w-md p-6 space-y-4 animate-slide-up relative z-10 border border-[var(--border)] shadow-elevated`}>
- <button type="button" onClick={resetForm} className="absolute top-4 right-4 text-gray-500 hover:text-content-primary dark:hover:text-content-primary bg-gray-800/40 dark:bg-gray-800/40/5 p-1 rounded-full transition-colors"><X className="w-5 h-5" /></button>
- <h2 className="text-xl font-black text-content-primary dark:text-content-primary flex items-center gap-2 mb-6">
+ <form onSubmit={handleSubmit} className={`\${tw.glass-card} w-full max-w-md p-6 space-y-4 animate-slide-up relative z-10 border border-[var(--border)] shadow-elevated`}>
+ <button type="button" onClick={resetForm} className="absolute top-4 right-4 text-gray-500 hover:text-[var(--text-primary)] dark:hover:text-[var(--text-primary)] bg-gray-800/40 dark:bg-gray-800/40/5 p-1 rounded-full transition-colors"><X className="w-5 h-5" /></button>
+ <h2 className="text-xl font-black text-[var(--text-primary)] dark:text-[var(--text-primary)] flex items-center gap-2 mb-6">
  <Target className="w-6 h-6 text-brand-500" /> {editId ? 'Configurar Meta' : 'Plano de Atingimento'}
  </h2>
 
  <div>
  <label className="text-[10px] text-gray-400 uppercase font-black tracking-widest block mb-1">Motivador Principal (Nome)</label>
- <input required value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} className="w-full bg-gray-800/30 dark:bg-black/20 border border-gray-700/40 dark:border-[var(--border)] rounded-xl px-4 py-3 text-content-primary dark:text-content-primary text-sm outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all" placeholder="Ex: Viagem Europa, Independência..." />
+ <input required value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} className="w-full bg-gray-800/30 dark:bg-black/20 border border-gray-700/40 dark:border-[var(--border)] rounded-xl px-4 py-3 text-[var(--text-primary)] dark:text-[var(--text-primary)] text-sm outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all" placeholder="Ex: Viagem Europa, Independência..." />
  </div>
 
  <div>
@@ -275,7 +275,7 @@ export default function Goals() {
  </div>
  </div>
 
- <div className="grid grid-cols-2 gap-4 pt-2">
+ <div className="grid grid-cols-2 gap-4 pt-2 animate-fade-in">
  <div>
  <label className="text-[10px] text-gray-400 uppercase font-black tracking-widest block mb-1">Alvo</label>
  <CurrencyInput
@@ -294,7 +294,7 @@ export default function Goals() {
  </div>
  </div>
 
- <div className="grid grid-cols-2 gap-4">
+ <div className="grid grid-cols-2 gap-4 animate-fade-in">
  <div>
  <label className="text-[10px] text-gray-400 uppercase font-black tracking-widest block mb-1">Aporte Mensal</label>
  <CurrencyInput
@@ -305,7 +305,7 @@ export default function Goals() {
  </div>
  <div>
  <label className="text-[10px] text-gray-400 uppercase font-black tracking-widest block mb-1">Prazo (opcional)</label>
- <input type="date" value={form.deadline} onChange={e => setForm({ ...form, deadline: e.target.value })} className="w-full bg-gray-800/30 dark:bg-black/20 border border-gray-700/40 dark:border-[var(--border)] rounded-xl px-4 py-3 text-content-primary dark:text-content-primary text-sm outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary" />
+ <input type="date" value={form.deadline} onChange={e => setForm({ ...form, deadline: e.target.value })} className="w-full bg-gray-800/30 dark:bg-black/20 border border-gray-700/40 dark:border-[var(--border)] rounded-xl px-4 py-3 text-[var(--text-primary)] dark:text-[var(--text-primary)] text-sm outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary" />
  </div>
  </div>
 

@@ -37,7 +37,7 @@ export default function Sidebar({ open, onClose }) {
  <Link to="/" className="flex items-center gap-3">
  <MetaFinLogo className="h-9 w-auto" />
  </Link>
- <button onClick={onClose} className="lg:hidden text-content-primary/40 hover:text-content-primary transition-colors">
+ <button onClick={onClose} className="lg:hidden text-[var(--text-primary)]/40 hover:text-[var(--text-primary)] transition-colors">
  <X size={20} />
  </button>
  </div>
@@ -52,12 +52,12 @@ export default function Sidebar({ open, onClose }) {
  w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium
  transition-all duration-200 group
  ${active
- ? "bg-surface-primary from-violet-500/20 to-indigo-500/10 text-violet-400 border border-violet-500/20"
- : "text-content-primary/40 hover:text-content-primary/80 hover:bg-gray-800/40/5"
+ ? "bg-[var(--bg-base)] from-violet-500/20 to-indigo-500/10 text-violet-400 border border-violet-500/20"
+ : "text-[var(--text-primary)]/40 hover:text-[var(--text-primary)]/80 hover:bg-gray-800/40/5"
  }
  `}
  >
- <Icon size={18} className={active ? "text-violet-400" : "text-content-primary/30 group-hover:text-content-primary/60"} />
+ <Icon size={18} className={active ? "text-violet-400" : "text-[var(--text-primary)]/30 group-hover:text-[var(--text-primary)]/60"} />
  {label}
  {active && (
  <span className="ml-auto w-1.5 h-1.5 rounded-full bg-violet-400"></span>
@@ -69,14 +69,14 @@ export default function Sidebar({ open, onClose }) {
  {/* User */}
  <div className="px-3 pb-6 border-t border-[var(--border)] pt-4">
  <div className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-800/40/5 cursor-pointer transition-colors">
- <div className="w-9 h-9 rounded-xl bg-surface-primary from-orange-400 to-pink-500 flex items-center justify-center text-sm font-bold">
+ <div className="w-9 h-9 rounded-xl bg-[var(--bg-base)] from-orange-400 to-pink-500 flex items-center justify-center text-sm font-bold">
  F
  </div>
  <div className="flex-1 min-w-0">
- <p className="text-sm font-medium text-content-primary/90 truncate">Felipe</p>
- <p className="text-xs text-content-primary/30 truncate">felipe@metafin.com</p>
+ <p className="text-sm font-medium text-[var(--text-primary)]/90 truncate">Felipe</p>
+ <p className="text-xs text-[var(--text-primary)]/30 truncate">felipe@metafin.com</p>
  </div>
- <LogOut size={15} className="text-content-primary/20 hover:text-red-400 transition-colors" />
+ <LogOut size={15} className="text-[var(--text-primary)]/20 hover:text-red-400 transition-colors" />
  </div>
  </div>
  </aside>

@@ -17,7 +17,7 @@ export default function Navbar() {
 
  return (
  <nav className="sticky top-0 z-30 h-14 flex items-center justify-end px-4 sm:px-6 bg-gray-900/50 dark:bg-[#06060a]/50 backdrop-blur-[20px]">
- <div className="absolute inset-x-0 bottom-0 h-[1px] bg-surface-primary from-transparent via-brand-primary/50 to-transparent" />
+ <div className="absolute inset-x-0 bottom-0 h-[1px] bg-[var(--bg-base)] from-transparent via-brand-primary/50 to-transparent" />
  <div className="flex items-center gap-3">
  {isDemo && (
  <span className="px-2 py-1 rounded-lg bg-orange-500/10 text-orange-400 text-xs font-medium">
@@ -29,7 +29,7 @@ export default function Navbar() {
  <div className="relative">
  <button
  onClick={() => setLangMenuOpen(!langMenuOpen)}
- className="p-2 rounded-xl text-gray-400 hover:text-content-primary hover:bg-gray-800/40/5 transition-all flex items-center gap-1"
+ className="p-2 rounded-xl text-gray-400 hover:text-[var(--text-primary)] hover:bg-gray-800/40/5 transition-all flex items-center gap-1"
  title="Mudar Idioma"
  >
  <Globe className="w-4 h-4" />
@@ -39,7 +39,7 @@ export default function Navbar() {
  {langMenuOpen && (
  <>
  <div className="fixed inset-0 z-10" onClick={() => setLangMenuOpen(false)} />
- <div className={`absolute right-0 mt-2 w-40 \${tw.card} p-1 z-20 shadow-elevated border border-[var(--border)]`}>
+ <div className={`absolute right-0 mt-2 w-40 \${tw.glass-card} p-1 z-20 shadow-elevated border border-[var(--border)]`}>
  {Object.keys(FLAGS).map((code) => (
  <button
  key={code}

@@ -44,11 +44,11 @@ export default function NpsSurvey({ onClose }) {
 
  return (
  <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4 bg-black/50 animate-fade-in">
- <div className={`\${tw.card} w-full max-w-md animate-slide-up`}>
+ <div className={`\${tw.glass-card} w-full max-w-md animate-slide-up`}>
  {submitted ? (
  <div className="text-center py-8">
  <div className="text-4xl mb-4">🎉</div>
- <h3 className="text-lg font-bold text-content-primary mb-2">
+ <h3 className="text-lg font-bold text-[var(--text-primary)] mb-2">
  Obrigado pelo feedback!
  </h3>
  <p className="text-gray-400 text-sm">
@@ -59,12 +59,12 @@ export default function NpsSurvey({ onClose }) {
  <>
  {/* Header */}
  <div className="flex items-center justify-between mb-6">
- <h3 className="text-lg font-bold text-content-primary">
+ <h3 className="text-lg font-bold text-[var(--text-primary)]">
  Sua experiência importa ❤️
  </h3>
  <button
  onClick={onClose}
- className="p-1.5 rounded-lg text-gray-500 hover:text-content-primary hover:bg-gray-800/40/10 transition-all"
+ className="p-1.5 rounded-lg text-gray-500 hover:text-[var(--text-primary)] hover:bg-gray-800/40/10 transition-all"
  >
  <X className="w-5 h-5" />
  </button>
@@ -77,14 +77,14 @@ export default function NpsSurvey({ onClose }) {
  </p>
 
  {/* Score Grid */}
- <div className="grid grid-cols-11 gap-1 mb-2">
+ <div className="grid grid-cols-11 gap-1 mb-2 animate-fade-in">
  {Array.from({ length: 11 }, (_, i) => (
  <button
  key={i}
  onClick={() => setScore(i)}
  className={`aspect-square rounded-lg text-xs font-medium transition-all ${score === i
- ? 'bg-brand-primary text-content-primary scale-110 shadow-lg shadow-brand-primary/30'
- : 'bg-gray-800/40/5 text-gray-400 hover:bg-gray-800/40/10 hover:text-content-primary'
+ ? 'bg-brand-primary text-[var(--text-primary)] scale-110 shadow-lg shadow-brand-primary/30'
+ : 'bg-gray-800/40/5 text-gray-400 hover:bg-gray-800/40/10 hover:text-[var(--text-primary)]'
  }`}
  >
  {i}

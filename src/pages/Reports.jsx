@@ -112,7 +112,7 @@ export default function Reports() {
  <div className="py-6 space-y-6 animate-fade-in pb-20">
  <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
  <div>
- <h1 className="text-2xl font-bold text-content-primary dark:text-content-primary flex items-center gap-2">
+ <h1 className="text-2xl font-bold text-[var(--text-primary)] dark:text-[var(--text-primary)] flex items-center gap-2">
  <FileText className="w-6 h-6 text-orange-500" />
  Relatorio Mensal
  </h1>
@@ -129,9 +129,9 @@ export default function Reports() {
  <span className="hidden sm:inline">Exportar PDF</span>
  </button>
  <div className="flex items-center gap-2 bg-gray-800/30 dark:bg-gray-800/40/5 p-1 rounded-xl">
- <button onClick={() => changeMonth(-1)} className="p-2 text-gray-400 hover:text-content-primary dark:hover:text-content-primary transition-all"><ChevronLeft className="w-4 h-4" /></button>
- <span className="px-4 text-sm font-bold text-content-primary dark:text-content-primary min-w-[160px] text-center capitalize">{monthLabel}</span>
- <button onClick={() => changeMonth(1)} className="p-2 text-gray-400 hover:text-content-primary dark:hover:text-content-primary transition-all"><ChevronRight className="w-4 h-4" /></button>
+ <button onClick={() => changeMonth(-1)} className="p-2 text-gray-400 hover:text-[var(--text-primary)] dark:hover:text-[var(--text-primary)] transition-all"><ChevronLeft className="w-4 h-4" /></button>
+ <span className="px-4 text-sm font-bold text-[var(--text-primary)] dark:text-[var(--text-primary)] min-w-[160px] text-center capitalize">{monthLabel}</span>
+ <button onClick={() => changeMonth(1)} className="p-2 text-gray-400 hover:text-[var(--text-primary)] dark:hover:text-[var(--text-primary)] transition-all"><ChevronRight className="w-4 h-4" /></button>
  </div>
  </div>
  </div>
@@ -139,8 +139,8 @@ export default function Reports() {
  <div ref={reportRef} className="space-y-6 px-1 py-2">
 
  {/* Summary Grid */}
- <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
- <div className={`\${tw.card} bg-brand-primary/5 border-brand-primary/10`}>
+ <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 animate-fade-in">
+ <div className={`\${tw.glass-card} bg-brand-primary/5 border-brand-primary/10`}>
  <p className="text-[10px] text-gray-500 dark:text-gray-400 uppercase font-bold mb-1">Receitas</p>
  <p className="text-xl font-bold text-brand-primary">{fmt(report.income, isVisible)}</p>
  {report.incomeChange !== 0 && (
@@ -150,7 +150,7 @@ export default function Reports() {
  </p>
  )}
  </div>
- <div className={`\${tw.card} bg-red-500/5 border-red-500/10`}>
+ <div className={`\${tw.glass-card} bg-red-500/5 border-red-500/10`}>
  <p className="text-[10px] text-gray-500 dark:text-gray-400 uppercase font-bold mb-1">Despesas</p>
  <p className="text-xl font-bold text-red-500">{fmt(report.expenses, isVisible)}</p>
  {report.expenseChange !== 0 && (
@@ -160,20 +160,20 @@ export default function Reports() {
  </p>
  )}
  </div>
- <div className={`\${tw.card}`}>
+ <div className={`\${tw.glass-card}`}>
  <p className="text-[10px] text-gray-500 dark:text-gray-400 uppercase font-bold mb-1">Resultado</p>
  <p className={`text-xl font-bold ${report.balance >= 0 ? 'text-blue-500' : 'text-red-500'}`}>{fmt(report.balance, isVisible)}</p>
  </div>
- <div className={`\${tw.card}`}>
+ <div className={`\${tw.glass-card}`}>
  <p className="text-[10px] text-gray-500 dark:text-gray-400 uppercase font-bold mb-1">Taxa de Poupanca</p>
  <p className={`text-xl font-bold ${report.savingsRate >= 20 ? 'text-brand-primary' : report.savingsRate >= 0 ? 'text-yellow-500' : 'text-red-500'}`}>{report.savingsRate.toFixed(0)}%</p>
  </div>
  </div>
 
  {/* Spending by Category */}
- <div className="grid lg:grid-cols-2 gap-6">
- <div className={`\${tw.card} p-6`}>
- <h3 className="text-sm font-semibold text-content-primary dark:text-content-primary mb-4">Gastos por Categoria</h3>
+ <div className="grid lg:grid-cols-2 gap-6 animate-fade-in">
+ <div className={`\${tw.glass-card} p-6`}>
+ <h3 className="text-sm font-semibold text-[var(--text-primary)] dark:text-[var(--text-primary)] mb-4">Gastos por Categoria</h3>
  {report.pieData.length > 0 ? (
  <div className="h-[220px]">
  <ResponsiveContainer width="100%" height="100%">
@@ -190,8 +190,8 @@ export default function Reports() {
  )}
  </div>
 
- <div className={`\${tw.card} p-6`}>
- <h3 className="text-sm font-semibold text-content-primary dark:text-content-primary mb-4">Detalhamento</h3>
+ <div className={`\${tw.glass-card} p-6`}>
+ <h3 className="text-sm font-semibold text-[var(--text-primary)] dark:text-[var(--text-primary)] mb-4">Detalhamento</h3>
  <div className="space-y-3 max-h-[260px] overflow-y-auto custom-scrollbar">
  {report.categories.map((cat, i) => (
  <div key={cat.cat} className="flex items-center gap-3">
@@ -201,7 +201,7 @@ export default function Reports() {
  <div className="flex-1 min-w-0">
  <div className="flex justify-between text-sm mb-1">
  <span className="text-gray-300 dark:text-gray-300 truncate">{cat.label}</span>
- <span className="font-bold text-content-primary dark:text-content-primary ml-2">{fmt(cat.total, isVisible)}</span>
+ <span className="font-bold text-[var(--text-primary)] dark:text-[var(--text-primary)] ml-2">{fmt(cat.total, isVisible)}</span>
  </div>
  <div className="h-1.5 bg-gray-800/50 dark:bg-gray-800/40/10 rounded-full overflow-hidden">
  <div className="h-full rounded-full transition-all" style={{ width: `${cat.pct}%`, backgroundColor: COLORS[i % COLORS.length] }} />
@@ -215,9 +215,9 @@ export default function Reports() {
  </div>
 
  {/* Top Transactions */}
- <div className="grid lg:grid-cols-2 gap-6">
- <div className={`\${tw.card} p-6`}>
- <h3 className="text-sm font-semibold text-content-primary dark:text-content-primary mb-4 flex items-center gap-2">
+ <div className="grid lg:grid-cols-2 gap-6 animate-fade-in">
+ <div className={`\${tw.glass-card} p-6`}>
+ <h3 className="text-sm font-semibold text-[var(--text-primary)] dark:text-[var(--text-primary)] mb-4 flex items-center gap-2">
  <TrendingDown className="w-4 h-4 text-red-500" /> Maiores Despesas
  </h3>
  <div className="space-y-2">
@@ -237,8 +237,8 @@ export default function Reports() {
  </div>
  </div>
 
- <div className={`\${tw.card} p-6`}>
- <h3 className="text-sm font-semibold text-content-primary dark:text-content-primary mb-4 flex items-center gap-2">
+ <div className={`\${tw.glass-card} p-6`}>
+ <h3 className="text-sm font-semibold text-[var(--text-primary)] dark:text-[var(--text-primary)] mb-4 flex items-center gap-2">
  <TrendingUp className="w-4 h-4 text-brand-primary" /> Maiores Receitas
  </h3>
  <div className="space-y-2">

@@ -46,14 +46,14 @@ export class ErrorBoundary extends Component {
  if (this.state.hasError) {
  return (
  <div className="min-h-screen flex items-center justify-center bg-gray-800/30 dark:bg-surface-950 p-4">
- <div className={`\${tw.card} text-center max-w-md w-full p-8`}>
+ <div className={`\${tw.glass-card} text-center max-w-md w-full p-8`}>
  {/* Ícone de erro */}
  <div className="w-20 h-20 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-6 ring-4 ring-red-500/20">
  <AlertTriangle className="w-10 h-10 text-red-400" />
  </div>
 
  {/* Título */}
- <h1 className="text-2xl font-bold text-content-primary dark:text-content-primary mb-2">
+ <h1 className="text-2xl font-bold text-[var(--text-primary)] dark:text-[var(--text-primary)] mb-2">
  Ops! Algo deu errado
  </h1>
 
@@ -80,7 +80,7 @@ export class ErrorBoundary extends Component {
  <div className="flex flex-col sm:flex-row gap-3 justify-center">
  <button
  onClick={this.handleReload}
- className="btn-primary flex items-center justify-center gap-2"
+ className="btn-brand flex items-center justify-center gap-2"
  >
  <RefreshCw className="w-4 h-4" />
  Tentar novamente

@@ -50,7 +50,7 @@ export default function BalanceCard() {
  const hasData = transactions.length > 0;
 
  return (
- <div className="relative overflow-hidden rounded-2xl bg-surface-primary from-violet-600 via-indigo-600 to-brand-dark p-6 h-full min-h-[180px] group">
+ <div className="relative overflow-hidden rounded-2xl bg-[var(--bg-base)] from-violet-600 via-indigo-600 to-brand-dark p-6 h-full min-h-[180px] group">
  {/* Background Sparkline */}
  <div className="absolute inset-0 opacity-20 pointer-events-none group-hover:opacity-40 transition-opacity">
  <ResponsiveContainer width="100%" height="100%">
@@ -82,18 +82,18 @@ export default function BalanceCard() {
  <div className="relative z-10 flex flex-col h-full justify-between">
  <div className="flex items-center justify-between">
  <div>
- <p className="text-content-primary/60 text-xs font-bold tracking-widest uppercase">Saldo Total</p>
+ <p className="text-[var(--text-primary)]/60 text-xs font-bold tracking-widest uppercase">Saldo Total</p>
  <div className="flex items-center gap-3 mt-2">
- <h2 className="text-3xl font-extrabold text-content-primary tracking-tight">
+ <h2 className="text-3xl font-extrabold text-[var(--text-primary)] tracking-tight">
  {!hasData
- ? <span className="text-content-primary/30 select-none">R$ —</span>
+ ? <span className="text-[var(--text-primary)]/30 select-none">R$ —</span>
  : isVisible ? fmt(saldo) : "R$ ••••••"
  }
  </h2>
  {hasData && (
  <button
  onClick={() => toggleVisibility()}
- className="text-content-primary/40 hover:text-content-primary transition-all transform hover:-translate-y-px transition-transform"
+ className="text-[var(--text-primary)]/40 hover:text-[var(--text-primary)] transition-all transform hover:-translate-y-px transition-transform"
  >
  {isVisible ? <EyeOff size={18} /> : <Eye size={18} />}
  </button>
@@ -101,7 +101,7 @@ export default function BalanceCard() {
  </div>
  </div>
 
- <div className="flex items-center gap-1.5 bg-gray-800/40/20 px-3 py-1.5 rounded-full text-xs font-bold text-content-primary border border-[var(--border)] shadow-lg">
+ <div className="flex items-center gap-1.5 bg-gray-800/40/20 px-3 py-1.5 rounded-full text-xs font-bold text-[var(--text-primary)] border border-[var(--border)] shadow-lg">
  {pct === null ? (
  <><Minus size={13} />&nbsp;—</>
  ) : pct >= 0 ? (
@@ -114,23 +114,23 @@ export default function BalanceCard() {
 
  <div className="flex items-center gap-6 mt-6">
  <div>
- <p className="text-content-primary/50 text-[10px] uppercase font-bold tracking-wider">Receitas</p>
- <p className="text-content-primary font-bold text-sm mt-0.5">
- {hasData ? (isVisible ? fmt(receitas) : "••••") : <span className="text-content-primary/30">—</span>}
+ <p className="text-[var(--text-primary)]/50 text-[10px] uppercase font-bold tracking-wider">Receitas</p>
+ <p className="text-[var(--text-primary)] font-bold text-sm mt-0.5">
+ {hasData ? (isVisible ? fmt(receitas) : "••••") : <span className="text-[var(--text-primary)]/30">—</span>}
  </p>
  </div>
  <div className="w-px h-8 bg-gray-800/40/20" />
  <div>
- <p className="text-content-primary/50 text-[10px] uppercase font-bold tracking-wider">Despesas</p>
- <p className="text-content-primary font-bold text-sm mt-0.5">
- {hasData ? (isVisible ? fmt(despesas) : "••••") : <span className="text-content-primary/30">—</span>}
+ <p className="text-[var(--text-primary)]/50 text-[10px] uppercase font-bold tracking-wider">Despesas</p>
+ <p className="text-[var(--text-primary)] font-bold text-sm mt-0.5">
+ {hasData ? (isVisible ? fmt(despesas) : "••••") : <span className="text-[var(--text-primary)]/30">—</span>}
  </p>
  </div>
  <div className="w-px h-8 bg-gray-800/40/20" />
  <div>
- <p className="text-content-primary/50 text-[10px] uppercase font-bold tracking-wider">Investido</p>
- <p className="text-content-primary font-bold text-sm mt-0.5">
- {hasData ? (isVisible ? fmt(investido) : "••••") : <span className="text-content-primary/30">—</span>}
+ <p className="text-[var(--text-primary)]/50 text-[10px] uppercase font-bold tracking-wider">Investido</p>
+ <p className="text-[var(--text-primary)] font-bold text-sm mt-0.5">
+ {hasData ? (isVisible ? fmt(investido) : "••••") : <span className="text-[var(--text-primary)]/30">—</span>}
  </p>
  </div>
  </div>

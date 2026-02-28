@@ -173,9 +173,9 @@ export default function Transactions() {
  .header h1{color:#8b5cf6;font-size:24px;font-weight:700}
  .header p{color:#64748b;font-size:13px;margin-top:4px}
  .summary{display:flex;gap:24px;margin-bottom:24px}
- .summary-card{background:#f8fafc;border-radius:12px;padding:16px 24px;flex:1;border:1px solid #e2e8f0}
- .summary-card .label{font-size:11px;color:#94a3b8;text-transform:uppercase;font-weight:600;letter-spacing:0.05em}
- .summary-card .value{font-size:20px;font-weight:700;margin-top:4px}
+ .summary-glass-card{background:#f8fafc;border-radius:12px;padding:16px 24px;flex:1;border:1px solid #e2e8f0}
+ .summary-glass-card .label{font-size:11px;color:#94a3b8;text-transform:uppercase;font-weight:600;letter-spacing:0.05em}
+ .summary-glass-card .value{font-size:20px;font-weight:700;margin-top:4px}
  .income-val{color:#10b981}.expense-val{color:#ef4444}.balance-pos{color:#10b981}.balance-neg{color:#ef4444}
  table{width:100%;border-collapse:collapse;font-size:13px}
  thead tr{background:#f1f5f9}
@@ -194,15 +194,15 @@ export default function Transactions() {
  <p>Exportado em ${new Date().toLocaleDateString('pt-BR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })} • ${dataToExport.length} transações • Período: ${monthLabel}</p>
  </div>
  <div class="summary">
- <div class="summary-card">
+ <div class="summary-glass-card">
  <div class="label">Receitas</div>
  <div class="value income-val">${fmt(dataToExport.filter(t => t.tipo === 'Receita').reduce((a, t) => a + Math.abs(t.valor), 0))}</div>
  </div>
- <div class="summary-card">
+ <div class="summary-glass-card">
  <div class="label">Despesas</div>
  <div class="value expense-val">${fmt(dataToExport.filter(t => t.tipo === 'Despesa').reduce((a, t) => a + Math.abs(t.valor), 0))}</div>
  </div>
- <div class="summary-card">
+ <div class="summary-glass-card">
  <div class="label">Saldo</div>
  ${(() => { const bal = dataToExport.reduce((a, t) => a + (t.tipo === 'Receita' ? Math.abs(t.valor) : -Math.abs(t.valor)), 0); return `<div class="value ${bal >= 0 ? 'balance-pos' : 'balance-neg'}">${fmt(bal)}</div>`; })()}
  </div>
@@ -259,26 +259,26 @@ export default function Transactions() {
  {/* Header */}
  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
  <div>
- <h1 className="text-2xl font-bold text-content-primary">Transações</h1>
- <p className="text-content-secondary text-sm mt-0.5">{filteredTransactions.length} transações em <span className="capitalize">{monthLabel}</span></p>
+ <h1 className="text-2xl font-bold text-[var(--text-primary)]">Transações</h1>
+ <p className="text-[var(--text-secondary)] text-sm mt-0.5">{filteredTransactions.length} transações em <span className="capitalize">{monthLabel}</span></p>
  </div>
  <div className="flex items-center gap-3 flex-wrap sm:flex-nowrap">
  {/* Month navigator */}
  <div className="flex bg-gray-800/40/5 p-1 rounded-xl items-center border border-[var(--border)]">
- <button onClick={() => changeMonth(-1)} className="p-2 text-content-secondary hover:text-content-primary transition-all rounded-lg hover:bg-gray-800/40/5">←</button>
- <span className="px-3 text-sm font-bold text-content-primary min-w-[140px] text-center capitalize">{monthLabel}</span>
- <button onClick={() => changeMonth(1)} className="p-2 text-content-secondary hover:text-content-primary transition-all rounded-lg hover:bg-gray-800/40/5">→</button>
+ <button onClick={() => changeMonth(-1)} className="p-2 text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-all rounded-lg hover:bg-gray-800/40/5">←</button>
+ <span className="px-3 text-sm font-bold text-[var(--text-primary)] min-w-[140px] text-center capitalize">{monthLabel}</span>
+ <button onClick={() => changeMonth(1)} className="p-2 text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-all rounded-lg hover:bg-gray-800/40/5">→</button>
  </div>
  {/* View mode */}
  <div className="flex bg-gray-800/40/5 p-1 rounded-xl border border-[var(--border)]">
- <button onClick={() => setViewMode('list')} className={`p-2 rounded-lg transition-all ${viewMode === 'list' ? 'bg-brand-primary/20 text-brand-glow' : 'text-content-muted hover:text-content-secondary'}`} title="Lista"><List className="w-4 h-4" /></button>
- <button onClick={() => setViewMode('analysis')} className={`p-2 rounded-lg transition-all ${viewMode === 'analysis' ? 'bg-brand-primary/20 text-brand-glow' : 'text-content-muted hover:text-content-secondary'}`} title="Análise"><BarChart2 className="w-4 h-4" /></button>
+ <button onClick={() => setViewMode('list')} className={`p-2 rounded-lg transition-all ${viewMode === 'list' ? 'bg-brand-primary/20 text-brand-glow' : 'text-[var(--text-muted)] hover:text-[var(--text-secondary)]'}`} title="Lista"><List className="w-4 h-4" /></button>
+ <button onClick={() => setViewMode('analysis')} className={`p-2 rounded-lg transition-all ${viewMode === 'analysis' ? 'bg-brand-primary/20 text-brand-glow' : 'text-[var(--text-muted)] hover:text-[var(--text-secondary)]'}`} title="Análise"><BarChart2 className="w-4 h-4" /></button>
  </div>
  {/* Export */}
  <div className="relative">
  <button
  onClick={() => setShowExportModal(!showExportModal)}
- className="h-[42px] px-4 py-2 rounded-xl border border-[var(--border)] text-content-secondary hover:bg-gray-800/40/5 hover:text-content-primary transition-all text-sm flex items-center gap-2 whitespace-nowrap bg-gray-800/40/5"
+ className="h-[42px] px-4 py-2 rounded-xl border border-[var(--border)] text-[var(--text-secondary)] hover:bg-gray-800/40/5 hover:text-[var(--text-primary)] transition-all text-sm flex items-center gap-2 whitespace-nowrap bg-gray-800/40/5"
  >
  <Download className="w-4 h-4 flex-shrink-0" />
  <span className="hidden sm:inline">Exportar</span>
@@ -286,17 +286,17 @@ export default function Transactions() {
  {showExportModal && (
  <>
  <div className="fixed inset-0 z-20" onClick={() => setShowExportModal(false)} />
- <div className="absolute right-0 mt-2 w-52 bg-[#0d1424] border border-[var(--border)] rounded-2xl shadow-card z-30 p-2 animate-slide-up">
- <p className="text-[10px] text-content-muted uppercase font-bold tracking-widest px-3 py-2">Escolha o formato</p>
- <button onClick={() => handleExport('csv')} className="w-full text-left px-3 py-2.5 text-sm text-content-secondary hover:bg-gray-800/40/5 hover:text-content-primary rounded-xl flex items-center justify-between transition-all">
+ <div className="absolute right-0 mt-2 w-52 bg-[#0d1424] border border-[var(--border)] rounded-2xl shadow-glass-card z-30 p-2 animate-slide-up">
+ <p className="text-[10px] text-[var(--text-muted)] uppercase font-bold tracking-widest px-3 py-2">Escolha o formato</p>
+ <button onClick={() => handleExport('csv')} className="w-full text-left px-3 py-2.5 text-sm text-[var(--text-secondary)] hover:bg-gray-800/40/5 hover:text-[var(--text-primary)] rounded-xl flex items-center justify-between transition-all">
  <span className="flex items-center gap-2">📊 Excel / CSV</span>
  <span className="text-[10px] text-slate-600 font-mono">.csv</span>
  </button>
- <button onClick={() => handleExport('json')} className="w-full text-left px-3 py-2.5 text-sm text-content-secondary hover:bg-gray-800/40/5 hover:text-content-primary rounded-xl flex items-center justify-between transition-all">
+ <button onClick={() => handleExport('json')} className="w-full text-left px-3 py-2.5 text-sm text-[var(--text-secondary)] hover:bg-gray-800/40/5 hover:text-[var(--text-primary)] rounded-xl flex items-center justify-between transition-all">
  <span className="flex items-center gap-2">🔧 JSON Data</span>
  <span className="text-[10px] text-slate-600 font-mono">.json</span>
  </button>
- <button onClick={() => handleExport('pdf')} className="w-full text-left px-3 py-2.5 text-sm text-content-secondary hover:bg-gray-800/40/5 hover:text-content-primary rounded-xl flex items-center justify-between transition-all">
+ <button onClick={() => handleExport('pdf')} className="w-full text-left px-3 py-2.5 text-sm text-[var(--text-secondary)] hover:bg-gray-800/40/5 hover:text-[var(--text-primary)] rounded-xl flex items-center justify-between transition-all">
  <span className="flex items-center gap-2">📄 Relatório PDF</span>
  <span className="text-[10px] text-slate-600 font-mono">.pdf</span>
  </button>
@@ -316,17 +316,17 @@ export default function Transactions() {
  </div>
 
  {/* Summary Cards */}
- <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
- <div className={`\${tw.card} p-5 border border-[var(--border)] hover:border-brand-primary/30 transition-all`}>
- <p className="text-xs font-semibold text-content-secondary mb-1 uppercase tracking-wider">Receitas</p>
+ <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 animate-fade-in">
+ <div className={`\${tw.glass-card} p-5 border border-[var(--border)] hover:border-brand-primary/30 transition-all`}>
+ <p className="text-xs font-semibold text-[var(--text-secondary)] mb-1 uppercase tracking-wider">Receitas</p>
  <h5 className="text-2xl font-bold text-brand-glow">{fmt(monthSummary.income)}</h5>
  </div>
- <div className={`\${tw.card} p-5 border border-[var(--border)] hover:border-rose-500/30 transition-all`}>
- <p className="text-xs font-semibold text-content-secondary mb-1 uppercase tracking-wider">Despesas</p>
+ <div className={`\${tw.glass-card} p-5 border border-[var(--border)] hover:border-rose-500/30 transition-all`}>
+ <p className="text-xs font-semibold text-[var(--text-secondary)] mb-1 uppercase tracking-wider">Despesas</p>
  <h5 className="text-2xl font-bold text-rose-400">-{fmt(monthSummary.expense)}</h5>
  </div>
- <div className={`\${tw.card} p-5 border border-[var(--border)] hover:border-indigo-500/30 transition-all`}>
- <p className="text-xs font-semibold text-content-secondary mb-1 uppercase tracking-wider">Fluxo de Caixa</p>
+ <div className={`\${tw.glass-card} p-5 border border-[var(--border)] hover:border-indigo-500/30 transition-all`}>
+ <p className="text-xs font-semibold text-[var(--text-secondary)] mb-1 uppercase tracking-wider">Fluxo de Caixa</p>
  <h5 className={`text-2xl font-bold ${monthSummary.income - monthSummary.expense >= 0 ? 'text-brand-glow' : 'text-rose-400'}`}>
  {fmt(monthSummary.income - monthSummary.expense)}
  </h5>
@@ -334,16 +334,16 @@ export default function Transactions() {
  </div>
 
  {/* Import — Drag & Drop + Format Buttons */}
- <div className={`\${tw.card}`}>
+ <div className={`\${tw.glass-card}`}>
  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-4">
  <div className="flex-1">
- <h3 className="text-sm font-semibold text-content-primary flex items-center gap-2">
+ <h3 className="text-sm font-semibold text-[var(--text-primary)] flex items-center gap-2">
  <FileSpreadsheet className="w-4 h-4 text-brand-glow" />
  Importar Transações
  </h3>
- <p className="text-xs text-content-secondary mt-1">CSV, OFX, Excel, PDF e mais formatos</p>
+ <p className="text-xs text-[var(--text-secondary)] mt-1">CSV, OFX, Excel, PDF e mais formatos</p>
  </div>
- <button onClick={downloadSampleCsv} className="px-3 py-2 rounded-lg border border-[var(--border)] text-content-secondary hover:bg-gray-800/40/5 hover:text-content-primary transition-all text-xs">
+ <button onClick={downloadSampleCsv} className="px-3 py-2 rounded-lg border border-[var(--border)] text-[var(--text-secondary)] hover:bg-gray-800/40/5 hover:text-[var(--text-primary)] transition-all text-xs">
  📄 Modelo CSV
  </button>
  </div>
@@ -373,12 +373,12 @@ export default function Transactions() {
  </div>
  ) : (
  <div className="flex flex-col items-center gap-2">
- <Upload className={`w-8 h-8 ${isDragging ? 'text-brand-glow' : 'text-content-muted'} transition-colors`} />
- <p className="text-sm text-content-secondary hidden sm:block">
+ <Upload className={`w-8 h-8 ${isDragging ? 'text-brand-glow' : 'text-[var(--text-muted)]'} transition-colors`} />
+ <p className="text-sm text-[var(--text-secondary)] hidden sm:block">
  {isDragging ? 'Solte o arquivo aqui' : 'Arraste um arquivo aqui ou clique para selecionar'}
  </p>
- <p className="text-sm text-content-secondary sm:hidden">Toque para selecionar arquivo</p>
- <p className="text-[10px] text-content-muted">Formatos aceitos: CSV, OFX, XLS, XLSX, PDF</p>
+ <p className="text-sm text-[var(--text-secondary)] sm:hidden">Toque para selecionar arquivo</p>
+ <p className="text-[10px] text-[var(--text-muted)]">Formatos aceitos: CSV, OFX, XLS, XLSX, PDF</p>
  </div>
  )}
  <input ref={fileInputRef} type="file" accept={ACCEPTED_EXTENSIONS} onChange={handleFileImport} disabled={importing} className="hidden" />
@@ -386,7 +386,7 @@ export default function Transactions() {
 
  {/* Format Buttons */}
  <div className="mt-4">
- <p className="text-[10px] text-content-muted uppercase tracking-widest font-bold mb-2">Ou importe diretamente</p>
+ <p className="text-[10px] text-[var(--text-muted)] uppercase tracking-widest font-bold mb-2">Ou importe diretamente</p>
  <div className="flex flex-wrap gap-2">
  {FORMAT_BUTTONS.map((fmt) => (
  <button
@@ -401,7 +401,7 @@ export default function Transactions() {
  className="flex flex-col items-center justify-center w-[72px] h-[64px] rounded-xl bg-gray-800/40/[0.03] border border-[var(--border)] hover:border-brand-glow/50 hover:bg-brand-primary/5 transition-all hover:-translate-y-px.5 gap-1"
  >
  <fmt.icon className="w-5 h-5" style={{ color: fmt.color }} />
- <span className="text-[10px] font-bold tracking-wider text-content-secondary">{fmt.label}</span>
+ <span className="text-[10px] font-bold tracking-wider text-[var(--text-secondary)]">{fmt.label}</span>
  </button>
  ))}
  </div>
@@ -419,36 +419,36 @@ export default function Transactions() {
  {/* Filters */}
  <div className="flex flex-col sm:flex-row gap-3">
  <div className="relative flex-1">
- <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-content-muted" />
- <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Buscar por descrição ou categoria..." className="w-full bg-gray-800/40/[0.03] border border-[var(--border)] rounded-2xl py-3.5 pl-12 pr-4 text-sm text-content-primary placeholder-slate-500 focus:outline-none focus:border-violet-500/50 transition-all" />
- {searchQuery && <button onClick={() => setSearchQuery('')} className="absolute right-4 top-1/2 -translate-y-1/2 text-content-muted hover:text-content-primary"><X className="w-4 h-4" /></button>}
+ <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-muted)]" />
+ <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Buscar por descrição ou categoria..." className="w-full bg-gray-800/40/[0.03] border border-[var(--border)] rounded-2xl py-3.5 pl-12 pr-4 text-sm text-[var(--text-primary)] placeholder-slate-500 focus:outline-none focus:border-violet-500/50 transition-all" />
+ {searchQuery && <button onClick={() => setSearchQuery('')} className="absolute right-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)] hover:text-[var(--text-primary)]"><X className="w-4 h-4" /></button>}
  </div>
  <div className="relative">
- <Filter className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-content-muted" />
+ <Filter className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-muted)]" />
  <select value={filterCategory} onChange={(e) => setFilterCategory(e.target.value)} className="bg-gray-800/40/[0.03] border border-[var(--border)] rounded-2xl py-3.5 pl-12 pr-10 text-sm text-slate-200 focus:outline-none focus:border-violet-500/50 transition-all appearance-none cursor-pointer min-w-[200px]">
- <option value="all" className="bg-surface-primary">Todas as Categorias</option>
- {allCategories.map((c) => <option key={c} value={c} className="bg-surface-primary">{categoryConfig[c]?.icon} {categoryConfig[c]?.label || c}</option>)}
+ <option value="all" className="bg-[var(--bg-base)]">Todas as Categorias</option>
+ {allCategories.map((c) => <option key={c} value={c} className="bg-[var(--bg-base)]">{categoryConfig[c]?.icon} {categoryConfig[c]?.label || c}</option>)}
  </select>
  </div>
  <select value={filterType} onChange={(e) => setFilterType(e.target.value)} className="bg-gray-800/40/[0.03] border border-[var(--border)] rounded-2xl py-3.5 px-4 text-sm text-slate-200 focus:outline-none focus:border-violet-500/50 transition-all appearance-none cursor-pointer min-w-[150px]">
- <option value="all" className="bg-surface-primary">Todos os Tipos</option>
- <option value="income" className="bg-surface-primary">💰 Receitas</option>
- <option value="expense" className="bg-surface-primary">💸 Despesas</option>
+ <option value="all" className="bg-[var(--bg-base)]">Todos os Tipos</option>
+ <option value="income" className="bg-[var(--bg-base)]">💰 Receitas</option>
+ <option value="expense" className="bg-[var(--bg-base)]">💸 Despesas</option>
  </select>
  </div>
 
  {/* Content */}
  {viewMode === 'analysis' ? (
  <div className="space-y-6 animate-fade-in">
- <div className={`\${tw.card} p-6`}>
+ <div className={`\${tw.glass-card} p-6`}>
  <div className="flex items-center justify-between mb-8">
  <div>
- <h3 className="text-lg font-semibold text-content-primary">Comparativo Mensal</h3>
- <p className="text-xs text-content-secondary">Total de gastos nos últimos 12 meses</p>
+ <h3 className="text-lg font-semibold text-[var(--text-primary)]">Comparativo Mensal</h3>
+ <p className="text-xs text-[var(--text-secondary)]">Total de gastos nos últimos 12 meses</p>
  </div>
  <div className="text-right">
- <p className="text-[10px] text-content-muted uppercase tracking-widest font-bold">Média Mensal</p>
- <p className="text-xl font-bold text-content-primary">
+ <p className="text-[10px] text-[var(--text-muted)] uppercase tracking-widest font-bold">Média Mensal</p>
+ <p className="text-xl font-bold text-[var(--text-primary)]">
  {fmt(monthlyData.reduce((acc, m) => acc + m.total, 0) / (monthlyData.filter(m => m.total > 0).length || 1))}
  </p>
  </div>
@@ -469,13 +469,13 @@ export default function Transactions() {
  </ResponsiveContainer>
  </div>
  </div>
- <div className="grid sm:grid-cols-2 gap-4">
- <div className={`\${tw.card} p-5 border-l-4 border-l-emerald-500`}>
- <p className="text-xs text-content-secondary font-medium">Mês Atual (Até agora)</p>
- <h4 className="text-2xl font-bold text-content-primary mt-1">{fmt(monthlyData[monthlyData.length - 1]?.total || 0)}</h4>
+ <div className="grid sm:grid-cols-2 gap-4 animate-fade-in">
+ <div className={`\${tw.glass-card} p-5 border-l-4 border-l-emerald-500`}>
+ <p className="text-xs text-[var(--text-secondary)] font-medium">Mês Atual (Até agora)</p>
+ <h4 className="text-2xl font-bold text-[var(--text-primary)] mt-1">{fmt(monthlyData[monthlyData.length - 1]?.total || 0)}</h4>
  </div>
- <div className={`\${tw.card} p-5 border-l-4 border-l-blue-500`}>
- <p className="text-xs text-content-secondary font-medium">Variação vs Mês Anterior</p>
+ <div className={`\${tw.glass-card} p-5 border-l-4 border-l-blue-500`}>
+ <p className="text-xs text-[var(--text-secondary)] font-medium">Variação vs Mês Anterior</p>
  {(() => {
  const curr = monthlyData[monthlyData.length - 1]?.total || 0;
  const prev = monthlyData[monthlyData.length - 2]?.total || 1;
@@ -488,22 +488,22 @@ export default function Transactions() {
  ) : (
  <div className="space-y-3">
  {filteredTransactions.length === 0 ? (
- <div className={`p-12 text-center \${tw.card}`}>
+ <div className={`p-12 text-center \${tw.glass-card}`}>
  <Search className="w-12 h-12 text-slate-600 mx-auto mb-4" />
- <p className="text-content-secondary">Nenhuma transação encontrada</p>
+ <p className="text-[var(--text-secondary)]">Nenhuma transação encontrada</p>
  </div>
  ) : (
  filteredTransactions.map((t) => {
  const cat = categoryConfig[t.category];
  return (
- <div key={t.id} onClick={() => handleEditClick(t)} className={`\${tw.card} !p-4 flex items-center justify-between border border-transparent border-l-4 hover:border-l-brand-primary hover:-translate-y-px hover:shadow-lg transition-all cursor-pointer group relative overflow-hidden hover:bg-white/5`}>
+ <div key={t.id} onClick={() => handleEditClick(t)} className={`\${tw.glass-card} !p-4 flex items-center justify-between border border-transparent border-l-4 hover:border-l-brand-primary hover:-translate-y-px hover:shadow-lg transition-all cursor-pointer group relative overflow-hidden hover:bg-white/5`}>
  <div className="flex items-center gap-4">
  <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-xl shrink-0" style={{ backgroundColor: `${cat?.color || '#6b7280'}20` }}>
  {cat?.icon || '📦'}
  </div>
  <div className="min-w-0">
- <p className="text-sm font-semibold text-content-primary truncate group-hover:text-violet-400 transition-colors">{t.description}</p>
- <p className="text-xs text-content-secondary flex items-center gap-2 mt-0.5">
+ <p className="text-sm font-semibold text-[var(--text-primary)] truncate group-hover:text-violet-400 transition-colors">{t.description}</p>
+ <p className="text-xs text-[var(--text-secondary)] flex items-center gap-2 mt-0.5">
  <span>{new Date(t.date + 'T12:00:00').toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' })}</span>
  <span className="w-1 h-1 bg-slate-600 rounded-full" />
  <span style={{ color: cat?.color || '#94a3b8' }}>{cat?.label || t.category}</span>
@@ -519,7 +519,7 @@ export default function Transactions() {
  <button
  onClick={(e) => { e.stopPropagation(); handleDelete(t.id); }}
  disabled={deletingId === t.id}
- className="absolute right-[-40px] top-1/2 -translate-y-1/2 p-2 rounded-xl bg-red-500 text-content-primary shadow-elevated hover:bg-red-600 transition-all disabled:opacity-50 opacity-0 group-hover:right-4 group-hover:opacity-100"
+ className="absolute right-[-40px] top-1/2 -translate-y-1/2 p-2 rounded-xl bg-red-500 text-[var(--text-primary)] shadow-elevated hover:bg-red-600 transition-all disabled:opacity-50 opacity-0 group-hover:right-4 group-hover:opacity-100"
  >
  {deletingId === t.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
  </button>
@@ -533,32 +533,32 @@ export default function Transactions() {
  {/* ADD/EDIT MODAL - Sólido */}
  {showAddModal && (
  <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/90 ">
- <div className="bg-[#0d1424] border border-[var(--border)] w-full max-w-md rounded-3xl p-8 shadow-card animate-slide-up">
+ <div className="bg-[#0d1424] border border-[var(--border)] w-full max-w-md rounded-3xl p-8 shadow-glass-card animate-slide-up">
  <div className="flex items-center justify-between mb-6">
- <h2 className="text-lg font-bold text-content-primary">{editId ? 'Editar Transação' : 'Nova Transação'}</h2>
- <button onClick={() => { setShowAddModal(false); setEditId(null); }} className="p-1.5 rounded-lg text-content-muted hover:text-content-primary hover:bg-gray-800/40/10 transition-all"><X className="w-5 h-5" /></button>
+ <h2 className="text-lg font-bold text-[var(--text-primary)]">{editId ? 'Editar Transação' : 'Nova Transação'}</h2>
+ <button onClick={() => { setShowAddModal(false); setEditId(null); }} className="p-1.5 rounded-lg text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-gray-800/40/10 transition-all"><X className="w-5 h-5" /></button>
  </div>
  <form onSubmit={handleAddTransaction} className="space-y-4">
  <div className="flex rounded-xl bg-gray-800/40/5 p-1">
- <button type="button" onClick={() => setNewTx((p) => ({ ...p, type: 'expense' }))} className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all ${newTx.type === 'expense' ? 'bg-red-500/20 text-red-400' : 'text-content-muted hover:text-content-secondary'}`}>💸 Despesa</button>
- <button type="button" onClick={() => setNewTx((p) => ({ ...p, type: 'income' }))} className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all ${newTx.type === 'income' ? 'bg-brand-primary/20 text-brand-glow' : 'text-content-muted hover:text-content-secondary'}`}>💰 Receita</button>
+ <button type="button" onClick={() => setNewTx((p) => ({ ...p, type: 'expense' }))} className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all ${newTx.type === 'expense' ? 'bg-red-500/20 text-red-400' : 'text-[var(--text-muted)] hover:text-[var(--text-secondary)]'}`}>💸 Despesa</button>
+ <button type="button" onClick={() => setNewTx((p) => ({ ...p, type: 'income' }))} className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all ${newTx.type === 'income' ? 'bg-brand-primary/20 text-brand-glow' : 'text-[var(--text-muted)] hover:text-[var(--text-secondary)]'}`}>💰 Receita</button>
  </div>
  <div>
- <label className="block text-sm text-content-secondary mb-1">Descrição</label>
+ <label className="block text-sm text-[var(--text-secondary)] mb-1">Descrição</label>
  <input type="text" value={newTx.description} onChange={(e) => setNewTx((p) => ({ ...p, description: e.target.value }))} placeholder="Ex: Supermercado Extra" required className="input-field" />
  </div>
- <div className="grid grid-cols-2 gap-3">
+ <div className="grid grid-cols-2 gap-3 animate-fade-in">
  <div>
- <label className="block text-sm text-content-secondary mb-1">Valor (R$)</label>
+ <label className="block text-sm text-[var(--text-secondary)] mb-1">Valor (R$)</label>
  <input type="number" step="0.01" min="0.01" value={newTx.amount} onChange={(e) => setNewTx((p) => ({ ...p, amount: e.target.value }))} placeholder="0,00" required className="input-field" />
  </div>
  <div>
- <label className="block text-sm text-content-secondary mb-1">Data</label>
+ <label className="block text-sm text-[var(--text-secondary)] mb-1">Data</label>
  <input type="date" value={newTx.date} onChange={(e) => setNewTx((p) => ({ ...p, date: e.target.value }))} required className="input-field" />
  </div>
  </div>
  <div>
- <label className="block text-sm text-content-secondary mb-2">Categoria</label>
+ <label className="block text-sm text-[var(--text-secondary)] mb-2">Categoria</label>
  <input
  type="text"
  value={catSearch}
@@ -575,20 +575,20 @@ export default function Transactions() {
  if (cats.length === 0) return null;
  return (
  <div key={group.id}>
- <p className="text-[10px] text-content-muted uppercase font-bold tracking-widest mb-1.5">{group.label}</p>
- <div className="grid grid-cols-4 sm:grid-cols-6 gap-1.5">
+ <p className="text-[10px] text-[var(--text-muted)] uppercase font-bold tracking-widest mb-1.5">{group.label}</p>
+ <div className="grid grid-cols-4 sm:grid-cols-6 gap-1.5 animate-fade-in">
  {cats.map((c) => (
  <button
  key={c}
  type="button"
  onClick={() => { setNewTx((p) => ({ ...p, category: c })); setCatSearch(''); }}
  className={`flex flex-col items-center justify-center p-2 rounded-xl border transition-all gap-0.5 ${newTx.category === c
- ? 'border-brand-glow bg-brand-primary/10 shadow-card'
+ ? 'border-brand-glow bg-brand-primary/10 shadow-glass-card'
  : 'border-[var(--border)] bg-gray-800/40/[0.02] hover:border-[var(--border)] hover:bg-gray-800/40/[0.05]'
  }`}
  >
  <span className="text-lg leading-none">{categoryConfig[c]?.icon}</span>
- <span className="text-[8px] font-semibold text-content-secondary uppercase tracking-wide truncate w-full text-center">
+ <span className="text-[8px] font-semibold text-[var(--text-secondary)] uppercase tracking-wide truncate w-full text-center">
  {categoryConfig[c]?.label?.split(' ')[0] || c}
  </span>
  </button>
@@ -600,7 +600,7 @@ export default function Transactions() {
  </div>
  </div>
  <div>
- <label className="block text-sm text-content-secondary mb-1">Notas (opcional)</label>
+ <label className="block text-sm text-[var(--text-secondary)] mb-1">Notas (opcional)</label>
  <input type="text" value={newTx.notes} onChange={(e) => setNewTx((p) => ({ ...p, notes: e.target.value }))} placeholder="Observações..." className="input-field" />
  </div>
  <button type="submit" className="gradient-btn w-full justify-center py-3">

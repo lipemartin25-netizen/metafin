@@ -55,7 +55,7 @@ function ToastItem({ id, type = 'info', title, message, duration = 5000, onClose
 
  <div className="flex-1 min-w-0">
  {title && (
- <p className="font-semibold text-sm text-content-primary mb-0.5">{title}</p>
+ <p className="font-semibold text-sm text-[var(--text-primary)] mb-0.5">{title}</p>
  )}
  {message && (
  <p className="text-sm opacity-90">{message}</p>

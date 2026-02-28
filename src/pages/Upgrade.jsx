@@ -41,14 +41,14 @@ export default function Upgrade() {
  <div className="py-6 max-w-2xl mx-auto animate-fade-in">
  <button
  onClick={() => navigate('/app')}
- className="flex items-center gap-2 text-gray-400 hover:text-content-primary text-sm mb-6 transition-colors"
+ className="flex items-center gap-2 text-gray-400 hover:text-[var(--text-primary)] text-sm mb-6 transition-colors"
  >
  <ArrowLeft className="w-4 h-4" /> Voltar ao Dashboard
  </button>
 
- <div className={`\${tw.card} text-center`}>
+ <div className={`\${tw.glass-card} text-center`}>
  <Crown className="w-16 h-16 text-brand-glow mx-auto mb-4" />
- <h1 className="text-2xl font-bold text-content-primary mb-2">
+ <h1 className="text-2xl font-bold text-[var(--text-primary)] mb-2">
  Você é Pro! 💎
  </h1>
  <p className="text-gray-400 mb-2">
@@ -80,7 +80,7 @@ export default function Upgrade() {
  <div className="py-6 max-w-4xl mx-auto animate-fade-in">
  <button
  onClick={() => navigate('/app')}
- className="flex items-center gap-2 text-gray-400 hover:text-content-primary text-sm mb-6 transition-colors"
+ className="flex items-center gap-2 text-gray-400 hover:text-[var(--text-primary)] text-sm mb-6 transition-colors"
  >
  <ArrowLeft className="w-4 h-4" /> Voltar ao Dashboard
  </button>
@@ -105,8 +105,8 @@ export default function Upgrade() {
 
  {/* Header */}
  <div className="text-center mb-8">
- <h1 className="text-3xl font-bold text-content-primary mb-2">
- Desbloqueie o Poder da <span className="text-transparent bg-clip-text bg-surface-primary from-brand-glow to-brand-glow">IA Financeira</span>
+ <h1 className="text-3xl font-bold text-[var(--text-primary)] mb-2">
+ Desbloqueie o Poder da <span className="text-transparent bg-clip-text bg-[var(--bg-base)] from-brand-glow to-brand-glow">IA Financeira</span>
  </h1>
  <p className="text-gray-400">
  7 modelos de IA, import ilimitado, insights personalizados
@@ -141,17 +141,17 @@ export default function Upgrade() {
  </div>
 
  {/* Plan Card */}
- <div className={`max-w-lg mx-auto \${tw.card} border border-brand-primary/20 relative overflow-hidden`}>
- <div className="absolute top-0 right-0 px-4 py-1.5 bg-surface-primary from-brand-primary to-brand-glow text-xs font-bold text-content-primary rounded-bl-xl">
+ <div className={`max-w-lg mx-auto \${tw.glass-card} border border-brand-primary/20 relative overflow-hidden`}>
+ <div className="absolute top-0 right-0 px-4 py-1.5 bg-[var(--bg-base)] from-brand-primary to-brand-glow text-xs font-bold text-[var(--text-primary)] rounded-bl-xl">
  7 DIAS GRÁTIS
  </div>
 
  <div className="mb-6">
- <h2 className="text-xl font-bold text-content-primary flex items-center gap-2">
+ <h2 className="text-xl font-bold text-[var(--text-primary)] flex items-center gap-2">
  💎 MetaFin Pro
  </h2>
  <div className="flex items-baseline gap-1 mt-2">
- <span className="text-4xl font-bold text-content-primary">{selected.label}</span>
+ <span className="text-4xl font-bold text-[var(--text-primary)]">{selected.label}</span>
  <span className="text-gray-500">{selected.period}</span>
  </div>
  {selected.savings && (
@@ -172,7 +172,7 @@ export default function Upgrade() {
  {/* AI Models Grid */}
  <div className="mb-6">
  <p className="text-xs text-gray-500 uppercase tracking-wide mb-2">Modelos de IA Inclusos</p>
- <div className="grid grid-cols-2 gap-2">
+ <div className="grid grid-cols-2 gap-2 animate-fade-in">
  {Object.values(AI_MODELS).filter(m => m.id !== 'gemini-1.5-flash').map((m) => ( // Show only premium models roughly
  <div
  key={m.id}
@@ -199,7 +199,7 @@ export default function Upgrade() {
  {/* CTA */}
  <div className="p-6 rounded-2xl bg-brand-primary/10 border border-brand-primary/20 text-center">
  <Crown className="w-12 h-12 text-brand-glow mx-auto mb-3" />
- <h3 className="text-xl font-bold text-content-primary mb-2">Acesso Pro Liberado! 🎉</h3>
+ <h3 className="text-xl font-bold text-[var(--text-primary)] mb-2">Acesso Pro Liberado! 🎉</h3>
  <p className="text-gray-400 text-sm mb-4">
  Estamos em uma fase especial e liberamos todas as funcionalidades Premium gratuitamente para todos os usuários.
  </p>

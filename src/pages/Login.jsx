@@ -69,7 +69,7 @@ export default function Login() {
 
 
  return (
- <div className="min-h-screen bg-surface-primary flex items-center justify-center p-6 relative overflow-hidden text-content-primary font-sans selection:bg-brand-primary/30 antialiased">
+ <div className="min-h-screen bg-[var(--bg-base)] flex items-center justify-center p-6 relative overflow-hidden text-[var(--text-primary)] font-sans selection:bg-brand-primary/30 antialiased">
  {/* Background elements matched with Landing Page */}
  <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
  <div className="absolute top-[-10%] right-[-5%] w-[50%] h-[50%] bg-brand-primary/[0.04] blur-[160px] rounded-full" />
@@ -85,13 +85,13 @@ export default function Login() {
  </div>
  </div>
 
- <div className={`p-10 ${tw.card} relative overflow-hidden`}>
+ <div className={`p-10 ${tw.glass-card} relative overflow-hidden`}>
  {/* Interior glow for depth */}
  <div className="absolute -top-24 -right-24 w-48 h-48 bg-brand-primary/[0.08] rounded-full blur-[80px] pointer-events-none" />
 
  <div className="mb-10 relative z-10">
- <h1 className="text-2xl font-bold text-content-primary mb-2 text-center tracking-tight uppercase">Acesse sua conta</h1>
- <p className="text-content-secondary text-sm font-medium text-center">Gestão patrimonial de elite em um só lugar.</p>
+ <h1 className="text-2xl font-bold text-[var(--text-primary)] mb-2 text-center tracking-tight uppercase">Acesse sua conta</h1>
+ <p className="text-[var(--text-secondary)] text-sm font-medium text-center">Gestão patrimonial de elite em um só lugar.</p>
  </div>
 
  {/* Custom Google Login Section */}
@@ -141,7 +141,7 @@ export default function Login() {
 
  <div className="flex items-center gap-4 mt-8 w-full">
  <span className="h-[1px] flex-1 bg-gray-800/40/5"></span>
- <p className="text-[10px] text-content-muted uppercase font-bold tracking-[0.2em] whitespace-nowrap">
+ <p className="text-[10px] text-[var(--text-muted)] uppercase font-bold tracking-[0.2em] whitespace-nowrap">
  Ou use seu ID MetaFin
  </p>
  <span className="h-[1px] flex-1 bg-gray-800/40/5"></span>
@@ -152,7 +152,7 @@ export default function Login() {
  {/* Formulário */}
  <form onSubmit={handleLogin} className="space-y-6 relative z-10">
  <div className="space-y-2">
- <label htmlFor="userId" className="block text-[10px] font-black text-content-muted ml-1 uppercase tracking-widest">
+ <label htmlFor="userId" className="block text-[10px] font-black text-[var(--text-muted)] ml-1 uppercase tracking-widest">
  Identificação (E-mail ou ID)
  </label>
  <input
@@ -164,7 +164,7 @@ export default function Login() {
  maxLength={100}
  autoComplete="username"
  placeholder="ex: usuario.metafin"
- className="w-full px-6 py-4 rounded-2xl bg-surface-secondary border border-[var(--border)] text-content-primary placeholder-slate-600 focus:outline-none focus:border-brand-primary/50 focus:bg-surface-secondary transition-all font-medium shadow-inner"
+ className="w-full px-6 py-4 rounded-2xl bg-[var(--bg-elevated)] border border-[var(--border)] text-[var(--text-primary)] placeholder-slate-600 focus:outline-none focus:border-brand-primary/50 focus:bg-[var(--bg-elevated)] transition-all font-medium shadow-inner"
  disabled={isLoading}
  />
  </div>
@@ -194,14 +194,14 @@ export default function Login() {
  </form>
 
  <div className="mt-10 pt-8 border-t border-[var(--border)] text-center relative z-10">
- <div className="flex items-center justify-center gap-2 text-content-muted text-[10px] font-black tracking-widest uppercase">
+ <div className="flex items-center justify-center gap-2 text-[var(--text-muted)] text-[10px] font-black tracking-widest uppercase">
  <Lock className="w-3.5 h-3.5 text-brand-primary/80" />
  <span>Protocolo Nexus: 256-bit AES</span>
  </div>
  </div>
  </div>
 
- <p className="mt-10 text-center text-content-muted text-xs font-bold">
+ <p className="mt-10 text-center text-[var(--text-muted)] text-xs font-bold">
  Ainda não possui conta? <Link to="/signup" className="text-brand-primary hover:text-brand-glow transition-colors ml-1 uppercase tracking-wider">Cadastre-se para a elite</Link>
  </p>
  </div>

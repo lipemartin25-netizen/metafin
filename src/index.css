@@ -522,18 +522,32 @@ body::before {
 }
 
 ::-webkit-scrollbar-thumb {
-    background: rgba(168, 85, 247, 0.3);
+    background: var(--brand-primary);
     border-radius: 3px;
+    opacity: 0.3;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: rgba(168, 85, 247, 0.5);
+    background: var(--brand-glow);
+    opacity: 0.5;
 }
 
 /* Selection */
 ::selection {
-    background-color: rgba(168, 85, 247, 0.3);
+    background-color: var(--brand-primary);
     color: white;
+}
+
+/* Botões Customizados */
+.btn-primary {
+    @apply px-6 py-3 text-white font-bold rounded-2xl transition-all duration-300 flex items-center justify-center gap-2;
+    background: linear-gradient(135deg, var(--brand-primary), var(--brand-glow));
+    box-shadow: 0 4px 15px var(--border-medium);
+}
+
+.btn-primary:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 25px var(--border-strong);
 }
 
 /* Garantir que NADA escape do dark theme */

@@ -1,8 +1,8 @@
-import { useMemo, useEffect } from 'react';
+import { useMemo, useEffect, useState } from 'react';
 import { useTransactions } from '../hooks/useTransactions';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
-import { Heart, TrendingUp, TrendingDown, AlertTriangle, CheckCircle, Shield, Lightbulb, ArrowRight, Leaf, Zap } from 'lucide-react';
+import { Heart, TrendingUp, TrendingDown, AlertTriangle, CheckCircle, Shield, Lightbulb, ArrowRight, Leaf, Zap, Sparkles } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { usePersistentState } from '../hooks/usePersistentState';
 import { calculateScore, calculateEcoImpact } from '../lib/scoreCalculator';
@@ -50,6 +50,10 @@ export default function FinancialHealth() {
 
     // Configuração flexível de orçamento por categoria (Híbrida: Supabase + LocalStorage)
     const [budgetGoals, setBudgetGoals] = usePersistentState('category_budgets', {}, { secure: false });
+
+    // AI Insights State
+    const [aiTips, setAiTips] = useState([]);
+    const [loadingAi, setLoadingAi] = useState(false);
 
     useEffect(() => {
         if (!user) return;
@@ -154,6 +158,61 @@ export default function FinancialHealth() {
         return { score, savingsRate, balance, income, expenses, topCategories, tips, totalCO2 };
     }, [transactions, summary]);
 
+    // Fetch AI Insights effect
+    useEffect(() => {
+        let isMounted = true;
+        async function fetchAiInsights() {
+            if (analysis.income === 0 && analysis.expenses === 0) return;
+
+            // Verifica o token JWT para enviar na requisição
+            const { data: { session } } = await supabase.auth.getSession();
+            const token = session?.access_token;
+            if (!token) return;
+
+            setLoadingAi(true);
+            try {
+                const response = await fetch('/api/health-insights', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        financialData: {
+                            income: analysis.income.toFixed(2),
+                            expenses: analysis.expenses.toFixed(2),
+                            balance: analysis.balance.toFixed(2),
+                            savingsRate: analysis.savingsRate.toFixed(1),
+                            topCategories: analysis.topCategories.map(c => c.cat)
+                        }
+                    })
+                });
+
+                if (response.ok && isMounted) {
+                    const data = await response.json();
+                    if (data && data.tips && Array.isArray(data.tips)) {
+                        setAiTips(data.tips);
+                    }
+                }
+            } catch (err) {
+                console.error("Erro ao buscar AI insights:", err);
+            } finally {
+                if (isMounted) setLoadingAi(false);
+            }
+        }
+
+        // Wait a small delay to avoid spamming the API on rapid re-renders
+        const timeout = setTimeout(() => {
+            fetchAiInsights();
+        }, 1000);
+
+        return () => {
+            isMounted = false;
+            clearTimeout(timeout);
+        };
+    }, [analysis.income, analysis.expenses, analysis.balance]);
+
+    const displayTips = aiTips.length > 0 ? aiTips : analysis.tips;
     const scoreColor = getScoreColor(analysis.score);
 
     return (
@@ -264,10 +323,15 @@ export default function FinancialHealth() {
                 {/* Tips & Recommendations */}
                 <div className="space-y-4">
                     <h3 className="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                        <Lightbulb className="w-5 h-5 text-yellow-500" /> Recomendações do Assistente
+                        {aiTips.length > 0 ? (
+                            <><Sparkles className="w-5 h-5 text-fuchsia-500" /> MetaFin AI Insights</>
+                        ) : (
+                            <><Lightbulb className="w-5 h-5 text-yellow-500" /> Recomendações</>
+                        )}
+                        {loadingAi && <RefreshCw className="w-4 h-4 text-gray-500 animate-spin ml-2" />}
                     </h3>
                     <div className="space-y-3">
-                        {analysis.tips.map((tip, i) => {
+                        {displayTips.map((tip, i) => {
                             const config = {
                                 success: { icon: CheckCircle, bg: 'bg-emerald-500/10 border-emerald-500/20', text: 'text-emerald-600 dark:text-emerald-400', ring: 'ring-emerald-500/20' },
                                 warning: { icon: AlertTriangle, bg: 'bg-yellow-500/10 border-yellow-500/20', text: 'text-yellow-600 dark:text-yellow-400', ring: 'ring-yellow-500/20' },

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Webhook, Plus, Bell, Target, Zap, RefreshCw, Heart, ArrowRight, Copy, CheckCircle } from 'lucide-react';
+import WebhookModal from '../components/WebhookModal';
 
 const WEBHOOK_EVENTS = [
     { id: 'transaction.created', label: 'Nova transação criada', icon: Zap, color: '#10B981', description: 'Disparado quando uma transação é adicionada (manual ou importação).' },
@@ -13,6 +14,12 @@ const WEBHOOK_EVENTS = [
 export default function Webhooks() {
     const [webhooks] = useState([]);
     const [copied, setCopied] = useState(false);
+    const [showModal, setShowModal] = useState(false);
+
+    const refreshWebhooks = async () => {
+        // Implementação futura de fetch
+        console.log('Atualizando lista de webhooks...');
+    };
 
     const samplePayload = `{
   "event": "transaction.created",
@@ -42,13 +49,13 @@ export default function Webhooks() {
                     </h1>
                     <p className="text-gray-400 text-sm">Integre o MetaFin com serviços externos via webhooks HTTP.</p>
                 </div>
-                <Link
-                    to="/app/settings"
-                    className="gradient-btn text-sm"
+                <button
+                    onClick={() => setShowModal(true)}
+                    className="gradient-btn text-sm px-4 py-2 flex items-center justify-center gap-2"
                 >
                     <Plus className="w-4 h-4" />
                     Novo Webhook
-                </Link>
+                </button>
             </div>
 
             {webhooks.length === 0 ? (
@@ -107,6 +114,14 @@ export default function Webhooks() {
                     para validar a autenticidade.
                 </p>
             </div>
+
+            <WebhookModal
+                isOpen={showModal}
+                onClose={() => setShowModal(false)}
+                onSuccess={() => {
+                    refreshWebhooks();
+                }}
+            />
         </div>
     );
 }

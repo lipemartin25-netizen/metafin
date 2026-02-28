@@ -4,33 +4,33 @@
  */
 
 const currencyFormatter = new Intl.NumberFormat('pt-BR', {
-    style: 'currency',
-    currency: 'BRL',
+ style: 'currency',
+ currency: 'BRL',
 });
 
 const dateFormatter = new Intl.DateTimeFormat('pt-BR', {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric',
+ day: '2-digit',
+ month: '2-digit',
+ year: 'numeric',
 });
 
 const dateTimeFormatter = new Intl.DateTimeFormat('pt-BR', {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
+ day: '2-digit',
+ month: '2-digit',
+ year: 'numeric',
+ hour: '2-digit',
+ minute: '2-digit',
 });
 
 const percentFormatter = new Intl.NumberFormat('pt-BR', {
-    style: 'percent',
-    minimumFractionDigits: 1,
-    maximumFractionDigits: 1,
+ style: 'percent',
+ minimumFractionDigits: 1,
+ maximumFractionDigits: 1,
 });
 
 const compactFormatter = new Intl.NumberFormat('pt-BR', {
-    notation: 'compact',
-    compactDisplay: 'short',
+ notation: 'compact',
+ compactDisplay: 'short',
 });
 
 /**
@@ -39,10 +39,10 @@ const compactFormatter = new Intl.NumberFormat('pt-BR', {
  * @returns {string} Valor formatado (ex: R$ 1.234,56)
  */
 export const formatCurrency = (value) => {
-    if (value === null || value === undefined || isNaN(value)) {
-        return 'R$ 0,00';
-    }
-    return currencyFormatter.format(value);
+ if (value === null || value === undefined || isNaN(value)) {
+ return 'R$ 0,00';
+ }
+ return currencyFormatter.format(value);
 };
 
 /**
@@ -51,12 +51,12 @@ export const formatCurrency = (value) => {
  * @returns {string} Data formatada (ex: 26/02/2026)
  */
 export const formatDate = (date) => {
-    if (!date) return '-';
-    try {
-        return dateFormatter.format(new Date(date));
-    } catch {
-        return '-';
-    }
+ if (!date) return '-';
+ try {
+ return dateFormatter.format(new Date(date));
+ } catch {
+ return '-';
+ }
 };
 
 /**
@@ -65,12 +65,12 @@ export const formatDate = (date) => {
  * @returns {string} Data e hora formatadas
  */
 export const formatDateTime = (date) => {
-    if (!date) return '-';
-    try {
-        return dateTimeFormatter.format(new Date(date));
-    } catch {
-        return '-';
-    }
+ if (!date) return '-';
+ try {
+ return dateTimeFormatter.format(new Date(date));
+ } catch {
+ return '-';
+ }
 };
 
 /**
@@ -79,10 +79,10 @@ export const formatDateTime = (date) => {
  * @returns {string} Porcentagem formatada
  */
 export const formatPercent = (value) => {
-    if (value === null || value === undefined || isNaN(value)) {
-        return '0,0%';
-    }
-    return percentFormatter.format(value / 100);
+ if (value === null || value === undefined || isNaN(value)) {
+ return '0,0%';
+ }
+ return percentFormatter.format(value / 100);
 };
 
 /**
@@ -91,10 +91,10 @@ export const formatPercent = (value) => {
  * @returns {string} Valor compactado (ex: 1,2 mi)
  */
 export const formatCompact = (value) => {
-    if (value === null || value === undefined || isNaN(value)) {
-        return '0';
-    }
-    return compactFormatter.format(value);
+ if (value === null || value === undefined || isNaN(value)) {
+ return '0';
+ }
+ return compactFormatter.format(value);
 };
 
 /**
@@ -103,17 +103,17 @@ export const formatCompact = (value) => {
  * @returns {string} Valor com sinal
  */
 export const formatSignedCurrency = (value) => {
-    const formatted = formatCurrency(Math.abs(value));
-    if (value > 0) return `+${formatted}`;
-    if (value < 0) return `-${formatted}`;
-    return formatted;
+ const formatted = formatCurrency(Math.abs(value));
+ if (value > 0) return `+${formatted}`;
+ if (value < 0) return `-${formatted}`;
+ return formatted;
 };
 
 export default {
-    formatCurrency,
-    formatDate,
-    formatDateTime,
-    formatPercent,
-    formatCompact,
-    formatSignedCurrency,
+ formatCurrency,
+ formatDate,
+ formatDateTime,
+ formatPercent,
+ formatCompact,
+ formatSignedCurrency,
 };

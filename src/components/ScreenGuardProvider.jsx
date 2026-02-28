@@ -6,7 +6,7 @@ import { useAuth } from '../contexts/AuthContext';
  * Deve envolver o <Layout /> dentro do <ProtectedRoute>.
  */
 export default function ScreenGuardProvider({ children }) {
-    const { user } = useAuth();
-    useScreenGuard(user?.email ?? '');
-    return <>{children}</>;
+ const { user } = useAuth();
+ useScreenGuard(user?.email ?? '');
+ return <>{children}</>;
 }

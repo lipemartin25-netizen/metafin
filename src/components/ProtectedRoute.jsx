@@ -7,23 +7,23 @@ import PageLoader from './PageLoader'
  * Redireciona para /login mantendo a URL original para redirect pós-login.
  */
 export default function ProtectedRoute({ children, redirectTo = '/login' }) {
-    const { user, loading } = useAuth()
-    const location = useLocation()
+ const { user, loading } = useAuth()
+ const location = useLocation()
 
-    if (loading) {
-        return <PageLoader message="Verificando acesso..." />
-    }
+ if (loading) {
+ return <PageLoader message="Verificando acesso..." />
+ }
 
-    if (!user) {
-        // Salva a URL atual para redirect após login
-        return (
-            <Navigate
-                to={redirectTo}
-                state={{ from: location.pathname }}
-                replace
-            />
-        )
-    }
+ if (!user) {
+ // Salva a URL atual para redirect após login
+ return (
+ <Navigate
+ to={redirectTo}
+ state={{ from: location.pathname }}
+ replace
+ />
+ )
+ }
 
-    return children
+ return children
 }

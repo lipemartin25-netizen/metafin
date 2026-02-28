@@ -21,34 +21,34 @@ const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || import.meta.env.
 
 // Inicialização de serviços core
 async function initCore() {
-  try {
-    // 1. Analytics
-    initAnalytics();
+ try {
+ // 1. Analytics
+ initAnalytics();
 
-    // 2. Feature Flags
-    await initFeatureFlags();
+ // 2. Feature Flags
+ await initFeatureFlags();
 
-    // 3. LGPD & Bootstrap Logic
-    const { enforceRetentionPolicy } = await import('./lib/lgpd.js');
-    setTimeout(() => enforceRetentionPolicy(365), 5000);
+ // 3. LGPD & Bootstrap Logic
+ const { enforceRetentionPolicy } = await import('./lib/lgpd.js');
+ setTimeout(() => enforceRetentionPolicy(365), 5000);
 
-    // 4. Service Worker (PWA)
-    if ('serviceWorker' in navigator && import.meta.env.PROD) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw-custom.js')
-          .catch(err => console.error('SW registration failed:', err));
-      });
-    }
+ // 4. Service Worker (PWA)
+ if ('serviceWorker' in navigator && import.meta.env.PROD) {
+ window.addEventListener('load', () => {
+ navigator.serviceWorker.register('/sw-custom.js')
+ .catch(err => console.error('SW registration failed:', err));
+ });
+ }
 
-    // 5. Listener global para sessões expiradas
-    window.addEventListener('metafin:session-expired', () => {
-      sessionStorage.clear();
-      window.location.href = '/login?expired=true';
-    });
+ // 5. Listener global para sessões expiradas
+ window.addEventListener('metafin:session-expired', () => {
+ sessionStorage.clear();
+ window.location.href = '/login?expired=true';
+ });
 
-  } catch (err) {
-    console.error('[MetaFin] Boot Error:', err);
-  }
+ } catch (err) {
+ console.error('[MetaFin] Boot Error:', err);
+ }
 }
 
 // Executar inicialização
@@ -57,24 +57,24 @@ initCore();
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
-  <ErrorBoundary>
-    <BrowserRouter>
-      <GoogleOAuthProvider clientId={googleClientId}>
-        <ThemeProvider>
-          <LanguageProvider>
-            <VisibilityProvider>
-              <AuthProvider>
-                <A11yProvider>
-                  <ToastProvider>
-                    <SkipLinks />
-                    <App />
-                  </ToastProvider>
-                </A11yProvider>
-              </AuthProvider>
-            </VisibilityProvider>
-          </LanguageProvider>
-        </ThemeProvider>
-      </GoogleOAuthProvider>
-    </BrowserRouter>
-  </ErrorBoundary>
+ <ErrorBoundary>
+ <BrowserRouter>
+ <GoogleOAuthProvider clientId={googleClientId}>
+ <ThemeProvider>
+ <LanguageProvider>
+ <VisibilityProvider>
+ <AuthProvider>
+ <A11yProvider>
+ <ToastProvider>
+ <SkipLinks />
+ <App />
+ </ToastProvider>
+ </A11yProvider>
+ </AuthProvider>
+ </VisibilityProvider>
+ </LanguageProvider>
+ </ThemeProvider>
+ </GoogleOAuthProvider>
+ </BrowserRouter>
+ </ErrorBoundary>
 );

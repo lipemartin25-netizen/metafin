@@ -7,17 +7,17 @@ import { useState, useEffect, useRef, useCallback } from 'react';
  * @returns {any} Valor debounced
  */
 export function useDebounce(value, delay = 300) {
-    const [debouncedValue, setDebouncedValue] = useState(value);
+ const [debouncedValue, setDebouncedValue] = useState(value);
 
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            setDebouncedValue(value);
-        }, delay);
+ useEffect(() => {
+ const timer = setTimeout(() => {
+ setDebouncedValue(value);
+ }, delay);
 
-        return () => clearTimeout(timer);
-    }, [value, delay]);
+ return () => clearTimeout(timer);
+ }, [value, delay]);
 
-    return debouncedValue;
+ return debouncedValue;
 }
 
 /**
@@ -27,49 +27,49 @@ export function useDebounce(value, delay = 300) {
  * @returns {Function} Função debounced
  */
 export function useDebouncedCallback(callback, delay = 300) {
-    const timeoutRef = useRef(null);
-    const callbackRef = useRef(callback);
+ const timeoutRef = useRef(null);
+ const callbackRef = useRef(callback);
 
-    // Atualizar ref quando callback mudar
-    useEffect(() => {
-        callbackRef.current = callback;
-    }, [callback]);
+ // Atualizar ref quando callback mudar
+ useEffect(() => {
+ callbackRef.current = callback;
+ }, [callback]);
 
-    // Limpar timeout no unmount
-    useEffect(() => {
-        return () => {
-            if (timeoutRef.current) {
-                clearTimeout(timeoutRef.current);
-            }
-        };
-    }, []);
+ // Limpar timeout no unmount
+ useEffect(() => {
+ return () => {
+ if (timeoutRef.current) {
+ clearTimeout(timeoutRef.current);
+ }
+ };
+ }, []);
 
-    const debouncedCallback = useCallback((...args) => {
-        if (timeoutRef.current) {
-            clearTimeout(timeoutRef.current);
-        }
+ const debouncedCallback = useCallback((...args) => {
+ if (timeoutRef.current) {
+ clearTimeout(timeoutRef.current);
+ }
 
-        timeoutRef.current = setTimeout(() => {
-            callbackRef.current(...args);
-        }, delay);
-    }, [delay]);
+ timeoutRef.current = setTimeout(() => {
+ callbackRef.current(...args);
+ }, delay);
+ }, [delay]);
 
-    // Função para cancelar o debounce pendente
-    const cancel = useCallback(() => {
-        if (timeoutRef.current) {
-            clearTimeout(timeoutRef.current);
-        }
-    }, []);
+ // Função para cancelar o debounce pendente
+ const cancel = useCallback(() => {
+ if (timeoutRef.current) {
+ clearTimeout(timeoutRef.current);
+ }
+ }, []);
 
-    // Função para executar imediatamente
-    const flush = useCallback((...args) => {
-        if (timeoutRef.current) {
-            clearTimeout(timeoutRef.current);
-        }
-        callbackRef.current(...args);
-    }, []);
+ // Função para executar imediatamente
+ const flush = useCallback((...args) => {
+ if (timeoutRef.current) {
+ clearTimeout(timeoutRef.current);
+ }
+ callbackRef.current(...args);
+ }, []);
 
-    return { debouncedCallback, cancel, flush };
+ return { debouncedCallback, cancel, flush };
 }
 
 export default useDebounce;

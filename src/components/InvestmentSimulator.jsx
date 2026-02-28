@@ -116,7 +116,7 @@ export default function InvestmentSimulator({ financialData }) {
  </div>
 
  {/* Inputs */}
- <div className={`rounded - 3xl border border - gray - 700 / 40 dark: border - white / 10 \${ tw.glass-card } p - 6 shadow - lg shadow - black / 10`}>
+ <div className={`rounded - 3xl border border - gray - 700 / 40 dark: border - white / 10 \${ tw.card } p - 6 shadow - lg shadow - black / 10`}>
  <h3 className="font-bold mb-6 flex items-center gap-2 text-[var(--text-primary)] dark:text-[var(--text-primary)]">
  <DollarSign className="h-5 w-5 text-brand-primary" /> Parâmetros da Simulação
  </h3>
@@ -218,7 +218,7 @@ transition - all border ${params.months === opt.value
 
  {/* Gráfico comparativo (barras) */}
  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-fade-in">
- <div className={`rounded - 3xl border border - gray - 700 / 40 dark: border - white / 10 \${ tw.glass-card } p - 6 shadow - lg shadow - black / 10`}>
+ <div className={`rounded - 3xl border border - gray - 700 / 40 dark: border - white / 10 \${ tw.card } p - 6 shadow - lg shadow - black / 10`}>
  <h3 className="font-bold mb-6 flex items-center gap-2 text-[var(--text-primary)] dark:text-[var(--text-primary)]">
  <TrendingUp className="h-5 w-5 text-brand-primary" /> Lucro Líquido por Investimento
  </h3>
@@ -265,7 +265,7 @@ transition - all border ${params.months === opt.value
  </div>
 
  {/* Gráfico de evolução (linhas) */}
- <div className={`rounded - 3xl border border - gray - 700 / 40 dark: border - white / 10 \${ tw.glass-card } p - 6 shadow - lg shadow - black / 10`}>
+ <div className={`rounded - 3xl border border - gray - 700 / 40 dark: border - white / 10 \${ tw.card } p - 6 shadow - lg shadow - black / 10`}>
  <h3 className="font-bold mb-6 flex items-center gap-2 text-[var(--text-primary)] dark:text-[var(--text-primary)]">
  <Clock className="h-5 w-5 text-blue-500" /> Evolução ao Longo do Tempo
  </h3>
@@ -320,7 +320,7 @@ transition - all border ${params.months === opt.value
  </div>
 
  {/* Tabela detalhada */}
- <div className={`rounded - 3xl border border - gray - 700 / 40 dark: border - white / 10 \${ tw.glass-card } p - 6 shadow - lg shadow - black / 10 overflow - hidden`}>
+ <div className={`rounded - 3xl border border - gray - 700 / 40 dark: border - white / 10 \${ tw.card } p - 6 shadow - lg shadow - black / 10 overflow - hidden`}>
  <h3 className="font-bold mb-6 flex items-center gap-2 text-[var(--text-primary)] dark:text-[var(--text-primary)]">
  <AlertTriangle className="h-5 w-5 text-brand-primary" /> Comparativo Detalhado (Risco vs Retorno)
  </h3>

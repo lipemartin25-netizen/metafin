@@ -198,7 +198,7 @@ export default function Simulators({ financialData }) {
  <button
  key={sim.id}
  onClick={() => setActiveSimulator(sim.id)}
- className={`group relative overflow-hidden rounded-[1.5rem] ${tw.glass-card} border-none
+ className={`group relative overflow-hidden rounded-[1.5rem] ${tw.card} border-none
  ${sim.bgLight} ${sim.bgDark}
  p-4 text-left transition-all duration-500 ease-out transform-gpu
  hover:shadow-glass-card dark:hover:shadow-glass-card

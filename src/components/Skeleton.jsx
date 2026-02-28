@@ -46,7 +46,7 @@ export function SkeletonAvatar({ size = 'md', className = '' }) {
 // Skeleton para glass-card
 export function SkeletonCard({ className = '' }) {
  return (
- <div className={`${tw.glass-card} p-6 space-y-4 ${className}`}>
+ <div className={`${tw.card} p-6 space-y-4 ${className}`}>
  <div className="flex items-center gap-4">
  <SkeletonAvatar size="md" />
  <div className="flex-1 space-y-2">
@@ -87,7 +87,7 @@ export function SkeletonTransactionList({ count = 5, className = '' }) {
 // Skeleton para gráfico
 export function SkeletonChart({ className = '' }) {
  return (
- <div className={`${tw.glass-card} p-6 ${className}`}>
+ <div className={`${tw.card} p-6 ${className}`}>
  <Skeleton className="h-6 w-1/3 mb-4" />
  <div className="flex items-end gap-2 h-48">
  {Array.from({ length: 7 }).map((_, i) => (
@@ -109,7 +109,7 @@ export function SkeletonDashboard() {
  {/* Cards de resumo */}
  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 animate-fade-in">
  {Array.from({ length: 3 }).map((_, i) => (
- <div key={i} className={`\${tw.glass-card} p-6`}>
+ <div key={i} className={`\${tw.card} p-6`}>
  <Skeleton className="h-4 w-1/2 mb-3" />
  <Skeleton className="h-8 w-3/4 mb-2" />
  <Skeleton className="h-3 w-1/3" />
@@ -121,7 +121,7 @@ export function SkeletonDashboard() {
  <SkeletonChart />
 
  {/* Lista */}
- <div className={`\${tw.glass-card}`}>
+ <div className={`\${tw.card}`}>
  <div className="p-4 border-b border-gray-700/40 dark:border-[var(--border)]">
  <Skeleton className="h-5 w-1/4" />
  </div>

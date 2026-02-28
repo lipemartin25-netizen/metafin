@@ -27,7 +27,7 @@ export default function GoalThermometer({ goal }) {
  };
 
  return (
- <div className={`relative rounded-2xl border p-5 \${tw.glass-card} shadow-lg shadow-black/10 hover:shadow-lg transition-all duration-300 group overflow-hidden`}>
+ <div className={`relative rounded-2xl border p-5 \${tw.card} shadow-lg shadow-black/10 hover:shadow-lg transition-all duration-300 group overflow-hidden`}>
 
  {pct >= 100 && (
  <div className="absolute -top-2 -right-2">

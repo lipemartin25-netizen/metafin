@@ -46,7 +46,7 @@ export class ErrorBoundary extends Component {
  if (this.state.hasError) {
  return (
  <div className="min-h-screen flex items-center justify-center bg-gray-800/30 dark:bg-surface-950 p-4">
- <div className={`\${tw.glass-card} text-center max-w-md w-full p-8`}>
+ <div className={`\${tw.card} text-center max-w-md w-full p-8`}>
  {/* Ícone de erro */}
  <div className="w-20 h-20 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-6 ring-4 ring-red-500/20">
  <AlertTriangle className="w-10 h-10 text-red-400" />

@@ -161,7 +161,7 @@ export default function AiChat() {
  onClick={() => setIsOpen(false)}
  >
  <div
- className={`\${tw.glass-card} w-full max-w-md text-center animate-slide-up relative overflow-hidden bg-gray-900 border-brand-primary/30`}
+ className={`\${tw.card} w-full max-w-md text-center animate-slide-up relative overflow-hidden bg-gray-900 border-brand-primary/30`}
  onClick={(e) => e.stopPropagation()}
  >
  <button

@@ -175,7 +175,7 @@ export default function Investments() {
 
  {/* Portfolio Summary */}
  <div className="grid md:grid-cols-3 gap-6 animate-fade-in">
- <div className={`\${tw.glass-card} col-span-2 relative overflow-hidden`}>
+ <div className={`\${tw.card} col-span-2 relative overflow-hidden`}>
  <div className="absolute top-0 right-0 p-4 opacity-5">
  <Building2 className="w-32 h-32 text-brand-primary" />
  </div>
@@ -193,7 +193,7 @@ export default function Investments() {
  )}
  </div>
 
- <div className={`\${tw.glass-card} flex flex-col justify-center items-center relative`}>
+ <div className={`\${tw.card} flex flex-col justify-center items-center relative`}>
  <h3 className="text-sm font-semibold text-[var(--text-secondary)] absolute top-4 left-4">Alocação</h3>
  {portfolio.total > 0 ? (
  <div className="w-full h-[160px]">
@@ -218,7 +218,7 @@ export default function Investments() {
 
  {/* Evolution Chart — só exibe se tiver dados */}
  {evolutionData.length > 0 && (
- <div className={`\${tw.glass-card} p-6`}>
+ <div className={`\${tw.card} p-6`}>
  <div className="flex items-center justify-between mb-6">
  <div>
  <h3 className="text-lg font-semibold text-[var(--text-primary)]">Evolução do Patrimônio</h3>
@@ -264,7 +264,7 @@ export default function Investments() {
  </h3>
 
  {connectedBrokers.length === 0 ? (
- <div className={`\${tw.glass-card} text-center py-12 border-dashed border-2 border-[var(--border)]`}>
+ <div className={`\${tw.card} text-center py-12 border-dashed border-2 border-[var(--border)]`}>
  <div className="w-16 h-16 rounded-full bg-brand-primary/10 mx-auto flex items-center justify-center mb-4">
  <Plug className="w-8 h-8 text-brand-glow" />
  </div>
@@ -276,7 +276,7 @@ export default function Investments() {
  ) : (
  <div className="grid gap-4 animate-fade-in">
  {connectedBrokers.map(broker => (
- <div key={broker.id} className={`\${tw.glass-card}`}>
+ <div key={broker.id} className={`\${tw.card}`}>
  <div className="flex items-center justify-between mb-4 border-b border-[var(--border)] pb-4">
  <div className="flex items-center gap-3">
  <div className="w-10 h-10 rounded-xl flex items-center justify-center font-bold shadow-lg text-[var(--text-primary)]" style={{ backgroundColor: broker.color || '#6b7280' }}>
@@ -354,7 +354,7 @@ export default function Investments() {
  <div className="grid sm:grid-cols-2 gap-4 mt-6 animate-fade-in">
  <button
  onClick={() => setShowB3Modal(true)}
- className={`\${tw.glass-card} p-4 flex items-center gap-4 bg-[var(--bg-base)] from-yellow-500/5 to-transparent border-yellow-500/20 hover:border-yellow-500/50 transition-all group text-left`}
+ className={`\${tw.card} p-4 flex items-center gap-4 bg-[var(--bg-base)] from-yellow-500/5 to-transparent border-yellow-500/20 hover:border-yellow-500/50 transition-all group text-left`}
  >
  <div className="w-12 h-12 rounded-xl bg-yellow-500 text-[var(--text-primary)] flex items-center justify-center font-bold text-xl shadow-lg shadow-yellow-500/20 group-hover:-translate-y-px transition-transform transition-transform">B3</div>
  <div className="flex-1">
@@ -365,7 +365,7 @@ export default function Investments() {
  </div>
  </button>
 
- <div className={`\${tw.glass-card} p-4 flex items-center gap-4 bg-[var(--bg-base)] from-brand-primary/5 to-transparent border-brand-primary/20`}>
+ <div className={`\${tw.card} p-4 flex items-center gap-4 bg-[var(--bg-base)] from-brand-primary/5 to-transparent border-brand-primary/20`}>
  <div className="w-12 h-12 rounded-xl bg-brand-primary text-[var(--text-primary)] flex items-center justify-center shadow-lg">
  <ShieldCheck className="w-6 h-6" />
  </div>

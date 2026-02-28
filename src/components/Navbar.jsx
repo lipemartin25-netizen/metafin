@@ -39,7 +39,7 @@ export default function Navbar() {
  {langMenuOpen && (
  <>
  <div className="fixed inset-0 z-10" onClick={() => setLangMenuOpen(false)} />
- <div className={`absolute right-0 mt-2 w-40 \${tw.glass-card} p-1 z-20 shadow-elevated border border-[var(--border)]`}>
+ <div className={`absolute right-0 mt-2 w-40 \${tw.card} p-1 z-20 shadow-elevated border border-[var(--border)]`}>
  {Object.keys(FLAGS).map((code) => (
  <button
  key={code}

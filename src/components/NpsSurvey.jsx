@@ -44,7 +44,7 @@ export default function NpsSurvey({ onClose }) {
 
  return (
  <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4 bg-black/50 animate-fade-in">
- <div className={`\${tw.glass-card} w-full max-w-md animate-slide-up`}>
+ <div className={`\${tw.card} w-full max-w-md animate-slide-up`}>
  {submitted ? (
  <div className="text-center py-8">
  <div className="text-4xl mb-4">🎉</div>

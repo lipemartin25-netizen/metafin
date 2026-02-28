@@ -261,7 +261,7 @@ export default function Home() {
  desc: "Conformidade total com as regulamentações BACEN e LGPD para uma proteção de dados em nível de estado-da-arte."
  }
  ].map((feature, i) => (
- <div key={i} className={`p-10 ${tw.glass-card} transition-all duration-500 group`}>
+ <div key={i} className={`p-10 ${tw.card} transition-all duration-500 group`}>
  <div className="w-16 h-16 rounded-2xl bg-[var(--bg-elevated)] flex items-center justify-center mb-8 border border-[var(--border)] group-hover:bg-brand-primary/10 group-hover:border-brand-glow/20 transition-all duration-500">
  {feature.icon}
  </div>
@@ -283,7 +283,7 @@ export default function Home() {
 
  <div className="grid lg:grid-cols-3 gap-8 animate-fade-in">
  {plans.map((plan, i) => (
- <div key={i} className={`p-10 ${tw.glass-card} transition-all duration-500 flex flex-col relative ${plan.popular ? 'border-brand-primary/40 ring-1 ring-emerald-500/20 scale-105 z-10' : ''}`}>
+ <div key={i} className={`p-10 ${tw.card} transition-all duration-500 flex flex-col relative ${plan.popular ? 'border-brand-primary/40 ring-1 ring-emerald-500/20 scale-105 z-10' : ''}`}>
  {plan.popular && (
  <div className="absolute top-10 right-10">
  <span className="bg-brand-primary text-slate-950 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.1em]">

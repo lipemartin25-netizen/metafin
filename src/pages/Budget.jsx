@@ -212,15 +212,15 @@ export default function Budget() {
 
  {/* Summary */}
  <div className="grid sm:grid-cols-3 gap-4 animate-fade-in">
- <div className={`\${tw.glass-card}`}>
+ <div className={`\${tw.card}`}>
  <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Orçamento Total</p>
  <p className="text-2xl font-bold text-[var(--text-primary)] dark:text-[var(--text-primary)]">{fmt(totalBudget)}</p>
  </div>
- <div className={`\${tw.glass-card}`}>
+ <div className={`\${tw.card}`}>
  <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Gasto Este Mês</p>
  <p className="text-2xl font-bold text-red-500">{fmt(totalSpent)}</p>
  </div>
- <div className={`\${tw.glass-card}`}>
+ <div className={`\${tw.card}`}>
  <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Disponível</p>
  <p className={`text-2xl font-bold ${totalBudget - totalSpent >= 0 ? 'text-brand-primary' : 'text-red-500'}`}>{fmt(totalBudget - totalSpent)}</p>
  {totalBudget > 0 && (
@@ -234,7 +234,7 @@ export default function Budget() {
 
  {/* Budget Items */}
  {budgets.length === 0 ? (
- <div className={`\${tw.glass-card} text-center py-12 border-dashed border-2 border-gray-700/40 dark:border-[var(--border)] bg-transparent relative overflow-hidden`}>
+ <div className={`\${tw.card} text-center py-12 border-dashed border-2 border-gray-700/40 dark:border-[var(--border)] bg-transparent relative overflow-hidden`}>
  <div className="absolute inset-0 bg-[var(--bg-base)] from-transparent to-pink-500/5 pointer-events-none" />
  <PiggyBank className="w-12 h-12 text-pink-500 mx-auto mb-4 opacity-50 relative z-10" />
  <h4 className="text-[var(--text-primary)] dark:text-[var(--text-primary)] font-medium mb-1 relative z-10">Nenhum orçamento definido</h4>
@@ -253,7 +253,7 @@ export default function Budget() {
  const remaining = budget.limit - spent;
 
  return (
- <div key={budget.id} className={`${tw.glass-card} ${over ? 'border-red-500/30 bg-red-500/5' : ''}`}>
+ <div key={budget.id} className={`${tw.card} ${over ? 'border-red-500/30 bg-red-500/5' : ''}`}>
  <div className="flex items-center justify-between mb-3">
  <div className="flex items-center gap-3">
  <div className="w-10 h-10 rounded-xl flex items-center justify-center text-lg" style={{ backgroundColor: `${cat?.color || '#6b7280'}15` }}>

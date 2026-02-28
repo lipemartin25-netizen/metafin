@@ -177,15 +177,15 @@ export default function Goals() {
 
  {/* Summary Block */}
  <div className="flex flex-wrap gap-4 items-stretch">
- <div className={`\${tw.glass-card} flex-1 min-w-[140px] relative overflow-hidden p-5 flex flex-col justify-center`}>
+ <div className={`\${tw.card} flex-1 min-w-[140px] relative overflow-hidden p-5 flex flex-col justify-center`}>
  <p className="text-[10px] text-gray-500 dark:text-gray-400 font-black uppercase tracking-[0.15em] mb-1">Total em Metas</p>
  <p className="text-2xl md:text-3xl font-black text-brand-600 dark:text-brand-400 drop-shadow-lg shadow-black/10">{fmt(totalSaved)}</p>
  </div>
- <div className={`\${tw.glass-card} flex-1 min-w-[140px] relative p-5 flex flex-col justify-center`}>
+ <div className={`\${tw.card} flex-1 min-w-[140px] relative p-5 flex flex-col justify-center`}>
  <p className="text-[10px] text-gray-500 dark:text-gray-400 font-black uppercase tracking-[0.15em] mb-1">Atingimento Alvo</p>
  <p className="text-2xl md:text-3xl font-black text-[var(--text-primary)] dark:text-[var(--text-primary)] drop-shadow-lg shadow-black/10">{fmt(totalTarget)}</p>
  </div>
- <div className={`\${tw.glass-card} flex-1 min-w-[140px] relative p-5 flex flex-col justify-center`}>
+ <div className={`\${tw.card} flex-1 min-w-[140px] relative p-5 flex flex-col justify-center`}>
  <p className="flex justify-between text-[10px] text-gray-500 dark:text-gray-400 font-black uppercase tracking-[0.15em] mb-2">
  <span>Eficiência</span>
  <span className="text-blue-500">{totalTarget > 0 ? Math.round((totalSaved / totalTarget) * 100) : 0}%</span>
@@ -203,7 +203,7 @@ export default function Goals() {
  <p className="text-sm font-medium animate-pulse text-gray-500">Calculando trajetórias...</p>
  </div>
  ) : goals.length === 0 ? (
- <div className={`\${tw.glass-card} text-center py-16 border-dashed border-2 border-gray-700/40 dark:border-[var(--border)] bg-transparent hover:bg-gray-800/40/5 transition-colors cursor-pointer group`} onClick={() => setShowAdd(true)}>
+ <div className={`\${tw.card} text-center py-16 border-dashed border-2 border-gray-700/40 dark:border-[var(--border)] bg-transparent hover:bg-gray-800/40/5 transition-colors cursor-pointer group`} onClick={() => setShowAdd(true)}>
  <Target className="w-16 h-16 text-brand-500/50 mx-auto mb-4 group-hover:-translate-y-px transition-transform group-hover:text-brand-500 transition-all" />
  <h4 className="text-lg text-[var(--text-primary)] dark:text-[var(--text-primary)] font-bold mb-2">Seu portfólio de metas está vazio</h4>
  <p className="text-gray-500 text-sm mb-6 max-w-sm mx-auto">Use a inteligência baseada em objetivos para focar nas grandes faturas: viagens, carros, casas, ou sua liberdade.</p>
@@ -241,7 +241,7 @@ export default function Goals() {
 
  {showAdd && (
  <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 animate-fade-in">
- <form onSubmit={handleSubmit} className={`\${tw.glass-card} w-full max-w-md p-6 space-y-4 animate-slide-up relative z-10 border border-[var(--border)] shadow-elevated`}>
+ <form onSubmit={handleSubmit} className={`\${tw.card} w-full max-w-md p-6 space-y-4 animate-slide-up relative z-10 border border-[var(--border)] shadow-elevated`}>
  <button type="button" onClick={resetForm} className="absolute top-4 right-4 text-gray-500 hover:text-[var(--text-primary)] dark:hover:text-[var(--text-primary)] bg-gray-800/40 dark:bg-gray-800/40/5 p-1 rounded-full transition-colors"><X className="w-5 h-5" /></button>
  <h2 className="text-xl font-black text-[var(--text-primary)] dark:text-[var(--text-primary)] flex items-center gap-2 mb-6">
  <Target className="w-6 h-6 text-brand-500" /> {editId ? 'Configurar Meta' : 'Plano de Atingimento'}

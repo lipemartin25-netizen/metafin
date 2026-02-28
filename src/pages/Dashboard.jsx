@@ -91,7 +91,7 @@ export default function Dashboard() {
  </div>
 
  <div className="grid sm:grid-cols-3 gap-4 animate-fade-in">
- <div className={`\${tw.glass-card} relative overflow-hidden group border-brand-primary/20 bg-[var(--bg-base)] from-surface-900 to-emerald-950/20`}>
+ <div className={`\${tw.card} relative overflow-hidden group border-brand-primary/20 bg-[var(--bg-base)] from-surface-900 to-emerald-950/20`}>
  <div className="flex items-center justify-between relative z-10">
  <div>
  <p className="text-gray-400 text-xs font-bold uppercase tracking-wider mb-2">{t('total_balance')}</p>
@@ -103,14 +103,14 @@ export default function Dashboard() {
  </div>
  </div>
 
- <div className={`\${tw.glass-card} group border-brand-primary/20`}>
+ <div className={`\${tw.card} group border-brand-primary/20`}>
  <div className="flex items-center justify-between">
  <div><p className="text-gray-400 text-xs font-bold uppercase tracking-wider mb-1">{t('income')}</p><h2 className="text-2xl font-bold text-brand-glow">{fmt(summary.totalIncome)}</h2></div>
  <div className="w-10 h-10 rounded-xl bg-brand-primary/10 flex items-center justify-center group-hover:bg-brand-primary/20 transition-colors"><TrendingUp className="w-5 h-5 text-brand-glow" /></div>
  </div>
  </div>
 
- <div className={`\${tw.glass-card} group border-rose-500/20`}>
+ <div className={`\${tw.card} group border-rose-500/20`}>
  <div className="flex items-center justify-between">
  <div><p className="text-gray-400 text-xs font-bold uppercase tracking-wider mb-1">{t('expenses')}</p><h2 className="text-2xl font-bold text-rose-400">{fmt(summary.totalExpenses)}</h2></div>
  <div className="w-10 h-10 rounded-xl bg-rose-500/10 flex items-center justify-center group-hover:bg-rose-500/20 transition-colors"><TrendingDown className="w-5 h-5 text-rose-400" /></div>
@@ -120,7 +120,7 @@ export default function Dashboard() {
 
  {/* Charts Grid */}
  <div className="grid lg:grid-cols-3 gap-6 animate-fade-in">
- <div className={`\${tw.glass-card} lg:col-span-2 p-6`}>
+ <div className={`\${tw.card} lg:col-span-2 p-6`}>
  <div className="flex items-center justify-between mb-8">
  <h3 className="text-lg font-bold text-[var(--text-primary)] flex items-center gap-2 uppercase tracking-tight"><TrendingUp className="w-5 h-5 text-brand-glow" /> {t('cash_flow')}</h3>
  <div className="flex gap-2">
@@ -147,7 +147,7 @@ export default function Dashboard() {
  </div>
  </div>
 
- <div className={`\${tw.glass-card} p-6`}>
+ <div className={`\${tw.card} p-6`}>
  <h3 className="text-lg font-bold text-[var(--text-primary)] mb-8 uppercase tracking-tight">{t('expenses_by_category')}</h3>
  <div className="h-[200px]">
  {categoryData.length > 0 ? (
@@ -178,7 +178,7 @@ export default function Dashboard() {
  </div>
 
  {/* Recent Transactions */}
- <div className={`\${tw.glass-card} p-0 overflow-hidden flex flex-col border-[var(--border)]`}>
+ <div className={`\${tw.card} p-0 overflow-hidden flex flex-col border-[var(--border)]`}>
  <div className="p-6 border-b border-[var(--border)] flex items-center justify-between">
  <h3 className="text-lg font-bold text-[var(--text-primary)] uppercase tracking-tight">{t('recent_transactions')}</h3>
  <Link to="/app/transactions" className="text-xs text-brand-glow hover:text-purple-300 font-bold uppercase tracking-widest transition-colors">{t('see_all')}</Link>
@@ -214,7 +214,7 @@ export default function Dashboard() {
 
  {/* AI Insights Section */}
  <ProGate feature="aiInsights">
- <div className={`\${tw.glass-card} border border-brand-primary/10 p-6 flex flex-col md:flex-row gap-8 items-center bg-[var(--bg-base)] from-surface-900 to-emerald-950/10`}>
+ <div className={`\${tw.card} border border-brand-primary/10 p-6 flex flex-col md:flex-row gap-8 items-center bg-[var(--bg-base)] from-surface-900 to-emerald-950/10`}>
  <div className="flex-1">
  <div className="flex items-center gap-3 mb-3">
  <div className="w-10 h-10 rounded-xl bg-brand-primary/10 flex items-center justify-center border border-brand-primary/20">

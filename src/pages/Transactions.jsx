@@ -317,15 +317,15 @@ export default function Transactions() {
 
  {/* Summary Cards */}
  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 animate-fade-in">
- <div className={`\${tw.glass-card} p-5 border border-[var(--border)] hover:border-brand-primary/30 transition-all`}>
+ <div className={`\${tw.card} p-5 border border-[var(--border)] hover:border-brand-primary/30 transition-all`}>
  <p className="text-xs font-semibold text-[var(--text-secondary)] mb-1 uppercase tracking-wider">Receitas</p>
  <h5 className="text-2xl font-bold text-brand-glow">{fmt(monthSummary.income)}</h5>
  </div>
- <div className={`\${tw.glass-card} p-5 border border-[var(--border)] hover:border-rose-500/30 transition-all`}>
+ <div className={`\${tw.card} p-5 border border-[var(--border)] hover:border-rose-500/30 transition-all`}>
  <p className="text-xs font-semibold text-[var(--text-secondary)] mb-1 uppercase tracking-wider">Despesas</p>
  <h5 className="text-2xl font-bold text-rose-400">-{fmt(monthSummary.expense)}</h5>
  </div>
- <div className={`\${tw.glass-card} p-5 border border-[var(--border)] hover:border-indigo-500/30 transition-all`}>
+ <div className={`\${tw.card} p-5 border border-[var(--border)] hover:border-indigo-500/30 transition-all`}>
  <p className="text-xs font-semibold text-[var(--text-secondary)] mb-1 uppercase tracking-wider">Fluxo de Caixa</p>
  <h5 className={`text-2xl font-bold ${monthSummary.income - monthSummary.expense >= 0 ? 'text-brand-glow' : 'text-rose-400'}`}>
  {fmt(monthSummary.income - monthSummary.expense)}
@@ -334,7 +334,7 @@ export default function Transactions() {
  </div>
 
  {/* Import — Drag & Drop + Format Buttons */}
- <div className={`\${tw.glass-card}`}>
+ <div className={`\${tw.card}`}>
  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-4">
  <div className="flex-1">
  <h3 className="text-sm font-semibold text-[var(--text-primary)] flex items-center gap-2">
@@ -440,7 +440,7 @@ export default function Transactions() {
  {/* Content */}
  {viewMode === 'analysis' ? (
  <div className="space-y-6 animate-fade-in">
- <div className={`\${tw.glass-card} p-6`}>
+ <div className={`\${tw.card} p-6`}>
  <div className="flex items-center justify-between mb-8">
  <div>
  <h3 className="text-lg font-semibold text-[var(--text-primary)]">Comparativo Mensal</h3>
@@ -470,11 +470,11 @@ export default function Transactions() {
  </div>
  </div>
  <div className="grid sm:grid-cols-2 gap-4 animate-fade-in">
- <div className={`\${tw.glass-card} p-5 border-l-4 border-l-emerald-500`}>
+ <div className={`\${tw.card} p-5 border-l-4 border-l-emerald-500`}>
  <p className="text-xs text-[var(--text-secondary)] font-medium">Mês Atual (Até agora)</p>
  <h4 className="text-2xl font-bold text-[var(--text-primary)] mt-1">{fmt(monthlyData[monthlyData.length - 1]?.total || 0)}</h4>
  </div>
- <div className={`\${tw.glass-card} p-5 border-l-4 border-l-blue-500`}>
+ <div className={`\${tw.card} p-5 border-l-4 border-l-blue-500`}>
  <p className="text-xs text-[var(--text-secondary)] font-medium">Variação vs Mês Anterior</p>
  {(() => {
  const curr = monthlyData[monthlyData.length - 1]?.total || 0;
@@ -488,7 +488,7 @@ export default function Transactions() {
  ) : (
  <div className="space-y-3">
  {filteredTransactions.length === 0 ? (
- <div className={`p-12 text-center \${tw.glass-card}`}>
+ <div className={`p-12 text-center \${tw.card}`}>
  <Search className="w-12 h-12 text-slate-600 mx-auto mb-4" />
  <p className="text-[var(--text-secondary)]">Nenhuma transação encontrada</p>
  </div>
@@ -496,7 +496,7 @@ export default function Transactions() {
  filteredTransactions.map((t) => {
  const cat = categoryConfig[t.category];
  return (
- <div key={t.id} onClick={() => handleEditClick(t)} className={`\${tw.glass-card} !p-4 flex items-center justify-between border border-transparent border-l-4 hover:border-l-brand-primary hover:-translate-y-px hover:shadow-lg transition-all cursor-pointer group relative overflow-hidden hover:bg-white/5`}>
+ <div key={t.id} onClick={() => handleEditClick(t)} className={`\${tw.card} !p-4 flex items-center justify-between border border-transparent border-l-4 hover:border-l-brand-primary hover:-translate-y-px hover:shadow-lg transition-all cursor-pointer group relative overflow-hidden hover:bg-white/5`}>
  <div className="flex items-center gap-4">
  <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-xl shrink-0" style={{ backgroundColor: `${cat?.color || '#6b7280'}20` }}>
  {cat?.icon || '📦'}

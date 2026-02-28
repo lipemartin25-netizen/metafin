@@ -16,7 +16,7 @@ function WebhookCard({ webhook, onToggle, onDelete }) {
  const eventsDetails = webhook.events.map(eventId => WEBHOOK_EVENTS.find(e => e.id === eventId)).filter(Boolean);
 
  return (
- <div className={`${tw.glass-card} p-5 space-y-4 border ${webhook.active ? 'border-brand-glow/30 shadow-glass-card' : 'border-[var(--border)] opacity-70'}`}>
+ <div className={`${tw.card} p-5 space-y-4 border ${webhook.active ? 'border-brand-glow/30 shadow-glass-card' : 'border-[var(--border)] opacity-70'}`}>
  <div className="flex justify-between items-start gap-4">
  <div className="flex-1 min-w-0">
  <div className="flex items-center gap-2 mb-1">
@@ -168,7 +168,7 @@ export default function Webhooks() {
  <RefreshCw className="w-8 h-8 text-brand-glow animate-spin" />
  </div>
  ) : webhooks.length === 0 ? (
- <div className={`\${tw.glass-card} p-10 text-center space-y-4`}>
+ <div className={`\${tw.card} p-10 text-center space-y-4`}>
  <div className="w-16 h-16 rounded-2xl bg-brand-glow/10 flex items-center justify-center mx-auto">
  <Webhook className="w-8 h-8 text-brand-glow" />
  </div>
@@ -203,7 +203,7 @@ export default function Webhooks() {
  <h2 className="text-sm font-bold text-gray-500 uppercase tracking-widest">Eventos Suportados</h2>
  <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 animate-fade-in">
  {WEBHOOK_EVENTS.map((evt) => (
- <div key={evt.id} className={`\${tw.glass-card} !p-4 flex items-start gap-3 border border-[var(--border)] hover:border-brand-glow/20 transition-all group`}>
+ <div key={evt.id} className={`\${tw.card} !p-4 flex items-start gap-3 border border-[var(--border)] hover:border-brand-glow/20 transition-all group`}>
  <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style={{ backgroundColor: `${evt.color}15` }}>
  <evt.icon className="w-5 h-5" style={{ color: evt.color }} />
  </div>
@@ -218,7 +218,7 @@ export default function Webhooks() {
  </div>
 
  {/* Exemplo de Payload */}
- <div className={`\${tw.glass-card} space-y-3`}>
+ <div className={`\${tw.card} space-y-3`}>
  <div className="flex items-center justify-between">
  <h3 className="text-sm font-bold text-gray-400 uppercase tracking-wider">Exemplo de Payload</h3>
  <button onClick={handleCopy} className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-[var(--text-primary)] transition-colors px-2 py-1 rounded-lg hover:bg-gray-800/40/5">

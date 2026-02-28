@@ -372,7 +372,7 @@ export default function FinancialHealth() {
  </div>
 
  {/* Eco-Finance Gamification Widget */}
- <div className={`\${tw.glass-card} mt-6 p-6 border-l-4 border-l-emerald-500 relative overflow-hidden bg-black/40 group`}>
+ <div className={`\${tw.card} mt-6 p-6 border-l-4 border-l-emerald-500 relative overflow-hidden bg-black/40 group`}>
  <div className="absolute -right-4 -top-4 w-32 h-32 bg-brand-primary/10 rounded-full blur-[40px] group-hover:bg-brand-primary/20 transition-all" />
  <h3 className="text-lg font-black text-[var(--text-primary)] flex items-center gap-2 mb-2 uppercase tracking-widest relative z-10">
  <Leaf className="w-5 h-5 text-brand-primary" /> Eco-Finance Tracker
@@ -403,7 +403,7 @@ export default function FinancialHealth() {
  <h3 className="text-lg font-bold text-[var(--text-primary)] dark:text-[var(--text-primary)] flex items-center gap-2">
  <Shield className="w-5 h-5 text-brand-primary" /> Limites de Gastos (MoM)
  </h3>
- <div className={`\${tw.glass-card} space-y-6 p-6`}>
+ <div className={`\${tw.card} space-y-6 p-6`}>
  <p className="text-sm text-gray-500 dark:text-gray-400">Defina e monitore tetos de gastos inteligentes para suas categorias de alto impacto (Mês-a-Mês).</p>
 
  {analysis.topCategories.map((cat) => {

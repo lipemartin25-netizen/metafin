@@ -223,7 +223,7 @@ export default function BankAccounts() {
  )}
  </div>
 
- <div className={`\${tw.glass-card} bg-[var(--bg-base)] from-gray-900 to-gray-800 border-brand-primary/20`}>
+ <div className={`\${tw.card} bg-[var(--bg-base)] from-gray-900 to-gray-800 border-brand-primary/20`}>
  <div className="flex items-center justify-between">
  <div>
  <p className="text-sm text-gray-400">Saldo Integrado Estimado</p>
@@ -250,7 +250,7 @@ export default function BankAccounts() {
  <p className="text-gray-500 text-sm animate-pulse">Sincronizando suas contas...</p>
  </div>
  ) : (accounts?.length || 0) === 0 ? (
- <div className={`\${tw.glass-card} text-center py-8 border-dashed border-2 border-[var(--border)] bg-transparent`}>
+ <div className={`\${tw.card} text-center py-8 border-dashed border-2 border-[var(--border)] bg-transparent`}>
  <div className="w-12 h-12 rounded-full bg-gray-800/40/5 mx-auto flex items-center justify-center mb-3">
  <Banknote className="w-6 h-6 text-gray-500" />
  </div>
@@ -391,7 +391,7 @@ export default function BankAccounts() {
 
  {showConnectModal && selectedBank && (
  <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 animate-fade-in">
- <div className={`\${tw.glass-card} w-full max-w-md p-0 overflow-hidden animate-slide-up relative`}>
+ <div className={`\${tw.card} w-full max-w-md p-0 overflow-hidden animate-slide-up relative`}>
  <button onClick={() => setShowConnectModal(false)} className="absolute top-4 right-4 text-gray-500 hover:text-[var(--text-primary)]"><X className="w-5 h-5" /></button>
 
  <div className="bg-gray-800/40/5 p-6 text-center border-b border-[var(--border)]">
@@ -561,7 +561,7 @@ export default function BankAccounts() {
  {/* Delete Confirmation Modal */}
  {deleteTarget && (
  <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 animate-fade-in" onClick={() => !deleting && setDeleteTarget(null)}>
- <div className={`\${tw.glass-card} w-full max-w-sm p-6 animate-slide-up text-center`} onClick={(e) => e.stopPropagation()}>
+ <div className={`\${tw.card} w-full max-w-sm p-6 animate-slide-up text-center`} onClick={(e) => e.stopPropagation()}>
  <div className="w-14 h-14 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-4 ring-4 ring-red-500/5">
  <AlertTriangle className="w-7 h-7 text-red-400" />
  </div>

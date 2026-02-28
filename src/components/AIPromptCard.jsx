@@ -21,7 +21,7 @@ export default function AIPromptCard() {
  };
 
  return (
- <div className={`\${tw.glass-card} p-6 border-violet-500/20 bg-[var(--bg-base)] from-violet-500/5 via-transparent to-brand-glow/5 group`}>
+ <div className={`\${tw.card} p-6 border-violet-500/20 bg-[var(--bg-base)] from-violet-500/5 via-transparent to-brand-glow/5 group`}>
  <div className="flex items-center justify-between mb-6">
  <div className="flex items-center gap-3">
  <div className="w-10 h-10 rounded-xl bg-violet-500/10 flex items-center justify-center border border-violet-500/20">

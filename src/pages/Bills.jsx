@@ -122,22 +122,22 @@ export default function Bills() {
 
  {/* Stats */}
  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 animate-fade-in">
- <div className={`\${tw.glass-card} text-center`}>
+ <div className={`\${tw.card} text-center`}>
  <p className="text-2xl font-bold text-[var(--text-primary)] dark:text-[var(--text-primary)]">{stats.pending}</p>
  <p className="text-[10px] text-gray-500 uppercase font-bold">Pendentes</p>
  </div>
- <div className={`\${tw.glass-card} text-center`}>
+ <div className={`\${tw.card} text-center`}>
  <p className="text-2xl font-bold text-red-500">{stats.overdue}</p>
  <p className="text-[10px] text-gray-500 uppercase font-bold">Vencidas</p>
  </div>
- <div className={`\${tw.glass-card} text-center hover:border-brand-primary/30 transition-all cursor-pointer group`} onClick={() => setFilter('subscriptions')}>
+ <div className={`\${tw.card} text-center hover:border-brand-primary/30 transition-all cursor-pointer group`} onClick={() => setFilter('subscriptions')}>
  <p className={`text-2xl font-bold flex items-center justify-center gap-1 transition-colors ${filter === 'subscriptions' ? 'text-brand-primary' : 'text-[var(--text-primary)] dark:text-[var(--text-primary)] group-hover:text-brand-primary'}`}>
  <Sparkles className={`w-5 h-5 ${filter === 'subscriptions' ? 'text-brand-primary' : 'text-brand-primary/50 group-hover:text-brand-primary'} transition-colors`} />
  {stats.subscriptions.length}
  </p>
  <p className="text-[10px] text-gray-500 uppercase font-bold mt-0.5">Assinaturas Info</p>
  </div>
- <div className={`\${tw.glass-card} text-center`}>
+ <div className={`\${tw.card} text-center`}>
  <p className="text-2xl font-bold text-blue-500">{fmt(stats.totalPending)}</p>
  <p className="text-[10px] text-gray-500 uppercase font-bold">Total a Pagar</p>
  </div>
@@ -161,7 +161,7 @@ export default function Bills() {
  {/* List Views */}
  {filter === 'subscriptions' ? (
  <div className="space-y-6 animate-fade-in">
- <div className={`\${tw.glass-card} p-6 border-l-4 border-l-red-500 relative overflow-hidden bg-black/40`}>
+ <div className={`\${tw.card} p-6 border-l-4 border-l-red-500 relative overflow-hidden bg-black/40`}>
  <div className="absolute top-0 right-0 p-8 opacity-10">
  <Bot className="w-48 h-48 text-red-500" />
  </div>
@@ -176,7 +176,7 @@ export default function Bills() {
 
  <div className="grid md:grid-cols-2 gap-6 animate-fade-in">
  {stats.subscriptions.map((sub, i) => (
- <div key={i} className={`${tw.glass-card} p-6 transition-all group cursor-default relative overflow-hidden ${sub.hasIncreasedPrice ? 'border-red-500/50 shadow-glass-card' : 'border-gray-800 hover:border-accent/30'}`}>
+ <div key={i} className={`${tw.card} p-6 transition-all group cursor-default relative overflow-hidden ${sub.hasIncreasedPrice ? 'border-red-500/50 shadow-glass-card' : 'border-gray-800 hover:border-accent/30'}`}>
  <div className={`absolute -right-4 -top-4 w-32 h-32 rounded-full blur-[50px] transition-all opacity-20 ${sub.hasIncreasedPrice ? 'bg-red-500' : 'bg-accent'}`}></div>
 
  {sub.hasIncreasedPrice && (
@@ -234,7 +234,7 @@ export default function Bills() {
  ) : (
  <div className="space-y-2">
  {filtered.length === 0 ? (
- <div className={`\${tw.glass-card} text-center py-12 border-dashed border-2 border-gray-700/40 dark:border-[var(--border)] bg-transparent`}>
+ <div className={`\${tw.card} text-center py-12 border-dashed border-2 border-gray-700/40 dark:border-[var(--border)] bg-transparent`}>
  <CalendarDays className="w-12 h-12 text-blue-500 mx-auto mb-4 opacity-50" />
  <p className="text-gray-500 text-sm">Nenhuma conta encontrada nesta categoria.</p>
  </div>
@@ -242,7 +242,7 @@ export default function Bills() {
  const status = getStatus(bill);
  const StatusIcon = status.icon;
  return (
- <div key={bill.id} className={`${tw.glass-card} flex items-center gap-4 ${bill.paid ? 'opacity-60' : ''}`}>
+ <div key={bill.id} className={`${tw.card} flex items-center gap-4 ${bill.paid ? 'opacity-60' : ''}`}>
  <button onClick={() => togglePaid(bill.id)}
  className={`w-8 h-8 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all ${bill.paid ? 'bg-brand-primary/20 border-brand-primary text-brand-primary' : 'border-gray-700/50 dark:border-[var(--border)] hover:border-blue-500'}`}>
  {bill.paid && <CheckCircle className="w-4 h-4" />}
@@ -284,7 +284,7 @@ export default function Bills() {
  {/* Add Modal */}
  {showAdd && (
  <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/60 animate-fade-in">
- <form onSubmit={handleAdd} className={`\${tw.glass-card} w-full max-w-md p-6 space-y-4 animate-slide-up relative bg-gray-800/40 dark:bg-surface-900 border border-gray-700/40 dark:border-[var(--border)]`}>
+ <form onSubmit={handleAdd} className={`\${tw.card} w-full max-w-md p-6 space-y-4 animate-slide-up relative bg-gray-800/40 dark:bg-surface-900 border border-gray-700/40 dark:border-[var(--border)]`}>
  <button type="button" onClick={() => setShowAdd(false)} className="absolute top-4 right-4 text-gray-500 hover:text-[var(--text-primary)] dark:hover:text-[var(--text-primary)] transition-colors"><X className="w-5 h-5" /></button>
  <h2 className="text-xl font-bold text-[var(--text-primary)] dark:text-[var(--text-primary)] flex items-center gap-2 mb-6"><CalendarDays className="w-5 h-5 text-blue-500" /> Nova Conta / Receita</h2>
 

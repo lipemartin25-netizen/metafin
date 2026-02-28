@@ -46,7 +46,7 @@ export default function Upgrade() {
  <ArrowLeft className="w-4 h-4" /> Voltar ao Dashboard
  </button>
 
- <div className={`\${tw.glass-card} text-center`}>
+ <div className={`\${tw.card} text-center`}>
  <Crown className="w-16 h-16 text-brand-glow mx-auto mb-4" />
  <h1 className="text-2xl font-bold text-[var(--text-primary)] mb-2">
  Você é Pro! 💎
@@ -141,7 +141,7 @@ export default function Upgrade() {
  </div>
 
  {/* Plan Card */}
- <div className={`max-w-lg mx-auto \${tw.glass-card} border border-brand-primary/20 relative overflow-hidden`}>
+ <div className={`max-w-lg mx-auto \${tw.card} border border-brand-primary/20 relative overflow-hidden`}>
  <div className="absolute top-0 right-0 px-4 py-1.5 bg-[var(--bg-base)] from-brand-primary to-brand-glow text-xs font-bold text-[var(--text-primary)] rounded-bl-xl">
  7 DIAS GRÁTIS
  </div>

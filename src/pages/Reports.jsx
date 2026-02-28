@@ -140,7 +140,7 @@ export default function Reports() {
 
  {/* Summary Grid */}
  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 animate-fade-in">
- <div className={`\${tw.glass-card} bg-brand-primary/5 border-brand-primary/10`}>
+ <div className={`\${tw.card} bg-brand-primary/5 border-brand-primary/10`}>
  <p className="text-[10px] text-gray-500 dark:text-gray-400 uppercase font-bold mb-1">Receitas</p>
  <p className="text-xl font-bold text-brand-primary">{fmt(report.income, isVisible)}</p>
  {report.incomeChange !== 0 && (
@@ -150,7 +150,7 @@ export default function Reports() {
  </p>
  )}
  </div>
- <div className={`\${tw.glass-card} bg-red-500/5 border-red-500/10`}>
+ <div className={`\${tw.card} bg-red-500/5 border-red-500/10`}>
  <p className="text-[10px] text-gray-500 dark:text-gray-400 uppercase font-bold mb-1">Despesas</p>
  <p className="text-xl font-bold text-red-500">{fmt(report.expenses, isVisible)}</p>
  {report.expenseChange !== 0 && (
@@ -160,11 +160,11 @@ export default function Reports() {
  </p>
  )}
  </div>
- <div className={`\${tw.glass-card}`}>
+ <div className={`\${tw.card}`}>
  <p className="text-[10px] text-gray-500 dark:text-gray-400 uppercase font-bold mb-1">Resultado</p>
  <p className={`text-xl font-bold ${report.balance >= 0 ? 'text-blue-500' : 'text-red-500'}`}>{fmt(report.balance, isVisible)}</p>
  </div>
- <div className={`\${tw.glass-card}`}>
+ <div className={`\${tw.card}`}>
  <p className="text-[10px] text-gray-500 dark:text-gray-400 uppercase font-bold mb-1">Taxa de Poupanca</p>
  <p className={`text-xl font-bold ${report.savingsRate >= 20 ? 'text-brand-primary' : report.savingsRate >= 0 ? 'text-yellow-500' : 'text-red-500'}`}>{report.savingsRate.toFixed(0)}%</p>
  </div>
@@ -172,7 +172,7 @@ export default function Reports() {
 
  {/* Spending by Category */}
  <div className="grid lg:grid-cols-2 gap-6 animate-fade-in">
- <div className={`\${tw.glass-card} p-6`}>
+ <div className={`\${tw.card} p-6`}>
  <h3 className="text-sm font-semibold text-[var(--text-primary)] dark:text-[var(--text-primary)] mb-4">Gastos por Categoria</h3>
  {report.pieData.length > 0 ? (
  <div className="h-[220px]">
@@ -190,7 +190,7 @@ export default function Reports() {
  )}
  </div>
 
- <div className={`\${tw.glass-card} p-6`}>
+ <div className={`\${tw.card} p-6`}>
  <h3 className="text-sm font-semibold text-[var(--text-primary)] dark:text-[var(--text-primary)] mb-4">Detalhamento</h3>
  <div className="space-y-3 max-h-[260px] overflow-y-auto custom-scrollbar">
  {report.categories.map((cat, i) => (
@@ -216,7 +216,7 @@ export default function Reports() {
 
  {/* Top Transactions */}
  <div className="grid lg:grid-cols-2 gap-6 animate-fade-in">
- <div className={`\${tw.glass-card} p-6`}>
+ <div className={`\${tw.card} p-6`}>
  <h3 className="text-sm font-semibold text-[var(--text-primary)] dark:text-[var(--text-primary)] mb-4 flex items-center gap-2">
  <TrendingDown className="w-4 h-4 text-red-500" /> Maiores Despesas
  </h3>
@@ -237,7 +237,7 @@ export default function Reports() {
  </div>
  </div>
 
- <div className={`\${tw.glass-card} p-6`}>
+ <div className={`\${tw.card} p-6`}>
  <h3 className="text-sm font-semibold text-[var(--text-primary)] dark:text-[var(--text-primary)] mb-4 flex items-center gap-2">
  <TrendingUp className="w-4 h-4 text-brand-primary" /> Maiores Receitas
  </h3>

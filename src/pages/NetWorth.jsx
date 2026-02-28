@@ -160,7 +160,7 @@ export default function NetWorth() {
  </div>
 
  {/* Main Net Worth Card */}
- <div className={`\${tw.glass-card} !bg-transparent !border-transparent !p-4 !shadow-none !mt-0 relative overflow-hidden`}>
+ <div className={`\${tw.card} !bg-transparent !border-transparent !p-4 !shadow-none !mt-0 relative overflow-hidden`}>
  <p className="text-sm font-medium text-gray-500 mb-1 flex items-center gap-2">Patrimônio Líquido Real</p>
  <h2 className={`text-6xl font-extrabold tracking-tighter ${data.netWorth >= 0 ? 'text-[var(--text-primary)] dark:text-[var(--text-primary)]' : 'text-red-500'}`}>
  {fmt(data.netWorth)}
@@ -180,7 +180,7 @@ export default function NetWorth() {
  </div>
 
  {/* Timeline Chart */}
- <div className={`\${tw.glass-card} p-6`}>
+ <div className={`\${tw.card} p-6`}>
  <h3 className="text-lg font-semibold text-[var(--text-primary)] dark:text-[var(--text-primary)] mb-6">Evolução Histórica</h3>
  <div className="h-[250px] w-full">
  <ResponsiveContainer width="100%" height="100%">
@@ -214,7 +214,7 @@ export default function NetWorth() {
  {breakdown.filter(i => i.value > 0).map((item, i) => {
  const Icon = item.icon;
  return (
- <div key={i} className={`${tw.glass-card} flex items-center gap-4 ${item.type === 'liability' ? 'hover:border-red-500/30' : 'hover:border-brand-primary/30'} transition-all`}>
+ <div key={i} className={`${tw.card} flex items-center gap-4 ${item.type === 'liability' ? 'hover:border-red-500/30' : 'hover:border-brand-primary/30'} transition-all`}>
  <div className="w-12 h-12 rounded-xl flex items-center justify-center p-3" style={{ backgroundColor: `${item.color}15` }}>
  <Icon className="w-6 h-6" style={{ color: item.color }} />
  </div>
@@ -235,7 +235,7 @@ export default function NetWorth() {
  <HomeIcon className="w-5 h-5 text-brand-primary" /> Patrimônios Manuais
  </h3>
  {customAssets.length === 0 ? (
- <div className={`\${tw.glass-card} flex flex-col items-center justify-center h-[200px] text-center border-dashed`}>
+ <div className={`\${tw.card} flex flex-col items-center justify-center h-[200px] text-center border-dashed`}>
  <Landmark className="w-8 h-8 text-gray-400 mb-3" />
  <p className="text-sm font-medium text-[var(--text-primary)] dark:text-[var(--text-primary)] mb-1">Nenhum Patrimônio Adicionado</p>
  <p className="text-xs text-gray-500">Adicione imóveis, veículos ou dívidas ativas para rastreio.</p>
@@ -245,7 +245,7 @@ export default function NetWorth() {
  {customAssets.map(a => {
  const AssetIcon = TYPE_ICONS[a.type] || FileDigit;
  return (
- <div key={a.id} className={`\${tw.glass-card} flex items-center justify-between p-4 group`}>
+ <div key={a.id} className={`\${tw.card} flex items-center justify-between p-4 group`}>
  <div className="flex items-center gap-3">
  <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${a.is_liability ? 'bg-red-500/10 text-red-500' : 'bg-brand-primary/10 text-brand-primary'}`}>
  <AssetIcon className="w-5 h-5" />
@@ -277,7 +277,7 @@ export default function NetWorth() {
  {/* Modal de Adição */}
  {showModal && (
  <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 animate-fade-in">
- <div className={`\${tw.glass-card} w-full max-w-md animate-slide-up relative bg-gray-800/40 dark:bg-surface-900 border border-gray-700/40 dark:border-[var(--border)]`}>
+ <div className={`\${tw.card} w-full max-w-md animate-slide-up relative bg-gray-800/40 dark:bg-surface-900 border border-gray-700/40 dark:border-[var(--border)]`}>
  <button onClick={() => setShowModal(false)} className="absolute top-4 right-4 text-gray-500 hover:text-[var(--text-primary)] dark:hover:text-[var(--text-primary)]">
  <X className="w-5 h-5" />
  </button>

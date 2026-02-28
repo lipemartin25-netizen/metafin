@@ -85,7 +85,7 @@ export default function Login() {
  </div>
  </div>
 
- <div className={`p-10 ${tw.glass-card} relative overflow-hidden`}>
+ <div className={`p-10 ${tw.card} relative overflow-hidden`}>
  {/* Interior glow for depth */}
  <div className="absolute -top-24 -right-24 w-48 h-48 bg-brand-primary/[0.08] rounded-full blur-[80px] pointer-events-none" />
 

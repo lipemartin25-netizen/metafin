@@ -113,7 +113,7 @@ export default function Settings() {
  </div>
 
  {/* Content */}
- <div className={`\${tw.glass-card} min-h-[500px] p-8`}>
+ <div className={`\${tw.card} min-h-[500px] p-8`}>
 
  {/* PREFERENCES */}
  {activeTab === 'preferences' && (
@@ -290,11 +290,11 @@ export default function Settings() {
  <h2 className="text-xl font-bold text-[var(--text-primary)] mb-6 flex items-center gap-2">
  <HelpCircle className="w-5 h-5 text-violet-400" /> Como Usar o MetaFin
  </h2>
- <div className={`\${tw.glass-card} p-5 border-l-4 border-l-violet-500`}>
+ <div className={`\${tw.card} p-5 border-l-4 border-l-violet-500`}>
  <h3 className="text-base font-bold text-[var(--text-primary)] mb-2">Visão Geral</h3>
  <p className="text-sm text-[var(--text-secondary)] leading-relaxed">O MetaFin é o seu copiloto inteligente para gerenciar suas finanças. Monitore transações, crie planos de orçamento, acompanhe seu patrimônio líquido e use IA avançada para analisar sua saúde financeira de maneira automática.</p>
  </div>
- <div className={`\${tw.glass-card} p-5`}>
+ <div className={`\${tw.card} p-5`}>
  <h3 className="text-base font-bold text-[var(--text-primary)] mb-4 flex items-center gap-2">
  <FileSpreadsheet className="w-5 h-5 text-brand-glow" /> Importando Documentos
  </h3>
@@ -306,7 +306,7 @@ export default function Settings() {
  <li>Certifique-se que os arquivos possuam colunas: <code className="bg-gray-800/40/5 px-1 rounded">data</code>, <code className="bg-gray-800/40/5 px-1 rounded">valor</code>, <code className="bg-gray-800/40/5 px-1 rounded">descricao</code>.</li>
  </ol>
  </div>
- <div className={`\${tw.glass-card} p-5 bg-brand-glow/5 border border-brand-glow/10`}>
+ <div className={`\${tw.card} p-5 bg-brand-glow/5 border border-brand-glow/10`}>
  <h3 className="text-base font-bold text-[var(--text-primary)] mb-4 flex items-center gap-2">
  <Zap className="w-5 h-5 text-brand-glow" /> Conectando Webhooks e Automações
  </h3>
@@ -317,7 +317,7 @@ export default function Settings() {
  <li>Copie a chave e configure na sua plataforma de automação preferida via <code className="bg-gray-800/40/5 px-1 rounded">POST</code>.</li>
  </ol>
  </div>
- <div className={`\${tw.glass-card} p-5`}>
+ <div className={`\${tw.card} p-5`}>
  <h3 className="text-base font-bold text-[var(--text-primary)] mb-3 flex items-center gap-2">
  <Globe className="w-5 h-5 text-blue-400" /> Consultor IA
  </h3>

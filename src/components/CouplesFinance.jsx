@@ -21,7 +21,7 @@ export default function CouplesFinance() {
 
  return (
  <div className="space-y-8 animate-fade-in text-[var(--text-primary)]/90 pb-20">
- <div className={`\${tw.glass-card} p-6 border-l-4 border-l-pink-500 relative overflow-hidden bg-black/40`}>
+ <div className={`\${tw.card} p-6 border-l-4 border-l-pink-500 relative overflow-hidden bg-black/40`}>
  <div className="absolute top-0 right-0 p-8 opacity-10">
  <HeartPulse className="w-32 h-32 text-pink-500" />
  </div>
@@ -34,7 +34,7 @@ export default function CouplesFinance() {
  </div>
 
  <div className="grid md:grid-cols-3 gap-6 animate-fade-in">
- <div className={`\${tw.glass-card} p-6 bg-black/20 border border-[var(--border)] space-y-4`}>
+ <div className={`\${tw.card} p-6 bg-black/20 border border-[var(--border)] space-y-4`}>
  <h3 className="font-bold uppercase tracking-widest text-xs text-gray-400">Renda Pessoa 1</h3>
  <input
  type="number"
@@ -43,7 +43,7 @@ export default function CouplesFinance() {
  className="w-full bg-black/40 border border-[var(--border)] rounded-xl px-4 py-3 text-[var(--text-primary)] text-xl font-black outline-none focus:border-pink-500 transition-colors"
  />
  </div>
- <div className={`\${tw.glass-card} p-6 bg-black/20 border border-[var(--border)] space-y-4`}>
+ <div className={`\${tw.card} p-6 bg-black/20 border border-[var(--border)] space-y-4`}>
  <h3 className="font-bold uppercase tracking-widest text-xs text-gray-400">Renda Pessoa 2</h3>
  <input
  type="number"
@@ -52,7 +52,7 @@ export default function CouplesFinance() {
  className="w-full bg-black/40 border border-[var(--border)] rounded-xl px-4 py-3 text-[var(--text-primary)] text-xl font-black outline-none focus:border-pink-500 transition-colors"
  />
  </div>
- <div className={`\${tw.glass-card} p-6 bg-black/20 border border-pink-500/30 shadow-glass-card space-y-4`}>
+ <div className={`\${tw.card} p-6 bg-black/20 border border-pink-500/30 shadow-glass-card space-y-4`}>
  <h3 className="font-bold uppercase tracking-widest text-xs text-pink-400 flex items-center gap-2">
  <CreditCard className="w-4 h-4" /> Despesas do Casal
  </h3>
@@ -67,7 +67,7 @@ export default function CouplesFinance() {
 
  <div className="grid md:grid-cols-2 gap-8 animate-fade-in">
  {/* 50 / 50 */}
- <div className={`\${tw.glass-card} p-8 bg-black/30 border border-gray-800 hover:border-[var(--border)] transition-all flex flex-col justify-between`}>
+ <div className={`\${tw.card} p-8 bg-black/30 border border-gray-800 hover:border-[var(--border)] transition-all flex flex-col justify-between`}>
  <div>
  <h3 className="text-lg font-black uppercase tracking-widest text-[var(--text-primary)] mb-2">Divisão 50/50</h3>
  <p className="text-xs text-gray-400 mb-6">Metade para cada um. Simples, porém pode pesar para quem tem menor renda líquida.</p>
@@ -86,7 +86,7 @@ export default function CouplesFinance() {
  </div>
 
  {/* Proporcional */}
- <div className={`\${tw.glass-card} p-8 border border-accent/30 shadow-glass-card relative overflow-hidden flex flex-col justify-between`}>
+ <div className={`\${tw.card} p-8 border border-accent/30 shadow-glass-card relative overflow-hidden flex flex-col justify-between`}>
  <div className="absolute -right-10 -top-10 w-40 h-40 bg-accent/20 rounded-full blur-[40px] pointer-events-none" />
 
  <div>

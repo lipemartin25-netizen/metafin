@@ -71,7 +71,7 @@ export default function SignUp() {
  <div className="absolute inset-0 opacity-[0.03] bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]" />
  </div>
 
- <div className={`w-full max-w-md text-center animate-fade-in p-12 ${tw.glass-card} shadow-elevated z-10`}>
+ <div className={`w-full max-w-md text-center animate-fade-in p-12 ${tw.card} shadow-elevated z-10`}>
  <div className="w-20 h-20 bg-brand-primary/10 rounded-full flex items-center justify-center mx-auto mb-10 shadow-inner">
  <Sparkles className="w-10 h-10 text-brand-primary" />
  </div>
@@ -105,7 +105,7 @@ export default function SignUp() {
  </p>
  </div>
 
- <div className={`p-10 ${tw.glass-card} relative overflow-hidden`}>
+ <div className={`p-10 ${tw.card} relative overflow-hidden`}>
  {/* Interior glow for depth */}
  <div className="absolute -top-24 -right-24 w-48 h-48 bg-brand-primary/[0.08] rounded-full blur-[80px] pointer-events-none" />
 

@@ -57,7 +57,7 @@ export default function DeveloperAPI() {
  <div className="grid md:grid-cols-3 gap-6 animate-fade-in">
  <div className="md:col-span-2 space-y-6">
  {/* API Key Section */}
- <div className={`\${tw.glass-card} p-6`}>
+ <div className={`\${tw.card} p-6`}>
  <div className="flex items-center gap-3 mb-6">
  <div className="w-10 h-10 rounded-xl bg-brand-glow/10 flex items-center justify-center">
  <Key className="w-5 h-5 text-brand-glow" />
@@ -101,7 +101,7 @@ export default function DeveloperAPI() {
  </div>
 
  {/* Code Example */}
- <div className={`\${tw.glass-card} p-6 border-brand-glow/20 bg-[var(--bg-base)] from-brand-glow/5 to-transparent`}>
+ <div className={`\${tw.card} p-6 border-brand-glow/20 bg-[var(--bg-base)] from-brand-glow/5 to-transparent`}>
  <div className="flex items-center gap-3 mb-6">
  <div className="w-10 h-10 rounded-xl bg-brand-primary/10 flex items-center justify-center">
  <Server className="w-5 h-5 text-brand-primary" />
@@ -138,7 +138,7 @@ export default function DeveloperAPI() {
  <div className="space-y-4">
  <h3 className="text-sm font-bold text-[var(--text-primary)] dark:text-[var(--text-primary)] uppercase tracking-wider mb-2">Casos de Uso Comuns</h3>
 
- <div className={`\${tw.glass-card} p-4 hover:border-orange-500/30 transition-colors cursor-pointer group`}>
+ <div className={`\${tw.card} p-4 hover:border-orange-500/30 transition-colors cursor-pointer group`}>
  <div className="flex items-start gap-3">
  <div className="bg-orange-500/10 p-2 rounded-lg text-orange-500"><Zap className="w-5 h-5" /></div>
  <div>
@@ -148,7 +148,7 @@ export default function DeveloperAPI() {
  </div>
  </div>
 
- <div className={`\${tw.glass-card} p-4 hover:border-brand-primary/30 transition-colors cursor-pointer group`}>
+ <div className={`\${tw.card} p-4 hover:border-brand-primary/30 transition-colors cursor-pointer group`}>
  <div className="flex items-start gap-3">
  <div className="bg-brand-primary/10 p-2 rounded-lg text-brand-primary"><Code2 className="w-5 h-5" /></div>
  <div>

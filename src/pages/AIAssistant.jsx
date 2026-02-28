@@ -192,17 +192,17 @@ export default function AIAssistant() {
  {/* ── Stats Bar ── */}
  {transactions.length > 0 && (
  <div className="grid grid-cols-3 gap-3 mb-4 flex-shrink-0 animate-fade-in">
- <div className={`\${tw.glass-card} py-3 px-4 text-center`}>
+ <div className={`\${tw.card} py-3 px-4 text-center`}>
  <TrendingUp className="w-4 h-4 text-brand-glow mx-auto mb-1" />
  <p className="text-[10px] text-gray-500 uppercase tracking-wider">Receita total</p>
  <p className="text-sm font-bold text-brand-glow">{fmt(totalIncome)}</p>
  </div>
- <div className={`\${tw.glass-card} py-3 px-4 text-center`}>
+ <div className={`\${tw.card} py-3 px-4 text-center`}>
  <PiggyBank className="w-4 h-4 text-violet-400 mx-auto mb-1" />
  <p className="text-[10px] text-gray-500 uppercase tracking-wider">Poupança</p>
  <p className="text-sm font-bold text-violet-400">{savingsRate.toFixed(0)}%</p>
  </div>
- <div className={`\${tw.glass-card} py-3 px-4 text-center`}>
+ <div className={`\${tw.card} py-3 px-4 text-center`}>
  <Wallet className="w-4 h-4 text-cyan-400 mx-auto mb-1" />
  <p className="text-[10px] text-gray-500 uppercase tracking-wider">Transações</p>
  <p className="text-sm font-bold text-cyan-400">{transactions.length}</p>
@@ -221,7 +221,7 @@ export default function AIAssistant() {
  <div className="w-8 h-8 rounded-xl bg-[var(--bg-base)] from-violet-500 to-brand-glow flex items-center justify-center flex-shrink-0 shadow-lg shadow-black/10">
  <Bot size={15} className="text-[var(--text-primary)]" />
  </div>
- <div className={`\${tw.glass-card} flex-1 py-4 px-5`}>
+ <div className={`\${tw.card} flex-1 py-4 px-5`}>
  <p className="text-gray-200 text-sm leading-relaxed">
  Olá, <span className="text-[var(--text-primary)] font-semibold">{displayName}</span>! 👋{' '}
  Sou o <strong className="text-violet-400">MetaFin Agent</strong> — consulto suas

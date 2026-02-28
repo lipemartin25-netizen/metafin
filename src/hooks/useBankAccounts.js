@@ -110,7 +110,7 @@ export function useBankAccounts() {
                 setAccountTransactions(grouped);
             } else {
                 // Fallback: localStorage
-                const localTxns = secureStorage.get('transactions') || [];
+                const localTxns = await secureStorage.getItem('transactions') || [];
                 const monthTxns = localTxns.filter(t => t.date >= startOfMonth && t.date <= endOfMonth);
                 const grouped = {};
                 for (const acc of accounts) {

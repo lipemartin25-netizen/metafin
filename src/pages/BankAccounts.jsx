@@ -31,7 +31,6 @@ function fmt(value) {
 
 export default function BankAccounts() {
     const { addBulkTransactions } = useTransactions();
-    const { user: _user } = useAuth();
     const { accounts, accountTransactions, addAccount, deleteAccount, syncAccount, loading, error: hookError } = useBankAccounts();
     const { openWidget, error: pluggyError } = usePluggy();
     const [showConnectModal, setShowConnectModal] = useState(false);

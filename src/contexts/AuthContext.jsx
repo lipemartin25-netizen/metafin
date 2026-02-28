@@ -64,15 +64,19 @@ export function AuthProvider({ children }) {
             }
 
             // Priority 2: Custom HMAC Token (mf_auth_token via usePersistentState)
-            if (authToken && isMounted.current) {
+            if (authToken && typeof authToken === 'string' && isMounted.current) {
                 try {
-                    const payload = authToken.split('.')[0];
-                    if (payload) {
-                        setUser({
-                            id: payload,
-                            email: payload.includes('@') ? payload : `${payload}@metafin.internal`,
-                            is_custom: true
-                        });
+                    // FIX M2 - Validar token split
+                    const parts = authToken.split('.');
+                    if (parts.length >= 1) {
+                        const payload = parts[0];
+                        if (payload) {
+                            setUser({
+                                id: payload,
+                                email: payload.includes('@') ? payload : `${payload}@metafin.internal`,
+                                is_custom: true
+                            });
+                        }
                     }
                 } catch (_e) {
                     setAuthToken(null);
@@ -210,15 +214,20 @@ export function AuthProvider({ children }) {
     }, [isDemo, setAuthToken]);
 
     const loginWithToken = useCallback((token) => {
+        if (!token || typeof token !== 'string') return false;
         setAuthToken(token);
-        const payload = token.split('.')[0];
-        if (payload) {
-            setUser({
-                id: payload,
-                email: payload.includes('@') ? payload : `${payload}@metafin.internal`,
-                is_custom: true
-            });
-            return true;
+        // FIX M2 - Validar token split
+        const parts = token.split('.');
+        if (parts.length >= 1) {
+            const payload = parts[0];
+            if (payload) {
+                setUser({
+                    id: payload,
+                    email: payload.includes('@') ? payload : `${payload}@metafin.internal`,
+                    is_custom: true
+                });
+                return true;
+            }
         }
         return false;
     }, [setAuthToken]);

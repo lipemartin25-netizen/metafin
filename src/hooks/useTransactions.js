@@ -7,11 +7,11 @@ import { add, sumTransactions } from '../lib/financialMath';
 const STORAGE_KEY = 'transactions';
 
 function getLocalTransactions() {
-    return secureStorage.get(STORAGE_KEY);
+    return secureStorage.getItem(STORAGE_KEY);
 }
 
 function saveLocalTransactions(transactions) {
-    secureStorage.set(STORAGE_KEY, transactions);
+    secureStorage.setItem(STORAGE_KEY, transactions);
 }
 
 export function useTransactions() {
@@ -33,22 +33,22 @@ export function useTransactions() {
                 // Retorna o que está no banco (pode ser vazio = lista limpa)
                 setTransactions(data && data.length > 0 ? data : []);
             } else {
-                // Modo offline: localStorage
-                const local = getLocalTransactions();
+                // Modo offline: secureStorage
+                const local = await getLocalTransactions();
                 if (local && local.length > 0) {
                     // Usa somente o que o usuário já salvou localmente
                     setTransactions(local);
                 } else {
                     // Primeira vez: começa zerado — sem dados fictícios
                     setTransactions([]);
-                    saveLocalTransactions([]);
+                    await saveLocalTransactions([]);
                 }
             }
         } catch (err) {
             console.error('Error loading transactions:', err);
             setError(err.message);
-            // Fallback: tenta localStorage, senão vazio
-            const local = getLocalTransactions();
+            // Fallback: tenta secureStorage, senão vazio
+            const local = await getLocalTransactions();
             setTransactions(local && local.length > 0 ? local : []);
         } finally {
             setLoading(false);
@@ -203,7 +203,7 @@ export function useTransactions() {
         }, {}),
     };
 
-    summary.totalIncome   = summary.income;
+    summary.totalIncome = summary.income;
     summary.totalExpenses = summary.expense;
 
     return {

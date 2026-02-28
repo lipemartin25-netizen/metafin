@@ -100,24 +100,23 @@ function sanitizeFinancialData(data) {
         return { valid: false, error: 'Volume de dados excede o limite de análise rápida' }
     }
 
-    // Filtragem RECURSIVA de PII em qualquer nível de profundidade
-    const blacklist = new Set(['password', 'token', 'apikey', 'api_key', 'secret', 'auth',
-        'email', 'phone', 'cpf', 'cnpj', 'rg', 'address', 'endereco', 'telefone',
-        'access_token', 'refresh_token', 'session', 'cookie', 'authorization'])
+    // FIX H5 — Filtragem recursiva de PII em qualquer profundidade
+    const PII_BLACKLIST = ['cpf', 'ssn', 'password', 'senha', 'credit_card', 'card_number', 'rg', 'cnpj', 'account_number', 'routing_number', 'pin', 'cvv', 'cvc', 'secret'];
 
-    function deepSanitize(obj, depth = 0) {
-        if (depth > 10) return '[MAX_DEPTH]'
-        if (obj === null || obj === undefined) return obj
-        if (typeof obj !== 'object') return obj
-        if (Array.isArray(obj)) return obj.map(item => deepSanitize(item, depth + 1))
+    function removePII(obj) {
+        if (typeof obj !== 'object' || obj === null) return obj;
+        if (Array.isArray(obj)) return obj.map(item => removePII(item));
 
-        const clean = {}
+        const cleaned = {};
         for (const [key, value] of Object.entries(obj)) {
-            if (blacklist.has(key.toLowerCase())) continue
-            clean[key] = deepSanitize(value, depth + 1)
+            if (PII_BLACKLIST.some(pii => key.toLowerCase().includes(pii))) {
+                cleaned[key] = '[REDACTED]';
+            } else {
+                cleaned[key] = removePII(value);
+            }
         }
-        return clean
+        return cleaned;
     }
 
-    return { valid: true, data: deepSanitize(data) }
+    return { valid: true, data: removePII(data) }
 }

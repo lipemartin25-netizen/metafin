@@ -20,58 +20,66 @@ export function usePersistentState(key, defaultValue, options = {}) {
         secure = true
     } = options;
 
-    // Inicialização do estado
-    const [state, setState] = useState(() => {
-        try {
-            const stored = secure
-                ? secureStorage.get(key)
-                : localStorage.getItem(`sf_${key}`);
+    const [state, setState] = useState(defaultValue);
+    const [isLoaded, setIsLoaded] = useState(false);
 
-            if (stored === null || stored === undefined) return defaultValue;
-
-            // Se não for secure, tenta dar parse no JSON se for string
-            if (!secure && typeof stored === 'string') {
-                try { return JSON.parse(stored); } catch { return stored; }
-            }
-
-            return stored;
-        } catch (err) {
-            console.error(`[usePersistentState] Erro ao carregar ${key}:`, err);
-            return defaultValue;
-        }
-    });
-
-    // Função para atualizar estado e storage
-    const setPersistentState = useCallback((newValue) => {
-        setState((prev) => {
-            const actualValue = typeof newValue === 'function' ? newValue(prev) : newValue;
-
+    // Inicialização do estado via Async (Device ready)
+    useEffect(() => {
+        let mounted = true;
+        const loadInitialData = async () => {
             try {
                 if (secure) {
-                    secureStorage.set(key, actualValue);
+                    const stored = await secureStorage.getItem(key);
+                    if (mounted && stored !== null && stored !== undefined) {
+                        setState(stored);
+                    }
                 } else {
-                    const stringified = typeof actualValue === 'object'
-                        ? JSON.stringify(actualValue)
-                        : String(actualValue);
-                    localStorage.setItem(`sf_${key}`, stringified);
+                    const stored = localStorage.getItem(`sf_${key}`);
+                    if (stored !== null && stored !== undefined) {
+                        let parsed = stored;
+                        try { parsed = JSON.parse(stored); } catch { /* was just string */ }
+                        if (mounted) setState(parsed);
+                    }
                 }
             } catch (err) {
-                console.error(`[usePersistentState] Erro ao salvar ${key}:`, err);
+                console.error(`[usePersistentState] Erro ao carregar ${key}:`, err);
+            } finally {
+                if (mounted) setIsLoaded(true);
             }
+        };
 
-            return actualValue;
-        });
+        loadInitialData();
+        return () => { mounted = false; };
     }, [key, secure]);
+
+    // Função para atualizar estado e storage
+    const setPersistentState = useCallback(async (newValue) => {
+        const actualValue = typeof newValue === 'function' ? newValue(state) : newValue;
+        setState(actualValue);
+
+        try {
+            if (secure) {
+                await secureStorage.setItem(key, actualValue);
+            } else {
+                const stringified = typeof actualValue === 'object'
+                    ? JSON.stringify(actualValue)
+                    : String(actualValue);
+                localStorage.setItem(`sf_${key}`, stringified);
+            }
+        } catch (err) {
+            console.error(`[usePersistentState] Erro ao salvar ${key}:`, err);
+        }
+    }, [key, secure, state]);
 
     // Listener para sincronização entre abas
     useEffect(() => {
-        const handleStorageChange = (e) => {
+        const handleStorageChange = async (e) => {
             const fullKey = secure ? `mf_${key}` : `sf_${key}`;
             if (e.key === fullKey && e.newValue) {
                 try {
                     const updatedValue = secure
-                        ? secureStorage.get(key)
-                        : (e.newValue.startsWith('{') ? JSON.parse(e.newValue) : e.newValue);
+                        ? await secureStorage.getItem(key)
+                        : (e.newValue.startsWith('{') || e.newValue.startsWith('[') ? JSON.parse(e.newValue) : e.newValue);
                     setState(updatedValue);
                 } catch {
                     // Ignora erros de parse na sincronização
@@ -83,5 +91,6 @@ export function usePersistentState(key, defaultValue, options = {}) {
         return () => window.removeEventListener('storage', handleStorageChange);
     }, [key, secure]);
 
-    return [state, setPersistentState];
+    // O retorno agora é um array pra ficar igual useState normal
+    return [state, setPersistentState, isLoaded];
 }

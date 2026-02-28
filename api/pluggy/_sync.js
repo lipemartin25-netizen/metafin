@@ -135,12 +135,19 @@ export function parsePixDetails(description) {
  */
 export async function syncItemData(supabase, itemId) {
     if (!process.env.PLUGGY_CLIENT_ID || !process.env.PLUGGY_CLIENT_SECRET) {
-        throw new Error('[Sync] PLUGGY_CLIENT_ID ou PLUGGY_CLIENT_SECRET não configurados.');
+        throw new Error('[Sync] Configuração ausente: PLUGGY_CLIENT_ID ou PLUGGY_CLIENT_SECRET.');
+    }
+
+    // FIX M5 — Garantir que não existam logs ou vazamentos se vars estiverem parcialmente vazias
+    const clientId = process.env.PLUGGY_CLIENT_ID.trim();
+    const clientSecret = process.env.PLUGGY_CLIENT_SECRET.trim();
+    if (clientId === '' || clientSecret === '') {
+        throw new Error('[Sync] Configuração vazia: PLUGGY_CLIENT_ID ou PLUGGY_CLIENT_SECRET.');
     }
 
     const pluggy = new PluggyClient({
-        clientId: process.env.PLUGGY_CLIENT_ID.trim(),
-        clientSecret: process.env.PLUGGY_CLIENT_SECRET.trim(),
+        clientId: clientId,
+        clientSecret: clientSecret,
     });
 
     try {

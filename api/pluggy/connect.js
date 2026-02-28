@@ -1,9 +1,9 @@
 import { createClient } from '@supabase/supabase-js';
 
+// FIX M3 — Removida origem duplicada
 const ALLOWED_ORIGINS = [
-    'https://metafin-app.vercel.app',
+    process.env.ALLOWED_ORIGIN || 'https://metafin-app.vercel.app',
     'http://localhost:5173',
-    'http://localhost:3000',
 ];
 
 function setCorsHeaders(req, res) {

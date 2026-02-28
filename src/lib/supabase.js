@@ -103,11 +103,14 @@ export const db = {
 
         update: async (id, updates, userId) => {
             if (!supabase) return { data: null, error: { message: 'Supabase não configurado' } };
+            // FIX L3 — Defense-in-depth: Exigir userId em mutações
+            if (!userId) return { data: null, error: { message: 'userId é obrigatório para atualização' } };
             const query = supabase
                 .from('transactions')
                 .update({ ...updates, updated_at: new Date().toISOString() })
-                .eq('id', id);
-            if (userId) query.eq('user_id', userId);
+                .eq('id', id)
+                .eq('user_id', userId);
+
             const { data, error } = await query
                 .select()
                 .single();
@@ -116,11 +119,14 @@ export const db = {
 
         delete: async (id, userId) => {
             if (!supabase) return { error: { message: 'Supabase não configurado' } };
+            // FIX L3 — Defense-in-depth: Exigir userId em mutações
+            if (!userId) return { error: { message: 'userId é obrigatório para exclusão' } };
             const query = supabase
                 .from('transactions')
                 .delete()
-                .eq('id', id);
-            if (userId) query.eq('user_id', userId);
+                .eq('id', id)
+                .eq('user_id', userId);
+
             const { error } = await query;
             return { error };
         },

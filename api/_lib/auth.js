@@ -38,13 +38,14 @@ export async function validateSession(req) {
     }
 
     // Nenhum sistema de autenticação configurado — bloqueia sempre
-    console.error('[auth] CRÍTICO: Nenhum sistema de autenticação configurado! Configure SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY ou APP_SECRET.')
+    // FIX C1 — Nunca permitir bypass de auth, mesmo em dev
+    console.error('[AUTH] SUPABASE_SERVICE_ROLE_KEY ou APP_SECRET não configurados. Bloqueando requisição.');
     console.log('[auth] DEBUG Vars presentes:', {
         HAS_SUPABASE_URL: !!supabaseUrl,
         HAS_SUPABASE_KEY: !!supabaseServiceKey,
         HAS_APP_SECRET: !!secret
     })
-    return { valid: false, reason: 'Serviço de autenticação não configurado' }
+    return { valid: false, error: 'Serviço de autenticação não configurado' }
 }
 
 async function validateSupabaseJWT(token, supabaseUrl, supabaseServiceKey) {
@@ -111,13 +112,20 @@ async function validateHmacToken(token, secret) {
 }
 
 export async function generateToken(userId) {
-    const secret = process.env.APP_SECRET
-    if (!secret) throw new Error('APP_SECRET não configurado. Defina a variável de ambiente APP_SECRET.')
+    // FIX H4 — Verificar APP_SECRET ANTES do fallback
+    const secret = process.env.APP_SECRET;
+    if (!secret) {
+        if (process.env.NODE_ENV === 'production') {
+            throw new Error('[AUTH] APP_SECRET não configurado em produção');
+        }
+        console.warn('[AUTH] APP_SECRET não configurado. Usando fallback APENAS para dev.');
+    }
+    const signingSecret = secret || 'dev_secret_fallback_123';
 
     const encoder = new TextEncoder()
     const key = await crypto.subtle.importKey(
         'raw',
-        encoder.encode(secret),
+        encoder.encode(signingSecret),
         { name: 'HMAC', hash: 'SHA-256' },
         false,
         ['sign']

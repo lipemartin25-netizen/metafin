@@ -10,9 +10,60 @@ const supabase = createClient(
 // UUID v4 pattern for itemId validation
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
-// Cache global em memória para Rate Limiting e Replay Protection
-const rateLimit = new Map();
-const seenNonces = new Set();
+// FIX M1 — Rate limit com expiração inline (sem setTimeout em serverless)
+const rateLimitMap = new Map();
+const RATE_LIMIT_WINDOW_MS = 60000;
+
+function isRateLimited(key, maxRequests = 100) {
+    const now = Date.now();
+    const entry = rateLimitMap.get(key);
+
+    // Limpar entradas expiradas (garbage collection inline)
+    for (const [k, v] of rateLimitMap.entries()) {
+        if (now - v.timestamp > RATE_LIMIT_WINDOW_MS) {
+            rateLimitMap.delete(k);
+        }
+    }
+
+    if (!entry || now - entry.timestamp > RATE_LIMIT_WINDOW_MS) {
+        rateLimitMap.set(key, { count: 1, timestamp: now });
+        return false;
+    }
+
+    entry.count += 1;
+    if (entry.count > maxRequests) return true;
+    return false;
+}
+
+// B. Replay Attack Protection com Map time-based (Fix M1 aplicado aqui também)
+const seenNoncesMap = new Map();
+function isReplayAttack(nonce) {
+    const now = Date.now();
+
+    // Garbage collection para seenNonces
+    for (const [k, timestamp] of seenNoncesMap.entries()) {
+        if (now - timestamp > RATE_LIMIT_WINDOW_MS) {
+            seenNoncesMap.delete(k);
+        }
+    }
+
+    if (seenNoncesMap.has(nonce)) return true;
+
+    seenNoncesMap.set(nonce, now);
+    return false;
+}
+
+// FIX C3 — Timing-safe comparison para evitar timing attacks
+function timingSafeCompare(a, b) {
+    if (typeof a !== 'string' || typeof b !== 'string') return false;
+    if (a.length !== b.length) {
+        // Comparar com hash para manter tempo constante mesmo com tamanhos diferentes
+        const hashA = crypto.createHash('sha256').update(a).digest();
+        const hashB = crypto.createHash('sha256').update(b).digest();
+        return crypto.timingSafeEqual(hashA, hashB);
+    }
+    return crypto.timingSafeEqual(Buffer.from(a, 'utf8'), Buffer.from(b, 'utf8'));
+}
 
 export default async function handler(req, res) {
     if (req.method !== 'POST') {
@@ -21,14 +72,9 @@ export default async function handler(req, res) {
 
     // A. Rate Limiting (DDoS Protection)
     const ip = req.headers['x-forwarded-for'] || req.socket?.remoteAddress || '127.0.0.1';
-    const currentRequests = rateLimit.get(ip) || 0;
-    if (currentRequests > 100) {
+    if (isRateLimited(ip, 100)) {
         return res.status(429).json({ error: 'Too Many Requests' });
     }
-    rateLimit.set(ip, currentRequests + 1);
-
-    // Libera a requisição do rate limit global após 1 minuto (Edge/Serverless lifetime support)
-    setTimeout(() => { rateLimit.set(ip, Math.max(0, rateLimit.get(ip) - 1)); }, 60000);
 
     // Validação Webhook Secret OBRIGATÓRIA (Assinatura HMAC simplificada)
     const webhookSecret = process.env.PLUGGY_WEBHOOK_SECRET;
@@ -38,9 +84,7 @@ export default async function handler(req, res) {
     }
 
     const receivedSecret = req.headers['x-webhook-secret'] || req.query?.secret || '';
-    const secretsMatch = receivedSecret.length === webhookSecret.length &&
-        crypto.timingSafeEqual(Buffer.from(receivedSecret), Buffer.from(webhookSecret));
-    if (!secretsMatch) {
+    if (!timingSafeCompare(receivedSecret, webhookSecret)) {
         console.warn('Webhook rejected: invalid secret');
         return res.status(403).json({ error: 'Forbidden' });
     }
@@ -58,12 +102,10 @@ export default async function handler(req, res) {
         const timestamp = new Date().toISOString();
         const webhookNonce = `${timestamp.slice(0, 13)}-${eventId || connItemId || crypto.randomUUID()}`;
 
-        if (seenNonces.has(webhookNonce)) {
+        if (isReplayAttack(webhookNonce)) {
             // Evita duplicidade de execução no mesmo webhook id + hora
             return res.status(409).json({ error: 'Duplicate Event / Replay Attack Prevented' });
         }
-        seenNonces.add(webhookNonce);
-        setTimeout(() => seenNonces.delete(webhookNonce), 60000);
 
         // C. Logging Estruturado (Datadog/Sentry Ready - No PII)
         const requestHash = crypto.createHash('sha256').update(ip).digest('hex');

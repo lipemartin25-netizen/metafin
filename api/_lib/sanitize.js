@@ -37,7 +37,8 @@ export function sanitizeMessages(messages) {
             role: msg.role,
             content: msg.content
                 .slice(0, MAX_MESSAGE_LENGTH)
-                .replace(/[\p{Cc}]/gu, '')
+                // FIX H2 — Preservar caracteres portugueses (acentos, ç, etc.)
+                .replace(/[\x00-\x1F\x7F]/g, '')
                 .trim()
         }
     })

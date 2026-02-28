@@ -26,6 +26,9 @@ export default async function handler(req, res) {
     }
 
     // 2. Rate Limit (por userId se autenticado, senão por IP)
+    // FIX L1 — ALERTA: Este rate limit é in-memory. Em ambientes Serverless/Vercel (scale-out),
+    // ele funcionará apenas por instância (container). Para bloqueio global rigoroso,
+    // recomenda-se migrar futuramente para Redis (ex: Upstash) ou Vercel KV.
     const ip = (req.headers['x-forwarded-for'] || 'unknown').split(',')[0].trim()
     const rateLimitKey = `chat:${session.userId || ip}`
     const limit = checkRateLimit(rateLimitKey, 15, 60000)

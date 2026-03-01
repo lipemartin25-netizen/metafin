@@ -11,6 +11,8 @@ import Layout from './components/Layout';
 import ProtectedRoute from './components/ProtectedRoute';
 import NpsSurvey from './components/NpsSurvey';
 import PageLoader from './components/PageLoader';
+import NexusSpotlight from './components/nexus/NexusSpotlight';
+import NexusInsightDrawer from './components/nexus/NexusInsightDrawer';
 
 // Lazy load das páginas do app (não críticas)
 const Dashboard = lazy(() => import('./pages/Dashboard'));
@@ -214,9 +216,13 @@ export default function App() {
 
                 {/* AI Chat FAB - apenas no app */}
                 {isAppRoute && (
-                    <Suspense fallback={null}>
-                        <AiChat />
-                    </Suspense>
+                    <>
+                        <Suspense fallback={null}>
+                            <AiChat />
+                        </Suspense>
+                        <NexusSpotlight />
+                        <NexusInsightDrawer />
+                    </>
                 )}
 
                 {/* NPS Survey */}

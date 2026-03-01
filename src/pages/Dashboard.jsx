@@ -18,8 +18,9 @@ import categoriesData from '../data/data.json';
 import { analytics } from '../hooks/useAnalytics';
 import { useLanguage } from '../contexts/LanguageContext';
 import ProGate from '../components/ProGate';
-import { Sparkles } from 'lucide-react';
+import { Sparkles, ScanEye } from 'lucide-react';
 import { formatCurrency as fmt } from '../lib/formatters';
+import NexusDropzone from '../components/nexus/NexusDropzone';
 
 const categoryConfig = categoriesData.categories;
 
@@ -90,6 +91,11 @@ export default function Dashboard() {
                     <h1 className="text-2xl font-bold text-[var(--text-primary)] uppercase tracking-tight">{t('dashboard')}</h1>
                     <p className="text-[var(--text-muted)] text-sm mt-1">{t('dashboard_overview')}</p>
                 </div>
+            </div>
+
+            {/* Nexus Vision Dropzone v3 */}
+            <div className="animate-fade-in-up delay-100">
+                <NexusDropzone />
             </div>
 
             <div className="grid sm:grid-cols-3 gap-6 animate-fade-in">

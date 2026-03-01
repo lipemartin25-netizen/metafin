@@ -1,14 +1,12 @@
 // src/components/nexus/NexusDropzone.jsx
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Upload, FileText, Image as ImageIcon, Loader2, CheckCircle2, AlertCircle } from 'lucide-react';
-import { tw } from '../../lib/utils';
+import { Upload, Loader2, CheckCircle2, AlertCircle } from 'lucide-react';
 import { auth } from '../../lib/supabase';
 
 export default function NexusDropzone() {
     const [isDragging, setIsDragging] = useState(false);
     const [status, setStatus] = useState('idle'); // idle, uploading, success, error
-    const [result, setResult] = useState(null);
 
     const handleFile = async (file) => {
         if (!file || status === 'uploading') return;
@@ -37,7 +35,6 @@ export default function NexusDropzone() {
                 const data = await resp.json();
                 if (!resp.ok) throw new Error(data.error || 'Falha no Vision');
 
-                setResult(data);
                 setStatus('success');
                 setTimeout(() => setStatus('idle'), 5000);
             };
@@ -59,12 +56,8 @@ export default function NexusDropzone() {
                     const file = e.dataTransfer.files[0];
                     handleFile(file);
                 }}
-                className={tw(
-                    "relative overflow-hidden rounded-3xl border-2 border-dashed transition-all duration-500",
-                    "flex flex-col items-center justify-center p-8 gap-4 text-center cursor-pointer",
-                    isDragging ? "border-violet-500 bg-violet-500/10 scale-[1.02]" : "border-white/10 bg-white/[0.02] hover:bg-white/[0.05]",
-                    status === 'uploading' ? "pointer-events-none opacity-80" : ""
-                )}
+                className={`relative overflow-hidden rounded-3xl border-2 border-dashed transition-all duration-500 flex flex-col items-center justify-center p-8 gap-4 text-center cursor-pointer ${isDragging ? "border-violet-500 bg-violet-500/10 scale-[1.02]" : "border-white/10 bg-white/[0.02] hover:bg-white/[0.05]"
+                    } ${status === 'uploading' ? "pointer-events-none opacity-80" : ""}`}
             >
                 {/* Background Glow */}
                 <div className="absolute inset-0 bg-gradient-to-br from-violet-600/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -78,7 +71,7 @@ export default function NexusDropzone() {
                             exit={{ opacity: 0, scale: 0.9 }}
                             className="flex flex-col items-center"
                         >
-                            <div className="p-4 bg-white/5 rounded-2xl mb-4 group-hover:scale-110 transition-transform">
+                            <div className="p-4 bg-white/5 rounded-2xl mb-4 group-hover:scale-110 transition-transform shadow-inner">
                                 <Upload className="w-8 h-8 text-violet-400" />
                             </div>
                             <h4 className="text-white font-bold text-sm">Nexus Vision Drop</h4>
@@ -95,28 +88,28 @@ export default function NexusDropzone() {
                         >
                             <Loader2 className="w-10 h-10 text-violet-500 animate-spin mb-4" />
                             <p className="text-sm font-medium text-white">Nexus está lendo os dados...</p>
-                            <p className="text-[10px] text-gray-500 mt-2 uppercase">Processamento Multimodal</p>
+                            <p className="text-[10px] text-gray-500 mt-2 uppercase tracking-wide">Processamento Multimodal</p>
                         </motion.div>
                     )}
 
                     {status === 'success' && (
                         <motion.div
                             key="success"
-                            initial={{ opacity: 0, scale: 0.5 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            className="flex flex-col items-center"
+                            initial={{ scale: 0.8, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            className="flex flex-col items-center text-emerald-400"
                         >
-                            <CheckCircle2 className="w-10 h-10 text-emerald-500 mb-4" />
-                            <p className="text-sm font-bold text-white">Processado com Sucesso!</p>
-                            <p className="text-[10px] text-emerald-400 mt-2 uppercase">Transação criada no Dashboard</p>
+                            <CheckCircle2 className="w-10 h-10 mb-4" />
+                            <p className="text-sm font-bold">Processado com Sucesso</p>
+                            <p className="text-[10px] uppercase mt-2">Dados extraídos para o MetaFin</p>
                         </motion.div>
                     )}
 
                     {status === 'error' && (
                         <motion.div
                             key="error"
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
+                            initial={{ scale: 0.8, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
                             className="flex flex-col items-center text-red-400"
                         >
                             <AlertCircle className="w-10 h-10 mb-4" />

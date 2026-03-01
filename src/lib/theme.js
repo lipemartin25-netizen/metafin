@@ -1,9 +1,10 @@
 // src/lib/theme.js
 export const tw = {
     // === Cards ===
-    card: 'pastel-card p-6',
+    card: 'tech-card p-6',
     cardElevated: 'pastel-card-featured p-6',
-    cardCompact: 'pastel-card p-4',
+    cardCompact: 'tech-card p-4',
+    bankCard: 'tech-card p-4 flex flex-col items-center gap-3 text-center cursor-pointer',
 
     // === Buttons ===
     btnPrimary: 'btn-menta',

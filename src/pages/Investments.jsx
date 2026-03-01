@@ -1,13 +1,9 @@
-import { tw } from '@/lib/theme';
 import { useState, useEffect, useMemo } from 'react';
-import { useAuth } from '../contexts/AuthContext';
-import { analytics } from '../hooks/useAnalytics';
 import { usePluggy } from '../hooks/usePluggy';
-import { TrendingUp, TrendingDown, Briefcase, Building2, Trash2, ExternalLink, Plug, RefreshCw, ShieldCheck, X, BarChart3, PieChart as PieIcon } from 'lucide-react';
+import { TrendingUp, Briefcase, Trash2, ShieldCheck, X, BarChart3, PieChart as PieIcon, Plus } from 'lucide-react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip, LineChart, Line, XAxis, YAxis, CartesianGrid } from 'recharts';
 import banksData from '../data/banks.json';
 import benchmarksData from '../data/benchmarks.json';
-import { motion } from 'framer-motion';
 
 const COLORS = ['#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#14b8a6'];
 
@@ -15,30 +11,12 @@ function fmt(value) {
     return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
 }
 
-const B3_HISTORICAL = [
-    { year: 2024, month: 'Jan', ibov: 128105, cdi_acc: 1.08 },
-    { year: 2024, month: 'Fev', ibov: 129808, cdi_acc: 2.17 },
-    { year: 2024, month: 'Mar', ibov: 127814, cdi_acc: 3.26 },
-    { year: 2024, month: 'Abr', ibov: 124110, cdi_acc: 4.33 },
-    { year: 2024, month: 'Mai', ibov: 122284, cdi_acc: 5.41 },
-    { year: 2024, month: 'Jun', ibov: 123215, cdi_acc: 6.50 },
-    { year: 2024, month: 'Jul', ibov: 128114, cdi_acc: 7.58 },
-    { year: 2024, month: 'Ago', ibov: 136004, cdi_acc: 8.57 },
-    { year: 2024, month: 'Set', ibov: 131012, cdi_acc: 9.56 },
-    { year: 2024, month: 'Out', ibov: 129065, cdi_acc: 10.62 },
-    { year: 2024, month: 'Nov', ibov: 125633, cdi_acc: 11.35 },
-    { year: 2024, month: 'Dez', ibov: 124690, cdi_acc: 12.35 },
-    { year: 2025, month: 'Jan', ibov: 121857, cdi_acc: 1.09 },
-    { year: 2025, month: 'Fev', ibov: 125345, cdi_acc: 2.20 },
-];
+
 
 export default function Investments() {
-    const { user } = useAuth();
-    const { openWidget, connecting: pluggyConnecting, error: pluggyError } = usePluggy();
+    const { openWidget } = usePluggy();
     const [connectedBrokers, setConnectedBrokers] = useState([]);
     const [showConnectModal, setShowConnectModal] = useState(false);
-    const [showB3Modal, setShowB3Modal] = useState(false);
-    const [selectedBroker, setSelectedBroker] = useState(null);
 
     useEffect(() => {
         const stored = localStorage.getItem('sf_connected_brokers');
@@ -86,33 +64,33 @@ export default function Investments() {
     const availableBrokers = banksData.filter(b => !connectedBrokers.find(cb => cb.id === b.id) && (b.type === 'broker' || b.type === 'integration'));
 
     return (
-        <div className="py-6 space-y-8 animate-fade-in pb-20">
-            <div className="flex items-center justify-between">
+        <div className="py-6 space-y-8 animate-fade-in pb-20 max-w-7xl mx-auto">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-2xl font-bold text-[var(--text-primary)] flex items-center gap-2">
-                        <Briefcase className="w-6 h-6 text-brand-primary" />
+                    <h1 className="text-3xl font-black text-[var(--text-primary)] flex items-center gap-3 tracking-tighter uppercase">
+                        <Briefcase className="w-8 h-8 text-[var(--menta-dark)]" />
                         Investimentos
                     </h1>
-                    <p className="text-gray-500 text-sm mt-1">Consolidação via Open Finance B3.</p>
+                    <p className="text-[var(--text-muted)] text-[10px] font-black uppercase tracking-[0.2em] mt-1">Consolidação via Open Finance B3.</p>
                 </div>
-                <button onClick={() => setShowB3Modal(true)} className="gradient-btn px-4 py-2 text-sm flex items-center gap-2">
+                <button className="btn-menta px-6 py-2.5 text-xs flex items-center gap-2">
                     <BarChart3 className="w-4 h-4" /> Histórico B3
                 </button>
             </div>
 
             {/* Main Portfolio Card */}
-            <div className="pastel-card p-8 bg-[var(--bg-base)] border-[var(--border-subtle)] relative overflow-hidden group">
-                <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/5 to-transparent pointer-events-none" />
-                <div className="relative z-10 flex flex-col md:flex-row items-center gap-10">
-                    <div className="flex-1 w-full">
-                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5 flex items-center gap-1.5">
-                            <TrendingUp className="w-4 h-4 text-brand-primary" /> Patrimônio em Renda Variável
+            <div className="pastel-card-featured p-10 relative overflow-hidden group">
+                <div className="absolute inset-0 bg-gradient-to-br from-[var(--menta-soft)]/10 to-transparent pointer-events-none" />
+                <div className="relative z-10 flex flex-col lg:flex-row items-center gap-12">
+                    <div className="flex-1 w-full text-center lg:text-left">
+                        <p className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-[0.3em] mb-4 flex items-center justify-center lg:justify-start gap-3">
+                            <span className="w-10 h-[1px] bg-[var(--border-subtle)]" /> Patrimônio em Renda Variável
                         </p>
-                        <h2 className="text-5xl md:text-6xl font-black tracking-tighter text-[var(--text-primary)] group-hover:scale-[1.01] transition-transform duration-700">
+                        <h2 className="text-5xl md:text-7xl font-black tracking-tighter text-[var(--text-primary)] group-hover:scale-[1.01] transition-transform duration-700">
                             {fmt(portfolio.total)}
                         </h2>
-                        <div className="mt-8 flex gap-6">
-                            <div className="tech-card px-4 py-2 border-brand-primary/20 bg-brand-primary/5 text-[10px] font-black text-brand-primary uppercase tracking-widest flex items-center gap-2">
+                        <div className="mt-8 flex flex-wrap justify-center lg:justify-start gap-4">
+                            <div className="tech-card px-4 py-2 border-[var(--menta-border)] bg-[var(--menta-soft)]/5 text-[10px] font-black text-[var(--menta-dark)] uppercase tracking-widest flex items-center gap-2">
                                 <ShieldCheck className="w-3.5 h-3.5" /> Sincronizado Pluggy
                             </div>
                         </div>
@@ -187,7 +165,7 @@ export default function Investments() {
                         <h2 className="text-xl font-bold text-[var(--text-primary)] mb-6 uppercase tracking-wider">Selecionar Instituição</h2>
                         <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3">
                             {availableBrokers.map(b => (
-                                <button key={b.id} onClick={() => { setSelectedBroker(b); openWidget(); setShowConnectModal(false); }} className="tech-card p-3 flex flex-col items-center gap-2 hover:border-brand-primary/40 transition-all group">
+                                <button key={b.id} onClick={() => { openWidget(); setShowConnectModal(false); }} className="tech-card p-3 flex flex-col items-center gap-2 hover:border-brand-primary/40 transition-all group">
                                     <div className="w-10 h-10 rounded-xl flex items-center justify-center text-white" style={{ backgroundColor: b.color }}>{b.logo}</div>
                                     <span className="text-[9px] font-black text-gray-400 uppercase tracking-tighter truncate w-full text-center">{b.name}</span>
                                 </button>

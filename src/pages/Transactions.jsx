@@ -2,7 +2,7 @@ import { useState, useMemo, useRef } from 'react';
 import { usePageAnnounce } from '../components/A11yAnnouncer';
 import { useTransactions } from '../hooks/useTransactions';
 import StatusChip from '../components/StatusChip';
-import { Search, Filter, Upload, Plus, X, FileSpreadsheet, CheckCircle, AlertCircle, Loader2, Trash2, Download, BarChart2, List, Landmark, FileText, File } from 'lucide-react';
+import { Search, Filter, Upload, Plus, X, FileSpreadsheet, CheckCircle, AlertCircle, Loader2, Trash2, Download, BarChart2, List, Landmark, FileText, File, ArrowUpRight, ArrowDownRight, ShieldCheck } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import Papa from 'papaparse';
 import { analytics } from '../hooks/useAnalytics';
@@ -257,10 +257,12 @@ export default function Transactions() {
     return (
         <div className="py-6 space-y-6 animate-fade-in">
             {/* Header */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                 <div>
-                    <h1 className="text-2xl font-bold text-[var(--text-primary)]">Transações</h1>
-                    <p className="text-[var(--text-secondary)] text-sm mt-0.5">{filteredTransactions.length} transações em <span className="capitalize">{monthLabel}</span></p>
+                    <h1 className="text-3xl font-black text-[var(--text-primary)] flex items-center gap-3 tracking-tighter uppercase">
+                        <List className="w-8 h-8 text-[var(--menta-dark)]" /> Transações
+                    </h1>
+                    <p className="text-[var(--text-muted)] text-[10px] font-black uppercase tracking-[0.2em] mt-1">{filteredTransactions.length} registros em <span className="text-[var(--menta-dark)]">{monthLabel}</span></p>
                 </div>
                 <div className="flex items-center gap-3 flex-wrap sm:flex-nowrap">
                     {/* Month navigator */}
@@ -270,17 +272,17 @@ export default function Transactions() {
                         <button onClick={() => changeMonth(1)} className="p-2 text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-all rounded-lg hover:bg-[var(--bg-surface)]">→</button>
                     </div>
                     {/* View mode */}
-                    <div className="flex bg-[var(--bg-surface)] p-1 rounded-xl border border-[var(--border)]">
-                        <button onClick={() => setViewMode('list')} className={`p-2 rounded-lg transition-all ${viewMode === 'list' ? 'bg-brand-primary/20 text-brand-glow' : 'text-[var(--text-muted)] hover:text-[var(--text-secondary)]'}`} title="Lista"><List className="w-4 h-4" /></button>
-                        <button onClick={() => setViewMode('analysis')} className={`p-2 rounded-lg transition-all ${viewMode === 'analysis' ? 'bg-brand-primary/20 text-brand-glow' : 'text-[var(--text-muted)] hover:text-[var(--text-secondary)]'}`} title="Análise"><BarChart2 className="w-4 h-4" /></button>
+                    <div className="flex bg-[var(--bg-card)] p-1 rounded-2xl border border-[var(--border-subtle)] shadow-3d">
+                        <button onClick={() => setViewMode('list')} className={`p-2.5 rounded-xl transition-all ${viewMode === 'list' ? 'bg-[var(--menta-soft)] text-[var(--menta-dark)]' : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'}`} title="Lista"><List className="w-4 h-4" /></button>
+                        <button onClick={() => setViewMode('analysis')} className={`p-2.5 rounded-xl transition-all ${viewMode === 'analysis' ? 'bg-[var(--menta-soft)] text-[var(--menta-dark)]' : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'}`} title="Análise"><BarChart2 className="w-4 h-4" /></button>
                     </div>
                     {/* Export */}
                     <div className="relative">
                         <button
                             onClick={() => setShowExportModal(!showExportModal)}
-                            className="h-[42px] px-4 py-2 rounded-xl border border-[var(--border)] text-[var(--text-secondary)] hover:bg-[var(--bg-surface)] hover:text-[var(--text-primary)] transition-all text-sm flex items-center gap-2 whitespace-nowrap bg-[var(--bg-surface)]"
+                            className="h-[48px] px-5 rounded-2xl border border-[var(--border-subtle)] text-[var(--text-muted)] hover:bg-[var(--bg-surface)] hover:text-[var(--text-primary)] transition-all text-xs font-black uppercase tracking-widest flex items-center gap-2 bg-[var(--bg-card)] shadow-3d"
                         >
-                            <Download className="w-4 h-4 flex-shrink-0" />
+                            <Download className="w-4 h-4 text-[var(--menta-dark)]" />
                             <span className="hidden sm:inline">Exportar</span>
                         </button>
                         {showExportModal && (
@@ -316,20 +318,32 @@ export default function Transactions() {
             </div>
 
             {/* Summary Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 animate-fade-in">
-                <div className="tech-card p-5">
-                    <p className="text-xs font-semibold text-[var(--text-secondary)] mb-1 uppercase tracking-wider">Receitas</p>
-                    <h5 className="text-2xl font-extrabold text-[var(--brand)]">{fmt(monthSummary.income)}</h5>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 animate-fade-in">
+                <div className="tech-card p-6 group relative overflow-hidden">
+                    <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-emerald-500/5 to-transparent pointer-events-none" />
+                    <p className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest mb-2">Receitas</p>
+                    <h5 className="text-3xl font-black text-[var(--menta-dark)] tracking-tighter">{fmt(monthSummary.income)}</h5>
+                    <div className="absolute bottom-4 right-4 text-emerald-500/10 group-hover:scale-110 transition-transform">
+                        <ArrowUpRight className="w-12 h-12" />
+                    </div>
                 </div>
-                <div className="tech-card p-5">
-                    <p className="text-xs font-semibold text-[var(--text-secondary)] mb-1 uppercase tracking-wider">Despesas</p>
-                    <h5 className="text-2xl font-extrabold text-rose-400">-{fmt(monthSummary.expense)}</h5>
+                <div className="tech-card p-6 group relative overflow-hidden">
+                    <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-rose-500/5 to-transparent pointer-events-none" />
+                    <p className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest mb-2">Despesas</p>
+                    <h5 className="text-3xl font-black text-rose-500 tracking-tighter">-{fmt(monthSummary.expense)}</h5>
+                    <div className="absolute bottom-4 right-4 text-rose-500/10 group-hover:scale-110 transition-transform">
+                        <ArrowDownRight className="w-12 h-12" />
+                    </div>
                 </div>
-                <div className="tech-card p-5">
-                    <p className="text-xs font-semibold text-[var(--text-secondary)] mb-1 uppercase tracking-wider">Fluxo de Caixa</p>
-                    <h5 className={`text-2xl font-extrabold ${monthSummary.income - monthSummary.expense >= 0 ? 'text-[var(--brand)]' : 'text-rose-400'}`}>
+                <div className="tech-card p-6 group relative overflow-hidden">
+                    <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-[var(--menta-soft)]/10 to-transparent pointer-events-none" />
+                    <p className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest mb-2">Fluxo Líquido</p>
+                    <h5 className={`text-3xl font-black tracking-tighter ${monthSummary.income - monthSummary.expense >= 0 ? 'text-[var(--menta-dark)]' : 'text-rose-500'}`}>
                         {fmt(monthSummary.income - monthSummary.expense)}
                     </h5>
+                    <div className="absolute bottom-4 right-4 text-[var(--menta-dark)]/5 group-hover:scale-110 transition-transform">
+                        <ShieldCheck className="w-12 h-12" />
+                    </div>
                 </div>
             </div>
 

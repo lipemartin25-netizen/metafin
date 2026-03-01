@@ -93,37 +93,37 @@ export default function Dashboard() {
             </div>
 
             <div className="grid sm:grid-cols-3 gap-6 animate-fade-in">
-                <div className="tech-card p-6 border-[var(--menta-border)]">
+                <div className="pastel-card-featured p-6 group">
                     <div className="flex items-center justify-between relative z-10">
                         <div>
-                            <p className="text-[var(--text-muted)] text-xs font-bold uppercase tracking-widest mb-2">{t('total_balance')}</p>
-                            <h2 className="text-3xl md:text-4xl font-playfair font-bold text-[var(--text-primary)]">{fmt(summary.balance)}</h2>
+                            <p className="text-[var(--text-muted)] text-[10px] font-black uppercase tracking-[0.2em] mb-2">{t('total_balance')}</p>
+                            <h2 className="text-3xl md:text-4xl font-playfair font-bold text-[var(--text-primary)] group-hover:text-[var(--menta-dark)] transition-colors">{fmt(summary.balance)}</h2>
                         </div>
-                        <div className="w-12 h-12 rounded-xl bg-[var(--menta-soft)] flex items-center justify-center border border-[var(--menta-border)]">
+                        <div className="w-12 h-12 rounded-2xl bg-[var(--menta-soft)] flex items-center justify-center border border-[var(--menta-border)] shadow-inset-3d group-hover:scale-110 transition-transform">
                             <Wallet className="w-6 h-6 text-[var(--menta-dark)]" />
                         </div>
                     </div>
                 </div>
 
-                <div className="tech-card p-6">
+                <div className="tech-card p-6 group">
                     <div className="flex items-center justify-between">
                         <div>
-                            <p className="text-[var(--text-muted)] text-xs font-bold uppercase tracking-widest mb-2">{t('income')}</p>
-                            <h2 className="text-2xl font-playfair font-bold text-emerald-400">{fmt(summary.totalIncome)}</h2>
+                            <p className="text-[var(--text-muted)] text-[10px] font-black uppercase tracking-[0.2em] mb-2">{t('income')}</p>
+                            <h2 className="text-2xl font-playfair font-bold text-emerald-500">{fmt(summary.totalIncome)}</h2>
                         </div>
-                        <div className="w-10 h-10 rounded-lg bg-emerald-500/10 flex items-center justify-center">
+                        <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20 group-hover:rotate-12 transition-transform">
                             <TrendingUp className="w-5 h-5 text-emerald-400" />
                         </div>
                     </div>
                 </div>
 
-                <div className="tech-card p-6">
+                <div className="tech-card p-6 group">
                     <div className="flex items-center justify-between">
                         <div>
-                            <p className="text-[var(--text-muted)] text-xs font-bold uppercase tracking-widest mb-2">{t('expenses')}</p>
-                            <h2 className="text-2xl font-playfair font-bold text-rose-400">{fmt(summary.totalExpenses)}</h2>
+                            <p className="text-[var(--text-muted)] text-[10px] font-black uppercase tracking-[0.2em] mb-2">{t('expenses')}</p>
+                            <h2 className="text-2xl font-playfair font-bold text-rose-500">{fmt(summary.totalExpenses)}</h2>
                         </div>
-                        <div className="w-10 h-10 rounded-lg bg-rose-500/10 flex items-center justify-center">
+                        <div className="w-10 h-10 rounded-xl bg-rose-500/10 flex items-center justify-center border border-rose-500/20 group-hover:-rotate-12 transition-transform">
                             <TrendingDown className="w-5 h-5 text-rose-400" />
                         </div>
                     </div>

@@ -4,7 +4,7 @@ import Navbar from './Navbar';
 
 export default function Layout() {
     return (
-        <div className="min-h-screen bg-[var(--bg-base)] flex font-sans selection:bg-[var(--menta-soft)] selection:text-[var(--menta-dark)] transition-colors duration-500 relative overflow-hidden">
+        <div className="min-h-screen bg-[var(--bg-base)] flex font-sans selection:bg-[var(--menta-soft)] selection:text-[var(--menta-dark)] transition-colors duration-500 relative overflow-hidden" style={{ perspective: '1200px' }}>
             {/* Background Effects 3D */}
             <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
                 <div className="tech-grid-bg opacity-[0.15] dark:opacity-25" />

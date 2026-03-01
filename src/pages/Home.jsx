@@ -385,9 +385,14 @@ export default function Home() {
                 </div>
 
                 <div className="max-w-7xl mx-auto pt-8 border-t border-[var(--border-subtle)] flex flex-col md:flex-row justify-between items-center gap-6">
-                    <p className="text-[11px] font-bold text-[var(--text-muted)] tracking-widest uppercase">
-                        © {new Date().getFullYear()} METAFIN HOLDINGS. ALL RIGHTS RESERVED.
-                    </p>
+                    <div className="flex flex-col items-center md:items-start gap-2">
+                        <p className="text-[11px] font-bold text-[var(--text-muted)] tracking-widest uppercase">
+                            © {new Date().getFullYear()} METAFIN HOLDINGS. ALL RIGHTS RESERVED.
+                        </p>
+                        <span className="text-[9px] font-black text-[var(--menta-dark)] bg-[var(--menta-soft)] px-2 py-0.5 rounded border border-[var(--menta-border)] uppercase tracking-tighter">
+                            Build: v2.5.0 Premium 3D active
+                        </span>
+                    </div>
                     <div className="flex items-center gap-2 text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-widest bg-[var(--bg-[var(--bg-elevated)])] px-4 py-2 rounded-full border border-[var(--border-subtle)]">
                         <Lock className="w-3 h-3 text-[var(--menta-dark)]" /> SOC-2 TYPE II COMPLIANT
                     </div>

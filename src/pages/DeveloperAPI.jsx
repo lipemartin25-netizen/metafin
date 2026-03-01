@@ -71,7 +71,7 @@ export default function DeveloperAPI() {
  {apiKey ? (
  <div className="space-y-4">
  <div className="flex items-center gap-2">
- <div className="flex-1 bg-gray-800/40 dark:bg-black/40 border border-gray-700/40 dark:border-[var(--border)] p-3 rounded-xl font-mono text-sm text-gray-300 dark:text-gray-300 break-all select-all">
+ <div className="flex-1 bg-gray-800/40 dark:bg-black/40 border border-[var(--border-subtle)]/40 dark:border-[var(--border)] p-3 rounded-xl font-mono text-sm text-gray-300 dark:text-gray-300 break-all select-all">
  {apiKey}
  </div>
  <button
@@ -90,7 +90,7 @@ export default function DeveloperAPI() {
  </div>
  </div>
  ) : (
- <div className="text-center py-6 border border-dashed border-gray-700/50 dark:border-[var(--border)] rounded-xl">
+ <div className="text-center py-6 border border-dashed border-[var(--border-subtle)]/50 dark:border-[var(--border)] rounded-xl">
  <p className="text-sm text-gray-500 mb-4">Você ainda não gerou uma chave de API.</p>
  <button onClick={generateKey} disabled={generating} className="gradient-btn-fuchsia flex items-center gap-2 mx-auto">
  {generating ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Key className="w-4 h-4" />}
@@ -115,7 +115,7 @@ export default function DeveloperAPI() {
  <div className="relative group">
  <div className="absolute -inset-1 bg-[var(--bg-base)] from-brand-glow to-brand-glow rounded-xl blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
  <div className="relative bg-[#0d1117] rounded-xl overflow-hidden ring-1 ring-white/10">
- <div className="flex items-center justify-between px-4 py-2 bg-gray-800/40/5 border-b border-[var(--border)]">
+ <div className="flex items-center justify-between px-4 py-2 bg-[var(--bg-surface)] border-b border-[var(--border)]">
  <div className="flex gap-2">
  <div className="w-3 h-3 rounded-full bg-red-500"></div>
  <div className="w-3 h-3 rounded-full bg-yellow-500"></div>

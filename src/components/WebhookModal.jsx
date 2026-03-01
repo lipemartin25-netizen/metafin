@@ -97,7 +97,7 @@ export default function WebhookModal({ isOpen, onClose, onSuccess }) {
  </h2>
  <button
  onClick={onClose}
- className="text-gray-400 hover:text-[var(--text-primary)] transition-colors p-2 hover:bg-gray-800/40/5 rounded-xl self-end sm:self-auto"
+ className="text-gray-400 hover:text-[var(--text-primary)] transition-colors p-2 hover:bg-[var(--bg-surface)] rounded-xl self-end sm:self-auto"
  title="Fechar (ESC)"
  >
  <X className="w-5 h-5" />
@@ -185,7 +185,7 @@ export default function WebhookModal({ isOpen, onClose, onSuccess }) {
  <button
  type="button"
  onClick={copySecret}
- className="px-4 py-3 bg-gray-800/40/5 hover:bg-gray-800/40/10 border border-[var(--border)] rounded-xl text-[var(--text-primary)] text-sm font-semibold transition-colors whitespace-nowrap flex items-center gap-2"
+ className="px-4 py-3 bg-[var(--bg-surface)] hover:bg-gray-800/40/10 border border-[var(--border)] rounded-xl text-[var(--text-primary)] text-sm font-semibold transition-colors whitespace-nowrap flex items-center gap-2"
  >
  {copied ? <><CheckCircle className="w-4 h-4 text-brand-glow" /> Copiado</> : <><Copy className="w-4 h-4" /> Copiar</>}
  </button>
@@ -208,14 +208,14 @@ export default function WebhookModal({ isOpen, onClose, onSuccess }) {
  <button
  type="button"
  onClick={onClose}
- className="flex-1 px-4 py-3.5 bg-gray-800/40/5 hover:bg-gray-800/40/10 border border-[var(--border)] rounded-xl text-[var(--text-primary)] font-semibold transition-colors"
+ className="flex-1 px-4 py-3.5 bg-[var(--bg-surface)] hover:bg-gray-800/40/10 border border-[var(--border)] rounded-xl text-[var(--text-primary)] font-semibold transition-colors"
  >
  Cancelar
  </button>
  <button
  type="submit"
  disabled={loading}
- className="flex-1 px-4 py-3.5 bg-brand-glow hover:bg-brand-glow disabled:bg-fuchsia-900/50 disabled:text-[var(--text-primary)]/50 disabled:cursor-not-allowed rounded-xl text-[var(--text-primary)] font-bold transition-colors flex items-center justify-center gap-2 shadow-lg shadow-brand-glow/20"
+ className="flex-1 px-4 py-3.5 bg-brand-glow hover:bg-brand-glow disabled:bg-[var(--bg-base)]uchsia-900/50 disabled:text-[var(--text-primary)]/50 disabled:cursor-not-allowed rounded-xl text-[var(--text-primary)] font-bold transition-colors flex items-center justify-center gap-2 shadow-lg shadow-brand-glow/20"
  >
  {loading ? (
  <><RefreshCw className="w-4 h-4 animate-spin" /> Salvando...</>

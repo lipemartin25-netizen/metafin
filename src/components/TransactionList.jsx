@@ -9,7 +9,7 @@ const transactions = [
  { icon: Utensils, label: "iFood", category: "Alimentação", amount: -67.50, date: "Ontem, 20:08", color: "text-red-400", bg: "bg-red-500/10" },
  { icon: Zap, label: "CPFL Energia", category: "Contas", amount: -184.30, date: "23 Fev", color: "text-yellow-400", bg: "bg-yellow-500/10" },
  { icon: Car, label: "Posto Shell", category: "Transporte", amount: -120.00, date: "22 Fev", color: "text-blue-400", bg: "bg-blue-500/10" },
- { icon: Coffee, label: "Starbucks", category: "Alimentação", amount: -32.00, date: "21 Fev", color: "text-amber-400", bg: "bg-amber-500/10" },
+ { icon: Coffee, label: "Starbucks", category: "Alimentação", amount: -32.00, date: "21 Fev", color: "text-amber-400", bg: "bg-[var(--bg-base)]mber-500/10" },
 ];
 
 export default function TransactionList() {
@@ -24,7 +24,7 @@ export default function TransactionList() {
  Transações Recentes
  <button
  onClick={() => toggleVisibility()}
- className="p-1 rounded-lg bg-gray-800/40/5 opacity-0 group-hover:opacity-100 transition-all hover:bg-gray-800/40/10"
+ className="p-1 rounded-lg bg-[var(--bg-surface)] opacity-0 group-hover:opacity-100 transition-all hover:bg-gray-800/40/10"
  >
  {isVisible ? <EyeOff size={12} className="text-[var(--text-primary)]/40" /> : <Eye size={12} className="text-[var(--text-primary)]/40" />}
  </button>

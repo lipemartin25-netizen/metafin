@@ -93,14 +93,14 @@ export default function InvestmentSimulator({ financialData }) {
 
  return (
  <div className="space-y-6">
- <div className="relative overflow-hidden flex flex-col items-center justify-center rounded-[2.5rem] bg-[var(--bg-base)] from-brand-primary via-teal-600 to-fuchsia-700 p-10 md:p-14 text-[var(--text-primary)] shadow-glass-card border border-[var(--border)] text-center group perspective-1000">
+ <div className="relative overflow-hidden flex flex-col items-center justify-center rounded-[2.5rem] bg-[var(--bg-base)] from-brand-primary via-teal-600 to-fuchsia-700 p-10 md:p-14 text-[var(--text-primary)] shadow-tech-card border border-[var(--border)] text-center group perspective-1000">
  {/* Efeitos 3D Internos */}
  <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+PGRlZnM+PG1hdHRlcm4gaWQ9ImciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTTAgNDBoNDBWMEgweiIgZmlsbD0ibm9uZSIvPjxwYXRoIGQ9Ik0wIDEwaDQwTTAgMjBoNDBNMCAzMGg0ME0xMCAwdjQwTTIwIDB2NDBNMzAgMHY0MCIgc3Ryb2tlPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMDUpIiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZykiLz48L3N2Zz4=')] opacity-30" />
  <div className="absolute -left-20 -top-20 w-80 h-80 bg-gray-800/40/10 rounded-full mix-blend-overlay filter blur-[40px] opacity-60 group-hover:-translate-y-px transition-transform transition-transform duration-1000 ease-out" />
  <div className="absolute top-0 right-0 w-64 h-64 bg-cyan-400/20 rounded-full mix-blend-color-dodge filter blur-[40px] opacity-60 group-hover:-translate-x-10 transition-transform duration-1000 ease-out delay-100" />
 
  <div className="relative z-10 p-5 bg-gray-800/40/10 rounded-[2rem] shadow-inner border border-[var(--border)] mb-6 group-hover:-translate-y-px group-hover:rotate-3 transition-transform duration-500">
- <Coins className="w-16 h-16 text-yellow-300 drop-shadow-glass-card animate-bounce-slow" />
+ <Coins className="w-16 h-16 text-yellow-300 drop-shadow-tech-card animate-bounce-slow" />
  </div>
 
  <h2 className="text-4xl md:text-5xl font-black mb-4 relative z-10 tracking-tight drop-shadow-lg scale-100 group-hover:scale-[1.02] transition-transform duration-500">
@@ -112,7 +112,7 @@ export default function InvestmentSimulator({ financialData }) {
  </p>
 
  {/* Laser scan line decorative effect */}
- <div className="absolute inset-x-0 h-1 bg-[var(--bg-base)] from-transparent via-cyan-300 to-transparent top-0 opacity-0 group-hover:opacity-100 animate-[scan_2s_ease-in-out_infinite] shadow-glass-card" />
+ <div className="absolute inset-x-0 h-1 bg-[var(--bg-base)] from-transparent via-cyan-300 to-transparent top-0 opacity-0 group-hover:opacity-100 animate-[scan_2s_ease-in-out_infinite] shadow-tech-card" />
  </div>
 
  {/* Inputs */}
@@ -133,7 +133,7 @@ export default function InvestmentSimulator({ financialData }) {
  type="number"
  value={params.initialAmount}
  onChange={e => handleChange('initialAmount', e.target.value)}
- className="w-full rounded-2xl border border-gray-700/40 dark:border-[var(--border)] 
+ className="w-full rounded-2xl border border-[var(--border-subtle)]/40 dark:border-[var(--border)] 
  bg-gray-800/40 dark:bg-black/20 text-[var(--text-primary)] dark:text-[var(--text-primary)] p-3 pl-10 text-sm font-bold shadow-lg shadow-black/10 outline-none
  focus:ring-2 focus:ring-emerald-500 transition-all"
  />
@@ -151,7 +151,7 @@ export default function InvestmentSimulator({ financialData }) {
  type="number"
  value={params.monthlyContribution}
  onChange={e => handleChange('monthlyContribution', e.target.value)}
- className="w-full rounded-2xl border border-gray-700/40 dark:border-[var(--border)] 
+ className="w-full rounded-2xl border border-[var(--border-subtle)]/40 dark:border-[var(--border)] 
  bg-gray-800/40 dark:bg-black/20 text-[var(--text-primary)] dark:text-[var(--text-primary)] p-3 pl-10 text-sm font-bold shadow-lg shadow-black/10 outline-none
  focus:ring-2 focus:ring-emerald-500 transition-all"
  />
@@ -170,7 +170,7 @@ export default function InvestmentSimulator({ financialData }) {
  className={`px - 4 py - 2 rounded - xl text - xs font - bold uppercase tracking - wider
 transition - all border ${params.months === opt.value
  ? 'bg-brand-primary text-[var(--text-primary)] shadow-lg shadow-brand-primary/30 border-brand-primary scale-105'
- : 'bg-gray-800/40 dark:bg-gray-800/40/5 text-gray-600 dark:text-gray-300 border-gray-700/40 dark:border-[var(--border)] hover:border-brand-primary/50 hover:text-brand-primary'
+ : 'bg-gray-800/40 dark:bg-[var(--bg-surface)] text-gray-600 dark:text-gray-300 border-[var(--border-subtle)]/40 dark:border-[var(--border)] hover:border-brand-primary/50 hover:text-brand-primary'
  } `}
  >
  {opt.label}
@@ -327,7 +327,7 @@ transition - all border ${params.months === opt.value
  <div className="overflow-x-auto custom-scrollbar pb-2">
  <table className="w-full text-sm table-premium">
  <thead>
- <tr className="border-b border-gray-700/40 dark:border-[var(--border)]">
+ <tr className="border-b border-[var(--border-subtle)]/40 dark:border-[var(--border)]">
  <th className="text-left py-3 px-3 uppercase text-[10px] tracking-widest text-gray-500 font-bold">Investimento</th>
  <th className="text-right py-3 px-3 uppercase text-[10px] tracking-widest text-gray-500 font-bold">Investido</th>
  <th className="text-right py-3 px-3 uppercase text-[10px] tracking-widest text-gray-500 font-bold">Bruto</th>

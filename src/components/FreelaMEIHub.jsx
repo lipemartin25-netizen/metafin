@@ -55,7 +55,7 @@ export default function FreelaMEIHub() {
 
  <div className="grid md:grid-cols-3 gap-6 animate-fade-in">
  {/* DAS / Imposto */}
- <div className={`\${tw.card} flex flex-col gap-4 p-6 border border-gray-800`}>
+ <div className={`\${tw.card} flex flex-col gap-4 p-6 border border-[var(--border-subtle)]`}>
  <div className="flex items-center gap-3">
  <div className="w-10 h-10 rounded-lg bg-orange-500/10 flex items-center justify-center border border-orange-500/20">
  <Receipt className="w-5 h-5 text-orange-400" />
@@ -71,7 +71,7 @@ export default function FreelaMEIHub() {
  </div>
 
  {/* ProLabore Suggestion */}
- <div className={`\${tw.card} flex flex-col gap-4 p-6 border border-cyan-500/30 shadow-glass-card relative overflow-hidden`}>
+ <div className={`\${tw.card} flex flex-col gap-4 p-6 border border-cyan-500/30 shadow-tech-card relative overflow-hidden`}>
  <div className="absolute top-0 right-0 bg-cyan-500 text-[var(--text-primary)] text-[9px] font-black tracking-widest px-2 py-0.5 rounded-bl-lg uppercase">
  Pró-Labore
  </div>
@@ -92,7 +92,7 @@ export default function FreelaMEIHub() {
  {/* Caixa da Empresa */}
  <div className={`\${tw.card} flex flex-col gap-4 p-6 border border-accent/20`}>
  <div className="flex items-center gap-3">
- <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center border border-accent/20">
+ <div className="w-10 h-10 rounded-lg bg-[var(--bg-base)]ccent/10 flex items-center justify-center border border-accent/20">
  <Percent className="w-5 h-5 text-accent" />
  </div>
  <div>

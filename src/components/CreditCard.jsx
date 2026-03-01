@@ -19,7 +19,7 @@ export default function CreditCard() {
  <div className="flex items-center gap-3">
  <button
  onClick={() => toggleVisibility()}
- className="p-1.5 rounded-lg bg-gray-800/40/5 opacity-0 group-hover:opacity-100 transition-all hover:bg-gray-800/40/10"
+ className="p-1.5 rounded-lg bg-[var(--bg-surface)] opacity-0 group-hover:opacity-100 transition-all hover:bg-gray-800/40/10"
  >
  {isVisible ? <EyeOff size={14} className="text-[var(--text-primary)]/40" /> : <Eye size={14} className="text-[var(--text-primary)]/40" />}
  </button>
@@ -33,7 +33,7 @@ export default function CreditCard() {
  {/* Card Visual */}
  <div className="relative rounded-2xl overflow-hidden bg-[var(--bg-base)] from-slate-800 border border-[var(--border)] p-5 flex-1 min-h-[120px] shadow-elevated">
  <div className="absolute inset-0 bg-[var(--bg-base)] from-violet-500/10 to-transparent" />
- <div className="absolute -bottom-10 -right-10 w-24 h-24 bg-gray-800/40/5 rounded-full blur-xl" />
+ <div className="absolute -bottom-10 -right-10 w-24 h-24 bg-[var(--bg-surface)] rounded-full blur-xl" />
 
  <div className="relative z-10 flex flex-col h-full justify-between">
  <div className="flex items-center justify-between">
@@ -67,9 +67,9 @@ export default function CreditCard() {
  {isVisible ? `${fmt(2150)} / ${fmt(8000)}` : "R$ •••• / R$ ••••"}
  </span>
  </div>
- <div className="h-2 bg-gray-800/40/5 rounded-full overflow-hidden p-[1px] border border-[var(--border)]">
+ <div className="h-2 bg-[var(--bg-surface)] rounded-full overflow-hidden p-[1px] border border-[var(--border)]">
  <div
- className="h-full bg-[var(--bg-base)] from-violet-500 to-indigo-500 rounded-full transition-all duration-1000 shadow-glass-card"
+ className="h-full bg-[var(--bg-base)] from-violet-500 to-indigo-500 rounded-full transition-all duration-1000 shadow-tech-card"
  style={{ width: "26.9%" }}
  />
  </div>

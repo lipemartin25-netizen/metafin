@@ -101,9 +101,9 @@ export default function SmartReconciliation() {
  transition={{ type: "spring", stiffness: 300, damping: 25 }}
  className="absolute inset-0 w-full"
  >
- <div className="bg-gray-800/40 dark:bg-surface-800 border border-gray-700/40 dark:border-[var(--border)] rounded-xl p-3 shadow-lg shadow-black/10 flex items-center justify-between gap-4 w-full group/glass-card hover:border-indigo-300 dark:hover:border-indigo-500/50 transition-colors h-full">
+ <div className="bg-gray-800/40 dark:bg-surface-800 border border-[var(--border-subtle)]/40 dark:border-[var(--border)] rounded-xl p-3 shadow-lg shadow-black/10 flex items-center justify-between gap-4 w-full group/tech-card hover:border-indigo-300 dark:hover:border-indigo-500/50 transition-colors h-full">
  <div className="flex items-center gap-4 flex-1 min-w-0">
- <div className="w-10 h-10 rounded-full bg-gray-800/40 dark:bg-surface-900 overflow-hidden flex items-center justify-center shrink-0 border border-gray-700/40 dark:border-[var(--border)]">
+ <div className="w-10 h-10 rounded-full bg-gray-800/40 dark:bg-surface-900 overflow-hidden flex items-center justify-center shrink-0 border border-[var(--border-subtle)]/40 dark:border-[var(--border)]">
  {tx.bank === 'Nubank' ? (
  <div className="w-full h-full bg-[#8A05BE] flex items-center justify-center text-[var(--text-primary)] font-bold text-xs">NU</div>
  ) : tx.bank === 'Itaú' ? (

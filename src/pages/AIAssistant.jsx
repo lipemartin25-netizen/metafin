@@ -182,7 +182,7 @@ export default function AIAssistant() {
  {messages.length > 0 && (
  <button
  onClick={() => setMessages([])}
- className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-gray-500 hover:text-[var(--text-primary)] hover:bg-gray-800/40/5 transition-all text-xs border border-[var(--border)]"
+ className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-gray-500 hover:text-[var(--text-primary)] hover:bg-[var(--bg-surface)] transition-all text-xs border border-[var(--border)]"
  >
  <RotateCcw size={12} /> Limpar
  </button>
@@ -283,7 +283,7 @@ export default function AIAssistant() {
 
  <div className={`rounded-2xl px-4 py-3 text-sm ${msg.role === 'user'
  ? 'bg-violet-600/80 text-[var(--text-primary)] rounded-tr-sm border border-violet-500/30'
- : 'bg-gray-800/40/5 border border-[var(--border)] text-gray-200 rounded-tl-sm'
+ : 'bg-[var(--bg-surface)] border border-[var(--border)] text-gray-200 rounded-tl-sm'
  }`}>
  <MsgText text={msg.text} />
  </div>
@@ -309,7 +309,7 @@ export default function AIAssistant() {
  <div className="w-7 h-7 rounded-lg bg-[var(--bg-base)] from-violet-500 to-brand-glow flex items-center justify-center flex-shrink-0">
  <Bot size={13} className="text-[var(--text-primary)]" />
  </div>
- <div className="bg-gray-800/40/5 border border-[var(--border)] rounded-2xl rounded-tl-sm px-4 py-3 flex items-center gap-2">
+ <div className="bg-[var(--bg-surface)] border border-[var(--border)] rounded-2xl rounded-tl-sm px-4 py-3 flex items-center gap-2">
  {[0, 150, 300].map(d => (
  <div key={d} className="w-1.5 h-1.5 rounded-full bg-violet-400 animate-bounce" style={{ animationDelay: `${d}ms` }} />
  ))}

@@ -173,9 +173,9 @@ export default function Transactions() {
  .header h1{color:#8b5cf6;font-size:24px;font-weight:700}
  .header p{color:#64748b;font-size:13px;margin-top:4px}
  .summary{display:flex;gap:24px;margin-bottom:24px}
- .summary-glass-card{background:#f8fafc;border-radius:12px;padding:16px 24px;flex:1;border:1px solid #e2e8f0}
- .summary-glass-card .label{font-size:11px;color:#94a3b8;text-transform:uppercase;font-weight:600;letter-spacing:0.05em}
- .summary-glass-card .value{font-size:20px;font-weight:700;margin-top:4px}
+ .summary-tech-card{background:#f8fafc;border-radius:12px;padding:16px 24px;flex:1;border:1px solid #e2e8f0}
+ .summary-tech-card .label{font-size:11px;color:#94a3b8;text-transform:uppercase;font-weight:600;letter-spacing:0.05em}
+ .summary-tech-card .value{font-size:20px;font-weight:700;margin-top:4px}
  .income-val{color:#10b981}.expense-val{color:#ef4444}.balance-pos{color:#10b981}.balance-neg{color:#ef4444}
  table{width:100%;border-collapse:collapse;font-size:13px}
  thead tr{background:#f1f5f9}
@@ -194,15 +194,15 @@ export default function Transactions() {
  <p>Exportado em ${new Date().toLocaleDateString('pt-BR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })} • ${dataToExport.length} transações • Período: ${monthLabel}</p>
  </div>
  <div class="summary">
- <div class="summary-glass-card">
+ <div class="summary-tech-card">
  <div class="label">Receitas</div>
  <div class="value income-val">${fmt(dataToExport.filter(t => t.tipo === 'Receita').reduce((a, t) => a + Math.abs(t.valor), 0))}</div>
  </div>
- <div class="summary-glass-card">
+ <div class="summary-tech-card">
  <div class="label">Despesas</div>
  <div class="value expense-val">${fmt(dataToExport.filter(t => t.tipo === 'Despesa').reduce((a, t) => a + Math.abs(t.valor), 0))}</div>
  </div>
- <div class="summary-glass-card">
+ <div class="summary-tech-card">
  <div class="label">Saldo</div>
  ${(() => { const bal = dataToExport.reduce((a, t) => a + (t.tipo === 'Receita' ? Math.abs(t.valor) : -Math.abs(t.valor)), 0); return `<div class="value ${bal >= 0 ? 'balance-pos' : 'balance-neg'}">${fmt(bal)}</div>`; })()}
  </div>
@@ -264,13 +264,13 @@ export default function Transactions() {
  </div>
  <div className="flex items-center gap-3 flex-wrap sm:flex-nowrap">
  {/* Month navigator */}
- <div className="flex bg-gray-800/40/5 p-1 rounded-xl items-center border border-[var(--border)]">
- <button onClick={() => changeMonth(-1)} className="p-2 text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-all rounded-lg hover:bg-gray-800/40/5">←</button>
+ <div className="flex bg-[var(--bg-surface)] p-1 rounded-xl items-center border border-[var(--border)]">
+ <button onClick={() => changeMonth(-1)} className="p-2 text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-all rounded-lg hover:bg-[var(--bg-surface)]">←</button>
  <span className="px-3 text-sm font-bold text-[var(--text-primary)] min-w-[140px] text-center capitalize">{monthLabel}</span>
- <button onClick={() => changeMonth(1)} className="p-2 text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-all rounded-lg hover:bg-gray-800/40/5">→</button>
+ <button onClick={() => changeMonth(1)} className="p-2 text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-all rounded-lg hover:bg-[var(--bg-surface)]">→</button>
  </div>
  {/* View mode */}
- <div className="flex bg-gray-800/40/5 p-1 rounded-xl border border-[var(--border)]">
+ <div className="flex bg-[var(--bg-surface)] p-1 rounded-xl border border-[var(--border)]">
  <button onClick={() => setViewMode('list')} className={`p-2 rounded-lg transition-all ${viewMode === 'list' ? 'bg-brand-primary/20 text-brand-glow' : 'text-[var(--text-muted)] hover:text-[var(--text-secondary)]'}`} title="Lista"><List className="w-4 h-4" /></button>
  <button onClick={() => setViewMode('analysis')} className={`p-2 rounded-lg transition-all ${viewMode === 'analysis' ? 'bg-brand-primary/20 text-brand-glow' : 'text-[var(--text-muted)] hover:text-[var(--text-secondary)]'}`} title="Análise"><BarChart2 className="w-4 h-4" /></button>
  </div>
@@ -278,7 +278,7 @@ export default function Transactions() {
  <div className="relative">
  <button
  onClick={() => setShowExportModal(!showExportModal)}
- className="h-[42px] px-4 py-2 rounded-xl border border-[var(--border)] text-[var(--text-secondary)] hover:bg-gray-800/40/5 hover:text-[var(--text-primary)] transition-all text-sm flex items-center gap-2 whitespace-nowrap bg-gray-800/40/5"
+ className="h-[42px] px-4 py-2 rounded-xl border border-[var(--border)] text-[var(--text-secondary)] hover:bg-[var(--bg-surface)] hover:text-[var(--text-primary)] transition-all text-sm flex items-center gap-2 whitespace-nowrap bg-[var(--bg-surface)]"
  >
  <Download className="w-4 h-4 flex-shrink-0" />
  <span className="hidden sm:inline">Exportar</span>
@@ -286,17 +286,17 @@ export default function Transactions() {
  {showExportModal && (
  <>
  <div className="fixed inset-0 z-20" onClick={() => setShowExportModal(false)} />
- <div className="absolute right-0 mt-2 w-52 bg-[#0d1424] border border-[var(--border)] rounded-2xl shadow-glass-card z-30 p-2 animate-slide-up">
+ <div className="absolute right-0 mt-2 w-52 bg-[var(--bg-[var(--bg-elevated)])] border border-[var(--border)] rounded-2xl shadow-tech-card z-30 p-2 animate-slide-up">
  <p className="text-[10px] text-[var(--text-muted)] uppercase font-bold tracking-widest px-3 py-2">Escolha o formato</p>
- <button onClick={() => handleExport('csv')} className="w-full text-left px-3 py-2.5 text-sm text-[var(--text-secondary)] hover:bg-gray-800/40/5 hover:text-[var(--text-primary)] rounded-xl flex items-center justify-between transition-all">
+ <button onClick={() => handleExport('csv')} className="w-full text-left px-3 py-2.5 text-sm text-[var(--text-secondary)] hover:bg-[var(--bg-surface)] hover:text-[var(--text-primary)] rounded-xl flex items-center justify-between transition-all">
  <span className="flex items-center gap-2">📊 Excel / CSV</span>
  <span className="text-[10px] text-slate-600 font-mono">.csv</span>
  </button>
- <button onClick={() => handleExport('json')} className="w-full text-left px-3 py-2.5 text-sm text-[var(--text-secondary)] hover:bg-gray-800/40/5 hover:text-[var(--text-primary)] rounded-xl flex items-center justify-between transition-all">
+ <button onClick={() => handleExport('json')} className="w-full text-left px-3 py-2.5 text-sm text-[var(--text-secondary)] hover:bg-[var(--bg-surface)] hover:text-[var(--text-primary)] rounded-xl flex items-center justify-between transition-all">
  <span className="flex items-center gap-2">🔧 JSON Data</span>
  <span className="text-[10px] text-slate-600 font-mono">.json</span>
  </button>
- <button onClick={() => handleExport('pdf')} className="w-full text-left px-3 py-2.5 text-sm text-[var(--text-secondary)] hover:bg-gray-800/40/5 hover:text-[var(--text-primary)] rounded-xl flex items-center justify-between transition-all">
+ <button onClick={() => handleExport('pdf')} className="w-full text-left px-3 py-2.5 text-sm text-[var(--text-secondary)] hover:bg-[var(--bg-surface)] hover:text-[var(--text-primary)] rounded-xl flex items-center justify-between transition-all">
  <span className="flex items-center gap-2">📄 Relatório PDF</span>
  <span className="text-[10px] text-slate-600 font-mono">.pdf</span>
  </button>
@@ -343,7 +343,7 @@ export default function Transactions() {
  </h3>
  <p className="text-xs text-[var(--text-secondary)] mt-1">CSV, OFX, Excel, PDF e mais formatos</p>
  </div>
- <button onClick={downloadSampleCsv} className="px-3 py-2 rounded-lg border border-[var(--border)] text-[var(--text-secondary)] hover:bg-gray-800/40/5 hover:text-[var(--text-primary)] transition-all text-xs">
+ <button onClick={downloadSampleCsv} className="px-3 py-2 rounded-lg border border-[var(--border)] text-[var(--text-secondary)] hover:bg-[var(--bg-surface)] hover:text-[var(--text-primary)] transition-all text-xs">
  📄 Modelo CSV
  </button>
  </div>
@@ -532,14 +532,14 @@ export default function Transactions() {
 
  {/* ADD/EDIT MODAL - Sólido */}
  {showAddModal && (
- <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/90 ">
- <div className="bg-[#0d1424] border border-[var(--border)] w-full max-w-md rounded-3xl p-8 shadow-glass-card animate-slide-up">
+ <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[var(--bg-base)]/90 ">
+ <div className="bg-[var(--bg-[var(--bg-elevated)])] border border-[var(--border)] w-full max-w-md rounded-3xl p-8 shadow-tech-card animate-slide-up">
  <div className="flex items-center justify-between mb-6">
  <h2 className="text-lg font-bold text-[var(--text-primary)]">{editId ? 'Editar Transação' : 'Nova Transação'}</h2>
  <button onClick={() => { setShowAddModal(false); setEditId(null); }} className="p-1.5 rounded-lg text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-gray-800/40/10 transition-all"><X className="w-5 h-5" /></button>
  </div>
  <form onSubmit={handleAddTransaction} className="space-y-4">
- <div className="flex rounded-xl bg-gray-800/40/5 p-1">
+ <div className="flex rounded-xl bg-[var(--bg-surface)] p-1">
  <button type="button" onClick={() => setNewTx((p) => ({ ...p, type: 'expense' }))} className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all ${newTx.type === 'expense' ? 'bg-red-500/20 text-red-400' : 'text-[var(--text-muted)] hover:text-[var(--text-secondary)]'}`}>💸 Despesa</button>
  <button type="button" onClick={() => setNewTx((p) => ({ ...p, type: 'income' }))} className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all ${newTx.type === 'income' ? 'bg-brand-primary/20 text-brand-glow' : 'text-[var(--text-muted)] hover:text-[var(--text-secondary)]'}`}>💰 Receita</button>
  </div>
@@ -583,7 +583,7 @@ export default function Transactions() {
  type="button"
  onClick={() => { setNewTx((p) => ({ ...p, category: c })); setCatSearch(''); }}
  className={`flex flex-col items-center justify-center p-2 rounded-xl border transition-all gap-0.5 ${newTx.category === c
- ? 'border-brand-glow bg-brand-primary/10 shadow-glass-card'
+ ? 'border-brand-glow bg-brand-primary/10 shadow-tech-card'
  : 'border-[var(--border)] bg-gray-800/40/[0.02] hover:border-[var(--border)] hover:bg-gray-800/40/[0.05]'
  }`}
  >

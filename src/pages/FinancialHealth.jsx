@@ -238,7 +238,7 @@ export default function FinancialHealth() {
  {/* Badge de status no topo */}
  <div className="relative z-10 px-6 pt-5 pb-0 flex items-center justify-between">
  <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--text-primary)]/30">Score de Saúde</span>
- <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-gray-800/40/5 border border-[var(--border)]">
+ <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[var(--bg-surface)] border border-[var(--border)]">
  <span className="text-xs">{getScoreIcon(analysis.score)}</span>
  <span className="text-xs font-bold text-[var(--text-primary)] uppercase tracking-wider">{getScoreLabel(analysis.score)}</span>
  </div>
@@ -277,7 +277,7 @@ export default function FinancialHealth() {
  </div>
 
  {/* Divisor vertical (apenas desktop) */}
- <div className="hidden sm:block w-px self-stretch bg-gray-800/40/5 flex-shrink-0" />
+ <div className="hidden sm:block w-px self-stretch bg-[var(--bg-surface)] flex-shrink-0" />
 
  {/* Métricas — Direita (ou baixo no mobile) */}
  <div className="flex-1 w-full space-y-3.5">
@@ -316,7 +316,7 @@ export default function FinancialHealth() {
  <p className="text-[9px] text-gray-500 uppercase font-black tracking-widest mb-2">Maiores Gastos</p>
  <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
  {analysis.topCategories.slice(0, 4).map((cat, i) => (
- <div key={i} className="flex-shrink-0 bg-gray-800/40/5 border border-[var(--border)] px-2.5 py-1.5 rounded-lg flex items-center gap-2">
+ <div key={i} className="flex-shrink-0 bg-[var(--bg-surface)] border border-[var(--border)] px-2.5 py-1.5 rounded-lg flex items-center gap-2">
  <div className="w-1.5 h-1.5 rounded-full bg-indigo-500" />
  <div className="flex flex-col">
  <span className="text-[10px] text-gray-400 font-bold capitalize">{cat.cat}</span>
@@ -355,13 +355,13 @@ export default function FinancialHealth() {
  const TipIcon = config.icon;
  return (
  <div key={i} className={`${config.bg} border rounded-2xl p-5 flex items-start gap-4 transition-all hover:ring-2 ${config.ring}`}>
- <div className="p-2 bg-gray-800/40/50 dark:bg-black/20 rounded-xl">
+ <div className="p-2 bg-[var(--bg-surface)]0 dark:bg-black/20 rounded-xl">
  <TipIcon className={`w-6 h-6 ${config.text}`} />
  </div>
  <div className="flex-1">
  <p className="text-sm text-gray-100 dark:text-gray-200 leading-relaxed font-medium">{tip.text}</p>
  {tip.link && (
- <Link to={tip.link} className={`text-xs ${config.text} font-bold hover:underline flex items-center gap-1 mt-2 w-max px-2 py-1 bg-gray-800/40/50 dark:bg-black/20 rounded-lg`}>
+ <Link to={tip.link} className={`text-xs ${config.text} font-bold hover:underline flex items-center gap-1 mt-2 w-max px-2 py-1 bg-[var(--bg-surface)]0 dark:bg-black/20 rounded-lg`}>
  Explorar <ArrowRight className="w-3 h-3" />
  </Link>
  )}
@@ -380,7 +380,7 @@ export default function FinancialHealth() {
  <div className="flex items-end justify-between relative z-10">
  <div>
  <p className="text-sm text-gray-400 mb-1">Pegada de Carbono (Mensal)</p>
- <p className="text-3xl font-black text-brand-glow drop-shadow-glass-card">
+ <p className="text-3xl font-black text-brand-glow drop-shadow-tech-card">
  {(analysis.totalCO2).toFixed(1)} <span className="text-sm text-brand-primary/60 uppercase">KG CO₂</span>
  </p>
  </div>
@@ -411,7 +411,7 @@ export default function FinancialHealth() {
  const hasGoal = currentGoal > 0;
  const pctOfGoal = hasGoal ? Math.min((cat.total / currentGoal) * 100, 100) : 0;
  const isOverBudget = hasGoal && cat.total > currentGoal;
- const barColor = isOverBudget ? 'bg-red-500 shadow-glass-card' : (pctOfGoal > 80 ? 'bg-yellow-500 shadow-glass-card' : 'bg-brand-primary shadow-glass-card');
+ const barColor = isOverBudget ? 'bg-red-500 shadow-tech-card' : (pctOfGoal > 80 ? 'bg-yellow-500 shadow-tech-card' : 'bg-brand-primary shadow-tech-card');
 
  return (
  <div key={cat.cat} className="space-y-3 group bg-gray-800/30/50 dark:bg-gray-800/40/[0.02] p-4 rounded-xl border border-transparent hover:border-brand-primary/20 transition-all">
@@ -423,7 +423,7 @@ export default function FinancialHealth() {
  <span className="text-[var(--text-primary)] dark:text-[var(--text-primary)] capitalize font-bold">{cat.cat}</span>
  {hasGoal && isOverBudget && <AlertTriangle className="w-4 h-4 text-red-500 animate-pulse" />}
  </div>
- <div className="flex items-center gap-2 bg-gray-800/40 dark:bg-surface-800 p-1 rounded-lg border border-gray-700/40 dark:border-[var(--border)] shadow-lg shadow-black/10">
+ <div className="flex items-center gap-2 bg-gray-800/40 dark:bg-surface-800 p-1 rounded-lg border border-[var(--border-subtle)]/40 dark:border-[var(--border)] shadow-lg shadow-black/10">
  <span className={`font-bold px-2 ${isOverBudget ? 'text-red-500' : 'text-[var(--text-primary)] dark:text-[var(--text-primary)]'}`}>
  {fmt(cat.total)}
  </span>
@@ -456,7 +456,7 @@ export default function FinancialHealth() {
  );
  })}
  {analysis.topCategories.length === 0 && (
- <div className="text-center py-10 border border-dashed border-gray-700/40 dark:border-[var(--border)] rounded-2xl">
+ <div className="text-center py-10 border border-dashed border-[var(--border-subtle)]/40 dark:border-[var(--border)] rounded-2xl">
  <p className="text-sm text-gray-500">Adicione suas despesas para começar a definir inteligentemente metas de gastos.</p>
  </div>
  )}

@@ -277,7 +277,7 @@ export default function NetWorth() {
  {/* Modal de Adição */}
  {showModal && (
  <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 animate-fade-in">
- <div className={`\${tw.card} w-full max-w-md animate-slide-up relative bg-gray-800/40 dark:bg-surface-900 border border-gray-700/40 dark:border-[var(--border)]`}>
+ <div className={`\${tw.card} w-full max-w-md animate-slide-up relative bg-gray-800/40 dark:bg-surface-900 border border-[var(--border-subtle)]/40 dark:border-[var(--border)]`}>
  <button onClick={() => setShowModal(false)} className="absolute top-4 right-4 text-gray-500 hover:text-[var(--text-primary)] dark:hover:text-[var(--text-primary)]">
  <X className="w-5 h-5" />
  </button>
@@ -288,7 +288,7 @@ export default function NetWorth() {
  <div>
  <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Nome do Patrimônio / Dívida</label>
  <input required type="text" placeholder="Ex: Apartamento Centro"
- className="w-full px-4 py-3 rounded-xl bg-gray-800/30 dark:bg-black/20 border border-gray-700/40 dark:border-[var(--border)] focus:border-brand-primary focus:ring-1 focus:ring-emerald-500 outline-none transition-all text-sm text-[var(--text-primary)] dark:text-[var(--text-primary)]"
+ className="w-full px-4 py-3 rounded-xl bg-gray-800/30 dark:bg-black/20 border border-[var(--border-subtle)]/40 dark:border-[var(--border)] focus:border-brand-primary focus:ring-1 focus:ring-emerald-500 outline-none transition-all text-sm text-[var(--text-primary)] dark:text-[var(--text-primary)]"
  value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} />
  </div>
 
@@ -296,13 +296,13 @@ export default function NetWorth() {
  <div>
  <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Valor Atual (R$)</label>
  <input required type="number" step="0.01" placeholder="350000"
- className="w-full px-4 py-3 rounded-xl bg-gray-800/30 dark:bg-black/20 border border-gray-700/40 dark:border-[var(--border)] focus:border-brand-primary focus:ring-1 focus:ring-emerald-500 outline-none transition-all text-sm text-[var(--text-primary)] dark:text-[var(--text-primary)]"
+ className="w-full px-4 py-3 rounded-xl bg-gray-800/30 dark:bg-black/20 border border-[var(--border-subtle)]/40 dark:border-[var(--border)] focus:border-brand-primary focus:ring-1 focus:ring-emerald-500 outline-none transition-all text-sm text-[var(--text-primary)] dark:text-[var(--text-primary)]"
  value={form.current_value} onChange={e => setForm({ ...form, current_value: e.target.value })} />
  </div>
  <div>
  <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Categoria</label>
  <select
- className="w-full px-4 py-3 rounded-xl bg-gray-800/30 dark:bg-black/20 border border-gray-700/40 dark:border-[var(--border)] focus:border-brand-primary focus:ring-1 focus:ring-emerald-500 outline-none transition-all text-sm text-[var(--text-primary)] dark:text-[var(--text-primary)]"
+ className="w-full px-4 py-3 rounded-xl bg-gray-800/30 dark:bg-black/20 border border-[var(--border-subtle)]/40 dark:border-[var(--border)] focus:border-brand-primary focus:ring-1 focus:ring-emerald-500 outline-none transition-all text-sm text-[var(--text-primary)] dark:text-[var(--text-primary)]"
  value={form.type} onChange={e => setForm({ ...form, type: e.target.value })}>
  {Object.entries(TYPE_LABELS).map(([k, v]) => (
  <option key={k} value={k}>{v}</option>
@@ -315,11 +315,11 @@ export default function NetWorth() {
  <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Tipo de Registro</label>
  <div className="grid grid-cols-2 gap-3 animate-fade-in">
  <button type="button" onClick={() => setForm({ ...form, is_liability: false })}
- className={`px-3 py-3 rounded-xl text-sm font-bold border transition-all ${!form.is_liability ? 'bg-brand-primary/10 border-brand-primary/30 text-brand-primary dark:text-brand-glow shadow-glass-card' : 'border-gray-700/40 dark:border-[var(--border)] text-gray-500 hover:bg-gray-800/30 dark:hover:bg-gray-800/40/5'}`}>
+ className={`px-3 py-3 rounded-xl text-sm font-bold border transition-all ${!form.is_liability ? 'bg-brand-primary/10 border-brand-primary/30 text-brand-primary dark:text-brand-glow shadow-tech-card' : 'border-[var(--border-subtle)]/40 dark:border-[var(--border)] text-gray-500 hover:bg-gray-800/30 dark:hover:bg-[var(--bg-surface)]'}`}>
  + É um Ativo
  </button>
  <button type="button" onClick={() => setForm({ ...form, is_liability: true })}
- className={`px-3 py-3 rounded-xl text-sm font-bold border transition-all ${form.is_liability ? 'bg-red-500/10 border-red-500/30 text-red-600 dark:text-red-400 shadow-glass-card' : 'border-gray-700/40 dark:border-[var(--border)] text-gray-500 hover:bg-gray-800/30 dark:hover:bg-gray-800/40/5'}`}>
+ className={`px-3 py-3 rounded-xl text-sm font-bold border transition-all ${form.is_liability ? 'bg-red-500/10 border-red-500/30 text-red-600 dark:text-red-400 shadow-tech-card' : 'border-[var(--border-subtle)]/40 dark:border-[var(--border)] text-gray-500 hover:bg-gray-800/30 dark:hover:bg-[var(--bg-surface)]'}`}>
  - Passivo (Dívida)
  </button>
  </div>

@@ -123,12 +123,12 @@ export default function Reports() {
  <button
  onClick={handleExportPDF}
  disabled={isExporting}
- className="px-4 py-2 rounded-xl text-sm font-semibold border border-[var(--border)] text-gray-300 hover:bg-gray-800/40/5 transition flex items-center gap-2"
+ className="px-4 py-2 rounded-xl text-sm font-semibold border border-[var(--border)] text-gray-300 hover:bg-[var(--bg-surface)] transition flex items-center gap-2"
  >
  {isExporting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
  <span className="hidden sm:inline">Exportar PDF</span>
  </button>
- <div className="flex items-center gap-2 bg-gray-800/30 dark:bg-gray-800/40/5 p-1 rounded-xl">
+ <div className="flex items-center gap-2 bg-gray-800/30 dark:bg-[var(--bg-surface)] p-1 rounded-xl">
  <button onClick={() => changeMonth(-1)} className="p-2 text-gray-400 hover:text-[var(--text-primary)] dark:hover:text-[var(--text-primary)] transition-all"><ChevronLeft className="w-4 h-4" /></button>
  <span className="px-4 text-sm font-bold text-[var(--text-primary)] dark:text-[var(--text-primary)] min-w-[160px] text-center capitalize">{monthLabel}</span>
  <button onClick={() => changeMonth(1)} className="p-2 text-gray-400 hover:text-[var(--text-primary)] dark:hover:text-[var(--text-primary)] transition-all"><ChevronRight className="w-4 h-4" /></button>

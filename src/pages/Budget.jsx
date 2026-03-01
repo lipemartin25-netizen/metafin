@@ -234,7 +234,7 @@ export default function Budget() {
 
  {/* Budget Items */}
  {budgets.length === 0 ? (
- <div className={`\${tw.card} text-center py-12 border-dashed border-2 border-gray-700/40 dark:border-[var(--border)] bg-transparent relative overflow-hidden`}>
+ <div className={`\${tw.card} text-center py-12 border-dashed border-2 border-[var(--border-subtle)]/40 dark:border-[var(--border)] bg-transparent relative overflow-hidden`}>
  <div className="absolute inset-0 bg-[var(--bg-base)] from-transparent to-pink-500/5 pointer-events-none" />
  <PiggyBank className="w-12 h-12 text-pink-500 mx-auto mb-4 opacity-50 relative z-10" />
  <h4 className="text-[var(--text-primary)] dark:text-[var(--text-primary)] font-medium mb-1 relative z-10">Nenhum orçamento definido</h4>
@@ -300,8 +300,8 @@ export default function Budget() {
 
  {/* Modal de Adicionar/Editar */}
  {showAdd && (
- <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 ">
- <div className="bg-[#0d1424] border border-[var(--border)] w-full max-w-sm rounded-[24px] overflow-hidden shadow-glass-card animate-slide-up">
+ <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[var(--bg-base)]/80 ">
+ <div className="bg-[var(--bg-[var(--bg-elevated)])] border border-[var(--border)] w-full max-w-sm rounded-[24px] overflow-hidden shadow-tech-card animate-slide-up">
  <div className="p-6 md:p-8">
  <div className="flex items-center justify-between mb-6">
  <h3 className="text-xl font-bold text-[var(--text-primary)] tracking-tight">{editId ? 'Editar Orçamento' : 'Novo Orçamento'}</h3>
@@ -317,9 +317,9 @@ export default function Budget() {
  required
  className="w-full bg-gray-800/40/[0.03] border border-[var(--border)] rounded-xl px-4 py-3.5 text-[var(--text-primary)] focus:border-brand-glow/50 focus:ring-1 focus:ring-brand-glow/50 outline-none transition-all appearance-none"
  >
- <option value="" disabled className="bg-[#0d1424] text-[var(--text-muted)]">Selecione uma categoria...</option>
+ <option value="" disabled className="bg-[var(--bg-[var(--bg-elevated)])] text-[var(--text-muted)]">Selecione uma categoria...</option>
  {availableCategories.map(c => (
- <option key={c} value={c} className="bg-[#0d1424] text-[var(--text-primary)]">
+ <option key={c} value={c} className="bg-[var(--bg-[var(--bg-elevated)])] text-[var(--text-primary)]">
  {categoryConfig[c]?.icon} {categoryConfig[c]?.label || c}
  </option>
  ))}

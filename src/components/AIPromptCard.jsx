@@ -43,7 +43,7 @@ export default function AIPromptCard() {
  value={query}
  onChange={(e) => setQuery(e.target.value)}
  placeholder="Pergunte qualquer coisa sobre seus dados..."
- className="w-full bg-[var(--bg-elevated)] border border-[var(--border)] rounded-2xl py-4 pl-12 pr-4 text-sm text-[var(--text-primary)] placeholder-slate-600 focus:outline-none focus:border-violet-500/50 transition-all font-medium"
+ className="w-full bg-[var(--bg-[var(--bg-elevated)])] border border-[var(--border)] rounded-2xl py-4 pl-12 pr-4 text-sm text-[var(--text-primary)] placeholder-slate-600 focus:outline-none focus:border-violet-500/50 transition-all font-medium"
  />
  <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-600" />
  <button

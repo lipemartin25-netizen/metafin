@@ -115,7 +115,7 @@ export default function Upgrade() {
 
  {/* Billing Toggle */}
  <div className="flex justify-center mb-8">
- <div className="flex rounded-xl bg-gray-800/40/5 p-1">
+ <div className="flex rounded-xl bg-[var(--bg-surface)] p-1">
  <button
  onClick={() => setBilling('monthly')}
  className={`px-5 py-2 rounded-lg text-sm font-medium transition-all ${billing === 'monthly'

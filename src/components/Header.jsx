@@ -27,14 +27,14 @@ export default function Header({ onMenuClick }) {
 
  <div className="flex items-center gap-3">
  {/* Search */}
- <div className="hidden md:flex items-center gap-2 bg-gray-800/40/5 border border-[var(--border)] rounded-xl px-4 py-2 text-sm text-[var(--text-primary)]/30 w-52 hover:border-[var(--border)] transition-colors cursor-pointer">
+ <div className="hidden md:flex items-center gap-2 bg-[var(--bg-surface)] border border-[var(--border)] rounded-xl px-4 py-2 text-sm text-[var(--text-primary)]/30 w-52 hover:border-[var(--border)] transition-colors cursor-pointer">
  <Search size={15} />
  <span>Buscar...</span>
  <span className="ml-auto text-xs bg-gray-800/40/10 px-1.5 py-0.5 rounded-md">⌘K</span>
  </div>
 
  {/* Notification */}
- <button className="relative w-9 h-9 rounded-xl bg-gray-800/40/5 border border-[var(--border)] flex items-center justify-center text-[var(--text-primary)]/40 hover:text-[var(--text-primary)] hover:border-[var(--border)] transition-all">
+ <button className="relative w-9 h-9 rounded-xl bg-[var(--bg-surface)] border border-[var(--border)] flex items-center justify-center text-[var(--text-primary)]/40 hover:text-[var(--text-primary)] hover:border-[var(--border)] transition-all">
  <Bell size={16} />
  <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-violet-500 rounded-full ring-2 ring-[#0a0a0f]"></span>
  </button>

@@ -8,7 +8,7 @@ import { tw } from '@/lib/theme';
 export function Skeleton({ className = '', ...props }) {
  return (
  <div
- className={`animate-pulse bg-gray-800/50 dark:bg-gray-800/40/5 rounded ${className}`}
+ className={`animate-pulse bg-gray-800/50 dark:bg-[var(--bg-surface)] rounded ${className}`}
  {...props}
  />
  );
@@ -43,7 +43,7 @@ export function SkeletonAvatar({ size = 'md', className = '' }) {
  );
 }
 
-// Skeleton para glass-card
+// Skeleton para tech-card
 export function SkeletonCard({ className = '' }) {
  return (
  <div className={`${tw.card} p-6 space-y-4 ${className}`}>
@@ -76,7 +76,7 @@ export function SkeletonTransaction({ className = '' }) {
 // Skeleton para lista de transações
 export function SkeletonTransactionList({ count = 5, className = '' }) {
  return (
- <div className={`divide-y divide-gray-800/50 dark:divide-white/5 ${className}`}>
+ <div className={`divide-y divide-[var(--border-subtle)]/50 dark:divide-white/5 ${className}`}>
  {Array.from({ length: count }).map((_, i) => (
  <SkeletonTransaction key={i} />
  ))}
@@ -122,7 +122,7 @@ export function SkeletonDashboard() {
 
  {/* Lista */}
  <div className={`\${tw.card}`}>
- <div className="p-4 border-b border-gray-700/40 dark:border-[var(--border)]">
+ <div className="p-4 border-b border-[var(--border-subtle)]/40 dark:border-[var(--border)]">
  <Skeleton className="h-5 w-1/4" />
  </div>
  <SkeletonTransactionList count={5} />

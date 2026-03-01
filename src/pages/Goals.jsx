@@ -146,7 +146,7 @@ export default function Goals() {
 
  return (
  <div className="py-6 space-y-6 animate-fade-in pb-20">
- <div className="relative overflow-hidden flex flex-col sm:flex-row items-center justify-between rounded-[2.5rem] bg-[var(--bg-base)] from-brand-600 via-teal-600 to-fuchsia-700 p-8 md:p-10 text-[var(--text-primary)] shadow-glass-card border border-[var(--border)] group perspective-1000">
+ <div className="relative overflow-hidden flex flex-col sm:flex-row items-center justify-between rounded-[2.5rem] bg-[var(--bg-base)] from-brand-600 via-teal-600 to-fuchsia-700 p-8 md:p-10 text-[var(--text-primary)] shadow-tech-card border border-[var(--border)] group perspective-1000">
  {/* Efeitos 3D Internos */}
  <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+PGRlZnM+PG1hdHRlcm4gaWQ9ImciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTTAgNDBoNDBWMEgweiIgZmlsbD0ibm9uZSIvPjxwYXRoIGQ9Ik0wIDEwaDQwTTAgMjBoNDBNMCAzMGg0ME0xMCAwdjQwTTIwIDB2NDBNMzAgMHY0MCIgc3Ryb2tlPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMDUpIiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZykiLz48L3N2Zz4=')] opacity-30" />
  <div className="absolute -left-20 -top-20 w-80 h-80 bg-gray-800/40/10 rounded-full mix-blend-overlay filter blur-[40px] opacity-60 group-hover:-translate-y-px transition-transform transition-transform duration-1000 ease-out" />
@@ -154,7 +154,7 @@ export default function Goals() {
 
  <div className="relative z-10 flex-1 flex gap-5 items-center">
  <div className="p-4 bg-gray-800/40/10 rounded-2xl shadow-inner border border-[var(--border)] group-hover:-translate-y-px group-hover:rotate-6 transition-transform duration-500">
- <Target className="w-12 h-12 text-yellow-300 drop-shadow-glass-card" />
+ <Target className="w-12 h-12 text-yellow-300 drop-shadow-tech-card" />
  </div>
  <div>
  <h1 className="text-3xl md:text-4xl font-black mb-2 tracking-tight drop-shadow-lg flex items-center gap-2">
@@ -166,7 +166,7 @@ export default function Goals() {
  </div>
  </div>
  <div className="flex items-center gap-3">
- <button onClick={loadGoals} className="p-2.5 rounded-xl border border-gray-700/40 dark:border-[var(--border)] hover:bg-gray-800/30 dark:hover:bg-gray-800/40/5 transition-colors text-gray-500">
+ <button onClick={loadGoals} className="p-2.5 rounded-xl border border-[var(--border-subtle)]/40 dark:border-[var(--border)] hover:bg-gray-800/30 dark:hover:bg-[var(--bg-surface)] transition-colors text-gray-500">
  <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
  </button>
  <button onClick={() => setShowAdd(true)} className="gradient-btn px-4 py-2 text-sm flex items-center gap-2 font-bold shadow-lg shadow-brand-500/20">
@@ -190,8 +190,8 @@ export default function Goals() {
  <span>Eficiência</span>
  <span className="text-blue-500">{totalTarget > 0 ? Math.round((totalSaved / totalTarget) * 100) : 0}%</span>
  </p>
- <div className="mt-1 h-2.5 bg-gray-800/40 dark:bg-black/20 rounded-full overflow-hidden shadow-inner border border-gray-700/40 dark:border-[var(--border)]">
- <div className="h-full bg-[var(--bg-base)] from-blue-500 to-emerald-500 rounded-full transition-all duration-1000 shadow-glass-card" style={{ width: `${totalTarget > 0 ? Math.min((totalSaved / totalTarget) * 100, 100) : 0}%` }} />
+ <div className="mt-1 h-2.5 bg-gray-800/40 dark:bg-black/20 rounded-full overflow-hidden shadow-inner border border-[var(--border-subtle)]/40 dark:border-[var(--border)]">
+ <div className="h-full bg-[var(--bg-base)] from-blue-500 to-emerald-500 rounded-full transition-all duration-1000 shadow-tech-card" style={{ width: `${totalTarget > 0 ? Math.min((totalSaved / totalTarget) * 100, 100) : 0}%` }} />
  </div>
  </div>
  </div>
@@ -203,7 +203,7 @@ export default function Goals() {
  <p className="text-sm font-medium animate-pulse text-gray-500">Calculando trajetórias...</p>
  </div>
  ) : goals.length === 0 ? (
- <div className={`\${tw.card} text-center py-16 border-dashed border-2 border-gray-700/40 dark:border-[var(--border)] bg-transparent hover:bg-gray-800/40/5 transition-colors cursor-pointer group`} onClick={() => setShowAdd(true)}>
+ <div className={`\${tw.card} text-center py-16 border-dashed border-2 border-[var(--border-subtle)]/40 dark:border-[var(--border)] bg-transparent hover:bg-[var(--bg-surface)] transition-colors cursor-pointer group`} onClick={() => setShowAdd(true)}>
  <Target className="w-16 h-16 text-brand-500/50 mx-auto mb-4 group-hover:-translate-y-px transition-transform group-hover:text-brand-500 transition-all" />
  <h4 className="text-lg text-[var(--text-primary)] dark:text-[var(--text-primary)] font-bold mb-2">Seu portfólio de metas está vazio</h4>
  <p className="text-gray-500 text-sm mb-6 max-w-sm mx-auto">Use a inteligência baseada em objetivos para focar nas grandes faturas: viagens, carros, casas, ou sua liberdade.</p>
@@ -227,7 +227,7 @@ export default function Goals() {
  + Aportar
  </button>
  )}
- <button onClick={() => handleEdit(goal)} className="flex-1 py-2 text-xs font-bold rounded-xl bg-gray-800/30 dark:bg-gray-800/40/5 text-gray-600 dark:text-gray-300 border border-gray-700/40 dark:border-[var(--border)] hover:border-blue-500/30 transition-all">
+ <button onClick={() => handleEdit(goal)} className="flex-1 py-2 text-xs font-bold rounded-xl bg-gray-800/30 dark:bg-[var(--bg-surface)] text-gray-600 dark:text-gray-300 border border-[var(--border-subtle)]/40 dark:border-[var(--border)] hover:border-blue-500/30 transition-all">
  Editar
  </button>
  <button disabled={saving} onClick={() => handleDelete(goal.id)} className="p-2 rounded-xl text-red-500/60 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 border border-transparent hover:border-red-200 dark:hover:border-red-500/20 transition-all">
@@ -242,14 +242,14 @@ export default function Goals() {
  {showAdd && (
  <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 animate-fade-in">
  <form onSubmit={handleSubmit} className={`\${tw.card} w-full max-w-md p-6 space-y-4 animate-slide-up relative z-10 border border-[var(--border)] shadow-elevated`}>
- <button type="button" onClick={resetForm} className="absolute top-4 right-4 text-gray-500 hover:text-[var(--text-primary)] dark:hover:text-[var(--text-primary)] bg-gray-800/40 dark:bg-gray-800/40/5 p-1 rounded-full transition-colors"><X className="w-5 h-5" /></button>
+ <button type="button" onClick={resetForm} className="absolute top-4 right-4 text-gray-500 hover:text-[var(--text-primary)] dark:hover:text-[var(--text-primary)] bg-gray-800/40 dark:bg-[var(--bg-surface)] p-1 rounded-full transition-colors"><X className="w-5 h-5" /></button>
  <h2 className="text-xl font-black text-[var(--text-primary)] dark:text-[var(--text-primary)] flex items-center gap-2 mb-6">
  <Target className="w-6 h-6 text-brand-500" /> {editId ? 'Configurar Meta' : 'Plano de Atingimento'}
  </h2>
 
  <div>
  <label className="text-[10px] text-gray-400 uppercase font-black tracking-widest block mb-1">Motivador Principal (Nome)</label>
- <input required value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} className="w-full bg-gray-800/30 dark:bg-black/20 border border-gray-700/40 dark:border-[var(--border)] rounded-xl px-4 py-3 text-[var(--text-primary)] dark:text-[var(--text-primary)] text-sm outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all" placeholder="Ex: Viagem Europa, Independência..." />
+ <input required value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} className="w-full bg-gray-800/30 dark:bg-black/20 border border-[var(--border-subtle)]/40 dark:border-[var(--border)] rounded-xl px-4 py-3 text-[var(--text-primary)] dark:text-[var(--text-primary)] text-sm outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all" placeholder="Ex: Viagem Europa, Independência..." />
  </div>
 
  <div>
@@ -257,7 +257,7 @@ export default function Goals() {
  <div className="flex gap-2 flex-wrap">
  {GOAL_ICONS.map(icon => (
  <button key={icon} type="button" onClick={() => setForm({ ...form, icon })}
- className={`w-10 h-10 rounded-xl text-xl flex items-center justify-center transition-all ${form.icon === icon ? 'bg-brand-500/20 border-2 border-brand-500 scale-110 shadow-lg shadow-black/10' : 'bg-gray-800/30 dark:bg-gray-800/40/5 border border-gray-700/40 dark:border-[var(--border)] hover:bg-gray-800/40 dark:hover:bg-gray-800/40/10'}`}>
+ className={`w-10 h-10 rounded-xl text-xl flex items-center justify-center transition-all ${form.icon === icon ? 'bg-brand-500/20 border-2 border-brand-500 scale-110 shadow-lg shadow-black/10' : 'bg-gray-800/30 dark:bg-[var(--bg-surface)] border border-[var(--border-subtle)]/40 dark:border-[var(--border)] hover:bg-gray-800/40 dark:hover:bg-gray-800/40/10'}`}>
  {icon}
  </button>
  ))}
@@ -305,7 +305,7 @@ export default function Goals() {
  </div>
  <div>
  <label className="text-[10px] text-gray-400 uppercase font-black tracking-widest block mb-1">Prazo (opcional)</label>
- <input type="date" value={form.deadline} onChange={e => setForm({ ...form, deadline: e.target.value })} className="w-full bg-gray-800/30 dark:bg-black/20 border border-gray-700/40 dark:border-[var(--border)] rounded-xl px-4 py-3 text-[var(--text-primary)] dark:text-[var(--text-primary)] text-sm outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary" />
+ <input type="date" value={form.deadline} onChange={e => setForm({ ...form, deadline: e.target.value })} className="w-full bg-gray-800/30 dark:bg-black/20 border border-[var(--border-subtle)]/40 dark:border-[var(--border)] rounded-xl px-4 py-3 text-[var(--text-primary)] dark:text-[var(--text-primary)] text-sm outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary" />
  </div>
  </div>
 

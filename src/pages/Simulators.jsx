@@ -81,8 +81,8 @@ const SIMULATORS = [
  subtitle: 'Aprenda com IA personalizada',
  icon: BookOpen,
  color: 'from-amber-500 to-yellow-600',
- bgLight: 'bg-amber-50',
- bgDark: 'dark:bg-amber-950/20',
+ bgLight: 'bg-[var(--bg-base)]mber-50',
+ bgDark: 'dark:bg-[var(--bg-base)]mber-950/20',
  textColor: 'text-amber-600 dark:text-amber-400',
  component: FinancialEducation
  },
@@ -159,8 +159,8 @@ export default function Simulators({ financialData }) {
 
  {/* Hero Section 3D Premium */}
  <div className="relative z-10 mb-12">
- <div className="relative overflow-hidden rounded-[2.5rem] bg-[var(--bg-base)] from-gray-900 via-indigo-950 to-black p-8 md:p-12 text-[var(--text-primary)] shadow-glass-card border border-[var(--border)] group">
- {/* Floating Orbs inside glass-card */}
+ <div className="relative overflow-hidden rounded-[2.5rem] bg-[var(--bg-base)] from-gray-900 via-indigo-950 to-black p-8 md:p-12 text-[var(--text-primary)] shadow-tech-card border border-[var(--border)] group">
+ {/* Floating Orbs inside tech-card */}
  <div className="absolute -right-20 -top-20 w-64 h-64 bg-[var(--bg-base)] from-indigo-500 to-brand-primary rounded-full mix-blend-screen filter blur-[40px] opacity-40 group-hover:-translate-y-px transition-transform transition-transform duration-1000" />
  <div className="absolute -left-20 -bottom-20 w-80 h-80 bg-[var(--bg-base)] from-blue-600 to-emerald-500 rounded-full mix-blend-screen filter blur-[60px] opacity-30 group-hover:-translate-y-px transition-transform transition-transform duration-1000 delay-100" />
 
@@ -184,8 +184,8 @@ export default function Simulators({ financialData }) {
  <div className="hidden lg:flex relative w-72 h-72 items-center justify-center">
  <div className="absolute inset-x-8 inset-y-8 bg-[var(--bg-base)] from-indigo-500/30 to-brand-primary/30 rounded-3xl animate-[spin_10s_linear_infinite] border border-[var(--border)] " />
  <div className="absolute inset-x-12 inset-y-12 bg-[var(--bg-base)] from-blue-500/30 to-emerald-500/30 rounded-full animate-[spin_15s_linear_infinite_reverse] border border-[var(--border)] " />
- <div className="relative w-32 h-32 bg-[var(--bg-base)] from-white/10 to-transparent rounded-2xl flex items-center justify-center border border-[var(--border)] shadow-glass-card transform hover:-translate-y-px transition-transform transition-transform duration-500 hover:-rotate-12 cursor-pointer z-20">
- <Target className="w-16 h-16 text-[var(--text-primary)] drop-shadow-glass-card" />
+ <div className="relative w-32 h-32 bg-[var(--bg-base)] from-white/10 to-transparent rounded-2xl flex items-center justify-center border border-[var(--border)] shadow-tech-card transform hover:-translate-y-px transition-transform transition-transform duration-500 hover:-rotate-12 cursor-pointer z-20">
+ <Target className="w-16 h-16 text-[var(--text-primary)] drop-shadow-tech-card" />
  </div>
  </div>
  </div>
@@ -201,7 +201,7 @@ export default function Simulators({ financialData }) {
  className={`group relative overflow-hidden rounded-[1.5rem] ${tw.card} border-none
  ${sim.bgLight} ${sim.bgDark}
  p-4 text-left transition-all duration-500 ease-out transform-gpu
- hover:shadow-glass-card dark:hover:shadow-glass-card
+ hover:shadow-tech-card dark:hover:shadow-tech-card
  hover:-translate-y-px`}
  >
  {/* 3D Glossy Light Reflection */}

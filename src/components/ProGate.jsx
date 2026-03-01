@@ -27,7 +27,7 @@ export default function ProGate({ feature, children, fallback, className = '' })
  </div>
 
  {/* Overlay */}
- <div className="absolute inset-0 z-10 flex items-center justify-center rounded-2xl bg-gray-950/20 backdrop-blur-[2px]">
+ <div className="absolute inset-0 z-10 flex items-center justify-center rounded-2xl bg-[var(--bg-base)]/20 backdrop-blur-[2px]">
  <div className={`\${tw.card} bg-gray-900/90 border border-brand-primary/20 p-6 max-w-xs text-center shadow-elevated relative overflow-hidden`}>
  {/* Efeito de brilho no fundo */}
  <div className="absolute top-0 left-0 w-full h-1 bg-[var(--bg-base)] from-transparent via-emerald-500 to-transparent opacity-50"></div>

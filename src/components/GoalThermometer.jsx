@@ -36,7 +36,7 @@ export default function GoalThermometer({ goal }) {
  )}
 
  <div className="flex items-center gap-4 mb-4 relative z-10">
- <div className="flex-shrink-0 w-12 h-12 flex items-center justify-center rounded-xl bg-gray-800/30/50 dark:bg-gray-800/40/5 border border-gray-100 dark:border-[var(--border)] group-hover:-translate-y-px transition-transform transition-transform">
+ <div className="flex-shrink-0 w-12 h-12 flex items-center justify-center rounded-xl bg-gray-800/30/50 dark:bg-[var(--bg-surface)] border border-gray-100 dark:border-[var(--border)] group-hover:-translate-y-px transition-transform transition-transform">
  <span className="text-2xl drop-shadow-lg shadow-black/10">
  {GOAL_ICONS[goal.category] || goal.icon}
  </span>
@@ -52,11 +52,11 @@ export default function GoalThermometer({ goal }) {
  </div>
 
  {/* Termômetro Visual */}
- <div className="relative h-6 w-full rounded-full bg-gray-800/50/50 dark:bg-gray-800/80 overflow-hidden mb-3 border border-gray-700/50/30 dark:border-gray-700/50 shadow-inner">
+ <div className="relative h-6 w-full rounded-full bg-gray-800/50/50 dark:bg-gray-800/80 overflow-hidden mb-3 border border-[var(--border-subtle)]/50/30 dark:border-[var(--border-subtle)]/50 shadow-inner">
  <div
  className={`h-full rounded-full bg-[var(--bg-base)] ${getColor()} 
  transition-all duration-1000 ease-out flex items-center 
- justify-end pr-3 shadow-glass-card`}
+ justify-end pr-3 shadow-tech-card`}
  style={{ width: `${Math.max(pct, 5)}%` }}
  >
  {pct >= 15 && (

@@ -27,11 +27,11 @@ const CONTENT = {
  <div className="space-y-6 text-[var(--text-secondary)]">
  <p>O ecossistema MetaFin não é apenas um aplicativo, é uma infraestrutura completa projetada para unir Instituições Financeiras, Inteligência Artificial e o usuário final em uma camada única de inteligência.</p>
  <div className="grid md:grid-cols-2 gap-4 animate-fade-in">
- <div className="p-6 bg-[var(--bg-elevated)] rounded-2xl border border-[var(--border)]">
+ <div className="p-6 bg-[var(--bg-[var(--bg-elevated)])] rounded-2xl border border-[var(--border)]">
  <h4 className="text-[var(--text-primary)] font-bold mb-2">Nexus Core IA</h4>
  <p className="text-sm">O motor por trás de toda a predição e categorização, processando bilhões de pontos de dados para antecipar seu fluxo de caixa.</p>
  </div>
- <div className="p-6 bg-[var(--bg-elevated)] rounded-2xl border border-[var(--border)]">
+ <div className="p-6 bg-[var(--bg-[var(--bg-elevated)])] rounded-2xl border border-[var(--border)]">
  <h4 className="text-[var(--text-primary)] font-bold mb-2">Open Finance Hub</h4>
  <p className="text-sm">Integrações diretas via API com os principais bancos do Brasil, garantindo que seus dados estejam sempre atualizados.</p>
  </div>
@@ -74,7 +74,7 @@ const CONTENT = {
  <p>Nossa base de conhecimento foi criada para resolver suas dúvidas em segundos. Desde o primeiro login até o uso avançado da API.</p>
  <div className="grid gap-3 animate-fade-in">
  {["Como conectar minha conta XP?", "Configurando metas dinâmicas", "Entendendo os insights do Nexus IA", "Exportação de relatórios para IR"].map(q => (
- <div key={q} className="p-4 bg-[var(--bg-elevated)] rounded-xl border border-[var(--border)] hover:border-[var(--border)] cursor-pointer transition-all">
+ <div key={q} className="p-4 bg-[var(--bg-[var(--bg-elevated)])] rounded-xl border border-[var(--border)] hover:border-[var(--border)] cursor-pointer transition-all">
  <span className="text-sm font-medium text-[var(--text-primary)]">{q}</span>
  </div>
  ))}
@@ -90,11 +90,11 @@ const CONTENT = {
  <div className="space-y-6 text-[var(--text-secondary)]">
  <p>Escolha o canal mais adequado para sua necessidade. Nosso tempo médio de resposta é de 15 minutos para solicitações críticas.</p>
  <div className="space-y-4">
- <div className="flex justify-between items-center p-4 bg-[var(--bg-elevated)] rounded-xl border border-[var(--border)]">
+ <div className="flex justify-between items-center p-4 bg-[var(--bg-[var(--bg-elevated)])] rounded-xl border border-[var(--border)]">
  <span className="text-sm">Suporte via Chat</span>
  <span className="text-xs bg-brand-primary/10 text-brand-primary px-2 py-1 rounded">Disponível</span>
  </div>
- <div className="flex justify-between items-center p-4 bg-[var(--bg-elevated)] rounded-xl border border-[var(--border)]">
+ <div className="flex justify-between items-center p-4 bg-[var(--bg-[var(--bg-elevated)])] rounded-xl border border-[var(--border)]">
  <span className="text-sm">E-mail: support@metafin.com.br</span>
  <span className="text-xs text-[var(--text-muted)]">Resposta em até 2h</span>
  </div>
@@ -110,12 +110,12 @@ const CONTENT = {
  <div className="space-y-6 text-[var(--text-secondary)]">
  <p>A arquitetura MetaFin foi desenhada para suportar multi-moedas, multi-bancos e alta volumetria de transações sem perda de performance.</p>
  <div className="grid md:grid-cols-2 gap-4 animate-fade-in">
- <div className="p-6 bg-[var(--bg-elevated)] rounded-2xl border border-[var(--border)]">
+ <div className="p-6 bg-[var(--bg-[var(--bg-elevated)])] rounded-2xl border border-[var(--border)]">
  <Smartphone className="w-6 h-6 text-brand-primary mb-4" />
  <h4 className="text-[var(--text-primary)] font-bold mb-2">Cross-Platform</h4>
  <p className="text-sm">Experiência idêntica em Desktop, iOS e Android, com sincronização em tempo real.</p>
  </div>
- <div className="p-6 bg-[var(--bg-elevated)] rounded-2xl border border-[var(--border)]">
+ <div className="p-6 bg-[var(--bg-[var(--bg-elevated)])] rounded-2xl border border-[var(--border)]">
  <Monitor className="w-6 h-6 text-brand-primary mb-4" />
  <h4 className="text-[var(--text-primary)] font-bold mb-2">Painel de Analista</h4>
  <p className="text-sm">Ferramentas avançadas de visualização e filtros para usuários que precisam de granularidade.</p>
@@ -141,7 +141,7 @@ const CONTENT = {
  { n: "Nexus IA Engine", v: "100%" },
  { n: "Dashboard Web", v: "99.98%" }
  ].map(s => (
- <div key={s.n} className="flex justify-between items-center p-4 bg-[var(--bg-elevated)] rounded-xl border border-[var(--border)]">
+ <div key={s.n} className="flex justify-between items-center p-4 bg-[var(--bg-[var(--bg-elevated)])] rounded-xl border border-[var(--border)]">
  <span className="text-sm">{s.n}</span>
  <span className="text-sm font-mono text-[var(--text-primary)]">{s.v}</span>
  </div>
@@ -172,10 +172,10 @@ const CONTENT = {
  <div className="space-y-6 text-[var(--text-secondary)]">
  <p>Ao utilizar a MetaFin, você concorda com os termos de prestação de serviços de agregação de dados e inteligência financeira.</p>
  <div className="space-y-4">
- <div className="p-4 bg-[var(--bg-elevated)] rounded-xl border border-[var(--border)]">
+ <div className="p-4 bg-[var(--bg-[var(--bg-elevated)])] rounded-xl border border-[var(--border)]">
  <p className="text-xs">Uso Pessoal vs Corporativo: Alguns planos são limitados a uso individual e não podem ser compartilhados por múltiplos usuários corporativos.</p>
  </div>
- <div className="p-4 bg-[var(--bg-elevated)] rounded-xl border border-[var(--border)]">
+ <div className="p-4 bg-[var(--bg-[var(--bg-elevated)])] rounded-xl border border-[var(--border)]">
  <p className="text-xs">Responsabilidade: O usuário é responsável pela manutenção do sigilo de suas senhas e tokens de acesso bancário.</p>
  </div>
  </div>
@@ -191,7 +191,7 @@ const CONTENT = {
  <p>Estamos em total conformidade com a LGPD Brasil, garantindo que o titular dos dados tenha controle pleno sobre suas informações.</p>
  <div className="grid gap-3 animate-fade-in">
  {["Direito ao Acesso", "Direito à Portabilidade", "Direito à Exclusão (Esquecimento)", "Direito à Revogação de Consentimento"].map(d => (
- <div key={d} className="flex gap-3 items-center p-3 bg-[var(--bg-elevated)] rounded-xl border border-[var(--border)]">
+ <div key={d} className="flex gap-3 items-center p-3 bg-[var(--bg-[var(--bg-elevated)])] rounded-xl border border-[var(--border)]">
  <CheckCircle2 className="w-4 h-4 text-brand-primary" />
  <span className="text-sm">{d}</span>
  </div>
@@ -207,7 +207,7 @@ const CONTENT = {
  body: (
  <div className="space-y-6 text-[var(--text-secondary)]">
  <p>O ecossistema MetaFin opera sob as diretrizes do Banco Central do Brasil para o compartilhamento de dados financeiros.</p>
- <div className="p-6 bg-[var(--bg-elevated)] rounded-2xl border border-[var(--border)] space-y-4">
+ <div className="p-6 bg-[var(--bg-[var(--bg-elevated)])] rounded-2xl border border-[var(--border)] space-y-4">
  <div className="flex gap-3">
  <AlertCircle className="w-5 h-5 text-brand-primary" />
  <p className="text-sm font-bold text-[var(--text-primary)]">Transparência no Consentimento</p>
@@ -253,7 +253,7 @@ export default function Institutional() {
  animate={{ opacity: 1, y: 0 }}
  className="mb-16 text-center md:text-left"
  >
- <div className="mb-8 inline-block p-4 bg-[var(--bg-elevated)] rounded-3xl border border-[var(--border)] shadow-elevated">
+ <div className="mb-8 inline-block p-4 bg-[var(--bg-[var(--bg-elevated)])] rounded-3xl border border-[var(--border)] shadow-elevated">
  {page.icon}
  </div>
  <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-4">{page.title}</h1>
@@ -264,7 +264,7 @@ export default function Institutional() {
  initial={{ opacity: 0, y: 20 }}
  animate={{ opacity: 1, y: 0 }}
  transition={{ delay: 0.1 }}
- className="bg-[var(--bg-elevated)] border border-[var(--border)] p-8 md:p-12 rounded-[3rem] shadow-elevated"
+ className="bg-[var(--bg-[var(--bg-elevated)])] border border-[var(--border)] p-8 md:p-12 rounded-[3rem] shadow-elevated"
  >
  {page.body}
  </motion.div>

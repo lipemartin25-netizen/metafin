@@ -34,194 +34,194 @@ const Webhooks = lazy(() => import('./pages/Webhooks'));
 const AiChat = lazy(() => import('./components/AiChat'));
 
 export default function App() {
- const location = useLocation();
- const [showNps, setShowNps] = useState(false);
- const { shouldShowNps, markNpsComplete } = useSessionVisit();
+    const location = useLocation();
+    const [showNps, setShowNps] = useState(false);
+    const { shouldShowNps, markNpsComplete } = useSessionVisit();
 
- // Track page views
- useEffect(() => {
- trackPageView(location.pathname, document.title);
- }, [location]);
+    // Track page views
+    useEffect(() => {
+        trackPageView(location.pathname, document.title);
+    }, [location]);
 
- // NPS Survey logic
- useEffect(() => {
- const isAppRoute = location.pathname.startsWith('/app');
+    // NPS Survey logic
+    useEffect(() => {
+        const isAppRoute = location.pathname.startsWith('/app');
 
- if (shouldShowNps(3) && isAppRoute) {
- const timer = setTimeout(() => setShowNps(true), 15000); // 15s delay
- return () => clearTimeout(timer);
- }
- }, [location.pathname, shouldShowNps]);
+        if (shouldShowNps(3) && isAppRoute) {
+            const timer = setTimeout(() => setShowNps(true), 15000); // 15s delay
+            return () => clearTimeout(timer);
+        }
+    }, [location.pathname, shouldShowNps]);
 
- const handleNpsClose = () => {
- setShowNps(false);
- markNpsComplete();
- };
+    const handleNpsClose = () => {
+        setShowNps(false);
+        markNpsComplete();
+    };
 
- const isAppRoute = location.pathname.startsWith('/app');
+    const isAppRoute = location.pathname.startsWith('/app');
 
- return (
- <div className="min-h-screen bg-[#06060a] text-[var(--text-primary)]">
- <Suspense fallback={<PageLoader message="Carregando..." />}>
- <Routes>
- {/* Rotas públicas */}
- <Route path="/" element={<Home />} />
- <Route path="/login" element={<Login />} />
- <Route path="/signup" element={<SignUp />} />
+    return (
+        <div className="min-h-screen bg-[var(--bg-base)] text-[var(--text-primary)] transition-colors duration-300">
+            <Suspense fallback={<PageLoader message="Carregando..." />}>
+                <Routes>
+                    {/* Rotas públicas */}
+                    <Route path="/" element={<Home />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/signup" element={<SignUp />} />
 
- {/* Rotas protegidas do app */}
- <Route
- path="/app"
- element={
- <ProtectedRoute>
- <Layout />
- </ProtectedRoute>
- }
- >
- <Route
- index
- element={
- <Suspense fallback={<PageLoader message="Carregando dashboard..." />}>
- <Dashboard />
- </Suspense>
- }
- />
- <Route
- path="transactions"
- element={
- <Suspense fallback={<PageLoader message="Carregando transações..." />}>
- <Transactions />
- </Suspense>
- }
- />
- <Route
- path="accounts"
- element={
- <Suspense fallback={<PageLoader message="Carregando contas..." />}>
- <BankAccounts />
- </Suspense>
- }
- />
- <Route
- path="cards"
- element={
- <Suspense fallback={<PageLoader message="Carregando cartões..." />}>
- <CreditCards />
- </Suspense>
- }
- />
- <Route
- path="bills"
- element={
- <Suspense fallback={<PageLoader message="Carregando faturas..." />}>
- <Bills />
- </Suspense>
- }
- />
- <Route
- path="investments"
- element={
- <Suspense fallback={<PageLoader message="Carregando investimentos..." />}>
- <Investments />
- </Suspense>
- }
- />
- <Route
- path="patrimony"
- element={
- <Suspense fallback={<PageLoader message="Carregando patrimônio..." />}>
- <NetWorth />
- </Suspense>
- }
- />
- <Route
- path="health"
- element={
- <Suspense fallback={<PageLoader message="Analisando saúde financeira..." />}>
- <FinancialHealth />
- </Suspense>
- }
- />
- <Route
- path="budget"
- element={
- <Suspense fallback={<PageLoader message="Carregando orçamento..." />}>
- <Budget />
- </Suspense>
- }
- />
- <Route
- path="goals"
- element={
- <Suspense fallback={<PageLoader message="Carregando metas..." />}>
- <Goals />
- </Suspense>
- }
- />
- <Route
- path="reports"
- element={
- <Suspense fallback={<PageLoader message="Gerando relatórios..." />}>
- <Reports />
- </Suspense>
- }
- />
- <Route
- path="advisor"
- element={
- <Suspense fallback={<PageLoader message="Despertando IA..." />}>
- <AIAssistant />
- </Suspense>
- }
- />
- <Route
- path="lab"
- element={
- <Suspense fallback={<PageLoader message="Abrindo laboratório wealth..." />}>
- <Simulators />
- </Suspense>
- }
- />
- <Route
- path="upgrade"
- element={
- <Suspense fallback={<PageLoader message="Carregando planos..." />}>
- <Upgrade />
- </Suspense>
- }
- />
- <Route
- path="settings"
- element={
- <Suspense fallback={<PageLoader message="Carregando configurações..." />}>
- <Settings />
- </Suspense>
- }
- />
- <Route
- path="webhooks"
- element={
- <Suspense fallback={<PageLoader message="Carregando webhooks..." />}>
- <Webhooks />
- </Suspense>
- }
- />
- </Route>
+                    {/* Rotas protegidas do app */}
+                    <Route
+                        path="/app"
+                        element={
+                            <ProtectedRoute>
+                                <Layout />
+                            </ProtectedRoute>
+                        }
+                    >
+                        <Route
+                            index
+                            element={
+                                <Suspense fallback={<PageLoader message="Carregando dashboard..." />}>
+                                    <Dashboard />
+                                </Suspense>
+                            }
+                        />
+                        <Route
+                            path="transactions"
+                            element={
+                                <Suspense fallback={<PageLoader message="Carregando transações..." />}>
+                                    <Transactions />
+                                </Suspense>
+                            }
+                        />
+                        <Route
+                            path="accounts"
+                            element={
+                                <Suspense fallback={<PageLoader message="Carregando contas..." />}>
+                                    <BankAccounts />
+                                </Suspense>
+                            }
+                        />
+                        <Route
+                            path="cards"
+                            element={
+                                <Suspense fallback={<PageLoader message="Carregando cartões..." />}>
+                                    <CreditCards />
+                                </Suspense>
+                            }
+                        />
+                        <Route
+                            path="bills"
+                            element={
+                                <Suspense fallback={<PageLoader message="Carregando faturas..." />}>
+                                    <Bills />
+                                </Suspense>
+                            }
+                        />
+                        <Route
+                            path="investments"
+                            element={
+                                <Suspense fallback={<PageLoader message="Carregando investimentos..." />}>
+                                    <Investments />
+                                </Suspense>
+                            }
+                        />
+                        <Route
+                            path="patrimony"
+                            element={
+                                <Suspense fallback={<PageLoader message="Carregando patrimônio..." />}>
+                                    <NetWorth />
+                                </Suspense>
+                            }
+                        />
+                        <Route
+                            path="health"
+                            element={
+                                <Suspense fallback={<PageLoader message="Analisando saúde financeira..." />}>
+                                    <FinancialHealth />
+                                </Suspense>
+                            }
+                        />
+                        <Route
+                            path="budget"
+                            element={
+                                <Suspense fallback={<PageLoader message="Carregando orçamento..." />}>
+                                    <Budget />
+                                </Suspense>
+                            }
+                        />
+                        <Route
+                            path="goals"
+                            element={
+                                <Suspense fallback={<PageLoader message="Carregando metas..." />}>
+                                    <Goals />
+                                </Suspense>
+                            }
+                        />
+                        <Route
+                            path="reports"
+                            element={
+                                <Suspense fallback={<PageLoader message="Gerando relatórios..." />}>
+                                    <Reports />
+                                </Suspense>
+                            }
+                        />
+                        <Route
+                            path="advisor"
+                            element={
+                                <Suspense fallback={<PageLoader message="Despertando IA..." />}>
+                                    <AIAssistant />
+                                </Suspense>
+                            }
+                        />
+                        <Route
+                            path="lab"
+                            element={
+                                <Suspense fallback={<PageLoader message="Abrindo laboratório wealth..." />}>
+                                    <Simulators />
+                                </Suspense>
+                            }
+                        />
+                        <Route
+                            path="upgrade"
+                            element={
+                                <Suspense fallback={<PageLoader message="Carregando planos..." />}>
+                                    <Upgrade />
+                                </Suspense>
+                            }
+                        />
+                        <Route
+                            path="settings"
+                            element={
+                                <Suspense fallback={<PageLoader message="Carregando configurações..." />}>
+                                    <Settings />
+                                </Suspense>
+                            }
+                        />
+                        <Route
+                            path="webhooks"
+                            element={
+                                <Suspense fallback={<PageLoader message="Carregando webhooks..." />}>
+                                    <Webhooks />
+                                </Suspense>
+                            }
+                        />
+                    </Route>
 
- {/* Fallback para rotas não encontradas */}
- <Route path="*" element={<Navigate to="/" replace />} />
- </Routes>
+                    {/* Fallback para rotas não encontradas */}
+                    <Route path="*" element={<Navigate to="/" replace />} />
+                </Routes>
 
- {/* AI Chat FAB - apenas no app */}
- {isAppRoute && (
- <Suspense fallback={null}>
- <AiChat />
- </Suspense>
- )}
+                {/* AI Chat FAB - apenas no app */}
+                {isAppRoute && (
+                    <Suspense fallback={null}>
+                        <AiChat />
+                    </Suspense>
+                )}
 
- {/* NPS Survey */}
- {showNps && <NpsSurvey onClose={handleNpsClose} />}
- </Suspense>
- </div>
- );
+                {/* NPS Survey */}
+                {showNps && <NpsSurvey onClose={handleNpsClose} />}
+            </Suspense>
+        </div>
+    );
 }

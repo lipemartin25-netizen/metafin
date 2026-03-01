@@ -52,7 +52,7 @@ export default function CouplesFinance() {
  className="w-full bg-black/40 border border-[var(--border)] rounded-xl px-4 py-3 text-[var(--text-primary)] text-xl font-black outline-none focus:border-pink-500 transition-colors"
  />
  </div>
- <div className={`\${tw.card} p-6 bg-black/20 border border-pink-500/30 shadow-glass-card space-y-4`}>
+ <div className={`\${tw.card} p-6 bg-black/20 border border-pink-500/30 shadow-tech-card space-y-4`}>
  <h3 className="font-bold uppercase tracking-widest text-xs text-pink-400 flex items-center gap-2">
  <CreditCard className="w-4 h-4" /> Despesas do Casal
  </h3>
@@ -67,17 +67,17 @@ export default function CouplesFinance() {
 
  <div className="grid md:grid-cols-2 gap-8 animate-fade-in">
  {/* 50 / 50 */}
- <div className={`\${tw.card} p-8 bg-black/30 border border-gray-800 hover:border-[var(--border)] transition-all flex flex-col justify-between`}>
+ <div className={`\${tw.card} p-8 bg-black/30 border border-[var(--border-subtle)] hover:border-[var(--border)] transition-all flex flex-col justify-between`}>
  <div>
  <h3 className="text-lg font-black uppercase tracking-widest text-[var(--text-primary)] mb-2">Divisão 50/50</h3>
  <p className="text-xs text-gray-400 mb-6">Metade para cada um. Simples, porém pode pesar para quem tem menor renda líquida.</p>
 
  <div className="space-y-3 mb-8">
- <div className="flex justify-between items-center bg-gray-800/40/5 p-4 rounded-xl">
+ <div className="flex justify-between items-center bg-[var(--bg-surface)] p-4 rounded-xl">
  <span className="font-medium text-gray-300">Pessoa 1 Paga:</span>
  <span className="font-black text-[var(--text-primary)] text-xl">{fmt(share5050)}</span>
  </div>
- <div className="flex justify-between items-center bg-gray-800/40/5 p-4 rounded-xl">
+ <div className="flex justify-between items-center bg-[var(--bg-surface)] p-4 rounded-xl">
  <span className="font-medium text-gray-300">Pessoa 2 Paga:</span>
  <span className="font-black text-[var(--text-primary)] text-xl">{fmt(share5050)}</span>
  </div>
@@ -86,24 +86,24 @@ export default function CouplesFinance() {
  </div>
 
  {/* Proporcional */}
- <div className={`\${tw.card} p-8 border border-accent/30 shadow-glass-card relative overflow-hidden flex flex-col justify-between`}>
- <div className="absolute -right-10 -top-10 w-40 h-40 bg-accent/20 rounded-full blur-[40px] pointer-events-none" />
+ <div className={`\${tw.card} p-8 border border-accent/30 shadow-tech-card relative overflow-hidden flex flex-col justify-between`}>
+ <div className="absolute -right-10 -top-10 w-40 h-40 bg-[var(--bg-base)]ccent/20 rounded-full blur-[40px] pointer-events-none" />
 
  <div>
- <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-accent/10 text-accent text-[10px] font-black uppercase tracking-widest mb-4 border border-accent/20">
+ <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[var(--bg-base)]ccent/10 text-accent text-[10px] font-black uppercase tracking-widest mb-4 border border-accent/20">
  <Sparkles className="w-3 h-3" /> A Escolha Inteligente
  </div>
  <h3 className="text-lg font-black uppercase tracking-widest text-[var(--text-primary)] mb-2">Divisão Proporcional</h3>
  <p className="text-xs text-gray-400 mb-6">Quem ganha mais, contribui mais. Mantém a equidade no relacionamento e sobras para investimentos individuais.</p>
 
  <div className="space-y-3 mb-8">
- <div className="flex justify-between items-center bg-accent/5 p-4 rounded-xl border border-accent/10">
+ <div className="flex justify-between items-center bg-[var(--bg-base)]ccent/5 p-4 rounded-xl border border-accent/10">
  <span className="font-medium text-gray-300 flex items-center gap-2">
  Pessoa 1 Paga <span className="text-[10px] text-accent">{(prop1 * 100).toFixed(1)}%</span>
  </span>
  <span className="font-black text-accent text-xl">{fmt(shareProp1)}</span>
  </div>
- <div className="flex justify-between items-center bg-accent/5 p-4 rounded-xl border border-accent/10">
+ <div className="flex justify-between items-center bg-[var(--bg-base)]ccent/5 p-4 rounded-xl border border-accent/10">
  <span className="font-medium text-gray-300 flex items-center gap-2">
  Pessoa 2 Paga <span className="text-[10px] text-accent">{(prop2 * 100).toFixed(1)}%</span>
  </span>

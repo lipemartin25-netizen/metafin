@@ -251,7 +251,7 @@ export default function BankAccounts() {
  </div>
  ) : (accounts?.length || 0) === 0 ? (
  <div className={`\${tw.card} text-center py-8 border-dashed border-2 border-[var(--border)] bg-transparent`}>
- <div className="w-12 h-12 rounded-full bg-gray-800/40/5 mx-auto flex items-center justify-center mb-3">
+ <div className="w-12 h-12 rounded-full bg-[var(--bg-surface)] mx-auto flex items-center justify-center mb-3">
  <Banknote className="w-6 h-6 text-gray-500" />
  </div>
  <p className="text-gray-400 text-sm mb-4">Nenhuma conta conectada ainda.</p>
@@ -275,7 +275,7 @@ export default function BankAccounts() {
  {bank.logo || bank.bank_name?.charAt(0) || 'B'}
  </div>
  {/* Source badge */}
- <div className={`absolute -bottom-1 -right-1 w-4 h-4 rounded-full flex items-center justify-center text-[8px] border border-gray-800 ${bank.display_name?.toLowerCase().includes('cartão') || bank.account_type === 'CREDIT' ? 'bg-brand-primary' : 'bg-brand-primary'}`}>
+ <div className={`absolute -bottom-1 -right-1 w-4 h-4 rounded-full flex items-center justify-center text-[8px] border border-[var(--border-subtle)] ${bank.display_name?.toLowerCase().includes('cartão') || bank.account_type === 'CREDIT' ? 'bg-brand-primary' : 'bg-brand-primary'}`}>
  {bank.display_name?.toLowerCase().includes('cartão') || bank.account_type === 'CREDIT' ? '💳' : '🏦'}
  </div>
  </div>
@@ -288,7 +288,7 @@ export default function BankAccounts() {
  ) : bank.last_synced_at || bank.updated_at ? (
  <span className="flex items-center gap-1 text-[9px] text-brand-glow bg-brand-primary/10 px-1.5 py-0.5 rounded-full font-bold">🟢 Ativo</span>
  ) : (
- <span className="flex items-center gap-1 text-[9px] text-gray-500 bg-gray-800/40/5 px-1.5 py-0.5 rounded-full font-bold">⚪ Manual</span>
+ <span className="flex items-center gap-1 text-[9px] text-gray-500 bg-[var(--bg-surface)] px-1.5 py-0.5 rounded-full font-bold">⚪ Manual</span>
  )}
  </div>
  <p className="text-xs text-gray-400">{bank.bank_name} • Ag {bank.agency || '0001'} • Cta {bank.account_number}</p>
@@ -336,7 +336,7 @@ export default function BankAccounts() {
  {fmt(txData.expense)}
  </p>
  </div>
- <div className="bg-gray-800/40/5 rounded-xl p-2.5 text-center">
+ <div className="bg-[var(--bg-surface)] rounded-xl p-2.5 text-center">
  <p className="text-[9px] text-gray-400/70 uppercase font-bold tracking-wider">Moviment.</p>
  <p className="text-sm font-bold text-[var(--text-primary)]">{txData.count}</p>
  </div>
@@ -347,7 +347,7 @@ export default function BankAccounts() {
  <div className="space-y-1">
  <p className="text-[9px] text-gray-500 uppercase font-bold tracking-wider mb-1">Últimas movimentações</p>
  {txData.recent.slice(0, 3).map((tx, i) => (
- <div key={tx.id || i} className="flex items-center justify-between py-1.5 px-2 rounded-lg hover:bg-gray-800/40/5 transition-colors">
+ <div key={tx.id || i} className="flex items-center justify-between py-1.5 px-2 rounded-lg hover:bg-[var(--bg-surface)] transition-colors">
  <span className="text-xs text-gray-300 truncate max-w-[60%]">{tx.description}</span>
  <span className={`text-xs font-bold ${tx.type === 'income' ? 'text-brand-glow' : 'text-red-400'}`}>
  {tx.type === 'income' ? '+' : '-'}{fmt(Math.abs(tx.amount))}
@@ -378,7 +378,7 @@ export default function BankAccounts() {
  <button
  key={bank.id}
  onClick={() => handleConnectClick(bank)}
- className={`${tw.bankCard} hover:bg-gray-800/40/5 transition-all p-4 flex flex-col items-center gap-3 text-center border hover:border-brand-primary/30 group`}
+ className={`${tw.bankCard} hover:bg-[var(--bg-surface)] transition-all p-4 flex flex-col items-center gap-3 text-center border hover:border-brand-primary/30 group`}
  >
  <div className="w-12 h-12 bank-icon-container flex items-center justify-center text-[var(--text-primary)] font-bold text-xl transition-transform group-hover:-translate-y-px transition-transform" style={{ backgroundColor: bank.color, color: bank.textColor }}>
  {bank.logo}
@@ -394,7 +394,7 @@ export default function BankAccounts() {
  <div className={`\${tw.card} w-full max-w-md p-0 overflow-hidden animate-slide-up relative`}>
  <button onClick={() => setShowConnectModal(false)} className="absolute top-4 right-4 text-gray-500 hover:text-[var(--text-primary)]"><X className="w-5 h-5" /></button>
 
- <div className="bg-gray-800/40/5 p-6 text-center border-b border-[var(--border)]">
+ <div className="bg-[var(--bg-surface)] p-6 text-center border-b border-[var(--border)]">
  <div className="w-16 h-16 bank-icon-container mx-auto flex items-center justify-center text-[var(--text-primary)] font-bold text-3xl mb-4" style={{ backgroundColor: selectedBank.color, color: selectedBank.textColor }}>
  {selectedBank.logo}
  </div>
@@ -423,7 +423,7 @@ export default function BankAccounts() {
 
  <button
  onClick={() => setConnectingState('consenting')}
- className="w-full flex items-center gap-4 p-4 rounded-xl bg-gray-800/40/5 border border-[var(--border)] hover:bg-gray-800/40/10 hover:border-[var(--border)] transition-all group text-left"
+ className="w-full flex items-center gap-4 p-4 rounded-xl bg-[var(--bg-surface)] border border-[var(--border)] hover:bg-gray-800/40/10 hover:border-[var(--border)] transition-all group text-left"
  >
  <div className="w-12 h-12 rounded-xl bg-gray-800/40/10 flex items-center justify-center flex-shrink-0 group-hover:-translate-y-px transition-transform transition-transform">
  <FileText className="w-6 h-6 text-gray-400" />
@@ -445,7 +445,7 @@ export default function BankAccounts() {
  type="text"
  value={customNickname}
  onChange={(e) => setCustomNickname(e.target.value)}
- className="w-full bg-gray-800/40/5 border border-[var(--border)] rounded-xl px-4 py-2 text-[var(--text-primary)] text-sm focus:border-brand-primary/50 outline-none mt-1"
+ className="w-full bg-[var(--bg-surface)] border border-[var(--border)] rounded-xl px-4 py-2 text-[var(--text-primary)] text-sm focus:border-brand-primary/50 outline-none mt-1"
  placeholder="Ex: Minha Conta Nubank"
  />
  </div>
@@ -455,7 +455,7 @@ export default function BankAccounts() {
  type="text"
  value={agency}
  onChange={(e) => setAgency(e.target.value)}
- className="w-full bg-gray-800/40/5 border border-[var(--border)] rounded-xl px-4 py-2 text-[var(--text-primary)] text-sm focus:border-brand-primary/50 outline-none mt-1"
+ className="w-full bg-[var(--bg-surface)] border border-[var(--border)] rounded-xl px-4 py-2 text-[var(--text-primary)] text-sm focus:border-brand-primary/50 outline-none mt-1"
  placeholder="0001"
  />
  </div>
@@ -465,7 +465,7 @@ export default function BankAccounts() {
  type="text"
  value={accountNum}
  onChange={(e) => setAccountNum(e.target.value)}
- className="w-full bg-gray-800/40/5 border border-[var(--border)] rounded-xl px-4 py-2 text-[var(--text-primary)] text-sm focus:border-brand-primary/50 outline-none mt-1"
+ className="w-full bg-[var(--bg-surface)] border border-[var(--border)] rounded-xl px-4 py-2 text-[var(--text-primary)] text-sm focus:border-brand-primary/50 outline-none mt-1"
  placeholder="12345-6"
  />
  </div>
@@ -475,7 +475,7 @@ export default function BankAccounts() {
  type="text"
  value={customBalance}
  onChange={(e) => setCustomBalance(e.target.value)}
- className="w-full bg-gray-800/40/5 border border-[var(--border)] rounded-xl px-4 py-2 text-[var(--text-primary)] text-sm focus:border-brand-primary/50 outline-none mt-1"
+ className="w-full bg-[var(--bg-surface)] border border-[var(--border)] rounded-xl px-4 py-2 text-[var(--text-primary)] text-sm focus:border-brand-primary/50 outline-none mt-1"
  placeholder="0,00"
  />
  </div>
@@ -486,19 +486,19 @@ export default function BankAccounts() {
  <div className="grid grid-cols-3 gap-2 animate-fade-in">
  <button
  onClick={() => setDataSource('empty')}
- className={`py-2 text-[10px] font-bold rounded-lg border transition-all ${dataSource === 'empty' ? 'bg-brand-primary/20 border-brand-primary/50 text-brand-glow' : 'bg-gray-800/40/5 border-[var(--border)] text-gray-500'}`}
+ className={`py-2 text-[10px] font-bold rounded-lg border transition-all ${dataSource === 'empty' ? 'bg-brand-primary/20 border-brand-primary/50 text-brand-glow' : 'bg-[var(--bg-surface)] border-[var(--border)] text-gray-500'}`}
  >
  LIMPA
  </button>
  <button
  onClick={() => setDataSource('demo')}
- className={`py-2 text-[10px] font-bold rounded-lg border transition-all ${dataSource === 'demo' ? 'bg-blue-500/20 border-blue-500/50 text-blue-400' : 'bg-gray-800/40/5 border-[var(--border)] text-gray-500'}`}
+ className={`py-2 text-[10px] font-bold rounded-lg border transition-all ${dataSource === 'demo' ? 'bg-blue-500/20 border-blue-500/50 text-blue-400' : 'bg-[var(--bg-surface)] border-[var(--border)] text-gray-500'}`}
  >
  DEMO
  </button>
  <button
  onClick={() => setDataSource('file')}
- className={`py-2 text-[10px] font-bold rounded-lg border transition-all ${dataSource === 'file' ? 'bg-brand-primary/20 border-brand-primary/50 text-brand-glow' : 'bg-gray-800/40/5 border-[var(--border)] text-gray-500'}`}
+ className={`py-2 text-[10px] font-bold rounded-lg border transition-all ${dataSource === 'file' ? 'bg-brand-primary/20 border-brand-primary/50 text-brand-glow' : 'bg-[var(--bg-surface)] border-[var(--border)] text-gray-500'}`}
  >
  EXTRATO
  </button>
@@ -576,7 +576,7 @@ export default function BankAccounts() {
  <button
  onClick={() => setDeleteTarget(null)}
  disabled={deleting}
- className="flex-1 py-2.5 rounded-xl bg-gray-800/40/5 border border-[var(--border)] text-sm text-gray-300 hover:bg-gray-800/40/10 transition-all disabled:opacity-50"
+ className="flex-1 py-2.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border)] text-sm text-gray-300 hover:bg-gray-800/40/10 transition-all disabled:opacity-50"
  >
  Cancelar
  </button>

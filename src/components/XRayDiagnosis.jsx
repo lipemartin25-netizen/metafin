@@ -161,10 +161,10 @@ export default function XRayDiagnosis({ onComplete, onClose }) {
  // Render logic
  return (
  <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/60 animate-fade-in">
- <div className="relative w-full max-w-2xl bg-gray-800/40 dark:bg-surface-900 border border-gray-700/40 dark:border-[var(--border)] rounded-3xl shadow-elevated overflow-hidden flex flex-col">
+ <div className="relative w-full max-w-2xl bg-gray-800/40 dark:bg-surface-900 border border-[var(--border-subtle)]/40 dark:border-[var(--border)] rounded-3xl shadow-elevated overflow-hidden flex flex-col">
  {/* Close Button if applicable */}
  {onClose && (
- <button onClick={() => onClose(null)} className="absolute top-6 right-6 z-20 p-2 bg-gray-800/40 dark:bg-gray-800/40/5 rounded-full text-gray-400 hover:text-[var(--text-primary)] dark:hover:text-[var(--text-primary)] transition-colors">
+ <button onClick={() => onClose(null)} className="absolute top-6 right-6 z-20 p-2 bg-gray-800/40 dark:bg-[var(--bg-surface)] rounded-full text-gray-400 hover:text-[var(--text-primary)] dark:hover:text-[var(--text-primary)] transition-colors">
  <X className="w-5 h-5" />
  </button>
  )}
@@ -210,7 +210,7 @@ export default function XRayDiagnosis({ onComplete, onClose }) {
  </div>
 
  <h2 className="text-2xl font-bold text-[var(--text-primary)] dark:text-[var(--text-primary)] mb-4">Seu Diagnóstico Financeiro</h2>
- <div className="p-6 rounded-2xl bg-gray-800/30 dark:bg-gray-800/40/[0.03] border border-gray-700/40 dark:border-[var(--border)] mb-8 max-w-lg mx-auto text-left shadow-inner">
+ <div className="p-6 rounded-2xl bg-gray-800/30 dark:bg-gray-800/40/[0.03] border border-[var(--border-subtle)]/40 dark:border-[var(--border)] mb-8 max-w-lg mx-auto text-left shadow-inner">
  <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-sm font-medium">
  {result.tip}
  </p>
@@ -237,7 +237,7 @@ export default function XRayDiagnosis({ onComplete, onClose }) {
  value={answers[QUESTIONS[step].key] || ''}
  onChange={(e) => handleChange(e.target.value)}
  placeholder="0,00"
- className="w-full bg-gray-800/30 dark:bg-black/20 border-2 border-gray-700/40 dark:border-[var(--border)] rounded-2xl py-5 pl-14 pr-6 text-2xl md:text-3xl font-black text-[var(--text-primary)] dark:text-[var(--text-primary)] focus:outline-none focus:border-brand-500 focus:ring-4 focus:ring-brand-500/20 transition-all shadow-inner"
+ className="w-full bg-gray-800/30 dark:bg-black/20 border-2 border-[var(--border-subtle)]/40 dark:border-[var(--border)] rounded-2xl py-5 pl-14 pr-6 text-2xl md:text-3xl font-black text-[var(--text-primary)] dark:text-[var(--text-primary)] focus:outline-none focus:border-brand-500 focus:ring-4 focus:ring-brand-500/20 transition-all shadow-inner"
  autoFocus
  onKeyDown={(e) => e.key === 'Enter' && handleNext()}
  />

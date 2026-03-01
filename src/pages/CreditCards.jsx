@@ -91,7 +91,7 @@ export default function CreditCards() {
 
  {/* Summary Cards */}
  <div className="grid sm:grid-cols-4 gap-4">
- <div className={`\${tw.card} hover:border-gray-700/50 dark:hover:border-[var(--border)] transition-colors`}>
+ <div className={`\${tw.card} hover:border-[var(--border-subtle)]/50 dark:hover:border-[var(--border)] transition-colors`}>
  <p className="text-xs text-gray-500 dark:text-gray-400 mb-2 uppercase font-bold tracking-wider">Limite Total</p>
  <p className="text-2xl font-black text-content-primary dark:text-content-primary">{fmt(totals.totalLimit)}</p>
  </div>
@@ -113,7 +113,7 @@ export default function CreditCards() {
  </div>
  )}
  </div>
- <div className={`\${tw.card} hover:border-gray-700/50 dark:hover:border-[var(--border)] transition-colors`}>
+ <div className={`\${tw.card} hover:border-[var(--border-subtle)]/50 dark:hover:border-[var(--border)] transition-colors`}>
  <p className="text-xs text-gray-500 dark:text-gray-400 mb-2 uppercase font-bold tracking-wider flex items-center gap-1.5">
  <Zap className="w-3.5 h-3.5" /> Est. Cashback
  </p>
@@ -124,8 +124,8 @@ export default function CreditCards() {
 
  {/* Cards List */}
  {cards.length === 0 ? (
- <div className={`\${tw.card} text-center py-16 border-dashed border-2 border-gray-700/40 dark:border-[var(--border)] bg-transparent flex flex-col items-center justify-center`}>
- <div className="w-20 h-20 bg-gray-800/40 dark:bg-gray-800/40/5 rounded-full flex items-center justify-center mb-6">
+ <div className={`\${tw.card} text-center py-16 border-dashed border-2 border-[var(--border-subtle)]/40 dark:border-[var(--border)] bg-transparent flex flex-col items-center justify-center`}>
+ <div className="w-20 h-20 bg-gray-800/40 dark:bg-[var(--bg-surface)] rounded-full flex items-center justify-center mb-6">
  <CreditCard className="w-10 h-10 text-gray-400 dark:text-gray-500" />
  </div>
  <h4 className="text-xl font-bold text-content-primary dark:text-content-primary mb-2">Carteira Vazia</h4>
@@ -153,7 +153,7 @@ export default function CreditCards() {
  {/* Physical/Virtual Card Representation */}
  <div className={`relative h-56 rounded-2xl p-6 flex flex-col justify-between overflow-hidden shadow-elevated transition-all duration-500 preserve-3d group-hover:rotate-y-12 ${card.isLocked ? 'grayscale opacity-75' : ''}`} style={{ background: `linear-gradient(135deg, ${flag.color}, ${flag.color}dd)` }}>
  {/* Chip & NF */}
- <div className="absolute top-0 right-0 w-64 h-64 bg-gray-800/40/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+ <div className="absolute top-0 right-0 w-64 h-64 bg-[var(--bg-surface)] rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
  <div className="flex justify-between items-start relative z-10 w-full">
  <div className="w-12 h-8 rounded bg-yellow-400/30 border border-yellow-400/50 flex items-center justify-center overflow-hidden">
  <div className="w-full h-px bg-yellow-400/50 absolute" />
@@ -210,7 +210,7 @@ export default function CreditCards() {
  <div className={`\${tw.card} mt-[-10px] pt-6 pb-4 px-4 rounded-xl shadow-lg border-t-0 rounded-t-none relative z-0`}>
  <div className="flex items-center justify-between mb-4">
  <div className="flex gap-2">
- <button onClick={() => toggleLock(card.id)} className={`p-2 rounded-xl transition-colors border ${card.isLocked ? 'bg-amber-500/10 text-amber-500 border-amber-500/20 hover:bg-amber-500/20' : 'bg-gray-800/40 dark:bg-gray-800/40/5 text-gray-500 hover:text-content-primary dark:hover:text-content-primary border-transparent'}`}>
+ <button onClick={() => toggleLock(card.id)} className={`p-2 rounded-xl transition-colors border ${card.isLocked ? 'bg-[var(--bg-base)]mber-500/10 text-amber-500 border-amber-500/20 hover:bg-[var(--bg-base)]mber-500/20' : 'bg-gray-800/40 dark:bg-[var(--bg-surface)] text-gray-500 hover:text-content-primary dark:hover:text-content-primary border-transparent'}`}>
  {card.isLocked ? <Lock className="w-4 h-4" /> : <Unlock className="w-4 h-4" />}
  </button>
  <button onClick={() => handleDelete(card.id)} className="p-2 rounded-xl bg-red-500/10 text-red-500 border border-red-500/20 hover:bg-red-500/20 transition-colors">
@@ -262,7 +262,7 @@ export default function CreditCards() {
  onSubmit={handleAdd}
  className={`\${tw.card} w-full max-w-md p-8 relative rounded-3xl`}
  >
- <button type="button" onClick={() => setShowAdd(false)} className="absolute top-6 right-6 p-2 rounded-xl bg-gray-800/40 dark:bg-gray-800/40/5 text-gray-500 hover:text-content-primary dark:hover:text-content-primary transition-colors"><X className="w-5 h-5" /></button>
+ <button type="button" onClick={() => setShowAdd(false)} className="absolute top-6 right-6 p-2 rounded-xl bg-gray-800/40 dark:bg-[var(--bg-surface)] text-gray-500 hover:text-content-primary dark:hover:text-content-primary transition-colors"><X className="w-5 h-5" /></button>
 
  <div className="mb-6">
  <h2 className="text-2xl font-black text-content-primary dark:text-content-primary tracking-tight leading-none mb-2">Emitir Cartão</h2>
@@ -271,7 +271,7 @@ export default function CreditCards() {
 
  <div className="space-y-5">
  {/* Tipo do Cartão Selecionador */}
- <div className="flex bg-gray-800/40 dark:bg-gray-800/40/5 p-1 rounded-xl">
+ <div className="flex bg-gray-800/40 dark:bg-[var(--bg-surface)] p-1 rounded-xl">
  <button type="button" onClick={() => setForm({ ...form, isVirtual: false })} className={`flex-1 py-2 text-sm font-semibold rounded-lg transition-all ${!form.isVirtual ? 'bg-gray-800/40 dark:bg-surface-800 shadow-lg shadow-black/10 text-content-primary dark:text-content-primary' : 'text-gray-500 hover:text-gray-300 dark:hover:text-gray-300'}`}>Físico</button>
  <button type="button" onClick={() => setForm({ ...form, isVirtual: true })} className={`flex-1 flex items-center justify-center gap-1.5 py-2 text-sm font-semibold rounded-lg transition-all ${form.isVirtual ? 'bg-surface-primary from-brand-500 to-accent shadow-lg shadow-black/10 text-surface-950' : 'text-gray-500 hover:text-gray-300 dark:hover:text-gray-300'}`}>
  <Smartphone className="w-3.5 h-3.5" /> Virtual
@@ -280,29 +280,29 @@ export default function CreditCards() {
 
  <div>
  <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider ml-1">Nome no Cartão</label>
- <input value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} className="w-full bg-gray-800/30 dark:bg-surface-900 border border-gray-700/40 dark:border-[var(--border)] rounded-xl px-4 py-3 text-content-primary dark:text-content-primary text-sm outline-none focus:border-brand-500/50 focus:ring-1 focus:ring-brand-500/20 mt-1.5 transition-all shadow-lg shadow-black/10 dark:shadow-none" placeholder="Nome Impresso/Mnemonic" required />
+ <input value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} className="w-full bg-gray-800/30 dark:bg-surface-900 border border-[var(--border-subtle)]/40 dark:border-[var(--border)] rounded-xl px-4 py-3 text-content-primary dark:text-content-primary text-sm outline-none focus:border-brand-500/50 focus:ring-1 focus:ring-brand-500/20 mt-1.5 transition-all shadow-lg shadow-black/10 dark:shadow-none" placeholder="Nome Impresso/Mnemonic" required />
  </div>
 
  <div className="grid grid-cols-2 gap-4">
  <div>
  <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider ml-1">Bandeira</label>
- <select value={form.flag} onChange={e => setForm({ ...form, flag: e.target.value })} className="w-full bg-gray-800/30 dark:bg-surface-900 border border-gray-700/40 dark:border-[var(--border)] rounded-xl px-4 py-3 text-content-primary dark:text-content-primary text-sm outline-none mt-1.5 focus:border-brand-500/50 focus:ring-1 focus:ring-brand-500/20 transition-all shadow-lg shadow-black/10 dark:shadow-none appearance-none">
+ <select value={form.flag} onChange={e => setForm({ ...form, flag: e.target.value })} className="w-full bg-gray-800/30 dark:bg-surface-900 border border-[var(--border-subtle)]/40 dark:border-[var(--border)] rounded-xl px-4 py-3 text-content-primary dark:text-content-primary text-sm outline-none mt-1.5 focus:border-brand-500/50 focus:ring-1 focus:ring-brand-500/20 transition-all shadow-lg shadow-black/10 dark:shadow-none appearance-none">
  {FLAGS.map(f => <option key={f.id} value={f.id}>{f.name}</option>)}
  </select>
  </div>
  <div>
  <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider ml-1">Vencimento</label>
- <input type="number" min="1" max="31" value={form.due} onChange={e => setForm({ ...form, due: e.target.value })} className="w-full bg-gray-800/30 dark:bg-surface-900 border border-gray-700/40 dark:border-[var(--border)] rounded-xl px-4 py-3 text-content-primary dark:text-content-primary text-sm outline-none mt-1.5 focus:border-brand-500/50 focus:ring-1 focus:ring-brand-500/20 transition-all shadow-lg shadow-black/10 dark:shadow-none" required />
+ <input type="number" min="1" max="31" value={form.due} onChange={e => setForm({ ...form, due: e.target.value })} className="w-full bg-gray-800/30 dark:bg-surface-900 border border-[var(--border-subtle)]/40 dark:border-[var(--border)] rounded-xl px-4 py-3 text-content-primary dark:text-content-primary text-sm outline-none mt-1.5 focus:border-brand-500/50 focus:ring-1 focus:ring-brand-500/20 transition-all shadow-lg shadow-black/10 dark:shadow-none" required />
  </div>
  </div>
  <div className="grid grid-cols-2 gap-4">
  <div>
  <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider ml-1">Limite Aprovado</label>
- <input value={form.limit} onChange={e => setForm({ ...form, limit: e.target.value })} className="w-full bg-gray-800/30 dark:bg-surface-900 border border-gray-700/40 dark:border-[var(--border)] rounded-xl px-4 py-3 text-content-primary dark:text-content-primary text-sm outline-none mt-1.5 shadow-lg shadow-black/10 dark:shadow-none font-mono" placeholder="5.000,00" required />
+ <input value={form.limit} onChange={e => setForm({ ...form, limit: e.target.value })} className="w-full bg-gray-800/30 dark:bg-surface-900 border border-[var(--border-subtle)]/40 dark:border-[var(--border)] rounded-xl px-4 py-3 text-content-primary dark:text-content-primary text-sm outline-none mt-1.5 shadow-lg shadow-black/10 dark:shadow-none font-mono" placeholder="5.000,00" required />
  </div>
  <div>
  <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider ml-1">Fatura Atual (R$)</label>
- <input value={form.used} onChange={e => setForm({ ...form, used: e.target.value })} className="w-full bg-gray-800/30 dark:bg-surface-900 border border-gray-700/40 dark:border-[var(--border)] rounded-xl px-4 py-3 text-content-primary dark:text-content-primary text-sm outline-none mt-1.5 shadow-lg shadow-black/10 dark:shadow-none font-mono" placeholder="0,00" />
+ <input value={form.used} onChange={e => setForm({ ...form, used: e.target.value })} className="w-full bg-gray-800/30 dark:bg-surface-900 border border-[var(--border-subtle)]/40 dark:border-[var(--border)] rounded-xl px-4 py-3 text-content-primary dark:text-content-primary text-sm outline-none mt-1.5 shadow-lg shadow-black/10 dark:shadow-none font-mono" placeholder="0,00" />
  </div>
  </div>
 

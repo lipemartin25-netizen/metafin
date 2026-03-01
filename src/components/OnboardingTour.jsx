@@ -110,7 +110,7 @@ export default function OnboardingTour({ onComplete }) {
  {/* Actions */}
  <div className="flex gap-3 justify-center">
  {step > 0 && (
- <button onClick={() => setStep(step - 1)} className="px-5 py-2.5 rounded-xl text-sm font-medium text-gray-400 hover:text-[var(--text-primary)] bg-gray-800/40/5 hover:bg-gray-800/40/10 border border-[var(--border)] transition-all">
+ <button onClick={() => setStep(step - 1)} className="px-5 py-2.5 rounded-xl text-sm font-medium text-gray-400 hover:text-[var(--text-primary)] bg-[var(--bg-surface)] hover:bg-gray-800/40/10 border border-[var(--border)] transition-all">
  Voltar
  </button>
  )}

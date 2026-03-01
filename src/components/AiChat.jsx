@@ -261,7 +261,7 @@ export default function AiChat() {
  <div className="px-4 py-2 border-b border-[var(--border)] bg-black/20">
  <button
  onClick={() => setShowModelPicker(!showModelPicker)}
- className="flex items-center gap-2 text-xs text-gray-300 hover:text-[var(--text-primary)] transition-colors w-full bg-gray-800/40/5 hover:bg-gray-800/40/10 p-2 rounded-lg border border-[var(--border)]"
+ className="flex items-center gap-2 text-xs text-gray-300 hover:text-[var(--text-primary)] transition-colors w-full bg-[var(--bg-surface)] hover:bg-gray-800/40/10 p-2 rounded-lg border border-[var(--border)]"
  aria-expanded={showModelPicker}
  >
  <span className="text-base">{currentModel?.icon}</span>
@@ -290,7 +290,7 @@ export default function AiChat() {
  className={`flex items-center gap-3 w-full px-3 py-2 rounded-xl text-xs transition-all ${isActive
  ? 'bg-brand-primary/10 text-brand-glow border border-brand-primary/20'
  : isAvailable
- ? 'text-gray-400 hover:bg-gray-800/40/5 hover:text-[var(--text-primary)] border border-transparent'
+ ? 'text-gray-400 hover:bg-[var(--bg-surface)] hover:text-[var(--text-primary)] border border-transparent'
  : 'opacity-40 cursor-not-allowed text-gray-600'
  }`}
  >
@@ -298,7 +298,7 @@ export default function AiChat() {
  <div className="flex-1 text-left">
  <div className="font-medium flex items-center gap-2">
  {m.name}
- <span className={`text-[9px] px-1 rounded ${m.costTier === 'free' ? 'bg-brand-primary/10 text-brand-primary' : 'bg-gray-800/40/5 text-gray-500'}`}>
+ <span className={`text-[9px] px-1 rounded ${m.costTier === 'free' ? 'bg-brand-primary/10 text-brand-primary' : 'bg-[var(--bg-surface)] text-gray-500'}`}>
  {m.costTier.toUpperCase()}
  </span>
  </div>
@@ -357,7 +357,7 @@ export default function AiChat() {
  ? 'bg-brand-primary text-[var(--text-primary)] rounded-tr-sm'
  : msg.isError
  ? 'bg-red-500/10 text-red-300 border border-red-500/20 rounded-tl-sm'
- : 'bg-gray-800/40/5 text-gray-200 border border-[var(--border)] rounded-tl-sm'
+ : 'bg-[var(--bg-surface)] text-gray-200 border border-[var(--border)] rounded-tl-sm'
  }`}
  >
  {/* Content - sanitizado se for da IA */}
@@ -401,7 +401,7 @@ export default function AiChat() {
  {/* Loading */}
  {loading && (
  <div className="flex justify-start animate-pulse">
- <div className="bg-gray-800/40/5 border border-[var(--border)] rounded-2xl rounded-tl-sm px-4 py-3 flex items-center gap-3">
+ <div className="bg-[var(--bg-surface)] border border-[var(--border)] rounded-2xl rounded-tl-sm px-4 py-3 flex items-center gap-3">
  <div className="w-2 h-2 bg-brand-glow rounded-full animate-bounce"></div>
  <div className="w-2 h-2 bg-brand-glow rounded-full animate-bounce" style={{ animationDelay: '75ms' }}></div>
  <div className="w-2 h-2 bg-brand-glow rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
@@ -422,7 +422,7 @@ export default function AiChat() {
  <button
  key={key}
  onClick={() => handleSend(action.prompt)}
- className="shrink-0 px-3 py-1.5 rounded-full bg-gray-800/40/5 border border-[var(--border)] text-[10px] text-gray-400 hover:text-[var(--text-primary)] hover:bg-gray-800/40/10 hover:border-brand-primary/30 transition-all whitespace-nowrap"
+ className="shrink-0 px-3 py-1.5 rounded-full bg-[var(--bg-surface)] border border-[var(--border)] text-[10px] text-gray-400 hover:text-[var(--text-primary)] hover:bg-gray-800/40/10 hover:border-brand-primary/30 transition-all whitespace-nowrap"
  >
  {action.label}
  </button>

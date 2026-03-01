@@ -153,7 +153,7 @@ export default function Bills() {
  { id: 'subscriptions', label: '🛡️ Kill-Switch (Assinaturas)' },
  ].map(f => (
  <button key={f.id} onClick={() => setFilter(f.id)}
- className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${filter === f.id ? (f.id === 'subscriptions' ? 'bg-brand-primary/10 text-brand-primary dark:text-brand-glow border border-brand-primary/30 shadow-glass-card' : 'bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/30') : 'bg-gray-800/30 dark:bg-gray-800/40/5 text-gray-500 border border-gray-700/40 dark:border-[var(--border)] hover:border-blue-500/30 dark:hover:bg-gray-800/40/10'}`}
+ className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${filter === f.id ? (f.id === 'subscriptions' ? 'bg-brand-primary/10 text-brand-primary dark:text-brand-glow border border-brand-primary/30 shadow-tech-card' : 'bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/30') : 'bg-gray-800/30 dark:bg-[var(--bg-surface)] text-gray-500 border border-[var(--border-subtle)]/40 dark:border-[var(--border)] hover:border-blue-500/30 dark:hover:bg-gray-800/40/10'}`}
  >{f.label}</button>
  ))}
  </div>
@@ -176,18 +176,18 @@ export default function Bills() {
 
  <div className="grid md:grid-cols-2 gap-6 animate-fade-in">
  {stats.subscriptions.map((sub, i) => (
- <div key={i} className={`${tw.card} p-6 transition-all group cursor-default relative overflow-hidden ${sub.hasIncreasedPrice ? 'border-red-500/50 shadow-glass-card' : 'border-gray-800 hover:border-accent/30'}`}>
- <div className={`absolute -right-4 -top-4 w-32 h-32 rounded-full blur-[50px] transition-all opacity-20 ${sub.hasIncreasedPrice ? 'bg-red-500' : 'bg-accent'}`}></div>
+ <div key={i} className={`${tw.card} p-6 transition-all group cursor-default relative overflow-hidden ${sub.hasIncreasedPrice ? 'border-red-500/50 shadow-tech-card' : 'border-[var(--border-subtle)] hover:border-accent/30'}`}>
+ <div className={`absolute -right-4 -top-4 w-32 h-32 rounded-full blur-[50px] transition-all opacity-20 ${sub.hasIncreasedPrice ? 'bg-red-500' : 'bg-[var(--bg-base)]ccent'}`}></div>
 
  {sub.hasIncreasedPrice && (
- <div className="absolute top-0 right-0 bg-red-600 text-[var(--text-primary)] text-[10px] font-black tracking-widest px-3 py-1 rounded-bl-xl uppercase flex items-center gap-1 shadow-glass-card">
+ <div className="absolute top-0 right-0 bg-red-600 text-[var(--text-primary)] text-[10px] font-black tracking-widest px-3 py-1 rounded-bl-xl uppercase flex items-center gap-1 shadow-tech-card">
  <AlertTriangle className="w-3 h-3" /> Aumento Detectado (+{fmt(sub.priceDiff)})
  </div>
  )}
 
  <div className="flex justify-between items-start mb-6">
  <div className="flex items-center gap-4">
- <div className={`w-14 h-14 rounded-2xl flex items-center justify-center font-black text-2xl shadow-inner border ${sub.hasIncreasedPrice ? 'bg-red-500/10 text-red-500 border-red-500/30' : 'bg-accent/10 text-accent border-accent/20'}`}>
+ <div className={`w-14 h-14 rounded-2xl flex items-center justify-center font-black text-2xl shadow-inner border ${sub.hasIncreasedPrice ? 'bg-red-500/10 text-red-500 border-red-500/30' : 'bg-[var(--bg-base)]ccent/10 text-accent border-accent/20'}`}>
  {sub.name.charAt(0)}
  </div>
  <div>
@@ -218,7 +218,7 @@ export default function Bills() {
  href={`https://www.google.com/search?q=como+cancelar+assinatura+${encodeURIComponent(sub.name)}`}
  target="_blank"
  rel="noreferrer"
- className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-red-600/10 hover:bg-red-600/20 border border-red-500/30 hover:border-red-500/80 text-red-500 hover:text-red-400 font-black text-sm uppercase tracking-widest transition-all shadow-inner group-hover:shadow-glass-card"
+ className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-red-600/10 hover:bg-red-600/20 border border-red-500/30 hover:border-red-500/80 text-red-500 hover:text-red-400 font-black text-sm uppercase tracking-widest transition-all shadow-inner group-hover:shadow-tech-card"
  >
  <Trash2 className="w-4 h-4 group-hover/btn:animate-bounce" />
  Derrubar Assinatura
@@ -234,7 +234,7 @@ export default function Bills() {
  ) : (
  <div className="space-y-2">
  {filtered.length === 0 ? (
- <div className={`\${tw.card} text-center py-12 border-dashed border-2 border-gray-700/40 dark:border-[var(--border)] bg-transparent`}>
+ <div className={`\${tw.card} text-center py-12 border-dashed border-2 border-[var(--border-subtle)]/40 dark:border-[var(--border)] bg-transparent`}>
  <CalendarDays className="w-12 h-12 text-blue-500 mx-auto mb-4 opacity-50" />
  <p className="text-gray-500 text-sm">Nenhuma conta encontrada nesta categoria.</p>
  </div>
@@ -244,7 +244,7 @@ export default function Bills() {
  return (
  <div key={bill.id} className={`${tw.card} flex items-center gap-4 ${bill.paid ? 'opacity-60' : ''}`}>
  <button onClick={() => togglePaid(bill.id)}
- className={`w-8 h-8 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all ${bill.paid ? 'bg-brand-primary/20 border-brand-primary text-brand-primary' : 'border-gray-700/50 dark:border-[var(--border)] hover:border-blue-500'}`}>
+ className={`w-8 h-8 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all ${bill.paid ? 'bg-brand-primary/20 border-brand-primary text-brand-primary' : 'border-[var(--border-subtle)]/50 dark:border-[var(--border)] hover:border-blue-500'}`}>
  {bill.paid && <CheckCircle className="w-4 h-4" />}
  </button>
  <div className="flex-1 min-w-0">
@@ -284,23 +284,23 @@ export default function Bills() {
  {/* Add Modal */}
  {showAdd && (
  <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/60 animate-fade-in">
- <form onSubmit={handleAdd} className={`\${tw.card} w-full max-w-md p-6 space-y-4 animate-slide-up relative bg-gray-800/40 dark:bg-surface-900 border border-gray-700/40 dark:border-[var(--border)]`}>
+ <form onSubmit={handleAdd} className={`\${tw.card} w-full max-w-md p-6 space-y-4 animate-slide-up relative bg-gray-800/40 dark:bg-surface-900 border border-[var(--border-subtle)]/40 dark:border-[var(--border)]`}>
  <button type="button" onClick={() => setShowAdd(false)} className="absolute top-4 right-4 text-gray-500 hover:text-[var(--text-primary)] dark:hover:text-[var(--text-primary)] transition-colors"><X className="w-5 h-5" /></button>
  <h2 className="text-xl font-bold text-[var(--text-primary)] dark:text-[var(--text-primary)] flex items-center gap-2 mb-6"><CalendarDays className="w-5 h-5 text-blue-500" /> Nova Conta / Receita</h2>
 
  <div>
  <label className="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Descrição</label>
- <input required value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} className="w-full bg-gray-800/30 dark:bg-black/20 border border-gray-700/40 dark:border-[var(--border)] rounded-xl px-4 py-3 text-[var(--text-primary)] dark:text-[var(--text-primary)] text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 mt-1 transition-all" placeholder="Ex: Aluguel, Provedor Internet..." />
+ <input required value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} className="w-full bg-gray-800/30 dark:bg-black/20 border border-[var(--border-subtle)]/40 dark:border-[var(--border)] rounded-xl px-4 py-3 text-[var(--text-primary)] dark:text-[var(--text-primary)] text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 mt-1 transition-all" placeholder="Ex: Aluguel, Provedor Internet..." />
  </div>
 
  <div className="grid grid-cols-2 gap-4 animate-fade-in">
  <div>
  <label className="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Valor (R$)</label>
- <input required value={form.amount} onChange={e => setForm({ ...form, amount: e.target.value })} className="w-full bg-gray-800/30 dark:bg-black/20 border border-gray-700/40 dark:border-[var(--border)] rounded-xl px-4 py-3 text-[var(--text-primary)] dark:text-[var(--text-primary)] text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 mt-1 transition-all" placeholder="125,90" />
+ <input required value={form.amount} onChange={e => setForm({ ...form, amount: e.target.value })} className="w-full bg-gray-800/30 dark:bg-black/20 border border-[var(--border-subtle)]/40 dark:border-[var(--border)] rounded-xl px-4 py-3 text-[var(--text-primary)] dark:text-[var(--text-primary)] text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 mt-1 transition-all" placeholder="125,90" />
  </div>
  <div>
  <label className="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Vencimento</label>
- <input required type="date" value={form.dueDate} onChange={e => setForm({ ...form, dueDate: e.target.value })} className="w-full bg-gray-800/30 dark:bg-black/20 border border-gray-700/40 dark:border-[var(--border)] rounded-xl px-4 py-3 text-[var(--text-primary)] dark:text-[var(--text-primary)] text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 mt-1 transition-all" />
+ <input required type="date" value={form.dueDate} onChange={e => setForm({ ...form, dueDate: e.target.value })} className="w-full bg-gray-800/30 dark:bg-black/20 border border-[var(--border-subtle)]/40 dark:border-[var(--border)] rounded-xl px-4 py-3 text-[var(--text-primary)] dark:text-[var(--text-primary)] text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 mt-1 transition-all" />
  </div>
  </div>
 
@@ -309,18 +309,18 @@ export default function Bills() {
  <label className="text-[10px] text-gray-500 uppercase font-bold tracking-widest mb-1 block">Tipo de Fluxo</label>
  <div className="grid grid-cols-2 gap-2 mt-1 animate-fade-in">
  <button type="button" onClick={() => setForm({ ...form, type: 'expense' })}
- className={`w-full py-2.5 text-xs font-bold rounded-xl border transition-all ${form.type === 'expense' ? 'bg-red-500/10 border-red-500/30 text-red-500 shadow-glass-card' : 'bg-gray-800/30 dark:bg-gray-800/40/5 border-gray-700/40 dark:border-[var(--border)] text-gray-500 hover:bg-gray-800/40 dark:hover:bg-gray-800/40/10'}`}>
+ className={`w-full py-2.5 text-xs font-bold rounded-xl border transition-all ${form.type === 'expense' ? 'bg-red-500/10 border-red-500/30 text-red-500 shadow-tech-card' : 'bg-gray-800/30 dark:bg-[var(--bg-surface)] border-[var(--border-subtle)]/40 dark:border-[var(--border)] text-gray-500 hover:bg-gray-800/40 dark:hover:bg-gray-800/40/10'}`}>
  SAÍDA
  </button>
  <button type="button" onClick={() => setForm({ ...form, type: 'income' })}
- className={`w-full py-2.5 text-xs font-bold rounded-xl border transition-all ${form.type === 'income' ? 'bg-brand-primary/10 border-brand-primary/30 text-brand-primary shadow-glass-card' : 'bg-gray-800/30 dark:bg-gray-800/40/5 border-gray-700/40 dark:border-[var(--border)] text-gray-500 hover:bg-gray-800/40 dark:hover:bg-gray-800/40/10'}`}>
+ className={`w-full py-2.5 text-xs font-bold rounded-xl border transition-all ${form.type === 'income' ? 'bg-brand-primary/10 border-brand-primary/30 text-brand-primary shadow-tech-card' : 'bg-gray-800/30 dark:bg-[var(--bg-surface)] border-[var(--border-subtle)]/40 dark:border-[var(--border)] text-gray-500 hover:bg-gray-800/40 dark:hover:bg-gray-800/40/10'}`}>
  ENTRADA
  </button>
  </div>
  </div>
  <div>
  <label className="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Recorrência Automática</label>
- <select value={form.recurrence} onChange={e => setForm({ ...form, recurrence: e.target.value })} className="w-full bg-gray-800/30 dark:bg-black/20 border border-gray-700/40 dark:border-[var(--border)] rounded-xl px-4 py-3 text-[var(--text-primary)] dark:text-[var(--text-primary)] text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 mt-1 transition-all">
+ <select value={form.recurrence} onChange={e => setForm({ ...form, recurrence: e.target.value })} className="w-full bg-gray-800/30 dark:bg-black/20 border border-[var(--border-subtle)]/40 dark:border-[var(--border)] rounded-xl px-4 py-3 text-[var(--text-primary)] dark:text-[var(--text-primary)] text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 mt-1 transition-all">
  {RECURRENCE_OPTIONS.map(r => <option key={r.id} value={r.id}>{r.label}</option>)}
  </select>
  </div>

@@ -84,7 +84,7 @@ export default function NpsSurvey({ onClose }) {
  onClick={() => setScore(i)}
  className={`aspect-square rounded-lg text-xs font-medium transition-all ${score === i
  ? 'bg-brand-primary text-[var(--text-primary)] scale-110 shadow-lg shadow-brand-primary/30'
- : 'bg-gray-800/40/5 text-gray-400 hover:bg-gray-800/40/10 hover:text-[var(--text-primary)]'
+ : 'bg-[var(--bg-surface)] text-gray-400 hover:bg-gray-800/40/10 hover:text-[var(--text-primary)]'
  }`}
  >
  {i}

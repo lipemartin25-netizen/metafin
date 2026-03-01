@@ -26,7 +26,7 @@ export default function Sidebar({ open, onClose }) {
  <aside
  className={`
  fixed lg:static inset-y-0 left-0 z-50 w-64
- bg-[#0a0f1e] border-r border-[var(--border)]
+ bg-[var(--bg-base)] border-r border-[var(--border)]
  flex flex-col
  transform transition-transform duration-300 ease-in-out
  ${open ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
@@ -53,7 +53,7 @@ export default function Sidebar({ open, onClose }) {
  transition-all duration-200 group
  ${active
  ? "bg-[var(--bg-base)] from-violet-500/20 to-indigo-500/10 text-violet-400 border border-violet-500/20"
- : "text-[var(--text-primary)]/40 hover:text-[var(--text-primary)]/80 hover:bg-gray-800/40/5"
+ : "text-[var(--text-primary)]/40 hover:text-[var(--text-primary)]/80 hover:bg-[var(--bg-surface)]"
  }
  `}
  >
@@ -68,7 +68,7 @@ export default function Sidebar({ open, onClose }) {
 
  {/* User */}
  <div className="px-3 pb-6 border-t border-[var(--border)] pt-4">
- <div className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-800/40/5 cursor-pointer transition-colors">
+ <div className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-[var(--bg-surface)] cursor-pointer transition-colors">
  <div className="w-9 h-9 rounded-xl bg-[var(--bg-base)] from-orange-400 to-pink-500 flex items-center justify-center text-sm font-bold">
  F
  </div>

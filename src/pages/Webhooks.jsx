@@ -16,11 +16,11 @@ function WebhookCard({ webhook, onToggle, onDelete }) {
  const eventsDetails = webhook.events.map(eventId => WEBHOOK_EVENTS.find(e => e.id === eventId)).filter(Boolean);
 
  return (
- <div className={`${tw.card} p-5 space-y-4 border ${webhook.active ? 'border-brand-glow/30 shadow-glass-card' : 'border-[var(--border)] opacity-70'}`}>
+ <div className={`${tw.card} p-5 space-y-4 border ${webhook.active ? 'border-brand-glow/30 shadow-tech-card' : 'border-[var(--border)] opacity-70'}`}>
  <div className="flex justify-between items-start gap-4">
  <div className="flex-1 min-w-0">
  <div className="flex items-center gap-2 mb-1">
- <div className={`w-2.5 h-2.5 rounded-full ${webhook.active ? 'bg-brand-primary shadow-glass-card animate-pulse' : 'bg-gray-500'}`} />
+ <div className={`w-2.5 h-2.5 rounded-full ${webhook.active ? 'bg-brand-primary shadow-tech-card animate-pulse' : 'bg-gray-500'}`} />
  <h3 className="text-lg font-bold text-[var(--text-primary)] truncate">{webhook.name}</h3>
  </div>
  <p className="text-xs font-mono text-gray-400 truncate bg-black/20 p-1.5 rounded-md inline-block max-w-full">
@@ -221,7 +221,7 @@ export default function Webhooks() {
  <div className={`\${tw.card} space-y-3`}>
  <div className="flex items-center justify-between">
  <h3 className="text-sm font-bold text-gray-400 uppercase tracking-wider">Exemplo de Payload</h3>
- <button onClick={handleCopy} className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-[var(--text-primary)] transition-colors px-2 py-1 rounded-lg hover:bg-gray-800/40/5">
+ <button onClick={handleCopy} className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-[var(--text-primary)] transition-colors px-2 py-1 rounded-lg hover:bg-[var(--bg-surface)]">
  {copied ? <><CheckCircle className="w-3 h-3 text-brand-glow" /> Copiado!</> : <><Copy className="w-3 h-3" /> Copiar</>}
  </button>
  </div>
@@ -230,7 +230,7 @@ export default function Webhooks() {
  </pre>
  <p className="text-[11px] text-gray-500">
  O MetaFin envia um POST com este formato para a URL configurada. Inclua o header
- <code className="bg-gray-800/40/5 px-1.5 py-0.5 rounded mx-1">X-Webhook-Secret</code>
+ <code className="bg-[var(--bg-surface)] px-1.5 py-0.5 rounded mx-1">X-Webhook-Secret</code>
  para validar a autenticidade.
  </p>
  </div>

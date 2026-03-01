@@ -87,7 +87,7 @@ export class ErrorBoundary extends Component {
  </button>
  <button
  onClick={this.handleGoHome}
- className="px-4 py-2 rounded-xl border border-gray-700/50 dark:border-[var(--border)] text-gray-300 dark:text-gray-300 hover:bg-gray-800/40 dark:hover:bg-gray-800/40/5 transition-colors flex items-center justify-center gap-2"
+ className="px-4 py-2 rounded-xl border border-[var(--border-subtle)]/50 dark:border-[var(--border)] text-gray-300 dark:text-gray-300 hover:bg-gray-800/40 dark:hover:bg-[var(--bg-surface)] transition-colors flex items-center justify-center gap-2"
  >
  <Home className="w-4 h-4" />
  Ir para início

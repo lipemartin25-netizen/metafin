@@ -117,7 +117,7 @@ export default function QuickStats() {
  <div className="flex items-center gap-2">
  <button
  onClick={(e) => { e.stopPropagation(); toggleVisibility(); }}
- className="p-1.5 rounded-lg bg-gray-800/40/5 opacity-0 group-hover:opacity-100 transition-all hover:bg-gray-800/40/10"
+ className="p-1.5 rounded-lg bg-[var(--bg-surface)] opacity-0 group-hover:opacity-100 transition-all hover:bg-gray-800/40/10"
  >
  {isVisible ? <EyeOff size={12} className="text-[var(--text-primary)]/40" /> : <Eye size={12} className="text-[var(--text-primary)]/40" />}
  </button>

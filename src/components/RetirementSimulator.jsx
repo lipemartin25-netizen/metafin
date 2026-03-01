@@ -51,7 +51,7 @@ export default function RetirementSimulator({ financialData }) {
 
  return (
  <div className="space-y-6 animate-fade-in">
- <div className="relative overflow-hidden rounded-[2.5rem] bg-[var(--bg-base)] from-indigo-600 via-blue-600 to-fuchsia-700 p-8 md:p-12 text-[var(--text-primary)] shadow-glass-card group border border-[var(--border)] perspective-1000">
+ <div className="relative overflow-hidden rounded-[2.5rem] bg-[var(--bg-base)] from-indigo-600 via-blue-600 to-fuchsia-700 p-8 md:p-12 text-[var(--text-primary)] shadow-tech-card group border border-[var(--border)] perspective-1000">
  {/* Efeitos 3D Internos */}
  <div className="absolute inset-x-0 -bottom-20 h-64 bg-[var(--bg-base)] from-black/40 to-transparent" />
  <div className="absolute -left-20 -top-20 w-80 h-80 bg-gray-800/40/10 rounded-full mix-blend-overlay filter blur-[40px] opacity-60 group-hover:-translate-y-px transition-transform transition-transform duration-1000 ease-out" />
@@ -67,34 +67,34 @@ export default function RetirementSimulator({ financialData }) {
  <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 md:gap-6 relative z-10 animate-fade-in">
  <div className="bg-gray-800/40/10 rounded-3xl p-5 border border-[var(--border)] shadow-inner group-hover:-translate-y-px transition-transform duration-300">
  <p className="text-[10px] uppercase font-black tracking-[0.2em] opacity-80 mb-2">Reserva Desejada</p>
- <p className="text-xl md:text-3xl font-black drop-shadow-glass-card tracking-tight">
+ <p className="text-xl md:text-3xl font-black drop-shadow-tech-card tracking-tight">
  {formatCurrency(result.requiredPortfolio)}
  </p>
  </div>
  <div className="bg-gray-800/40/10 rounded-3xl p-5 border border-[var(--border)] shadow-inner group-hover:-translate-y-px transition-transform duration-300 delay-75">
  <p className="text-[10px] uppercase font-black tracking-[0.2em] opacity-80 mb-2">Aporte Necessário</p>
- <p className="text-xl md:text-3xl font-black drop-shadow-glass-card text-yellow-300 tracking-tight">
+ <p className="text-xl md:text-3xl font-black drop-shadow-tech-card text-yellow-300 tracking-tight">
  {formatCurrency(result.monthlyContribution)}
  <span className="text-xs md:text-sm font-medium ml-1 text-[var(--text-primary)]/70">/mês</span>
  </p>
  </div>
  <div className="bg-gray-800/40/10 rounded-3xl p-5 border border-[var(--border)] shadow-inner group-hover:-translate-y-px transition-transform duration-300 delay-100">
  <p className="text-[10px] uppercase font-black tracking-[0.2em] opacity-80 mb-2">Renda Vitalícia</p>
- <p className="text-xl md:text-3xl font-black drop-shadow-glass-card tracking-tight">
+ <p className="text-xl md:text-3xl font-black drop-shadow-tech-card tracking-tight">
  {formatCurrency(params.desiredRetirementIncome)}
  </p>
  </div>
- <div className="lg:col-span-2 bg-black/20 rounded-3xl p-5 border border-[var(--border)] shadow-glass-card group-hover:-translate-y-px transition-transform duration-300 delay-150">
+ <div className="lg:col-span-2 bg-black/20 rounded-3xl p-5 border border-[var(--border)] shadow-tech-card group-hover:-translate-y-px transition-transform duration-300 delay-150">
  <p className="text-[10px] uppercase font-black tracking-[0.2em] opacity-80 mb-2 text-indigo-200">Status do Plano</p>
- <p className={`text-lg md:text-xl font-black drop-shadow-glass-card mt-1 flex items-center gap-2 ${result.isSustainable ? 'text-purple-300' : 'text-red-300'}`}>
+ <p className={`text-lg md:text-xl font-black drop-shadow-tech-card mt-1 flex items-center gap-2 ${result.isSustainable ? 'text-purple-300' : 'text-red-300'}`}>
  {result.isSustainable ? (
  <>
- <span className="h-3 w-3 rounded-full bg-brand-glow animate-pulse shadow-glass-card" />
+ <span className="h-3 w-3 rounded-full bg-brand-glow animate-pulse shadow-tech-card" />
  Seguro e Sustentável
  </>
  ) : (
  <>
- <span className="h-3 w-3 rounded-full bg-red-400 animate-pulse shadow-glass-card" />
+ <span className="h-3 w-3 rounded-full bg-red-400 animate-pulse shadow-tech-card" />
  Insuficiente (Dura apenas {result.sustainableYears} anos)
  </>
  )}
@@ -115,7 +115,7 @@ export default function RetirementSimulator({ financialData }) {
  <label className="text-xs text-gray-500 font-bold uppercase tracking-wider block mb-1">Idade Atual</label>
  <input
  type="number"
- className="w-full bg-gray-800/30 dark:bg-black/20 border border-gray-700/40 dark:border-[var(--border)] rounded-xl px-3 py-2 text-sm text-[var(--text-primary)] dark:text-[var(--text-primary)] outline-none focus:border-indigo-500"
+ className="w-full bg-gray-800/30 dark:bg-black/20 border border-[var(--border-subtle)]/40 dark:border-[var(--border)] rounded-xl px-3 py-2 text-sm text-[var(--text-primary)] dark:text-[var(--text-primary)] outline-none focus:border-indigo-500"
  value={params.currentAge}
  onChange={(e) => setParams({ ...params, currentAge: Number(e.target.value) })}
  />
@@ -124,7 +124,7 @@ export default function RetirementSimulator({ financialData }) {
  <label className="text-xs text-gray-500 font-bold uppercase tracking-wider block mb-1">Idade Aposento</label>
  <input
  type="number"
- className="w-full bg-gray-800/30 dark:bg-black/20 border border-gray-700/40 dark:border-[var(--border)] rounded-xl px-3 py-2 text-sm text-[var(--text-primary)] dark:text-[var(--text-primary)] outline-none focus:border-indigo-500"
+ className="w-full bg-gray-800/30 dark:bg-black/20 border border-[var(--border-subtle)]/40 dark:border-[var(--border)] rounded-xl px-3 py-2 text-sm text-[var(--text-primary)] dark:text-[var(--text-primary)] outline-none focus:border-indigo-500"
  value={params.retiredAge}
  onChange={(e) => setParams({ ...params, retiredAge: Number(e.target.value) })}
  />
@@ -135,7 +135,7 @@ export default function RetirementSimulator({ financialData }) {
  <label className="text-xs text-gray-500 font-bold uppercase tracking-wider block mb-1">Renda Passiva Desejada</label>
  <input
  type="number"
- className="w-full bg-gray-800/30 dark:bg-black/20 border border-gray-700/40 dark:border-[var(--border)] rounded-xl px-3 py-2 text-sm text-[var(--text-primary)] dark:text-[var(--text-primary)] outline-none focus:border-brand-primary"
+ className="w-full bg-gray-800/30 dark:bg-black/20 border border-[var(--border-subtle)]/40 dark:border-[var(--border)] rounded-xl px-3 py-2 text-sm text-[var(--text-primary)] dark:text-[var(--text-primary)] outline-none focus:border-brand-primary"
  value={params.desiredRetirementIncome}
  onChange={(e) => setParams({ ...params, desiredRetirementIncome: Number(e.target.value) })}
  />

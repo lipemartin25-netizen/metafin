@@ -9,9 +9,9 @@ export default function StatusChip({ status }) {
  },
  pending: {
  label: 'Pendente',
- bg: 'bg-amber-500/10',
+ bg: 'bg-[var(--bg-base)]mber-500/10',
  text: 'text-amber-400',
- dot: 'bg-amber-400',
+ dot: 'bg-[var(--bg-base)]mber-400',
  },
  processing: {
  label: 'Processando',

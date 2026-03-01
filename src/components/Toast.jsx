@@ -19,7 +19,7 @@ const TOAST_TYPES = {
  },
  warning: {
  icon: AlertTriangle,
- className: 'bg-amber-500/10 border-amber-500/20 text-amber-400',
+ className: 'bg-[var(--bg-base)]mber-500/10 border-amber-500/20 text-amber-400',
  iconClass: 'text-amber-400',
  },
  info: {

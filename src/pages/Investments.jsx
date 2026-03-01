@@ -303,9 +303,9 @@ export default function Investments() {
  {broker.assets?.length > 0 && (
  <div className="space-y-2">
  {broker.assets.map((asset, idx) => (
- <div key={idx} className="flex items-center justify-between p-2 hover:bg-gray-800/40/5 rounded-lg transition-colors">
+ <div key={idx} className="flex items-center justify-between p-2 hover:bg-[var(--bg-surface)] rounded-lg transition-colors">
  <div className="flex items-center gap-3">
- <div className="w-8 h-8 rounded-lg bg-gray-800/40/5 flex items-center justify-center text-xs font-bold text-[var(--text-secondary)] border border-[var(--border)]">
+ <div className="w-8 h-8 rounded-lg bg-[var(--bg-surface)] flex items-center justify-center text-xs font-bold text-[var(--text-secondary)] border border-[var(--border)]">
  {asset.symbol?.substring(0, 4) || '---'}
  </div>
  <div>
@@ -339,7 +339,7 @@ export default function Investments() {
  <button
  key={broker.id}
  onClick={() => handleBrokerClick(broker)}
- className="p-3 rounded-xl bg-gray-800/40/5 hover:bg-gray-800/40/10 border border-[var(--border)] hover:border-brand-primary/30 transition-all flex flex-col items-center gap-2 text-center group"
+ className="p-3 rounded-xl bg-[var(--bg-surface)] hover:bg-gray-800/40/10 border border-[var(--border)] hover:border-brand-primary/30 transition-all flex flex-col items-center gap-2 text-center group"
  title={`Conectar ${broker.name}`}
  >
  <div className="w-10 h-10 rounded-lg flex items-center justify-center text-[var(--text-primary)] font-bold text-sm shadow group-hover:-translate-y-px transition-transform transition-transform" style={{ backgroundColor: broker.color, color: broker.textColor }}>
@@ -381,8 +381,8 @@ export default function Investments() {
 
  {/* ══════════ MODAL B3 HISTÓRICO ══════════ */}
  {showB3Modal && (
- <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/90 animate-fade-in">
- <div className="bg-[#0d1424] border border-[var(--border)] w-full max-w-2xl rounded-3xl shadow-glass-card animate-slide-up overflow-hidden">
+ <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[var(--bg-base)]/90 animate-fade-in">
+ <div className="bg-[var(--bg-[var(--bg-elevated)])] border border-[var(--border)] w-full max-w-2xl rounded-3xl shadow-tech-card animate-slide-up overflow-hidden">
  {/* Header */}
  <div className="flex items-center justify-between p-6 border-b border-[var(--border)]">
  <div className="flex items-center gap-3">
@@ -475,12 +475,12 @@ export default function Investments() {
 
  {/* Modal de seleção de corretora */}
  {showConnectModal && selectedBroker && (
- <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/90 animate-fade-in">
- <div className="bg-[#0d1424] border border-[var(--border)] w-full max-w-sm rounded-3xl overflow-hidden animate-slide-up shadow-glass-card relative">
+ <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[var(--bg-base)]/90 animate-fade-in">
+ <div className="bg-[var(--bg-[var(--bg-elevated)])] border border-[var(--border)] w-full max-w-sm rounded-3xl overflow-hidden animate-slide-up shadow-tech-card relative">
  <button onClick={() => setShowConnectModal(false)} className="absolute top-4 right-4 text-[var(--text-muted)] hover:text-[var(--text-primary)] p-1.5 rounded-lg hover:bg-gray-800/40/10 transition-all">
  <X className="w-5 h-5" />
  </button>
- <div className="p-6 text-center border-b border-[var(--border)] bg-gray-800/40/5">
+ <div className="p-6 text-center border-b border-[var(--border)] bg-[var(--bg-surface)]">
  <div className="w-16 h-16 rounded-2xl mx-auto flex items-center justify-center text-[var(--text-primary)] font-bold text-3xl shadow-lg mb-4"
  style={{ backgroundColor: selectedBroker.color, color: selectedBroker.textColor }}>
  {selectedBroker.logo}
@@ -504,7 +504,7 @@ export default function Investments() {
  </button>
  <button
  onClick={() => { setShowConnectModal(false); alert('Cadastro manual em breve!'); }}
- className="w-full flex items-center gap-4 p-4 rounded-xl bg-gray-800/40/5 border border-[var(--border)] hover:bg-gray-800/40/10 transition-all text-left"
+ className="w-full flex items-center gap-4 p-4 rounded-xl bg-[var(--bg-surface)] border border-[var(--border)] hover:bg-gray-800/40/10 transition-all text-left"
  >
  <div className="w-10 h-10 rounded-lg bg-gray-800/40/10 flex items-center justify-center">
  <Briefcase className="w-5 h-5 text-[var(--text-secondary)]" />

@@ -23,7 +23,7 @@ export default function GoalsCard() {
  <div className="flex items-center gap-3">
  <button
  onClick={() => toggleVisibility()}
- className="p-1.5 rounded-lg bg-gray-800/40/5 opacity-0 group-hover:opacity-100 transition-all hover:bg-gray-800/40/10"
+ className="p-1.5 rounded-lg bg-[var(--bg-surface)] opacity-0 group-hover:opacity-100 transition-all hover:bg-gray-800/40/10"
  >
  {isVisible ? <EyeOff size={14} className="text-[var(--text-primary)]/40" /> : <Eye size={14} className="text-[var(--text-primary)]/40" />}
  </button>
@@ -45,7 +45,7 @@ export default function GoalsCard() {
  <span className="text-[var(--text-primary)]/70">{label}</span>
  <span className="text-[var(--text-primary)]/40">{pct}%</span>
  </div>
- <div className="h-2 bg-gray-800/40/5 rounded-full overflow-hidden p-[1px] border border-[var(--border)]">
+ <div className="h-2 bg-[var(--bg-surface)] rounded-full overflow-hidden p-[1px] border border-[var(--border)]">
  <div
  className={`h-full ${color} rounded-full transition-all duration-1000 ${shadow} shadow-lg`}
  style={{ width: `${pct}%` }}

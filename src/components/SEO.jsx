@@ -47,7 +47,7 @@ export default function SEO({
  'twitter:title': fullTitle,
  'twitter:description': finalDescription,
  'twitter:image': finalImage,
- 'twitter:glass-card': 'summary_large_image',
+ 'twitter:tech-card': 'summary_large_image',
  };
 
  // Atualizar ou criar meta tags

@@ -6,22 +6,23 @@
 
 :root {
     /* === TECH PREMIUM THEME — Dark Navy & Neon Green === */
-    /* By default, we force dark mode for the tech premium feel, light mode can be a softer charcoal */
+    /* By default, we force dark mode for the tech premium feel */
 
     /* Backgrounds */
     --bg-base: #06080D;
-    /* Deepest Navy/Black */
     --bg-elevated: #0B0E17;
-    /* Charcoal/Navy for standard cards */
     --bg-surface: #121826;
-    /* Slightly lighter for nested panels or hovered cards */
+    --bg-card: #0B0E17;
+    --bg-card-alt: #121826;
+    --bg-sidebar: #06080D;
+    --bg-navbar: rgba(6, 8, 13, 0.85);
 
     /* Texts */
     --text-primary: #FFFFFF;
     --text-secondary: #94A3B8;
-    /* Slate 400 */
     --text-muted: #64748B;
-    /* Slate 500 */
+    --text-on-menta: #06080D;
+    --text-on-rosa: #FFFFFF;
 
     /* Accent / Brand (Neon Green) */
     --brand: #00E576;
@@ -32,16 +33,42 @@
     --brand-glow: rgba(0, 229, 118, 0.25);
 
     /* Borders */
+    --border-card: rgba(255, 255, 255, 0.08);
+    --border-card-hover: rgba(0, 229, 118, 0.3);
     --border-subtle: #1E293B;
-    /* Slate 800 */
     --border-hover: #334155;
-    /* Slate 700 */
     --border-brand: rgba(0, 229, 118, 0.5);
+    --border-divider: rgba(255, 255, 255, 0.05);
 
-    /* Shadows */
-    --shadow-ambient: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -2px rgba(0, 0, 0, 0.5);
-    --shadow-elevated: 0 10px 15px -3px rgba(0, 0, 0, 0.6), 0 4px 6px -4px rgba(0, 0, 0, 0.5);
-    --shadow-glow: 0 0 15px rgba(0, 229, 118, 0.15);
+    /* Shadows & 3D Effects */
+    --shadow-card:
+        0 4px 12px rgba(0, 0, 0, 0.5),
+        0 0 1px rgba(255, 255, 255, 0.1) inset;
+    --shadow-card-hover:
+        0 12px 24px rgba(0, 0, 0, 0.6),
+        0 0 1px rgba(0, 229, 118, 0.4) inset;
+    --shadow-card-featured:
+        0 8px 32px rgba(0, 229, 118, 0.1),
+        0 0 1px rgba(255, 255, 255, 0.15) inset;
+
+    --shadow-ambient: var(--shadow-card);
+    --shadow-elevated: var(--shadow-card-hover);
+    --shadow-glow: var(--brand-glow);
+
+    /* Gradients */
+    --gradient-menta: linear-gradient(135deg, #00E576 0%, #00B35C 100%);
+    --gradient-rosa: linear-gradient(135deg, #D4A0B9 0%, #9E4A71 100%);
+    --gradient-card-shine: linear-gradient(180deg,
+            rgba(255, 255, 255, 0.05) 0%,
+            transparent 100%);
+
+    /* Colors for legacy/compatibility */
+    --menta: #00E576;
+    --menta-dark: #00B35C;
+    --menta-soft: rgba(0, 229, 118, 0.1);
+    --menta-border: rgba(0, 229, 118, 0.25);
+    --rosa: #D4A0B9;
+    --rosa-soft: rgba(212, 160, 185, 0.1);
 }
 
 .light,
@@ -153,7 +180,7 @@
 
 /* === PASTEL PREMIUM 3D COMPONENTS === */
 
-/* --- Card Padrão (Rosa) --- */
+/* --- Card Padrão (3D Depth) --- */
 .pastel-card {
     position: relative;
     background: var(--bg-card);
@@ -164,53 +191,62 @@
     transition:
         transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
         box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-        border-color 0.35s ease;
+        border-color 0.35s ease,
+        background-color 0.4s ease;
+    isolation: isolate;
 }
 
+/* 3D Top Edge Highlight */
 .pastel-card::before {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
-    height: 1px;
+    height: 1.5px;
     background: linear-gradient(90deg,
-            transparent 5%,
-            rgba(255, 255, 255, 0.9) 20%,
-            rgba(232, 196, 216, 0.4) 50%,
-            rgba(255, 255, 255, 0.9) 80%,
-            transparent 95%);
-    z-index: 2;
+            transparent 0%,
+            rgba(255, 255, 255, 0.4) 15%,
+            rgba(255, 255, 255, 0.7) 50%,
+            rgba(255, 255, 255, 0.4) 85%,
+            transparent 100%);
+    opacity: 0.8;
+    z-index: 5;
+    pointer-events: none;
 }
 
+/* Glossy Surface Reflection */
 .pastel-card::after {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
-    height: 45%;
-    background: var(--gradient-card-shine);
+    height: 100%;
+    background: radial-gradient(circle at 50% -20%,
+            rgba(255, 255, 255, 0.08) 0%,
+            transparent 60%);
     pointer-events: none;
-    z-index: 0;
+    z-index: -1;
 }
 
 .pastel-card:hover {
-    transform: translateY(-4px);
+    transform: translateY(-6px) scale(1.01);
     box-shadow: var(--shadow-card-hover);
     border-color: var(--border-card-hover);
+    background-color: var(--bg-card-alt);
 }
 
 .pastel-card>* {
     position: relative;
-    z-index: 1;
+    z-index: 2;
 }
 
-/* --- Card Destaque (Menta) --- */
+/* --- Card Destaque (Featured 3D) --- */
 .pastel-card-featured {
     position: relative;
     background: var(--bg-card);
-    border: 2px solid var(--menta-border);
+    border: 2px solid var(--border-brand);
     border-radius: 24px;
     box-shadow: var(--shadow-card-featured);
     overflow: hidden;
@@ -218,48 +254,45 @@
         transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
         box-shadow 0.4s ease,
         border-color 0.4s ease;
+    isolation: isolate;
 }
 
+/* Glow under featured card */
 .pastel-card-featured::before {
     content: '';
     position: absolute;
-    top: 0;
-    left: 5%;
-    right: 5%;
-    height: 2px;
-    background: var(--gradient-menta);
-    border-radius: 0 0 2px 2px;
-    z-index: 2;
-    box-shadow: 0 2px 10px rgba(142, 207, 185, 0.2);
+    top: -100px;
+    left: -100px;
+    right: -100px;
+    bottom: -100px;
+    background: radial-gradient(circle at 50% 10%,
+            rgba(0, 229, 118, 0.05) 0%,
+            transparent 70%);
+    z-index: -2;
+    pointer-events: none;
 }
 
+/* Featured Top Highlight */
 .pastel-card-featured::after {
     content: '';
     position: absolute;
     top: 0;
-    left: 0;
-    right: 0;
-    height: 50%;
-    background: linear-gradient(180deg,
-            rgba(142, 207, 185, 0.05) 0%,
-            transparent 100%);
-    pointer-events: none;
-    z-index: 0;
+    left: 10%;
+    right: 10%;
+    height: 3px;
+    background: var(--gradient-menta);
+    border-radius: 0 0 100px 100px;
+    z-index: 5;
+    box-shadow: 0 0 15px rgba(0, 229, 118, 0.2);
+    opacity: 0.9;
 }
 
 .pastel-card-featured:hover {
-    transform: translateY(-6px);
-    border-color: var(--menta);
+    transform: translateY(-8px) scale(1.02);
+    border-color: var(--brand);
     box-shadow:
-        0 4px 12px rgba(142, 207, 185, 0.12),
-        0 16px 40px rgba(142, 207, 185, 0.1),
-        0 0 40px rgba(142, 207, 185, 0.06),
-        0 -1px 0 rgba(255, 255, 255, 0.95) inset;
-}
-
-.pastel-card-featured>* {
-    position: relative;
-    z-index: 1;
+        0 8px 32px rgba(0, 229, 118, 0.15),
+        0 0 0 1px rgba(0, 229, 118, 0.1) inset;
 }
 
 /* ============================================
@@ -430,30 +463,28 @@
 }
 
 /* ============================================
-   SIDEBAR — Pastel Premium
+   SIDEBAR — Pastel Premium 3D
    ============================================ */
 
 .sidebar-pastel {
     background: var(--bg-sidebar);
-    border-right: 1.5px solid var(--border-subtle);
-    box-shadow: var(--shadow-sidebar);
+    border-right: 1px solid var(--border-divider);
+    box-shadow: 10px 0 30px rgba(0, 0, 0, 0.2);
     position: relative;
+    isolation: isolate;
 }
 
-.sidebar-pastel::after {
+/* Sidebar glossy overlay */
+.sidebar-pastel::before {
     content: '';
     position: absolute;
-    top: 15%;
-    right: -1px;
-    bottom: 15%;
-    width: 2px;
-    background: linear-gradient(180deg,
-            transparent,
-            var(--rosa-light),
-            var(--menta),
-            var(--rosa-light),
-            transparent);
-    border-radius: 2px;
+    inset: 0;
+    background: linear-gradient(90deg,
+            rgba(255, 255, 255, 0.02) 0%,
+            transparent 50%,
+            rgba(255, 255, 255, 0.02) 100%);
+    pointer-events: none;
+    z-index: -1;
 }
 
 .sidebar-item-pastel {
@@ -462,108 +493,79 @@
     color: var(--text-secondary);
     font-weight: 500;
     cursor: pointer;
-    border: 1.5px solid transparent;
-    transition:
-        background 0.2s ease,
-        color 0.2s ease,
-        border-color 0.2s ease,
-        box-shadow 0.2s ease,
-        transform 0.2s ease;
+    border: 1px solid transparent;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
     align-items: center;
     gap: 12px;
 }
 
 .sidebar-item-pastel:hover {
-    background: var(--rosa-soft);
+    background: var(--bg-surface);
     color: var(--text-primary);
-    border-color: var(--rosa-border);
-    transform: translateX(2px);
-    box-shadow:
-        0 1px 4px rgba(212, 160, 185, 0.1),
-        inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    border-color: var(--border-card);
+    transform: translateX(4px);
+    box-shadow: var(--shadow-card);
 }
 
 .sidebar-item-active-pastel {
-    padding: 10px 16px;
-    border-radius: 12px;
-    background: var(--menta-soft);
-    color: var(--menta-dark);
+    padding: 12px 18px;
+    border-radius: 14px;
+    background: var(--brand-soft);
+    color: var(--brand);
     font-weight: 700;
-    border: 1.5px solid var(--menta-border);
+    border: 1px solid var(--border-brand);
     position: relative;
     box-shadow:
-        0 2px 8px rgba(142, 207, 185, 0.12),
-        inset 0 1px 0 rgba(255, 255, 255, 0.5);
+        0 4px 12px rgba(0, 229, 118, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
     display: flex;
     align-items: center;
     gap: 12px;
 }
 
-.sidebar-item-active-pastel::before {
-    content: '';
-    position: absolute;
-    left: -1px;
-    top: 15%;
-    bottom: 15%;
-    width: 3px;
-    background: var(--gradient-menta);
-    border-radius: 0 3px 3px 0;
-    box-shadow: 2px 0 8px rgba(142, 207, 185, 0.25);
-}
-
-/* ============================================
-   NAVBAR — Frosted Pastel
-   ============================================ */
-
+/* --- NAVBAR — Frosted 3D --- */
 .navbar-pastel {
     background: var(--bg-navbar);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-bottom: 1.5px solid var(--border-subtle);
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.03);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border-divider);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     position: relative;
 }
 
-.navbar-pastel::after {
+.navbar-pastel::before {
     content: '';
     position: absolute;
-    bottom: -1px;
-    left: 5%;
-    right: 5%;
+    top: 0;
+    left: 0;
+    right: 0;
     height: 1px;
     background: linear-gradient(90deg,
             transparent,
-            var(--rosa-light),
-            var(--menta-light),
-            var(--rosa-light),
+            rgba(255, 255, 255, 0.1),
             transparent);
 }
 
-/* ============================================
-   INPUTS — 3D Inset
-   ============================================ */
-
+/* --- INPUTS — 3D Glass --- */
 .input-pastel {
-    background: var(--bg-elevated);
+    background: var(--bg-surface);
     border: 1.5px solid var(--border-subtle);
-    border-radius: 12px;
+    border-radius: 14px;
     padding: 12px 16px;
     color: var(--text-primary);
     font-size: 0.9rem;
-    box-shadow: var(--shadow-inset-3d);
-    transition:
-        border-color 0.25s ease,
-        box-shadow 0.25s ease;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: all 0.2s ease;
 }
 
 .input-pastel:focus {
     outline: none;
-    border-color: var(--menta);
+    border-color: var(--brand);
     box-shadow:
-        0 0 0 3px var(--menta-glow),
-        0 0 12px rgba(142, 207, 185, 0.08),
-        inset 0 1px 2px rgba(0, 0, 0, 0.03);
+        0 0 0 3px var(--brand-glow),
+        inset 0 2px 4px rgba(0, 0, 0, 0.1);
+    background: var(--bg-elevated);
 }
 
 .input-pastel::placeholder {
@@ -713,6 +715,45 @@
 /* ============================================
    ANIMAÇÕES
    ============================================ */
+/* --- Specialized 3D Utilities --- */
+.glow-bg {
+    @apply absolute pointer-events-none;
+    filter: blur(100px);
+    opacity: var(--glow-opacity, 0.15);
+    z-index: -1;
+}
+
+.animate-float {
+    animation: float-3d 8s ease-in-out infinite;
+}
+
+@keyframes float-3d {
+
+    0%,
+    100% {
+        transform: translateY(0) rotate(0deg);
+    }
+
+    50% {
+        transform: translateY(-10px) rotate(1deg);
+    }
+}
+
+@keyframes slide-up {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-slide-up {
+    animation: slide-up 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
 
 @keyframes fadeInUp {
     from {

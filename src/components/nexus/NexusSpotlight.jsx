@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Command, Sparkles, Send, BrainCircuit, X, MessageSquare, Bot, AlertCircle, Trash2, Lock } from 'lucide-react';
-import { tw } from '../../lib/utils';
+import { tw } from '../../lib/theme';
 import { useAuth } from '../../contexts/AuthContext';
 import { usePlan } from '../../hooks/usePlan';
 import { auth } from '../../lib/supabase';
@@ -264,10 +264,7 @@ export default function NexusSpotlight() {
                                     onChange={(e) => setInput(e.target.value)}
                                     onKeyDown={(e) => e.key === 'Enter' && handleSend()}
                                     placeholder="Sua pergunta para o Nexus (ex: 'Como está minha meta de FIRE?')..."
-                                    className={tw(
-                                        "w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-5 pr-12 text-sm text-white",
-                                        "focus:outline-none focus:border-violet-500/50 transition-all placeholder:text-gray-500"
-                                    )}
+                                    className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-5 pr-12 text-sm text-white focus:outline-none focus:border-violet-500/50 transition-all placeholder:text-gray-500"
                                 />
                                 <button
                                     onClick={handleSend}

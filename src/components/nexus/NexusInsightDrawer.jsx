@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, X, TrendingUp, AlertCircle, Lightbulb, ChevronRight, Activity } from 'lucide-react';
-import { tw } from '../../lib/utils';
+import { tw } from '../../lib/theme';
 import { auth } from '../../lib/supabase';
 
 export default function NexusInsightDrawer() {
@@ -38,12 +38,7 @@ export default function NexusInsightDrawer() {
                 onClick={() => setIsOpen(true)}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className={tw(
-                    "fixed right-6 bottom-24 z-40 p-4 rounded-2xl flex items-center gap-2",
-                    "bg-gradient-to-br from-violet-600/60 to-brand-primary/60 backdrop-blur-xl",
-                    "border border-white/20 shadow-[0_0_20px_rgba(139,92,246,0.3)]",
-                    "text-white font-medium group transition-all"
-                )}
+                className="fixed right-6 bottom-24 z-40 p-4 rounded-2xl flex items-center gap-2 bg-gradient-to-br from-violet-600/60 to-brand-primary/60 backdrop-blur-xl border border-white/20 shadow-[0_0_20px_rgba(139,92,246,0.3)] text-white font-medium group transition-all"
             >
                 <Sparkles className="w-5 h-5 group-hover:rotate-12 transition-transform" />
                 <span>Nexus</span>
@@ -68,11 +63,7 @@ export default function NexusInsightDrawer() {
                         animate={{ x: 0 }}
                         exit={{ x: '100%' }}
                         transition={{ type: 'spring', damping: 20, stiffness: 100 }}
-                        className={tw(
-                            "fixed top-0 right-0 h-full w-full max-w-md z-50",
-                            "bg-slate-900/80 backdrop-blur-3xl border-l border-white/10",
-                            "shadow-[-10px_0_40px_rgba(0,0,0,0.5)] p-6 flex flex-col gap-6"
-                        )}
+                        className="fixed top-0 right-0 h-full w-full max-w-md z-50 bg-slate-900/80 backdrop-blur-3xl border-l border-white/10 shadow-[-10px_0_40px_rgba(0,0,0,0.5)] p-6 flex flex-col gap-6"
                     >
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-3">
@@ -99,22 +90,16 @@ export default function NexusInsightDrawer() {
                                     key={insight.id || idx}
                                     initial={{ opacity: 0, y: 10 }}
                                     animate={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: idx * 0.1 }}
-                                    className={tw(
-                                        "p-4 rounded-2xl border border-white/10 transition-all cursor-default",
-                                        "bg-gradient-to-br from-white/5 to-white/[0.02] hover:border-white/20 active:scale-[0.98]",
-                                        insight.type === 'alert' ? 'border-red-500/20 hover:bg-red-500/[0.02]' : '',
-                                        insight.type === 'suggestion' ? 'border-emerald-500/20 hover:bg-emerald-500/[0.02]' : ''
-                                    )}
+                                    className="p-5 rounded-[2.5rem] bg-white/[0.03] border border-white/5 hover:border-violet-500/30 transition-all group"
                                 >
-                                    <div className="flex items-start gap-3">
-                                        <div className={tw(
-                                            "p-2 rounded-xl mt-1",
-                                            insight.type === 'alert' ? 'bg-red-500/20 text-red-400' :
-                                                insight.type === 'suggestion' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-blue-500/20 text-blue-400'
-                                        )}>
-                                            {insight.type === 'alert' ? <AlertCircle className="w-4 h-4" /> :
-                                                insight.type === 'suggestion' ? <Lightbulb className="w-4 h-4" /> : <TrendingUp className="w-4 h-4" />}
+                                    <div className="flex gap-4">
+                                        <div className={`p-3 rounded-2xl flex-shrink-0 ${insight.type === 'alert' ? 'bg-red-500/10 text-red-400' :
+                                                insight.type === 'suggestion' ? 'bg-amber-500/10 text-amber-400' :
+                                                    'bg-blue-500/10 text-blue-400'
+                                            }`}>
+                                            {insight.type === 'alert' ? <AlertCircle className="w-5 h-5" /> :
+                                                insight.type === 'suggestion' ? <Lightbulb className="w-5 h-5" /> :
+                                                    <TrendingUp className="w-5 h-5" />}
                                         </div>
                                         <div className="flex-1">
                                             <h3 className="text-white font-semibold text-sm mb-1">{insight.title}</h3>
@@ -135,7 +120,7 @@ export default function NexusInsightDrawer() {
                         <div className="pt-4 border-t border-white/10 flex items-center justify-between">
                             <div className="flex items-center gap-2 text-[10px] font-bold text-gray-500 uppercase">
                                 <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                                <span>Nexus V3.0 Live</span>
+                                <span>Nexus v3.0 Live</span>
                             </div>
                             <span className="text-[10px] px-2 py-0.5 rounded-full bg-violet-600 text-white font-bold uppercase">Pro Tier</span>
                         </div>

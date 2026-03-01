@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Upload, FileText, Image as ImageIcon, Loader2, CheckCircle2, AlertCircle } from 'lucide-react';
 import { tw } from '../../lib/utils';
+import { auth } from '../../lib/supabase';
 
 export default function NexusDropzone() {
     const [isDragging, setIsDragging] = useState(false);
@@ -18,7 +19,8 @@ export default function NexusDropzone() {
             reader.readAsDataURL(file);
             reader.onload = async () => {
                 const base64 = reader.result;
-                const token = localStorage.getItem('supabase.auth.token');
+                const { data: { session } } = await auth.getSession();
+                const token = session?.access_token;
 
                 const resp = await fetch('/api/nexus/vision', {
                     method: 'POST',

@@ -5,6 +5,7 @@ import { Command, Sparkles, Send, BrainCircuit, X, MessageSquare, Bot, AlertCirc
 import { tw } from '../../lib/utils';
 import { useAuth } from '../../contexts/AuthContext';
 import { usePlan } from '../../hooks/usePlan';
+import { auth } from '../../lib/supabase';
 
 export default function NexusSpotlight() {
     const [isOpen, setIsOpen] = useState(false);
@@ -39,7 +40,8 @@ export default function NexusSpotlight() {
 
     const fetchHistory = async () => {
         try {
-            const token = localStorage.getItem('supabase.auth.token');
+            const { data: { session } } = await auth.getSession();
+            const token = session?.access_token;
             const resp = await fetch('/api/nexus/history', {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -53,7 +55,8 @@ export default function NexusSpotlight() {
     const clearHistory = async () => {
         if (!confirm('Deseja apagar TODO o histórico com o Nexus?')) return;
         try {
-            const token = localStorage.getItem('supabase.auth.token');
+            const { data: { session } } = await auth.getSession();
+            const token = session?.access_token;
             await fetch('/api/nexus/history', {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
@@ -84,7 +87,8 @@ export default function NexusSpotlight() {
         setMessages(prev => [...prev, assistantMsg]);
 
         try {
-            const token = localStorage.getItem('supabase.auth.token'); // Simplificado
+            const { data: { session } } = await auth.getSession();
+            const token = session?.access_token;
             const response = await fetch('/api/nexus/chat', {
                 method: 'POST',
                 headers: {

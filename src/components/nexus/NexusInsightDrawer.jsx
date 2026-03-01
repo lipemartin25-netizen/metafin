@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, X, TrendingUp, AlertCircle, Lightbulb, ChevronRight, Activity } from 'lucide-react';
 import { tw } from '../../lib/utils';
+import { auth } from '../../lib/supabase';
 
 export default function NexusInsightDrawer() {
     const [isOpen, setIsOpen] = useState(false);
@@ -14,7 +15,8 @@ export default function NexusInsightDrawer() {
             const fetchInsights = async () => {
                 setLoading(true);
                 try {
-                    const token = localStorage.getItem('supabase.auth.token');
+                    const { data: { session } } = await auth.getSession();
+                    const token = session?.access_token;
                     const resp = await fetch('/api/nexus/insights', {
                         headers: { 'Authorization': `Bearer ${token}` }
                     });

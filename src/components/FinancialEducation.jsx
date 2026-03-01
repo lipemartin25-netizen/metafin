@@ -72,7 +72,7 @@ export default function FinancialEducation() {
 
  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 pt-4 animate-fade-in">
  {tracks.map(track => (
- <div key={track.id} className={`\${tw.card} p-6 flex flex-col group hover:-translate-y-px transition-all duration-300`}>
+ <div key={track.id} className={`${tw.card} p-6 flex flex-col group hover:-translate-y-px transition-all duration-300`}>
  <div className="flex items-start justify-between mb-4">
  <div className={`p-4 rounded-2xl border ${track.color} transition-all group-hover:-translate-y-px transition-transform shadow-lg shadow-black/10`}>
  {track.icon}

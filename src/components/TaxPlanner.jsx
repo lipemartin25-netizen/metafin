@@ -56,7 +56,7 @@ export default function TaxPlanner({ financialData }) {
 
  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-fade-in">
  {/* Sidebar Configurações */}
- <div className={`\${tw.card} p-5 space-y-4`}>
+ <div className={`${tw.card} p-5 space-y-4`}>
  <h3 className="font-bold text-[var(--text-primary)] dark:text-[var(--text-primary)] flex items-center gap-2 mb-4">
  Receitas e Deduções
  </h3>
@@ -127,7 +127,7 @@ export default function TaxPlanner({ financialData }) {
  <div className="lg:col-span-2 space-y-6">
 
  {/* Comparativo de Modelos */}
- <div className={`\${tw.card} p-6`}>
+ <div className={`${tw.card} p-6`}>
  <h3 className="font-bold text-[var(--text-primary)] dark:text-[var(--text-primary)] flex items-center gap-2 mb-6">
  Comparativo Anual <ArrowRight className="w-4 h-4 text-gray-500" />
  </h3>
@@ -162,7 +162,7 @@ export default function TaxPlanner({ financialData }) {
  </div>
 
  {/* Dicas de IA */}
- <div className={`\${tw.card} p-6`}>
+ <div className={`${tw.card} p-6`}>
  <h3 className="font-bold text-[var(--text-primary)] dark:text-[var(--text-primary)] flex items-center gap-2 mb-4">
  Recomendações Práticas
  </h3>

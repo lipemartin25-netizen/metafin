@@ -124,7 +124,7 @@ export default function CreditCards() {
 
             {/* Cards List */}
             {cards.length === 0 ? (
-                <div className={`\${tw.card} text-center py-16 border-dashed border-2 border-[var(--border-subtle)]/40 dark:border-[var(--border)] bg-transparent flex flex-col items-center justify-center`}>
+                <div className={`${tw.card} text-center py-16 border-dashed border-2 border-[var(--border-subtle)]/40 dark:border-[var(--border)] bg-transparent flex flex-col items-center justify-center`}>
                     <div className="w-20 h-20 bg-gray-800/40 dark:bg-[var(--bg-surface)] rounded-full flex items-center justify-center mb-6">
                         <CreditCard className="w-10 h-10 text-gray-400 dark:text-gray-500" />
                     </div>
@@ -260,7 +260,7 @@ export default function CreditCards() {
                             exit={{ scale: 0.95, opacity: 0, y: 20 }}
                             transition={{ type: "spring", stiffness: 300, damping: 25 }}
                             onSubmit={handleAdd}
-                            className={`\${tw.card} w-full max-w-md p-8 relative rounded-3xl`}
+                            className={`${tw.card} w-full max-w-md p-8 relative rounded-3xl`}
                         >
                             <button type="button" onClick={() => setShowAdd(false)} className="absolute top-6 right-6 p-2 rounded-xl bg-gray-800/40 dark:bg-[var(--bg-surface)] text-gray-500 hover:text-content-primary dark:hover:text-content-primary transition-colors"><X className="w-5 h-5" /></button>
 

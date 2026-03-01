@@ -104,7 +104,7 @@ export default function RetirementSimulator({ financialData }) {
  </div>
 
  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-fade-in">
- <div className={`\${tw.card} p-5 space-y-4`}>
+ <div className={`${tw.card} p-5 space-y-4`}>
  <h3 className="font-bold text-[var(--text-primary)] dark:text-[var(--text-primary)] flex items-center gap-2 mb-4">
  Configurações Base
  </h3>
@@ -156,7 +156,7 @@ export default function RetirementSimulator({ financialData }) {
  </div>
 
  <div className="lg:col-span-2 space-y-6">
- <div className={`\${tw.card} p-5`}>
+ <div className={`${tw.card} p-5`}>
  <h3 className="font-bold text-[var(--text-primary)] dark:text-[var(--text-primary)] mb-4 flex items-center gap-2">
  <HeartPulse className="h-5 w-5 text-indigo-500" /> Trajetória de Longevidade
  </h3>

@@ -67,7 +67,7 @@ export default function SmartReconciliation() {
  if (pendingQs.length === 0) return null;
 
  return (
- <div className={`\${tw.card} bg-indigo-50/50 dark:bg-indigo-500/5 border border-indigo-200 dark:border-indigo-500/20 shadow-lg shadow-indigo-500/5 mb-6 overflow-hidden relative group p-1`}>
+ <div className={`${tw.card} bg-indigo-50/50 dark:bg-indigo-500/5 border border-indigo-200 dark:border-indigo-500/20 shadow-lg shadow-indigo-500/5 mb-6 overflow-hidden relative group p-1`}>
  {/* Glow logic */}
  <div className="absolute -top-10 -right-10 w-32 h-32 bg-indigo-500/20 rounded-full blur-3xl animate-pulse-slow" />
 

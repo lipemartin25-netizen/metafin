@@ -80,7 +80,7 @@ export default function OnboardingTour({ onComplete }) {
  <span className="text-xs text-gray-500 font-mono">{step + 1}/{STEPS.length}</span>
  </div>
 
- <div className={`\${tw.card} p-8 text-center relative overflow-hidden`}>
+ <div className={`${tw.card} p-8 text-center relative overflow-hidden`}>
  {/* Background decoration */}
  <div className="absolute -top-20 -right-20 w-40 h-40 rounded-full opacity-10" style={{ backgroundColor: current.color }} />
  <div className="absolute -bottom-10 -left-10 w-32 h-32 rounded-full opacity-5" style={{ backgroundColor: current.color }} />

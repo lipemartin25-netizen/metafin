@@ -1,16 +1,39 @@
-# React + Vite
+# MetaFin — Nexus Hub Financeiro
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Hub central de inteligência financeira com design premium 3D, integração Open Finance e Advisor IA multimodelo.
 
-Currently, two official plugins are available:
+## 🚀 Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### 1. Sistema de Design Premium 3D
 
-## React Compiler
+- **Interface Glassmorphism**: Uso extensivo de camadas translúcidas, sombras profundas e efeitos de profundidade.
+- **Micro-animações**: Transições suaves e efeitos de "glow" em cards interativos.
+- **Modo Dark Nativo**: Otimizado para alta legibilidade e estética futurista.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### 2. Integração Open Finance (Pluggy)
 
-## Expanding the ESLint configuration
+- **Conectividade Total**: Sincronização automática com bancos e corretoras brasileiras.
+- **Dashboard Consolidado**: Visão única de saldo, transações e investimentos.
+- **Webhooks**: Notificações em tempo real para eventos financeiros importantes.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### 3. Inteligência Artificial (Nexus IA)
+
+- **Multi-modelo**: Suporte a GPT-4o, Gemini 1.5 Pro/Flash e Claude 3.5.
+- **Análise Preditiva**: Insights automáticos sobre saúde financeira e tendências de gastos.
+- **Wealth Lab**: Simuladores avançados de Independência Financeira (FIRE) e Aposentadoria.
+
+## 🛠️ Correções e Auditoria (v2.5.5)
+
+- **Fix (Investimentos)**: Corrigido erro crítico de importação que impedia o acesso à aba de investimentos.
+- **Fix (Style Bugs)**: Correção global de bugs de interpolação de strings em tokens de design system (23 arquivos corrigidos).
+- **Cleanup**: Remoção de arquivos mortos (`Wealth.jsx`, `DeveloperAPI.jsx`, `Institutional.jsx`) e consolidação de pastas de backend.
+- **Database**: Migração de schemas de metas e simuladores para o diretório padrão de migrações do Supabase.
+
+## 🔒 Segurança
+
+- **RLS (Row Level Security)**: Habilitado em todas as tabelas do banco de dados.
+- **Backend Proxy**: Chamadas sensíveis (IA/Open Finance) agora passam por rotas de API autenticadas.
+- **Compliance**: Estruturado seguindo padrões SOC-2 e LGPD.
+
+---
+© 2026 METAFIN HOLDINGS. PRODUTO PREMIUM.

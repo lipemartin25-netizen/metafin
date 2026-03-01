@@ -502,7 +502,7 @@ export default function Transactions() {
             ) : (
                 <div className="space-y-3">
                     {filteredTransactions.length === 0 ? (
-                        <div className={`p-12 text-center \${tw.card}`}>
+                        <div className={`p-12 text-center ${tw.card}`}>
                             <Search className="w-12 h-12 text-slate-600 mx-auto mb-4" />
                             <p className="text-[var(--text-secondary)]">Nenhuma transação encontrada</p>
                         </div>

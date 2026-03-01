@@ -243,7 +243,7 @@ export default function BankAccounts() {
                         <p className="text-gray-500 text-sm animate-pulse">Sincronizando suas contas...</p>
                     </div>
                 ) : (accounts?.length || 0) === 0 ? (
-                    <div className={`\${tw.card} text-center py-8 border-dashed border-2 border-[var(--border)] bg-transparent`}>
+                    <div className={`${tw.card} text-center py-8 border-dashed border-2 border-[var(--border)] bg-transparent`}>
                         <div className="w-12 h-12 rounded-full bg-[var(--bg-surface)] mx-auto flex items-center justify-center mb-3">
                             <Banknote className="w-6 h-6 text-gray-500" />
                         </div>

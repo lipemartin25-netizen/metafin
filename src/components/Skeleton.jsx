@@ -109,7 +109,7 @@ export function SkeletonDashboard() {
  {/* Cards de resumo */}
  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 animate-fade-in">
  {Array.from({ length: 3 }).map((_, i) => (
- <div key={i} className={`\${tw.card} p-6`}>
+ <div key={i} className={`${tw.card} p-6`}>
  <Skeleton className="h-4 w-1/2 mb-3" />
  <Skeleton className="h-8 w-3/4 mb-2" />
  <Skeleton className="h-3 w-1/3" />
@@ -121,7 +121,7 @@ export function SkeletonDashboard() {
  <SkeletonChart />
 
  {/* Lista */}
- <div className={`\${tw.card}`}>
+ <div className={`${tw.card}`}>
  <div className="p-4 border-b border-[var(--border-subtle)]/40 dark:border-[var(--border)]">
  <Skeleton className="h-5 w-1/4" />
  </div>

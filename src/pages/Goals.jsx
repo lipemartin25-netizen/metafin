@@ -1,320 +1,185 @@
 import { tw } from '@/lib/theme';
 import { useState, useEffect, useCallback } from 'react';
-import { Target, Plus, Trash2, X, Loader2, RefreshCw } from 'lucide-react';
+import { Target, Plus, Trash2, X, Loader2, RefreshCw, TrendingUp, Sparkles, LayoutGrid } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
-import GoalThermometer from '../components/GoalThermometer';
-import { CurrencyInput } from '../components/CurrencyInput';
+import { motion } from 'framer-motion';
 
 function fmt(v) {
- return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v);
+    return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v);
 }
 
 const GOAL_ICONS = ['🏖️', '🏠', '🚗', '💰', '📚', '🎮', '✈️', '💍', '🏥', '📱'];
 const GOAL_COLORS = ['#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#14b8a6', '#f97316'];
 
 export default function Goals() {
- const { user } = useAuth();
- const [goals, setGoals] = useState([]);
- const [loading, setLoading] = useState(true);
- const [saving, setSaving] = useState(false);
- const [showAdd, setShowAdd] = useState(false);
- const [editId, setEditId] = useState(null);
- const [form, setForm] = useState({ name: '', target: '', current: '', icon: '🏖️', color: '#10b981', category: 'travel', deadline: '', monthlyContribution: '' });
+    const { user } = useAuth();
+    const [goals, setGoals] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [saving, setSaving] = useState(false);
+    const [showAdd, setShowAdd] = useState(false);
+    const [editId, setEditId] = useState(null);
+    const [form, setForm] = useState({ name: '', target: '', currentValue: '', icon: '🏖️', color: '#10b981', deadline: '' });
 
- const loadGoals = useCallback(async () => {
- if (!user) return;
- setLoading(true);
- try {
- const { data, error } = await supabase
- .from('financial_goals')
- .select('*')
- .order('created_at', { ascending: false });
+    const loadGoals = useCallback(async () => {
+        if (!user) return;
+        setLoading(true);
+        try {
+            const { data, error } = await supabase.from('financial_goals').select('*').order('created_at', { ascending: false });
+            if (data) setGoals(data.map(g => ({ ...g, saved: g.current_amount, target: g.target_amount, title: g.name, deadline: g.target_date })));
+        } catch (err) { console.error(err); }
+        finally { setLoading(false); }
+    }, [user]);
 
- if (error && error.code !== '42P01') {
- console.error("Erro ao carregar metas:", error);
- }
- if (data) {
- setGoals(data);
- }
- } catch (err) {
- console.error("Exceção ao carregar:", err);
- } finally {
- setLoading(false);
- }
- }, [user]);
+    useEffect(() => { loadGoals(); }, [user, loadGoals]);
 
- useEffect(() => {
- loadGoals();
- }, [user, loadGoals]);
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        if (!user) return;
+        setSaving(true);
+        try {
+            const payload = {
+                user_id: user.id,
+                name: form.name,
+                target_amount: parseFloat(form.target),
+                current_amount: parseFloat(form.currentValue) || 0,
+                icon: form.icon,
+                color: form.color,
+                target_date: form.deadline
+            };
+            if (editId) await supabase.from('financial_goals').update(payload).eq('id', editId);
+            else await supabase.from('financial_goals').insert([payload]);
+            await loadGoals();
+            setShowAdd(false);
+            setEditId(null);
+            setForm({ name: '', target: '', currentValue: '', icon: '🏖️', color: '#10b981', deadline: '' });
+        } catch (e) { console.error(e); }
+        setSaving(false);
+    };
 
- const handleSubmit = async (e) => {
- e.preventDefault();
- if (!user) return;
- setSaving(true);
+    const handleDelete = async (id) => {
+        if (!confirm('Excluir meta?')) return;
+        await supabase.from('financial_goals').delete().eq('id', id);
+        await loadGoals();
+    };
 
- try {
- const targetVal = typeof form.target === 'string' ? parseFloat(form.target.replace(/\./g, '').replace(',', '.')) : form.target;
- const currentVal = typeof form.current === 'string' ? parseFloat(form.current.replace(/\./g, '').replace(',', '.')) : form.current;
- const contributionVal = typeof form.monthlyContribution === 'string' ? parseFloat(form.monthlyContribution.replace(/\./g, '').replace(',', '.')) : form.monthlyContribution;
+    const totalSaved = goals.reduce((s, g) => s + Number(g.saved), 0);
+    const totalTarget = goals.reduce((s, g) => s + Number(g.target), 0);
+    const avgProgress = goals.length > 0 ? Math.round((totalSaved / totalTarget) * 100) : 0;
 
- const payload = {
- user_id: user.id,
- name: form.name || 'Nova Meta',
- target_amount: targetVal || 0,
- current_amount: currentVal || 0,
- icon: form.icon,
- color: form.color,
- category: form.category,
- target_date: form.deadline || null,
- monthly_contribution: contributionVal || 0,
- };
+    return (
+        <div className="py-6 space-y-8 animate-fade-in pb-20">
+            <div className="flex items-center justify-between">
+                <div>
+                    <h1 className="text-2xl font-bold text-[var(--text-primary)] flex items-center gap-2">
+                        <Target className="w-6 h-6 text-brand-primary" />
+                        Metas Financeiras
+                    </h1>
+                    <p className="text-gray-500 text-sm mt-1">Transforme sonhos em planos concretos.</p>
+                </div>
+                <div className="flex items-center gap-3">
+                    <button onClick={loadGoals} className="p-2.5 rounded-xl border border-[var(--border-subtle)]/40 hover:bg-gray-800/30 transition-colors text-gray-500">
+                        <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+                    </button>
+                    <button onClick={() => setShowAdd(true)} className="gradient-btn px-4 py-2 text-sm flex items-center gap-2 font-bold shadow-lg shadow-brand-500/20">
+                        <Plus className="w-4 h-4" /> Nova Meta
+                    </button>
+                </div>
+            </div>
 
- if (editId) {
- await supabase.from('financial_goals').update(payload).eq('id', editId);
- } else {
- await supabase.from('financial_goals').insert([payload]);
- }
+            {/* Summary Block */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 animate-in">
+                <div className="tech-card p-5 border-[var(--border-subtle)] bg-brand-primary/5">
+                    <p className="text-[10px] text-gray-500 uppercase font-black tracking-widest mb-1.5 flex items-center gap-1.5">
+                        <LayoutGrid className="w-3.5 h-3.5 text-brand-primary" /> Total de Metas
+                    </p>
+                    <p className="text-3xl font-black text-brand-primary">{goals.length}</p>
+                </div>
+                <div className="tech-card p-5 border-[var(--border-subtle)]">
+                    <p className="text-[10px] text-gray-500 uppercase font-black tracking-widest mb-1.5 flex items-center gap-1.5">
+                        <TrendingUp className="w-3.5 h-3.5 text-blue-500" /> Valor Alvo
+                    </p>
+                    <p className="text-2xl font-black text-[var(--text-primary)]">{fmt(totalTarget)}</p>
+                </div>
+                <div className="pastel-card p-5 border-brand-primary/20 bg-brand-primary/5">
+                    <p className="text-[10px] text-brand-primary uppercase font-black tracking-widest mb-1.5 flex items-center gap-1.5">
+                        <Target className="w-3.5 h-3.5" /> Valor Guardado
+                    </p>
+                    <p className="text-2xl font-black text-brand-primary">{fmt(totalSaved)}</p>
+                </div>
+                <div className="tech-card p-5 border-indigo-500/20 bg-indigo-500/5">
+                    <p className="text-[10px] text-indigo-500 uppercase font-black tracking-widest mb-1.5 flex items-center gap-1.5">
+                        <Sparkles className="w-3.5 h-3.5" /> Progresso Médio
+                    </p>
+                    <p className="text-2xl font-black text-indigo-500">{avgProgress}%</p>
+                </div>
+            </div>
 
- await loadGoals();
- resetForm();
- } catch (e) {
- console.error(e);
- alert("Erro ao salvar meta. Você rodou a migration `create_goals_schema.sql`?");
- } finally {
- setSaving(false);
- }
- };
+            {/* Render Goals */}
+            {loading ? (
+                <div className="flex justify-center py-20 text-brand-primary"><Loader2 className="w-10 h-10 animate-spin" /></div>
+            ) : goals.length === 0 ? (
+                <div className="tech-card text-center py-16 border-dashed border-2 border-[var(--border-subtle)]/40 bg-transparent cursor-pointer" onClick={() => setShowAdd(true)}>
+                    <Target className="w-16 h-16 text-brand-500/30 mx-auto mb-4" />
+                    <h4 className="text-[var(--text-primary)] font-black">Nenhuma meta ainda</h4>
+                    <p className="text-gray-500 text-sm">Clique para planejar seu próximo grande passo.</p>
+                </div>
+            ) : (
+                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in">
+                    {goals.map(goal => {
+                        const pct = Math.round((goal.saved / goal.target) * 100) || 0;
+                        return (
+                            <div key={goal.id} className="tech-card p-6 border-[var(--border-subtle)] hover:border-brand-primary/30 transition-all group relative overflow-hidden">
+                                <div className="absolute top-0 right-0 p-8 opacity-5"><Target className="w-32 h-32" /></div>
+                                <div className="flex justify-between items-start mb-6 relative z-10">
+                                    <div className="flex items-center gap-4">
+                                        <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-xl bg-brand-primary/10 border border-brand-primary/20 shadow-inner">
+                                            {goal.icon}
+                                        </div>
+                                        <div>
+                                            <h3 className="font-black text-[var(--text-primary)] text-lg tracking-tight uppercase">{goal.title}</h3>
+                                            <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest mt-1">
+                                                Vence em {new Date(goal.deadline + 'T12:00:00').toLocaleDateString('pt-BR')}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <button onClick={() => handleDelete(goal.id)} className="p-2.5 rounded-xl bg-red-500/10 border border-red-500/20 text-red-500 hover:bg-red-500/20 transition-all">
+                                        <Trash2 className="w-4 h-4" />
+                                    </button>
+                                </div>
+                                <div className="space-y-4 relative z-10">
+                                    <div className="flex justify-between items-end text-xs font-black uppercase tracking-widest">
+                                        <span className="text-gray-500">Progresso</span>
+                                        <span className="text-[var(--text-primary)] text-sm">{pct}% <span className="text-[10px] text-gray-500 opacity-40">({fmt(goal.saved)})</span></span>
+                                    </div>
+                                    <div className="h-3 bg-gray-800/40 dark:bg-black/20 rounded-full overflow-hidden border border-white/5 shadow-inner">
+                                        <motion.div initial={{ width: 0 }} animate={{ width: `${pct}%` }} className={`h-full rounded-full shadow-[0_0_10px_rgba(0,0,0,0.2)] ${pct >= 100 ? 'bg-brand-primary' : 'bg-blue-500'}`} />
+                                    </div>
+                                </div>
+                            </div>
+                        );
+                    })}
+                </div>
+            )}
 
- const resetForm = () => {
- setForm({ name: '', target: '', current: '', icon: '🏖️', color: '#10b981', category: 'other', deadline: '', monthlyContribution: '' });
- setShowAdd(false);
- setEditId(null);
- };
-
- const handleEdit = (goal) => {
- setForm({
- name: goal.name,
- target: goal.target_amount.toString(),
- current: goal.current_amount.toString(),
- icon: goal.icon,
- color: goal.color,
- category: goal.category,
- deadline: goal.target_date || '',
- monthlyContribution: (goal.monthly_contribution || 0).toString()
- });
- setEditId(goal.id);
- setShowAdd(true);
- };
-
- const handleDelete = async (id) => {
- if (!confirm('Excluir esta meta permanentemente?')) return;
- setSaving(true);
- try {
- await supabase.from('financial_goals').delete().eq('id', id);
- await loadGoals();
- } catch (e) {
- console.error(e);
- } finally {
- setSaving(false);
- }
- };
-
- const addContribution = async (id, currentAmount, amountToAdd) => {
- try {
- const newAmount = currentAmount + amountToAdd;
- await supabase.from('financial_goals').update({ current_amount: newAmount }).eq('id', id);
- await supabase.from('goal_contributions').insert([{
- user_id: user.id, goal_id: id, amount: amountToAdd, source: 'manual'
- }]);
- await loadGoals();
- } catch (e) {
- console.error("Erro ao aportar:", e);
- }
- };
-
- // Derived logic for local fallback UI
- const getMonthsToGoal = (g) => {
- if (!g.monthly_contribution || g.monthly_contribution <= 0) return null;
- const remaining = g.target_amount - g.current_amount;
- if (remaining <= 0) return 0;
- return Math.ceil(remaining / g.monthly_contribution);
- };
-
- const totalSaved = goals.reduce((s, g) => s + Number(g.current_amount), 0);
- const totalTarget = goals.reduce((s, g) => s + Number(g.target_amount), 0);
-
- return (
- <div className="py-6 space-y-6 animate-fade-in pb-20">
- <div className="relative overflow-hidden flex flex-col sm:flex-row items-center justify-between rounded-[2.5rem] bg-[var(--bg-base)] from-brand-600 via-teal-600 to-fuchsia-700 p-8 md:p-10 text-[var(--text-primary)] shadow-tech-card border border-[var(--border)] group perspective-1000">
- {/* Efeitos 3D Internos */}
- <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+PGRlZnM+PG1hdHRlcm4gaWQ9ImciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTTAgNDBoNDBWMEgweiIgZmlsbD0ibm9uZSIvPjxwYXRoIGQ9Ik0wIDEwaDQwTTAgMjBoNDBNMCAzMGg0ME0xMCAwdjQwTTIwIDB2NDBNMzAgMHY0MCIgc3Ryb2tlPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMDUpIiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZykiLz48L3N2Zz4=')] opacity-30" />
- <div className="absolute -left-20 -top-20 w-80 h-80 bg-gray-800/40/10 rounded-full mix-blend-overlay filter blur-[40px] opacity-60 group-hover:-translate-y-px transition-transform transition-transform duration-1000 ease-out" />
- <div className="absolute bottom-0 right-0 w-64 h-64 bg-cyan-400/20 rounded-full mix-blend-color-dodge filter blur-[40px] opacity-60 group-hover:-translate-x-10 transition-transform duration-1000 ease-out delay-100" />
-
- <div className="relative z-10 flex-1 flex gap-5 items-center">
- <div className="p-4 bg-gray-800/40/10 rounded-2xl shadow-inner border border-[var(--border)] group-hover:-translate-y-px group-hover:rotate-6 transition-transform duration-500">
- <Target className="w-12 h-12 text-yellow-300 drop-shadow-tech-card" />
- </div>
- <div>
- <h1 className="text-3xl md:text-4xl font-black mb-2 tracking-tight drop-shadow-lg flex items-center gap-2">
- Planejador de Metas
- </h1>
- <p className="text-brand-50 text-sm md:text-base font-medium max-w-xl leading-relaxed ">
- Use o modelo de <strong className="text-[var(--text-primary)] drop-shadow-lg shadow-black/10">Goal-Based Wealth</strong> e alinhe aportes aos seus grandes sonhos.
- </p>
- </div>
- </div>
- <div className="flex items-center gap-3">
- <button onClick={loadGoals} className="p-2.5 rounded-xl border border-[var(--border-subtle)]/40 dark:border-[var(--border)] hover:bg-gray-800/30 dark:hover:bg-[var(--bg-surface)] transition-colors text-gray-500">
- <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
- </button>
- <button onClick={() => setShowAdd(true)} className="gradient-btn px-4 py-2 text-sm flex items-center gap-2 font-bold shadow-lg shadow-brand-500/20">
- <Plus className="w-4 h-4" /> Nova Meta
- </button>
- </div>
- </div>
-
- {/* Summary Block */}
- <div className="flex flex-wrap gap-4 items-stretch">
- <div className={`\${tw.card} flex-1 min-w-[140px] relative overflow-hidden p-5 flex flex-col justify-center`}>
- <p className="text-[10px] text-gray-500 dark:text-gray-400 font-black uppercase tracking-[0.15em] mb-1">Total em Metas</p>
- <p className="text-2xl md:text-3xl font-black text-brand-600 dark:text-brand-400 drop-shadow-lg shadow-black/10">{fmt(totalSaved)}</p>
- </div>
- <div className={`\${tw.card} flex-1 min-w-[140px] relative p-5 flex flex-col justify-center`}>
- <p className="text-[10px] text-gray-500 dark:text-gray-400 font-black uppercase tracking-[0.15em] mb-1">Atingimento Alvo</p>
- <p className="text-2xl md:text-3xl font-black text-[var(--text-primary)] dark:text-[var(--text-primary)] drop-shadow-lg shadow-black/10">{fmt(totalTarget)}</p>
- </div>
- <div className={`\${tw.card} flex-1 min-w-[140px] relative p-5 flex flex-col justify-center`}>
- <p className="flex justify-between text-[10px] text-gray-500 dark:text-gray-400 font-black uppercase tracking-[0.15em] mb-2">
- <span>Eficiência</span>
- <span className="text-blue-500">{totalTarget > 0 ? Math.round((totalSaved / totalTarget) * 100) : 0}%</span>
- </p>
- <div className="mt-1 h-2.5 bg-gray-800/40 dark:bg-black/20 rounded-full overflow-hidden shadow-inner border border-[var(--border-subtle)]/40 dark:border-[var(--border)]">
- <div className="h-full bg-[var(--bg-base)] from-blue-500 to-emerald-500 rounded-full transition-all duration-1000 shadow-tech-card" style={{ width: `${totalTarget > 0 ? Math.min((totalSaved / totalTarget) * 100, 100) : 0}%` }} />
- </div>
- </div>
- </div>
-
- {/* Render Goals */}
- {loading ? (
- <div className="flex justify-center flex-col items-center py-20 text-brand-500">
- <Loader2 className="w-10 h-10 animate-spin mb-4" />
- <p className="text-sm font-medium animate-pulse text-gray-500">Calculando trajetórias...</p>
- </div>
- ) : goals.length === 0 ? (
- <div className={`\${tw.card} text-center py-16 border-dashed border-2 border-[var(--border-subtle)]/40 dark:border-[var(--border)] bg-transparent hover:bg-[var(--bg-surface)] transition-colors cursor-pointer group`} onClick={() => setShowAdd(true)}>
- <Target className="w-16 h-16 text-brand-500/50 mx-auto mb-4 group-hover:-translate-y-px transition-transform group-hover:text-brand-500 transition-all" />
- <h4 className="text-lg text-[var(--text-primary)] dark:text-[var(--text-primary)] font-bold mb-2">Seu portfólio de metas está vazio</h4>
- <p className="text-gray-500 text-sm mb-6 max-w-sm mx-auto">Use a inteligência baseada em objetivos para focar nas grandes faturas: viagens, carros, casas, ou sua liberdade.</p>
- <button onClick={(e) => { e.stopPropagation(); setShowAdd(true); }} className="gradient-btn px-6 py-2.5 text-sm font-bold shadow-lg shadow-brand-500/30">Criar Primeira Meta</button>
- </div>
- ) : (
- <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in">
- {goals.map(goal => (
- <div key={goal.id} className="flex flex-col gap-3 group">
- <GoalThermometer goal={{
- ...goal,
- months_remaining: getMonthsToGoal(goal)
- }} />
-
- <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
- {goal.current_amount < goal.target_amount && (
- <button
- disabled={saving}
- onClick={() => addContribution(goal.id, Number(goal.current_amount), goal.monthly_contribution || 100)}
- className="flex-1 py-2 text-xs font-bold rounded-xl bg-purple-50 text-brand-primary dark:bg-brand-primary/10 dark:text-brand-glow border border-purple-200 dark:border-brand-primary/20 hover:bg-purple-100 transition-colors disabled:opacity-50">
- + Aportar
- </button>
- )}
- <button onClick={() => handleEdit(goal)} className="flex-1 py-2 text-xs font-bold rounded-xl bg-gray-800/30 dark:bg-[var(--bg-surface)] text-gray-600 dark:text-gray-300 border border-[var(--border-subtle)]/40 dark:border-[var(--border)] hover:border-blue-500/30 transition-all">
- Editar
- </button>
- <button disabled={saving} onClick={() => handleDelete(goal.id)} className="p-2 rounded-xl text-red-500/60 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 border border-transparent hover:border-red-200 dark:hover:border-red-500/20 transition-all">
- <Trash2 className="w-4 h-4" />
- </button>
- </div>
- </div>
- ))}
- </div>
- )}
-
- {showAdd && (
- <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 animate-fade-in">
- <form onSubmit={handleSubmit} className={`\${tw.card} w-full max-w-md p-6 space-y-4 animate-slide-up relative z-10 border border-[var(--border)] shadow-elevated`}>
- <button type="button" onClick={resetForm} className="absolute top-4 right-4 text-gray-500 hover:text-[var(--text-primary)] dark:hover:text-[var(--text-primary)] bg-gray-800/40 dark:bg-[var(--bg-surface)] p-1 rounded-full transition-colors"><X className="w-5 h-5" /></button>
- <h2 className="text-xl font-black text-[var(--text-primary)] dark:text-[var(--text-primary)] flex items-center gap-2 mb-6">
- <Target className="w-6 h-6 text-brand-500" /> {editId ? 'Configurar Meta' : 'Plano de Atingimento'}
- </h2>
-
- <div>
- <label className="text-[10px] text-gray-400 uppercase font-black tracking-widest block mb-1">Motivador Principal (Nome)</label>
- <input required value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} className="w-full bg-gray-800/30 dark:bg-black/20 border border-[var(--border-subtle)]/40 dark:border-[var(--border)] rounded-xl px-4 py-3 text-[var(--text-primary)] dark:text-[var(--text-primary)] text-sm outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all" placeholder="Ex: Viagem Europa, Independência..." />
- </div>
-
- <div>
- <label className="text-[10px] text-gray-400 uppercase font-black tracking-widest block mb-1">Ícone</label>
- <div className="flex gap-2 flex-wrap">
- {GOAL_ICONS.map(icon => (
- <button key={icon} type="button" onClick={() => setForm({ ...form, icon })}
- className={`w-10 h-10 rounded-xl text-xl flex items-center justify-center transition-all ${form.icon === icon ? 'bg-brand-500/20 border-2 border-brand-500 scale-110 shadow-lg shadow-black/10' : 'bg-gray-800/30 dark:bg-[var(--bg-surface)] border border-[var(--border-subtle)]/40 dark:border-[var(--border)] hover:bg-gray-800/40 dark:hover:bg-gray-800/40/10'}`}>
- {icon}
- </button>
- ))}
- </div>
- </div>
-
- <div>
- <label className="text-[10px] text-gray-400 uppercase font-black tracking-widest block mb-1 mt-2">Cor Tema</label>
- <div className="flex gap-3">
- {GOAL_COLORS.map(color => (
- <button key={color} type="button" onClick={() => setForm({ ...form, color })}
- className={`w-6 h-6 rounded-full transition-all ${form.color === color ? 'ring-2 ring-offset-2 ring-offset-white dark:ring-offset-gray-900 scale-125' : 'hover:-translate-y-px transition-transform border border-[var(--border)]'}`}
- style={{ backgroundColor: color, ringColor: color }} />
- ))}
- </div>
- </div>
-
- <div className="grid grid-cols-2 gap-4 pt-2 animate-fade-in">
- <div>
- <label className="text-[10px] text-gray-400 uppercase font-black tracking-widest block mb-1">Alvo</label>
- <CurrencyInput
- value={form.target}
- onChange={val => setForm({ ...form, target: val })}
- placeholder="0,00"
- />
- </div>
- <div>
- <label className="text-[10px] text-gray-400 uppercase font-black tracking-widest block mb-1">Já Guardou</label>
- <CurrencyInput
- value={form.current}
- onChange={val => setForm({ ...form, current: val })}
- placeholder="0,00"
- />
- </div>
- </div>
-
- <div className="grid grid-cols-2 gap-4 animate-fade-in">
- <div>
- <label className="text-[10px] text-gray-400 uppercase font-black tracking-widest block mb-1">Aporte Mensal</label>
- <CurrencyInput
- value={form.monthlyContribution}
- onChange={val => setForm({ ...form, monthlyContribution: val })}
- placeholder="0,00"
- />
- </div>
- <div>
- <label className="text-[10px] text-gray-400 uppercase font-black tracking-widest block mb-1">Prazo (opcional)</label>
- <input type="date" value={form.deadline} onChange={e => setForm({ ...form, deadline: e.target.value })} className="w-full bg-gray-800/30 dark:bg-black/20 border border-[var(--border-subtle)]/40 dark:border-[var(--border)] rounded-xl px-4 py-3 text-[var(--text-primary)] dark:text-[var(--text-primary)] text-sm outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary" />
- </div>
- </div>
-
- <button disabled={saving} type="submit" className="gradient-btn w-full py-3.5 text-sm font-bold shadow-lg shadow-brand-500/30 mt-4 outline-none disabled:opacity-75 disabled:cursor-not-allowed">
- {saving ? <Loader2 className="w-5 h-5 mx-auto animate-spin" /> : (editId ? 'Salvar Configuração' : 'Lançar Meta')}
- </button>
- </form>
- </div>
- )}
- </div>
- );
+            {showAdd && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 animate-fade-in">
+                    <div className="tech-card w-full max-w-md p-6 bg-gray-800/40 border border-white/5">
+                        <button onClick={() => setShowAdd(false)} className="absolute top-4 right-4 text-gray-500"><X className="w-5 h-5" /></button>
+                        <h2 className="text-xl font-black text-[var(--text-primary)] mb-6">Nova Meta</h2>
+                        <form onSubmit={handleSubmit} className="space-y-4">
+                            <input required placeholder="Título da Meta" className="w-full bg-black/20 border border-white/5 rounded-xl px-4 py-3 text-sm text-[var(--text-primary)]" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} />
+                            <div className="grid grid-cols-2 gap-4">
+                                <input required type="number" placeholder="Valor Alvo" className="w-full bg-black/20 border border-white/5 rounded-xl px-4 py-3 text-sm text-[var(--text-primary)]" value={form.target} onChange={e => setForm({ ...form, target: e.target.value })} />
+                                <input required type="date" className="w-full bg-black/20 border border-white/5 rounded-xl px-4 py-3 text-sm text-[var(--text-primary)]" value={form.deadline} onChange={e => setForm({ ...form, deadline: e.target.value })} />
+                            </div>
+                            <button type="submit" disabled={saving} className="gradient-btn w-full py-4 rounded-xl font-bold uppercase tracking-widest text-xs">
+                                {saving ? 'Salvando...' : 'Lançar Meta'}
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            )}
+        </div>
+    );
 }

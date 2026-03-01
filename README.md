@@ -18,21 +18,23 @@ Hub central de inteligência financeira com design premium 3D, integração Open
 
 ### 3. Inteligência Artificial (Nexus IA)
 
+- **Smart Categorization**: Novo botão em Transações para categorização automática inteligente via IA (MetaFin IA Engine).
 - **Multi-modelo**: Suporte a GPT-4o, Gemini 1.5 Pro/Flash e Claude 3.5.
 - **Análise Preditiva**: Insights automáticos sobre saúde financeira e tendências de gastos.
 - **Wealth Lab**: Simuladores avançados de Independência Financeira (FIRE) e Aposentadoria.
 
-## 🛠️ Correções e Auditoria (v2.5.5)
+## 🛠️ Correções e Auditoria (v2.6.0)
 
-- **Fix (Investimentos)**: Corrigido erro crítico de importação que impedia o acesso à aba de investimentos.
-- **Fix (Style Bugs)**: Correção global de bugs de interpolação de strings em tokens de design system (23 arquivos corrigidos).
-- **Cleanup**: Remoção de arquivos mortos (`Wealth.jsx`, `DeveloperAPI.jsx`, `Institutional.jsx`) e consolidação de pastas de backend.
-- **Database**: Migração de schemas de metas e simuladores para o diretório padrão de migrações do Supabase.
+- **Deep Project Audit**: Concluída varredura profunda para remoção de arquivos desnecessários (+100 logs/logs de build removidos).
+- **Feature (Investimentos)**: Corrigido erro crítico de importação e bug de design que impedia o acesso.
+- **Fix (Style Bugs)**: Correção global de herança de CSS em tokens de design 3D (23 arquivos corrigidos).
+- **Cleanup**: Remoção total de páginas redundantes e consolidação do backend `/server` para `/api` Serverless.
 
 ## 🔒 Segurança
 
-- **RLS (Row Level Security)**: Habilitado em todas as tabelas do banco de dados.
-- **Backend Proxy**: Chamadas sensíveis (IA/Open Finance) agora passam por rotas de API autenticadas.
+- **XSS Prevention**: Implementada sanitização de inputs em Transações utilizando `DOMPurify` (descrição e notas).
+- **RLS (Row Level Security)**: Habilitado em todas as tabelas do banco de dados para isolamento absoluto de tenant.
+- **Backend Proxy**: Chamadas sensíveis (IA/Open Finance) agora passam por rotas de API autenticadas via JWT do Supabase.
 - **Compliance**: Estruturado seguindo padrões SOC-2 e LGPD.
 
 ---

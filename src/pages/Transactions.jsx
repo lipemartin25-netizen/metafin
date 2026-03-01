@@ -1,13 +1,16 @@
 import { useState, useMemo, useRef } from 'react';
+import { tw } from '../lib/theme';
 import { usePageAnnounce } from '../components/A11yAnnouncer';
 import { useTransactions } from '../hooks/useTransactions';
 import StatusChip from '../components/StatusChip';
-import { Search, Filter, Upload, Plus, X, FileSpreadsheet, CheckCircle, AlertCircle, Loader2, Trash2, Download, BarChart2, List, Landmark, FileText, File, ArrowUpRight, ArrowDownRight, ShieldCheck } from 'lucide-react';
+import { Search, Filter, Upload, Plus, X, FileSpreadsheet, CheckCircle, AlertCircle, Loader2, Trash2, Download, BarChart2, List, Landmark, FileText, File, ArrowUpRight, ArrowDownRight, ShieldCheck, Sparkles } from 'lucide-react';
+import { suggestCategories } from '../lib/aiCategorizer';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import Papa from 'papaparse';
 import { analytics } from '../hooks/useAnalytics';
 import { parseFile, ACCEPTED_EXTENSIONS, SUPPORTED_FORMATS } from '../lib/fileParser';
 import categoriesData from '../data/data.json';
+import DOMPurify from 'dompurify';
 
 const categoryConfig = categoriesData.categories;
 const categoryGroups = categoriesData.categoryGroups || [];
@@ -46,6 +49,36 @@ export default function Transactions() {
     });
     const [isDragging, setIsDragging] = useState(false);
     const [catSearch, setCatSearch] = useState('');
+    const [categorizing, setCategorizing] = useState(false);
+
+    const handleAICategorize = async () => {
+        const pendingNodes = transactions.filter(t => t.category === 'outros' || t.status === 'pending');
+        if (pendingNodes.length === 0) {
+            setImportResult({ success: false, message: 'Nenhuma transação pendente encontrada.' });
+            return;
+        }
+
+        setCategorizing(true);
+        try {
+            const descriptions = [...new Set(pendingNodes.map(t => t.description))];
+            const suggestions = await suggestCategories(descriptions);
+            let count = 0;
+
+            for (const tx of pendingNodes) {
+                const suggestedCat = suggestions[tx.description];
+                if (suggestedCat && allCategories.includes(suggestedCat)) {
+                    await updateTransaction(tx.id, { ...tx, category: suggestedCat, status: 'categorized' });
+                    count++;
+                }
+            }
+            setImportResult({ success: true, message: `${count} transações categorizadas com sucesso!` });
+            analytics.featureUsed('ai_categorize_executed');
+        } catch (_error) {
+            setImportResult({ success: false, message: 'Falha na categorização inteligente.' });
+        } finally {
+            setCategorizing(false);
+        }
+    };
 
     const changeMonth = (offset) => {
         const [year, month] = selectedMonth.split('-').map(Number);
@@ -79,7 +112,13 @@ export default function Transactions() {
     const handleAddTransaction = async (e) => {
         e.preventDefault();
         const amount = parseFloat(newTx.amount);
-        const txData = { ...newTx, amount: newTx.type === 'expense' ? -Math.abs(amount) : Math.abs(amount), status: 'categorized' };
+        const txData = {
+            ...newTx,
+            description: DOMPurify.sanitize(newTx.description),
+            notes: DOMPurify.sanitize(newTx.notes || ''),
+            amount: newTx.type === 'expense' ? -Math.abs(amount) : Math.abs(amount),
+            status: 'categorized'
+        };
         if (editId) {
             await updateTransaction(editId, txData);
             setEditId(null);
@@ -449,6 +488,15 @@ export default function Transactions() {
                     <option value="income" className="bg-[var(--bg-base)]">💰 Receitas</option>
                     <option value="expense" className="bg-[var(--bg-base)]">💸 Despesas</option>
                 </select>
+                <button
+                    onClick={handleAICategorize}
+                    disabled={categorizing}
+                    className="flex items-center justify-center gap-2 bg-gradient-to-r from-violet-600 to-brand-primary text-[var(--text-primary)] px-5 py-3.5 rounded-2xl text-sm font-bold shadow-lg shadow-violet-500/20 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 disabled:grayscale"
+                    title="Usar IA para categorizar transações pendentes"
+                >
+                    {categorizing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
+                    {categorizing ? 'Analisando...' : 'Categorizar com IA'}
+                </button>
             </div>
 
             {/* Content */}
